@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RR Graphics Lab — OpenGL & Vulkan</title>
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222636;
+  --border:#2a2f40;--border2:#3a4055;
+  --accent:#6c63ff;--accent2:#a78bfa;--accent3:#38bdf8;
+  --teal:#2dd4bf;--coral:#f87171;--amber:#fbbf24;--green:#4ade80;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --card:#161b27;--card2:#1e2335;
+  --code-bg:#0f1117;
+  --r:10px;--r2:16px;--r3:24px;
+  --shadow:0 4px 24px rgba(0,0,0,.5);
+  --glow:0 0 32px rgba(108,99,255,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,15,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px;font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none}
+.nav-badge{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:13px;padding:5px 10px;border-radius:6px;transition:all .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3)}
+.nav-ask-btn{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;border:none;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+.nav-ask-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(108,99,255,.4)}
+
+/* ── HERO ── */
+.hero{padding:120px 2rem 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(circle,rgba(108,99,255,.12) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:.4px;margin-bottom:24px}
+.hero-eyebrow .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-.02em}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent3),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.05rem;color:var(--text2);max-width:620px;margin:0 auto 36px;line-height:1.7}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;border:none;padding:12px 28px;border-radius:25px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(108,99,255,.4)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border2);padding:12px 28px;border-radius:25px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-ghost:hover{background:var(--bg3);border-color:var(--border2)}
+.hero-stats{display:flex;gap:32px;justify-content:center;margin-top:48px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:1.8rem;font-weight:800;color:var(--accent2)}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* ── LAYOUT ── */
+.container{max-width:1200px;margin:0 auto;padding:0 2rem}
+.section{padding:70px 0}
+.section-header{text-align:center;margin-bottom:48px}
+.section-tag{display:inline-block;background:rgba(108,99,255,.15);color:var(--accent2);font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.section-sub{color:var(--text2);font-size:1rem;max-width:540px;margin:0 auto}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:4px;margin-bottom:32px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-btn{flex-shrink:0;padding:8px 20px;border-radius:var(--r);border:none;background:transparent;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab-btn.active{background:var(--bg4);color:var(--text);box-shadow:var(--shadow)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* ── MODULE CARDS ── */
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.module-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:24px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));opacity:0;transition:.25s}
+.module-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--glow)}
+.module-card:hover::before{opacity:1}
+.module-card.day1::before{background:linear-gradient(90deg,#6c63ff,#38bdf8)}
+.module-card.day2::before{background:linear-gradient(90deg,#2dd4bf,#4ade80)}
+.module-card.day3::before{background:linear-gradient(90deg,#f59e0b,#f87171)}
+.module-card.day4::before{background:linear-gradient(90deg,#8b5cf6,#ec4899)}
+.module-card.day5::before{background:linear-gradient(90deg,#f87171,#fbbf24)}
+.module-card:hover::before{opacity:1}
+.module-num{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.module-title{font-size:1.05rem;font-weight:700;margin-bottom:8px;line-height:1.4}
+.module-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
+.module-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;letter-spacing:.3px;text-transform:uppercase}
+.tag-blue{background:rgba(56,189,248,.12);color:var(--accent3)}
+.tag-purple{background:rgba(108,99,255,.12);color:var(--accent2)}
+.tag-teal{background:rgba(45,212,191,.12);color:var(--teal)}
+.tag-amber{background:rgba(251,191,36,.12);color:var(--amber)}
+.tag-coral{background:rgba(248,113,113,.12);color:var(--coral)}
+
+/* ── READING PANEL ── */
+.reading-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:40px;line-height:1.8}
+.reading-panel h1{font-size:2rem;font-weight:800;margin-bottom:8px}
+.reading-panel h2{font-size:1.4rem;font-weight:700;margin:36px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);color:var(--accent2)}
+.reading-panel h3{font-size:1.1rem;font-weight:700;margin:24px 0 10px;color:var(--text)}
+.reading-panel p{color:var(--text2);margin-bottom:16px}
+.reading-panel ul,.reading-panel ol{color:var(--text2);margin:0 0 16px 20px}
+.reading-panel li{margin-bottom:6px}
+.reading-panel strong{color:var(--text);font-weight:700}
+.reading-meta{display:flex;gap:12px;align-items:center;margin-bottom:32px;flex-wrap:wrap}
+.reading-meta .tag{font-size:11px}
+.reading-meta .time{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px}
+
+/* ── PIPELINE DIAGRAM ── */
+.pipeline-viz{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin:24px 0;overflow-x:auto}
+.pipeline-flow{display:flex;align-items:center;gap:0;min-width:680px}
+.pipe-stage{flex:1;text-align:center;padding:14px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;position:relative;cursor:pointer;transition:all .2s}
+.pipe-stage:hover{border-color:var(--accent);box-shadow:0 0 16px rgba(108,99,255,.2)}
+.pipe-stage.you{border-color:var(--accent);background:rgba(108,99,255,.1)}
+.pipe-stage .pipe-icon{font-size:1.4rem;margin-bottom:6px}
+.pipe-stage .pipe-name{font-size:11px;font-weight:700;color:var(--text);line-height:1.3}
+.pipe-stage .pipe-desc{font-size:10px;color:var(--text3);margin-top:4px}
+.pipe-stage .you-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;white-space:nowrap}
+.pipe-arrow{flex-shrink:0;width:28px;text-align:center;color:var(--text3);font-size:1rem}
+
+/* ── CODE BLOCKS ── */
+.code-block{position:relative;background:var(--code-bg);border:1px solid var(--border);border-radius:var(--r);margin:20px 0;overflow:hidden}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.code-lang{font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px}
+.copy-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .2s;font-weight:600}
+.copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.copy-btn.copied{background:var(--green);color:#0d1f0f;border-color:var(--green)}
+pre{padding:20px;overflow-x:auto;font-family:'Cascadia Code','Fira Code','JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:#e2e8f0}
+pre .kw{color:#c792ea}
+pre .fn{color:#82aaff}
+pre .str{color:#c3e88d}
+pre .cm{color:#546e7a;font-style:italic}
+pre .num{color:#f78c6c}
+pre .ty{color:#ffcb6b}
+pre .var{color:#eeffff}
+
+/* ── DEMOS ── */
+.demo-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);margin-bottom:24px;overflow:hidden}
+.demo-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);cursor:pointer;transition:.2s}
+.demo-header:hover{background:var(--bg3)}
+.demo-num{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.demo-title-group{flex:1;margin-left:12px}
+.demo-title{font-weight:700;font-size:1rem}
+.demo-subtitle{font-size:12px;color:var(--text3);margin-top:2px}
+.demo-body{padding:24px;display:none}
+.demo-body.open{display:block}
+.demo-difficulty{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+.diff-beginner{background:rgba(74,222,128,.12);color:var(--green)}
+.diff-intermediate{background:rgba(251,191,36,.12);color:var(--amber)}
+.diff-advanced{background:rgba(248,113,113,.12);color:var(--coral)}
+.step-list{counter-reset:steps;list-style:none;margin:20px 0}
+.step-list li{counter-increment:steps;display:flex;gap:12px;margin-bottom:20px;position:relative}
+.step-list li::before{content:counter(steps);min-width:26px;height:26px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:2px}
+.step-text{flex:1}
+.step-text strong{color:var(--text);font-weight:700}
+.step-text p{color:var(--text2);font-size:13px;margin-top:4px}
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.callout-info{background:rgba(56,189,248,.08);border-left:3px solid var(--accent3);color:var(--text2)}
+.callout-tip{background:rgba(74,222,128,.08);border-left:3px solid var(--green);color:var(--text2)}
+.callout-warn{background:rgba(251,191,36,.08);border-left:3px solid var(--amber);color:var(--text2)}
+.callout-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+
+/* ── USECASE ── */
+.usecase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:20px 0}
+.usecase-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.usecase-icon{font-size:1.5rem;margin-bottom:8px}
+.usecase-title{font-size:.9rem;font-weight:700;margin-bottom:6px}
+.usecase-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* ── ASK AGENT ── */
+.agent-tab{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;align-items:center;gap:0}
+.agent-tab-btn{writing-mode:vertical-rl;text-orientation:mixed;background:linear-gradient(180deg,var(--accent),#8b5cf6);color:#fff;border:none;padding:16px 10px;border-radius:12px 0 0 12px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:all .2s;box-shadow:var(--shadow)}
+.agent-tab-btn:hover{padding-left:14px;box-shadow:0 4px 24px rgba(108,99,255,.5)}
+.agent-fab{position:fixed;bottom:28px;right:28px;z-index:200;width:56px;height:56px;background:linear-gradient(135deg,var(--accent),#8b5cf6);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 24px rgba(108,99,255,.5);transition:all .2s;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.agent-fab:hover{transform:scale(1.1)!important;animation:none}
+.agent-panel{position:fixed;right:0;bottom:0;top:0;width:380px;background:var(--bg2);border-left:1px solid var(--border);z-index:300;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 40px rgba(0,0,0,.5)}
+.agent-panel.open{transform:translateX(0)}
+.agent-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.agent-avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.agent-info{margin-left:10px;flex:1}
+.agent-name{font-weight:700;font-size:.95rem}
+.agent-status{font-size:11px;color:var(--teal);display:flex;align-items:center;gap:4px}
+.agent-status::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite}
+.agent-close{background:none;border:none;color:var(--text3);font-size:1.3rem;cursor:pointer;padding:4px;border-radius:6px;transition:.2s}
+.agent-close:hover{background:var(--bg4);color:var(--text)}
+.agent-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+.agent-messages::-webkit-scrollbar{width:4px}
+.agent-messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.msg-bubble{max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.6}
+.msg.bot .msg-bubble{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px 14px 14px 14px}
+.msg.user .msg-bubble{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;border-radius:14px 4px 14px 14px}
+.msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.bot-av{background:linear-gradient(135deg,var(--accent),var(--accent3))}
+.user-av{background:var(--bg4);border:1px solid var(--border2);font-size:1rem}
+.msg-time{font-size:10px;color:var(--text3);margin-top:4px}
+.quick-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 12px}
+.chip{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:11px;padding:5px 10px;border-radius:14px;cursor:pointer;transition:.2s;white-space:nowrap}
+.chip:hover{background:var(--bg4);border-color:var(--border2);color:var(--text)}
+.agent-input-row{display:flex;gap:8px;padding:16px 20px;border-top:1px solid var(--border);background:var(--bg3)}
+.agent-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:10px 16px;color:var(--text);font-size:13px;font-family:inherit;resize:none;outline:none;transition:.2s}
+.agent-input:focus{border-color:var(--accent)}
+.agent-send{background:linear-gradient(135deg,var(--accent),#8b5cf6);border:none;color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.2s;flex-shrink:0;align-self:flex-end}
+.agent-send:hover{transform:scale(1.1)}
+.typing-indicator{display:flex;gap:4px;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:4px 14px 14px 14px;width:fit-content}
+.typing-indicator span{width:6px;height:6px;background:var(--text3);border-radius:50%;animation:typing .8s infinite}
+.typing-indicator span:nth-child(2){animation-delay:.15s}
+.typing-indicator span:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);margin-bottom:24px;flex-wrap:wrap}
+.breadcrumb a{color:var(--text3);text-decoration:none;transition:.2s}
+.breadcrumb a:hover{color:var(--accent2)}
+.breadcrumb .sep{color:var(--border2)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;background:var(--bg3);border:1px solid var(--border);padding:7px 14px;border-radius:20px;transition:.2s;margin-bottom:20px;border:none}
+.back-btn:hover{background:var(--bg4);color:var(--text)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 2rem;text-align:center}
+.footer-brand{font-size:1.2rem;font-weight:800;margin-bottom:8px}
+.footer-sub{font-size:12px;color:var(--text3)}
+.footer-links{display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.footer-links a{color:var(--text3);font-size:12px;text-decoration:none;transition:.2s}
+.footer-links a:hover{color:var(--accent2)}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+.progress-bar{height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:3px;margin:16px 0}
+.toc-sidebar{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start}
+.toc-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px;position:sticky;top:80px}
+.toc-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+.toc-list a{display:block;font-size:13px;color:var(--text2);text-decoration:none;padding:5px 10px;border-radius:6px;transition:.2s;border-left:2px solid transparent}
+.toc-list a:hover,.toc-list a.active{color:var(--text);background:var(--bg3);border-left-color:var(--accent)}
+
+@media(max-width:768px){
+  .toc-sidebar{grid-template-columns:1fr}
+  .toc-box{display:none}
+  .agent-panel{width:100%}
+  .hero h1{font-size:2rem}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a class="nav-brand" href="#" onclick="showView('home')">
+    <span style="background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.3rem">⬡</span>
+    RR Graphics Lab
+    <span class="nav-badge">MCT</span>
+  </a>
+  <div class="nav-links">
+    <a href="#" onclick="showView('home')" id="nav-home" class="active">Home</a>
+    <a href="#" onclick="showView('modules')" id="nav-modules">Modules</a>
+    <a href="#" onclick="showView('demos')" id="nav-demos">Demos</a>
+    <a href="#" onclick="showView('about')" id="nav-about">About</a>
+  </div>
+  <button class="nav-ask-btn" onclick="toggleAgent()">✦ Ask Raushan</button>
+</nav>
+
+<!-- ── HOME VIEW ── -->
+<div class="view active" id="view-home">
+  <section class="hero">
+    <div class="hero-eyebrow"><span class="dot"></span>OpenGL &amp; Vulkan Training by Raushan Ranjan, MCT</div>
+    <h1>Master <span>GPU Graphics</span><br>From Zero to Vulkan</h1>
+    <p class="hero-sub">A complete, practical 15-module courseware covering OpenGL, Vulkan, GLSL shaders, 3D rendering, and GPU compute — built for enterprise and defense engineers.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#" onclick="showView('modules')">▶ Start Learning</a>
+      <a class="btn-ghost" href="#" onclick="showView('demos')">⬡ View Demos</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">Modules</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Days</div></div>
+      <div class="stat"><div class="stat-num">60+</div><div class="stat-label">Code Demos</div></div>
+      <div class="stat"><div class="stat-num">MCT</div><div class="stat-label">Instructor</div></div>
+    </div>
+  </section>
+
+  <!-- Pipeline visual -->
+  <div class="container" style="padding-bottom:60px">
+    <div class="section-header">
+      <div class="section-tag">The Rendering Pipeline</div>
+      <div class="section-title">How a Triangle Becomes a Pixel</div>
+      <div class="section-sub">Every OpenGL and Vulkan application passes through these stages. The highlighted stages are where you write code.</div>
+    </div>
+    <div class="pipeline-viz">
+      <div class="pipeline-flow">
+        <div class="pipe-stage" onclick="agentAsk('What is vertex data in OpenGL?')"><div class="pipe-icon">📦</div><div class="pipe-name">Vertex Data</div><div class="pipe-desc">CPU arrays</div></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-stage you" onclick="agentAsk('Explain the vertex shader in detail')"><div class="you-badge">YOU WRITE</div><div class="pipe-icon">⚡</div><div class="pipe-name">Vertex Shader</div><div class="pipe-desc">Position transform</div></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-stage" onclick="agentAsk('What does primitive assembly do?')"><div class="pipe-icon">△</div><div class="pipe-name">Primitive Assembly</div><div class="pipe-desc">GPU auto</div></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-stage" onclick="agentAsk('What is rasterization?')"><div class="pipe-icon">⬛</div><div class="pipe-name">Rasterization</div><div class="pipe-desc">Pixels covered</div></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-stage you" onclick="agentAsk('Explain the fragment shader')"><div class="you-badge">YOU WRITE</div><div class="pipe-icon">🎨</div><div class="pipe-name">Fragment Shader</div><div class="pipe-desc">Color per pixel</div></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-stage" onclick="agentAsk('What is the framebuffer?')"><div class="pipe-icon">🖥️</div><div class="pipe-name">Framebuffer</div><div class="pipe-desc">Screen output</div></div>
+      </div>
+      <p style="text-align:center;font-size:11px;color:var(--text3);margin-top:14px">Click any stage to ask Raushan about it</p>
+    </div>
+
+    <!-- Quick module grid -->
+    <div class="section-header" style="margin-top:60px">
+      <div class="section-tag">All 15 Modules</div>
+      <div class="section-title">Pick a Module to Start</div>
+    </div>
+    <div class="modules-grid">
+      <div class="module-card day1" onclick="openModule('m1')"><div class="module-num">Day 1 · Module 1</div><div class="module-title">Introduction to Graphics Programming</div><div class="module-desc">GPU vs CPU, rendering pipeline, graphics APIs compared, the architecture of a graphics system.</div><div class="module-tags"><span class="tag tag-blue">Foundation</span><span class="tag tag-purple">Theory</span></div></div>
+      <div class="module-card day1" onclick="openModule('m2')"><div class="module-num">Day 1 · Module 2</div><div class="module-title">Getting Started with OpenGL</div><div class="module-desc">Environment setup, GLFW/GLEW, OpenGL context, the render loop, your first window.</div><div class="module-tags"><span class="tag tag-blue">Setup</span><span class="tag tag-teal">Hands-On</span></div></div>
+      <div class="module-card day1" onclick="openModule('m3')"><div class="module-num">Day 1 · Module 3</div><div class="module-title">OpenGL Data Flow</div><div class="module-desc">VBO, VAO, EBO — how vertex data travels from CPU to GPU. Draw your first triangle.</div><div class="module-tags"><span class="tag tag-teal">GPU Memory</span><span class="tag tag-purple">Buffers</span></div></div>
+      <div class="module-card day2" onclick="openModule('m4')"><div class="module-num">Day 2 · Module 4</div><div class="module-title">Transformations &amp; 3D Space</div><div class="module-desc">Model-View-Projection matrices, depth testing, perspective projection, a rotating 3D cube.</div><div class="module-tags"><span class="tag tag-teal">Math</span><span class="tag tag-blue">3D</span></div></div>
+      <div class="module-card day2" onclick="openModule('m5')"><div class="module-num">Day 2 · Module 5</div><div class="module-title">Lighting &amp; Materials</div><div class="module-desc">Phong/Blinn-Phong lighting model, ambient, diffuse, specular. Lighting entirely in shaders.</div><div class="module-tags"><span class="tag tag-amber">Lighting</span><span class="tag tag-purple">Shaders</span></div></div>
+      <div class="module-card day2" onclick="openModule('m6')"><div class="module-num">Day 2 · Module 6</div><div class="module-title">Textures &amp; Mapping</div><div class="module-desc">UV coordinates, STB image loading, mipmaps, multi-texturing, cube maps, skyboxes.</div><div class="module-tags"><span class="tag tag-amber">Textures</span><span class="tag tag-teal">UV Mapping</span></div></div>
+      <div class="module-card day3" onclick="openModule('m7')"><div class="module-num">Day 3 · Module 7</div><div class="module-title">Shaders with GLSL</div><div class="module-desc">Complete GLSL language, swizzling, uniforms, geometry shaders, GPU instancing.</div><div class="module-tags"><span class="tag tag-coral">GLSL</span><span class="tag tag-purple">Instancing</span></div></div>
+      <div class="module-card day3" onclick="openModule('m8')"><div class="module-num">Day 3 · Module 8</div><div class="module-title">Framebuffers &amp; Effects</div><div class="module-desc">FBO post-processing, blending, MSAA anti-aliasing, stencil buffer outlines.</div><div class="module-tags"><span class="tag tag-coral">FBO</span><span class="tag tag-amber">Effects</span></div></div>
+      <div class="module-card day3" onclick="openModule('m9')"><div class="module-num">Day 3 · Module 9</div><div class="module-title">Optimization &amp; Performance</div><div class="module-desc">Draw call reduction, frustum culling, LOD, RenderDoc profiling, GPU memory strategies.</div><div class="module-tags"><span class="tag tag-coral">Performance</span><span class="tag tag-blue">Profiling</span></div></div>
+      <div class="module-card day4" onclick="openModule('m10')"><div class="module-num">Day 4 · Module 10</div><div class="module-title">Vulkan Overview</div><div class="module-desc">Why Vulkan exists, explicit vs driver-managed, SPIR-V shaders, SDK setup, validation layers.</div><div class="module-tags"><span class="tag tag-purple">Vulkan</span><span class="tag tag-blue">Architecture</span></div></div>
+      <div class="module-card day4" onclick="openModule('m11')"><div class="module-num">Day 4 · Module 11</div><div class="module-title">Vulkan Core Concepts</div><div class="module-desc">Instance, physical/logical device, queue families, command buffers, explicit memory management.</div><div class="module-tags"><span class="tag tag-purple">Vulkan</span><span class="tag tag-coral">Memory</span></div></div>
+      <div class="module-card day4" onclick="openModule('m12')"><div class="module-num">Day 4 · Module 12</div><div class="module-title">Rendering with Vulkan</div><div class="module-desc">Swap chains, render passes, graphics pipeline, synchronization — first Vulkan triangle.</div><div class="module-tags"><span class="tag tag-purple">Vulkan</span><span class="tag tag-teal">Rendering</span></div></div>
+      <div class="module-card day5" onclick="openModule('m13')"><div class="module-num">Day 5 · Module 13</div><div class="module-title">Vulkan Compute &amp; Advanced</div><div class="module-desc">GPU compute shaders, descriptor sets, model loading, push constants, pipeline cache.</div><div class="module-tags"><span class="tag tag-coral">Compute</span><span class="tag tag-purple">Advanced</span></div></div>
+      <div class="module-card day5" onclick="openModule('m14')"><div class="module-num">Day 5 · Module 14</div><div class="module-title">Integration &amp; Cross-Platform</div><div class="module-desc">C++, C#, Unity, Android integration, validation layer debugging, OpenGL→Vulkan porting.</div><div class="module-tags"><span class="tag tag-amber">Integration</span><span class="tag tag-teal">Cross-Platform</span></div></div>
+      <div class="module-card day5" onclick="openModule('m15')"><div class="module-num">Day 5 · Module 15</div><div class="module-title">Capstone Project &amp; Review</div><div class="module-desc">Build a naval operations rendering demo. Full best practices checklist, Q&amp;A guide, recap.</div><div class="module-tags"><span class="tag tag-amber">Capstone</span><span class="tag tag-blue">Review</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODULES VIEW ── -->
+<div class="view" id="view-modules">
+  <div class="container section" id="module-list-view">
+    <div class="section-header">
+      <div class="section-tag">Reading Material</div>
+      <div class="section-title">All Modules</div>
+      <div class="section-sub">Notes by Raushan Ranjan, MCT. Click any module to read.</div>
+    </div>
+    <div class="modules-grid">
+      <div class="module-card day1" onclick="openModule('m1')"><div class="module-num">Module 1</div><div class="module-title">Introduction to Graphics Programming</div><div class="module-desc">GPU vs CPU, rendering pipeline, graphics APIs</div><div class="module-tags"><span class="tag tag-blue">Foundation</span></div></div>
+      <div class="module-card day1" onclick="openModule('m2')"><div class="module-num">Module 2</div><div class="module-title">Getting Started with OpenGL</div><div class="module-desc">Setup, context, render loop, first window</div><div class="module-tags"><span class="tag tag-teal">Hands-On</span></div></div>
+      <div class="module-card day1" onclick="openModule('m3')"><div class="module-num">Module 3</div><div class="module-title">OpenGL Data Flow — VBO, VAO, EBO</div><div class="module-desc">GPU buffers, vertex attributes, first triangle</div><div class="module-tags"><span class="tag tag-purple">Buffers</span></div></div>
+      <div class="module-card day2" onclick="openModule('m4')"><div class="module-num">Module 4</div><div class="module-title">Transformations &amp; 3D Space</div><div class="module-desc">MVP matrices, depth testing, rotating cube</div><div class="module-tags"><span class="tag tag-teal">3D Math</span></div></div>
+      <div class="module-card day2" onclick="openModule('m5')"><div class="module-num">Module 5</div><div class="module-title">Lighting &amp; Materials</div><div class="module-desc">Phong shading, ambient/diffuse/specular</div><div class="module-tags"><span class="tag tag-amber">Lighting</span></div></div>
+      <div class="module-card day2" onclick="openModule('m6')"><div class="module-num">Module 6</div><div class="module-title">Textures &amp; Mapping</div><div class="module-desc">UV coords, mipmaps, cube maps, skyboxes</div><div class="module-tags"><span class="tag tag-amber">Textures</span></div></div>
+      <div class="module-card day3" onclick="openModule('m7')"><div class="module-num">Module 7</div><div class="module-title">Shaders with GLSL</div><div class="module-desc">Full GLSL, instancing, geometry shaders</div><div class="module-tags"><span class="tag tag-coral">GLSL</span></div></div>
+      <div class="module-card day3" onclick="openModule('m8')"><div class="module-num">Module 8</div><div class="module-title">Framebuffers &amp; Effects</div><div class="module-desc">Post-processing, blending, stencil, MSAA</div><div class="module-tags"><span class="tag tag-coral">FBO</span></div></div>
+      <div class="module-card day3" onclick="openModule('m9')"><div class="module-num">Module 9</div><div class="module-title">Optimization &amp; Performance</div><div class="module-desc">Culling, LOD, RenderDoc, memory strategies</div><div class="module-tags"><span class="tag tag-coral">Performance</span></div></div>
+      <div class="module-card day4" onclick="openModule('m10')"><div class="module-num">Module 10</div><div class="module-title">Vulkan Overview</div><div class="module-desc">Explicit API, SPIR-V, validation layers</div><div class="module-tags"><span class="tag tag-purple">Vulkan</span></div></div>
+      <div class="module-card day4" onclick="openModule('m11')"><div class="module-num">Module 11</div><div class="module-title">Vulkan Core Concepts</div><div class="module-desc">Devices, queues, command buffers, memory</div><div class="module-tags"><span class="tag tag-purple">Vulkan</span></div></div>
+      <div class="module-card day4" onclick="openModule('m12')"><div class="module-num">Module 12</div><div class="module-title">Rendering with Vulkan</div><div class="module-desc">Swap chain, pipelines, sync primitives</div><div class="module-tags"><span class="tag tag-purple">Vulkan</span></div></div>
+      <div class="module-card day5" onclick="openModule('m13')"><div class="module-num">Module 13</div><div class="module-title">Vulkan Compute &amp; Advanced</div><div class="module-desc">Compute shaders, descriptors, push constants</div><div class="module-tags"><span class="tag tag-coral">Compute</span></div></div>
+      <div class="module-card day5" onclick="openModule('m14')"><div class="module-num">Module 14</div><div class="module-title">Integration &amp; Cross-Platform</div><div class="module-desc">C#, Unity, Android, porting guide</div><div class="module-tags"><span class="tag tag-amber">Integration</span></div></div>
+      <div class="module-card day5" onclick="openModule('m15')"><div class="module-num">Module 15</div><div class="module-title">Capstone &amp; Review</div><div class="module-desc">Full project, best practices, Q&amp;A</div><div class="module-tags"><span class="tag tag-amber">Capstone</span></div></div>
+    </div>
+  </div>
+
+  <!-- Single module reading view -->
+  <div class="container section" id="module-read-view" style="display:none">
+    <button class="back-btn" onclick="backToList()">← Back to Modules</button>
+    <div class="toc-sidebar">
+      <div class="toc-box">
+        <div class="toc-title">On this page</div>
+        <ul class="toc-list" id="module-toc"></ul>
+      </div>
+      <div class="reading-panel" id="module-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DEMOS VIEW ── -->
+<div class="view" id="view-demos">
+  <div class="container section">
+    <div class="section-header">
+      <div class="section-tag">Hands-On Lab Demos</div>
+      <div class="section-title">Run on Your VM — Step by Step</div>
+      <div class="section-sub">Each demo includes setup instructions, complete code you can copy, and expected output. Works with the VM spec provided in the courseware.</div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchDemoTab('d1',this)">Day 1 — Basics</button>
+      <button class="tab-btn" onclick="switchDemoTab('d2',this)">Day 2 — 3D & Lighting</button>
+      <button class="tab-btn" onclick="switchDemoTab('d3',this)">Day 3 — Advanced GL</button>
+      <button class="tab-btn" onclick="switchDemoTab('d4',this)">Day 4 — Vulkan</button>
+      <button class="tab-btn" onclick="switchDemoTab('d5',this)">Day 5 — Compute</button>
+    </div>
+
+    <!-- DAY 1 DEMOS -->
+    <div class="tab-content active" id="demos-d1">
+
+      <div class="demo-card">
+        <div class="demo-header" onclick="toggleDemo(this)">
+          <div class="demo-num">1</div>
+          <div class="demo-title-group">
+            <div class="demo-title">Your First OpenGL Window</div>
+            <div class="demo-subtitle">Module 2 · GLFW + GLEW Setup · Navy dark background</div>
+          </div>
+          <span class="demo-difficulty diff-beginner">Beginner</span>
+          <span style="color:var(--text3);margin-left:12px;font-size:1.2rem">›</span>
+        </div>
+        <div class="demo-body" id="d1-1">
+          <div class="callout callout-info"><span class="callout-icon">ℹ</span><div><strong>What this demo does:</strong> Opens an 800×600 window with a dark navy background (R=0.05, G=0.10, B=0.20). Prints your GPU name, OpenGL version, and GLSL version. Press ESC to close. This is the foundation that every OpenGL application starts with.</div></div>
+
+          <h3>📁 Project Layout</h3>
+          <div class="code-block"><div class="code-header"><span class="code-lang">File Structure</span></div><pre>C:\Labs\Module02_Window\
+  ├── src\
+  │   └── main.cpp
+  └── CMakeLists.txt</pre></div>
+
+          <h3>⚙️ CMakeLists.txt</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CMake</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="kw">cmake_minimum_required</span>(<span class="ty">VERSION</span> <span class="num">3.20</span>)
+<span class="kw">project</span>(lab)
+<span class="kw">set</span>(<span class="ty">CMAKE_CXX_STANDARD</span> <span class="num">17</span>)
+<span class="kw">find_package</span>(<span class="ty">OpenGL</span> REQUIRED)
+<span class="kw">set</span>(<span class="ty">GLFW_DIR</span> <span class="var">$ENV{GLFW_DIR}</span>)
+<span class="kw">set</span>(<span class="ty">GLEW_DIR</span> <span class="var">$ENV{GLEW_DIR}</span>)
+<span class="kw">set</span>(<span class="ty">GLM_DIR</span>  <span class="var">$ENV{GLM_DIR}</span>)
+<span class="kw">include_directories</span>(
+  <span class="var">${GLFW_DIR}</span>/include
+  <span class="var">${GLEW_DIR}</span>/include
+  <span class="var">${GLM_DIR}</span>)
+<span class="kw">add_executable</span>(lab src/main.cpp)
+<span class="kw">target_link_libraries</span>(lab
+  <span class="ty">OpenGL::GL</span>
+  <span class="var">${GLFW_DIR}</span>/lib-vc2022/glfw3.lib
+  <span class="var">${GLEW_DIR}</span>/lib/Release/x64/glew32s.lib)</pre>
+          </div>
+
+          <h3>💻 main.cpp — Complete Code</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cm">// Demo 1 — First OpenGL Window | RR Graphics Lab</span>
+<span class="cm">// Instructor: Raushan Ranjan, MCT</span>
+<span class="kw">#include</span> <span class="str">&lt;GL/glew.h&gt;</span>   <span class="cm">// ALWAYS before GLFW</span>
+<span class="kw">#include</span> <span class="str">&lt;GLFW/glfw3.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+
+<span class="cm">// Called automatically when window is resized</span>
+<span class="ty">void</span> <span class="fn">framebuffer_size_callback</span>(<span class="ty">GLFWwindow</span>* w, <span class="ty">int</span> width, <span class="ty">int</span> h){
+    <span class="fn">glViewport</span>(<span class="num">0</span>,<span class="num">0</span>,width,h); <span class="cm">// update drawing area</span>
+}
+
+<span class="ty">void</span> <span class="fn">process_input</span>(<span class="ty">GLFWwindow</span>* w){
+    <span class="cm">// ESC key closes the window</span>
+    <span class="kw">if</span>(<span class="fn">glfwGetKey</span>(w, <span class="ty">GLFW_KEY_ESCAPE</span>)==<span class="ty">GLFW_PRESS</span>)
+        <span class="fn">glfwSetWindowShouldClose</span>(w, <span class="kw">true</span>);
+}
+
+<span class="ty">int</span> <span class="fn">main</span>(){
+    <span class="fn">glfwInit</span>();
+    <span class="cm">// Request OpenGL 3.3 Core Profile (modern, no legacy)</span>
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MAJOR</span>, <span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MINOR</span>, <span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_OPENGL_PROFILE</span>, <span class="ty">GLFW_OPENGL_CORE_PROFILE</span>);
+
+    <span class="ty">GLFWwindow</span>* win = <span class="fn">glfwCreateWindow</span>(<span class="num">800</span>,<span class="num">600</span>,
+        <span class="str">"RR Graphics Lab — Module 2"</span>, <span class="kw">NULL</span>, <span class="kw">NULL</span>);
+    <span class="fn">glfwMakeContextCurrent</span>(win); <span class="cm">// make this window's context active</span>
+    <span class="fn">glfwSetFramebufferSizeCallback</span>(win, framebuffer_size_callback);
+
+    <span class="cm">// GLEW loads all modern OpenGL functions from the driver</span>
+    <span class="var">glewExperimental</span> = <span class="ty">GL_TRUE</span>;
+    <span class="fn">glewInit</span>();
+
+    <span class="cm">// Print GPU info — always useful for debugging</span>
+    std::cout &lt;&lt; <span class="str">"GPU: "</span>     &lt;&lt; <span class="fn">glGetString</span>(<span class="ty">GL_RENDERER</span>) &lt;&lt; <span class="str">"\n"</span>;
+    std::cout &lt;&lt; <span class="str">"OpenGL: "</span>  &lt;&lt; <span class="fn">glGetString</span>(<span class="ty">GL_VERSION</span>)  &lt;&lt; <span class="str">"\n"</span>;
+    std::cout &lt;&lt; <span class="str">"GLSL: "</span>    &lt;&lt; <span class="fn">glGetString</span>(<span class="ty">GL_SHADING_LANGUAGE_VERSION</span>) &lt;&lt; <span class="str">"\n"</span>;
+
+    <span class="fn">glViewport</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">800</span>, <span class="num">600</span>);
+
+    <span class="cm">// ── THE RENDER LOOP — runs 60+ times per second ──</span>
+    <span class="kw">while</span>(!<span class="fn">glfwWindowShouldClose</span>(win)){
+        <span class="fn">process_input</span>(win);
+
+        <span class="cm">// Navy blue background — RGB all in 0.0–1.0 range</span>
+        <span class="fn">glClearColor</span>(<span class="num">0.05f</span>, <span class="num">0.10f</span>, <span class="num">0.20f</span>, <span class="num">1.0f</span>);
+        <span class="fn">glClear</span>(<span class="ty">GL_COLOR_BUFFER_BIT</span>);
+
+        <span class="fn">glfwSwapBuffers</span>(win); <span class="cm">// show the back buffer</span>
+        <span class="fn">glfwPollEvents</span>();     <span class="cm">// handle OS events</span>
+    }
+
+    <span class="fn">glfwDestroyWindow</span>(win);
+    <span class="fn">glfwTerminate</span>();
+}</pre>
+          </div>
+
+          <h3>🚀 Build &amp; Run</h3>
+          <div class="code-block"><div class="code-header"><span class="code-lang">PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><span class="cm"># Open "Developer Command Prompt for VS 2022"</span>
+cd C:\Labs\Module02_Window
+cmake -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+build\Release\lab.exe</pre></div>
+
+          <h3>✅ Expected Output</h3>
+          <div class="callout callout-tip"><span class="callout-icon">✓</span><div>A dark navy blue window appears, 800×600 pixels. Your terminal shows your GPU name (e.g., "NVIDIA GeForce RTX 3060"), OpenGL version (3.3+), and GLSL version. Press ESC to exit cleanly.</div></div>
+
+          <h3>🧪 Experiments — Try These</h3>
+          <ol class="step-list">
+            <li><div class="step-text"><strong>Change background color:</strong><p>Try <code>glClearColor(1.0f, 0.0f, 0.0f, 1.0f)</code> for red. Values are 0.0–1.0 (not 0–255). To convert: divide RGB by 255.</p></div></li>
+            <li><div class="step-text"><strong>Comment out glfwPollEvents():</strong><p>The window freezes — you can't move or close it. This proves why event polling is mandatory every frame.</p></div></li>
+            <li><div class="step-text"><strong>Comment out glfwSwapBuffers():</strong><p>Window stays black even though you set a clear color. Proves double-buffering — you draw to the back buffer, but never show it.</p></div></li>
+          </ol>
+
+          <div class="usecase-grid">
+            <div class="usecase-card"><div class="usecase-icon">🚢</div><div class="usecase-title">Naval Display System</div><div class="usecase-desc">Every display system — radar, sonar, navigation — starts with exactly this: a context, a window, and a render loop refreshing at 60Hz.</div></div>
+            <div class="usecase-card"><div class="usecase-icon">✈️</div><div class="usecase-title">Flight Simulation</div><div class="usecase-desc">The render loop timing directly impacts simulator fidelity. A 60fps loop gives 16.7ms per frame — the budget your entire scene must fit within.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-header" onclick="toggleDemo(this)">
+          <div class="demo-num">2</div>
+          <div class="demo-title-group">
+            <div class="demo-title">First Triangle with VBO &amp; VAO</div>
+            <div class="demo-subtitle">Module 3 · GPU Buffers · Vertex Shaders</div>
+          </div>
+          <span class="demo-difficulty diff-beginner">Beginner</span>
+          <span style="color:var(--text3);margin-left:12px;font-size:1.2rem">›</span>
+        </div>
+        <div class="demo-body">
+          <div class="callout callout-info"><span class="callout-icon">ℹ</span><div><strong>What this demo does:</strong> Renders a solid orange triangle using a VBO (vertex data on GPU), VAO (remembers the data format), and two minimal shaders. This is the "Hello World" of GPU rendering — every 3D scene ever made uses this exact pattern.</div></div>
+
+          <div class="callout callout-warn"><span class="callout-icon">⚠</span><div><strong>VBO vs VAO mental model:</strong> The VBO is the filing cabinet (raw data). The VAO is the instruction manual that says "read 3 floats at a time, starting at offset 0." The VAO remembers the format so you don't re-configure it every frame.</div></div>
+
+          <h3>💻 Complete Code</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">C++</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cm">// Demo 2 — First Triangle | RR Graphics Lab</span>
+<span class="kw">#include</span> <span class="str">&lt;GL/glew.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;GLFW/glfw3.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+
+<span class="cm">// Vertex shader: runs once per vertex</span>
+<span class="cm">// layout(location=0) links to VAO attribute index 0</span>
+<span class="kw">const char</span>* <span class="var">vertSrc</span> = <span class="str">R"(
+#version 330 core
+layout(location=0) in vec3 aPos;
+void main(){ gl_Position = vec4(aPos,1.0); }
+)"</span>;
+
+<span class="cm">// Fragment shader: runs once per pixel — outputs orange</span>
+<span class="kw">const char</span>* <span class="var">fragSrc</span> = <span class="str">R"(
+#version 330 core
+out vec4 FragColor;
+void main(){ FragColor = vec4(1.0,0.5,0.2,1.0); }
+)"</span>;
+
+<span class="ty">unsigned int</span> <span class="fn">compileShader</span>(<span class="ty">unsigned int</span> type, <span class="kw">const char</span>* src){
+    <span class="ty">unsigned int</span> id = <span class="fn">glCreateShader</span>(type);
+    <span class="fn">glShaderSource</span>(id, <span class="num">1</span>, &amp;src, <span class="kw">NULL</span>);
+    <span class="fn">glCompileShader</span>(id);
+    <span class="ty">int</span> ok; <span class="ty">char</span> log[<span class="num">512</span>];
+    <span class="fn">glGetShaderiv</span>(id, <span class="ty">GL_COMPILE_STATUS</span>, &amp;ok);
+    <span class="kw">if</span>(!ok){ <span class="fn">glGetShaderInfoLog</span>(id,<span class="num">512</span>,<span class="kw">NULL</span>,log);
+              std::cerr &lt;&lt; <span class="str">"Shader error: "</span> &lt;&lt; log; }
+    <span class="kw">return</span> id;
+}
+
+<span class="ty">int</span> <span class="fn">main</span>(){
+    <span class="fn">glfwInit</span>();
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MAJOR</span>,<span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MINOR</span>,<span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_OPENGL_PROFILE</span>,<span class="ty">GLFW_OPENGL_CORE_PROFILE</span>);
+    <span class="ty">GLFWwindow</span>* win = <span class="fn">glfwCreateWindow</span>(<span class="num">800</span>,<span class="num">600</span>,<span class="str">"Triangle Demo"</span>,<span class="kw">NULL</span>,<span class="kw">NULL</span>);
+    <span class="fn">glfwMakeContextCurrent</span>(win);
+    <span class="var">glewExperimental</span>=<span class="ty">GL_TRUE</span>; <span class="fn">glewInit</span>();
+
+    <span class="cm">// Compile and link shaders into a program</span>
+    <span class="ty">unsigned int</span> vs = <span class="fn">compileShader</span>(<span class="ty">GL_VERTEX_SHADER</span>,   <span class="var">vertSrc</span>);
+    <span class="ty">unsigned int</span> fs = <span class="fn">compileShader</span>(<span class="ty">GL_FRAGMENT_SHADER</span>, <span class="var">fragSrc</span>);
+    <span class="ty">unsigned int</span> prog = <span class="fn">glCreateProgram</span>();
+    <span class="fn">glAttachShader</span>(prog,vs); <span class="fn">glAttachShader</span>(prog,fs);
+    <span class="fn">glLinkProgram</span>(prog);
+    <span class="fn">glDeleteShader</span>(vs); <span class="fn">glDeleteShader</span>(fs);
+
+    <span class="cm">// Triangle vertices in NDC (-1 to 1 range)</span>
+    <span class="ty">float</span> verts[] = {
+        <span class="num">-0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,  <span class="cm">// bottom-left</span>
+         <span class="num">0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,  <span class="cm">// bottom-right</span>
+         <span class="num">0.0f</span>,  <span class="num">0.5f</span>, <span class="num">0.0f</span>   <span class="cm">// top-center</span>
+    };
+
+    <span class="ty">unsigned int</span> VAO, VBO;
+    <span class="fn">glGenVertexArrays</span>(<span class="num">1</span>, &amp;VAO);  <span class="cm">// create VAO (remembers format)</span>
+    <span class="fn">glGenBuffers</span>(<span class="num">1</span>, &amp;VBO);        <span class="cm">// create VBO (holds data)</span>
+
+    <span class="fn">glBindVertexArray</span>(VAO);       <span class="cm">// start recording attribute config</span>
+    <span class="fn">glBindBuffer</span>(<span class="ty">GL_ARRAY_BUFFER</span>, VBO);
+    <span class="fn">glBufferData</span>(<span class="ty">GL_ARRAY_BUFFER</span>, <span class="kw">sizeof</span>(verts), verts, <span class="ty">GL_STATIC_DRAW</span>);
+    <span class="cm">// Tell GPU: attribute 0 = 3 floats, starting at offset 0</span>
+    <span class="fn">glVertexAttribPointer</span>(<span class="num">0</span>,<span class="num">3</span>,<span class="ty">GL_FLOAT</span>,<span class="ty">GL_FALSE</span>,<span class="num">3</span>*<span class="kw">sizeof</span>(<span class="ty">float</span>),(<span class="ty">void</span>*)<span class="num">0</span>);
+    <span class="fn">glEnableVertexAttribArray</span>(<span class="num">0</span>);
+    <span class="fn">glBindVertexArray</span>(<span class="num">0</span>);        <span class="cm">// stop recording</span>
+
+    <span class="kw">while</span>(!<span class="fn">glfwWindowShouldClose</span>(win)){
+        <span class="kw">if</span>(<span class="fn">glfwGetKey</span>(win,<span class="ty">GLFW_KEY_ESCAPE</span>)==<span class="ty">GLFW_PRESS</span>)
+            <span class="fn">glfwSetWindowShouldClose</span>(win,<span class="kw">true</span>);
+        <span class="fn">glClearColor</span>(<span class="num">0.1f</span>,<span class="num">0.1f</span>,<span class="num">0.15f</span>,<span class="num">1.0f</span>);
+        <span class="fn">glClear</span>(<span class="ty">GL_COLOR_BUFFER_BIT</span>);
+        <span class="cm">// Activate shader, bind VAO, draw 3 vertices as a triangle</span>
+        <span class="fn">glUseProgram</span>(prog);
+        <span class="fn">glBindVertexArray</span>(VAO);
+        <span class="fn">glDrawArrays</span>(<span class="ty">GL_TRIANGLES</span>, <span class="num">0</span>, <span class="num">3</span>);
+        <span class="fn">glfwSwapBuffers</span>(win);
+        <span class="fn">glfwPollEvents</span>();
+    }
+    <span class="fn">glDeleteVertexArrays</span>(<span class="num">1</span>,&amp;VAO); <span class="fn">glDeleteBuffers</span>(<span class="num">1</span>,&amp;VBO);
+    <span class="fn">glDeleteProgram</span>(prog);
+    <span class="fn">glfwTerminate</span>();
+}</pre>
+          </div>
+
+          <h3>✅ Expected Output</h3>
+          <div class="callout callout-tip"><span class="callout-icon">✓</span><div>An orange triangle centered on a dark background. The triangle is perfectly centered because NDC (0,0) is screen center, and our vertices span -0.5 to +0.5 in X/Y.</div></div>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-header" onclick="toggleDemo(this)">
+          <div class="demo-num">3</div>
+          <div class="demo-title-group">
+            <div class="demo-title">Rotating 3D Cube with MVP Transforms</div>
+            <div class="demo-subtitle">Module 4 · Model-View-Projection · Depth Testing</div>
+          </div>
+          <span class="demo-difficulty diff-intermediate">Intermediate</span>
+          <span style="color:var(--text3);margin-left:12px;font-size:1.2rem">›</span>
+        </div>
+        <div class="demo-body">
+          <div class="callout callout-info"><span class="callout-icon">ℹ</span><div><strong>What this demo does:</strong> Renders a colorful 3D cube that tumbles continuously. Uses the full MVP pipeline — Model (rotates over time), View (camera at position), Projection (perspective). Requires GLM for matrix math.</div></div>
+
+          <h3>🧠 The MVP Pipeline Visualised</h3>
+          <div class="pipeline-viz">
+            <div class="pipeline-flow" style="min-width:500px">
+              <div class="pipe-stage" style="flex:1.2"><div class="pipe-icon">📦</div><div class="pipe-name">Local Space</div><div class="pipe-desc">Cube vertices at origin</div></div>
+              <div class="pipe-arrow">→<br><span style="font-size:9px;color:var(--accent2)">Model</span></div>
+              <div class="pipe-stage" style="flex:1.2"><div class="pipe-icon">🌍</div><div class="pipe-name">World Space</div><div class="pipe-desc">Object placed in scene</div></div>
+              <div class="pipe-arrow">→<br><span style="font-size:9px;color:var(--accent3)">View</span></div>
+              <div class="pipe-stage" style="flex:1.2"><div class="pipe-icon">📷</div><div class="pipe-name">Camera Space</div><div class="pipe-desc">Relative to camera</div></div>
+              <div class="pipe-arrow">→<br><span style="font-size:9px;color:var(--teal)">Proj</span></div>
+              <div class="pipe-stage" style="flex:1.2 "><div class="pipe-icon">🖥️</div><div class="pipe-name">NDC / Screen</div><div class="pipe-desc">Pixels on monitor</div></div>
+            </div>
+          </div>
+
+          <h3>🔑 Key Code Snippets</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">C++ — MVP Setup (inside render loop)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cm">// Model: rotate around combined axis — creates tumbling effect</span>
+<span class="ty">float</span> angle = (<span class="ty">float</span>)<span class="fn">glfwGetTime</span>() * <span class="num">50.0f</span>; <span class="cm">// 50° per second</span>
+glm::mat4 model = glm::mat4(<span class="num">1.0f</span>);
+model = <span class="fn">glm::rotate</span>(model, <span class="fn">glm::radians</span>(angle),
+                   glm::vec3(<span class="num">1.0f</span>, <span class="num">0.5f</span>, <span class="num">0.3f</span>)); <span class="cm">// tumble axis</span>
+
+<span class="cm">// View: camera 3 units back, looking at origin</span>
+glm::mat4 view = <span class="fn">glm::lookAt</span>(
+    glm::vec3(<span class="num">0.0f</span>, <span class="num">1.0f</span>, <span class="num">3.0f</span>),   <span class="cm">// eye position</span>
+    glm::vec3(<span class="num">0.0f</span>, <span class="num">0.0f</span>, <span class="num">0.0f</span>),   <span class="cm">// look at origin</span>
+    glm::vec3(<span class="num">0.0f</span>, <span class="num">1.0f</span>, <span class="num">0.0f</span>)); <span class="cm">// up = Y axis</span>
+
+<span class="cm">// Projection: 45° FOV, aspect 800/600, near=0.1, far=100</span>
+glm::mat4 proj = <span class="fn">glm::perspective</span>(
+    <span class="fn">glm::radians</span>(<span class="num">45.0f</span>), <span class="num">800.0f</span>/<span class="num">600.0f</span>, <span class="num">0.1f</span>, <span class="num">100.0f</span>);
+
+<span class="cm">// Send all three matrices to the vertex shader as uniforms</span>
+<span class="fn">glUniformMatrix4fv</span>(<span class="fn">glGetUniformLocation</span>(prog,<span class="str">"model"</span>),<span class="num">1</span>,<span class="ty">GL_FALSE</span>,
+                   <span class="fn">glm::value_ptr</span>(model));
+<span class="fn">glUniformMatrix4fv</span>(<span class="fn">glGetUniformLocation</span>(prog,<span class="str">"view"</span>), <span class="num">1</span>,<span class="ty">GL_FALSE</span>,
+                   <span class="fn">glm::value_ptr</span>(view));
+<span class="fn">glUniformMatrix4fv</span>(<span class="fn">glGetUniformLocation</span>(prog,<span class="str">"proj"</span>), <span class="num">1</span>,<span class="ty">GL_FALSE</span>,
+                   <span class="fn">glm::value_ptr</span>(proj));</pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">GLSL — Vertex Shader</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="kw">#version</span> <span class="num">330</span> core
+<span class="kw">layout</span>(location=<span class="num">0</span>) <span class="kw">in</span> <span class="ty">vec3</span> aPos;
+<span class="kw">layout</span>(location=<span class="num">1</span>) <span class="kw">in</span> <span class="ty">vec3</span> aColor;
+<span class="kw">out</span> <span class="ty">vec3</span> vertColor;
+<span class="kw">uniform</span> <span class="ty">mat4</span> model, view, proj;
+<span class="kw">void</span> <span class="fn">main</span>(){
+    <span class="cm">// Matrix chain: proj × view × model × vertex</span>
+    <span class="kw">gl_Position</span> = proj * view * model * <span class="fn">vec4</span>(aPos, <span class="num">1.0</span>);
+    vertColor = aColor;
+}</pre>
+          </div>
+
+          <h3>✅ Expected Output</h3>
+          <div class="callout callout-tip"><span class="callout-icon">✓</span><div>A multi-colored cube tumbling in 3D space. Each of the 8 vertices has a unique color (red, green, blue, yellow, magenta, cyan, white, gray). Depth testing ensures front faces always appear in front of back faces.</div></div>
+        </div>
+      </div>
+
+    </div><!-- end demos-d1 -->
+
+    <!-- DAY 4 DEMOS (Vulkan) -->
+    <div class="tab-content" id="demos-d4">
+      <div class="demo-card">
+        <div class="demo-header" onclick="toggleDemo(this)">
+          <div class="demo-num">1</div>
+          <div class="demo-title-group">
+            <div class="demo-title">Vulkan Instance &amp; Device Initialization</div>
+            <div class="demo-subtitle">Module 11 · VkInstance · VkDevice · Queue Families</div>
+          </div>
+          <span class="demo-difficulty diff-intermediate">Intermediate</span>
+          <span style="color:var(--text3);margin-left:12px;font-size:1.2rem">›</span>
+        </div>
+        <div class="demo-body">
+          <div class="callout callout-info"><span class="callout-icon">ℹ</span><div><strong>What this demo does:</strong> The first Vulkan program — no triangle yet. Creates a Vulkan instance with validation layers, selects the best GPU, finds queue families, creates a logical device. Prints all found information. This is the boilerplate all Vulkan apps start with.</div></div>
+
+          <h3>🏗️ Vulkan Object Hierarchy</h3>
+          <div class="pipeline-viz">
+            <div style="display:flex;flex-direction:column;gap:0;max-width:300px;margin:0 auto">
+              <div class="pipe-stage" style="margin-bottom:0;border-radius:10px 10px 0 0"><div class="pipe-name">VkInstance</div><div class="pipe-desc">Root. Holds extensions &amp; validation layers</div></div>
+              <div style="text-align:center;color:var(--text3);font-size:1.2rem;padding:4px">↓</div>
+              <div class="pipe-stage" style="border-radius:0"><div class="pipe-name">VkPhysicalDevice</div><div class="pipe-desc">Real GPU — you query, not create</div></div>
+              <div style="text-align:center;color:var(--text3);font-size:1.2rem;padding:4px">↓</div>
+              <div class="pipe-stage" style="border-radius:0"><div class="pipe-name">VkDevice</div><div class="pipe-desc">Logical interface — you create this</div></div>
+              <div style="text-align:center;color:var(--text3);font-size:1.2rem;padding:4px">↓</div>
+              <div class="pipe-stage" style="border-radius:0 0 10px 10px"><div class="pipe-name">VkQueue, Buffers, Pipelines…</div><div class="pipe-desc">All child objects</div></div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">C++ — Vulkan Init (key sections)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cm">// Step 1: Create Vulkan instance</span>
+<span class="ty">VkApplicationInfo</span> appInfo{};
+appInfo.sType              = <span class="ty">VK_STRUCTURE_TYPE_APPLICATION_INFO</span>;
+appInfo.pApplicationName   = <span class="str">"RR Graphics Lab"</span>;
+appInfo.applicationVersion = <span class="fn">VK_MAKE_VERSION</span>(<span class="num">1</span>,<span class="num">0</span>,<span class="num">0</span>);
+appInfo.apiVersion         = <span class="ty">VK_API_VERSION_1_3</span>;
+
+<span class="cm">// Always enable validation layers during development!</span>
+<span class="kw">const</span> std::vector&lt;<span class="kw">const char</span>*&gt; layers = {<span class="str">"VK_LAYER_KHRONOS_validation"</span>};
+
+<span class="ty">VkInstanceCreateInfo</span> instInfo{};
+instInfo.sType                   = <span class="ty">VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO</span>;
+instInfo.pApplicationInfo        = &amp;appInfo;
+instInfo.enabledLayerCount       = (<span class="ty">uint32_t</span>)layers.size();
+instInfo.ppEnabledLayerNames     = layers.data();
+<span class="cm">// Add GLFW's required extensions</span>
+<span class="ty">uint32_t</span> glfwExtCount = <span class="num">0</span>;
+<span class="kw">const char</span>** glfwExts = <span class="fn">glfwGetRequiredInstanceExtensions</span>(&amp;glfwExtCount);
+instInfo.enabledExtensionCount   = glfwExtCount;
+instInfo.ppEnabledExtensionNames = glfwExts;
+
+<span class="ty">VkInstance</span> instance;
+<span class="kw">if</span>(<span class="fn">vkCreateInstance</span>(&amp;instInfo, <span class="kw">nullptr</span>, &amp;instance) != <span class="ty">VK_SUCCESS</span>)
+    <span class="kw">throw</span> std::runtime_error(<span class="str">"Failed to create Vulkan instance!"</span>);
+
+<span class="cm">// Step 2: Pick the best GPU</span>
+<span class="ty">uint32_t</span> devCount = <span class="num">0</span>;
+<span class="fn">vkEnumeratePhysicalDevices</span>(instance, &amp;devCount, <span class="kw">nullptr</span>);
+std::vector&lt;<span class="ty">VkPhysicalDevice</span>&gt; devices(devCount);
+<span class="fn">vkEnumeratePhysicalDevices</span>(instance, &amp;devCount, devices.data());
+
+<span class="ty">VkPhysicalDevice</span> physDev = <span class="ty">VK_NULL_HANDLE</span>;
+<span class="kw">for</span>(<span class="kw">auto</span>&amp; dev : devices){
+    <span class="ty">VkPhysicalDeviceProperties</span> props;
+    <span class="fn">vkGetPhysicalDeviceProperties</span>(dev, &amp;props);
+    std::cout &lt;&lt; <span class="str">"GPU found: "</span> &lt;&lt; props.deviceName &lt;&lt; <span class="str">"\n"</span>;
+    <span class="cm">// Prefer discrete GPU (dedicated card)</span>
+    <span class="kw">if</span>(props.deviceType == <span class="ty">VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU</span>){
+        physDev = dev; <span class="kw">break</span>;
+    }
+}
+<span class="kw">if</span>(physDev == <span class="ty">VK_NULL_HANDLE</span>) physDev = devices[<span class="num">0</span>]; <span class="cm">// fallback</span>
+
+<span class="cm">// Step 3: Find queue families (graphics + present)</span>
+<span class="ty">uint32_t</span> qfCount = <span class="num">0</span>;
+<span class="fn">vkGetPhysicalDeviceQueueFamilyProperties</span>(physDev, &amp;qfCount, <span class="kw">nullptr</span>);
+std::vector&lt;<span class="ty">VkQueueFamilyProperties</span>&gt; qf(qfCount);
+<span class="fn">vkGetPhysicalDeviceQueueFamilyProperties</span>(physDev, &amp;qfCount, qf.data());
+
+<span class="ty">uint32_t</span> graphicsFamily = <span class="num">UINT32_MAX</span>;
+<span class="kw">for</span>(<span class="ty">uint32_t</span> i=<span class="num">0</span>; i&lt;qfCount; i++){
+    <span class="kw">if</span>(qf[i].queueFlags &amp; <span class="ty">VK_QUEUE_GRAPHICS_BIT</span>){
+        graphicsFamily = i; <span class="kw">break</span>;
+    }
+}
+std::cout &lt;&lt; <span class="str">"Graphics queue family: "</span> &lt;&lt; graphicsFamily &lt;&lt; <span class="str">"\n"</span>;
+</pre>
+          </div>
+
+          <div class="callout callout-warn"><span class="callout-icon">⚠</span><div><strong>sType is mandatory:</strong> Every Vulkan struct has an <code>sType</code> field. If you forget it, validation layers will flag it immediately. Always set it to the matching <code>VK_STRUCTURE_TYPE_*</code> enum.</div></div>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-header" onclick="toggleDemo(this)">
+          <div class="demo-num">2</div>
+          <div class="demo-title-group">
+            <div class="demo-title">Vulkan First Triangle — Full Pipeline</div>
+            <div class="demo-subtitle">Module 12 · Swap Chain · Render Pass · Graphics Pipeline · Sync</div>
+          </div>
+          <span class="demo-difficulty diff-advanced">Advanced</span>
+          <span style="color:var(--text3);margin-left:12px;font-size:1.2rem">›</span>
+        </div>
+        <div class="demo-body">
+          <div class="callout callout-info"><span class="callout-icon">ℹ</span><div><strong>What this demo does:</strong> The complete Vulkan triangle — swap chain, render pass, full graphics pipeline object, command buffer recording, and semaphore/fence synchronization. ~700 lines total. The most important Vulkan milestone.</div></div>
+
+          <div class="callout callout-warn"><span class="callout-icon">⚠</span><div><strong>Compile shaders first:</strong> Before building, run <code>glslc triangle.vert -o vert.spv</code> and <code>glslc triangle.frag -o frag.spv</code> in the <code>src/</code> folder. Vulkan requires pre-compiled SPIR-V — it does not accept GLSL source directly.</div></div>
+
+          <h3>🔄 Vulkan Frame Loop</h3>
+          <div class="pipeline-viz">
+            <div class="pipeline-flow" style="min-width:600px">
+              <div class="pipe-stage"><div class="pipe-name">WaitForFences</div><div class="pipe-desc">CPU waits for GPU</div></div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-stage"><div class="pipe-name">AcquireImage</div><div class="pipe-desc">Get swap image</div></div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-stage you"><div class="pipe-name">Record CmdBuf</div><div class="pipe-desc">Begin, Draw, End</div></div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-stage"><div class="pipe-name">QueueSubmit</div><div class="pipe-desc">Send to GPU</div></div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-stage"><div class="pipe-name">QueuePresent</div><div class="pipe-desc">Show on screen</div></div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">GLSL — triangle.vert (compile with glslc)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="kw">#version</span> <span class="num">450</span>
+<span class="cm">// Hardcoded positions — no vertex buffer needed for first triangle</span>
+<span class="ty">vec2</span> positions[<span class="num">3</span>] = <span class="ty">vec2</span>[](
+    <span class="fn">vec2</span>( <span class="num">0.0</span>, -<span class="num">0.5</span>),  <span class="cm">// top</span>
+    <span class="fn">vec2</span>( <span class="num">0.5</span>,  <span class="num">0.5</span>),  <span class="cm">// bottom-right</span>
+    <span class="fn">vec2</span>(-<span class="num">0.5</span>,  <span class="num">0.5</span>)   <span class="cm">// bottom-left</span>
+);
+<span class="ty">vec3</span> colors[<span class="num">3</span>] = <span class="ty">vec3</span>[](
+    <span class="fn">vec3</span>(<span class="num">1.0</span>,<span class="num">0.0</span>,<span class="num">0.0</span>), <span class="cm">// red</span>
+    <span class="fn">vec3</span>(<span class="num">0.0</span>,<span class="num">1.0</span>,<span class="num">0.0</span>), <span class="cm">// green</span>
+    <span class="fn">vec3</span>(<span class="num">0.0</span>,<span class="num">0.0</span>,<span class="num">1.0</span>)  <span class="cm">// blue</span>
+);
+<span class="kw">layout</span>(location=<span class="num">0</span>) <span class="kw">out</span> <span class="ty">vec3</span> fragColor;
+<span class="kw">void</span> <span class="fn">main</span>(){
+    <span class="kw">gl_Position</span> = <span class="fn">vec4</span>(positions[<span class="kw">gl_VertexIndex</span>], <span class="num">0.0</span>, <span class="num">1.0</span>);
+    fragColor    = colors[<span class="kw">gl_VertexIndex</span>];
+}</pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">C++ — drawFrame() function</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="ty">void</span> <span class="fn">drawFrame</span>(){
+    <span class="cm">// 1. Wait: previous frame must finish before we reuse its command buffer</span>
+    <span class="fn">vkWaitForFences</span>(device,<span class="num">1</span>,&amp;inFlightFence,<span class="ty">VK_TRUE</span>,<span class="ty">UINT64_MAX</span>);
+    <span class="fn">vkResetFences</span>(device,<span class="num">1</span>,&amp;inFlightFence);
+
+    <span class="cm">// 2. Acquire next available swap chain image</span>
+    <span class="ty">uint32_t</span> imgIdx;
+    <span class="fn">vkAcquireNextImageKHR</span>(device,swapchain,<span class="ty">UINT64_MAX</span>,
+                          imageAvailSem,<span class="ty">VK_NULL_HANDLE</span>,&amp;imgIdx);
+
+    <span class="cm">// 3. Record draw commands into command buffer</span>
+    <span class="fn">vkResetCommandBuffer</span>(cmdBuf,<span class="num">0</span>);
+    <span class="fn">recordCommandBuffer</span>(cmdBuf, imgIdx);
+
+    <span class="cm">// 4. Submit: wait for image, signal when render done</span>
+    <span class="ty">VkPipelineStageFlags</span> waitStage = <span class="ty">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span>;
+    <span class="ty">VkSubmitInfo</span> sub{};
+    sub.sType                = <span class="ty">VK_STRUCTURE_TYPE_SUBMIT_INFO</span>;
+    sub.waitSemaphoreCount   = <span class="num">1</span>; sub.pWaitSemaphores   = &amp;imageAvailSem;
+    sub.pWaitDstStageMask    = &amp;waitStage;
+    sub.commandBufferCount   = <span class="num">1</span>; sub.pCommandBuffers   = &amp;cmdBuf;
+    sub.signalSemaphoreCount = <span class="num">1</span>; sub.pSignalSemaphores = &amp;renderDoneSem;
+    <span class="fn">vkQueueSubmit</span>(gfxQueue,<span class="num">1</span>,&amp;sub,inFlightFence);
+
+    <span class="cm">// 5. Present: show this image once render is done</span>
+    <span class="ty">VkPresentInfoKHR</span> pres{};
+    pres.sType              = <span class="ty">VK_STRUCTURE_TYPE_PRESENT_INFO_KHR</span>;
+    pres.waitSemaphoreCount = <span class="num">1</span>; pres.pWaitSemaphores = &amp;renderDoneSem;
+    pres.swapchainCount     = <span class="num">1</span>; pres.pSwapchains    = &amp;swapchain;
+    pres.pImageIndices      = &amp;imgIdx;
+    <span class="fn">vkQueuePresentKHR</span>(presentQueue,&amp;pres);
+}</pre>
+          </div>
+
+          <div class="usecase-grid">
+            <div class="usecase-card"><div class="usecase-icon">🔭</div><div class="usecase-title">Sensor Synchronization</div><div class="usecase-desc">The fence+semaphore pattern ensures sensor data and rendering never overlap — critical for real-time sonar and radar displays.</div></div>
+            <div class="usecase-card"><div class="usecase-icon">⚡</div><div class="usecase-title">Zero Tearing</div><div class="usecase-desc">Semaphores guarantee the swap image is never displayed mid-render — no tearing on tactical displays even at high update rates.</div></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end demos-d4 -->
+
+    <!-- Placeholder tabs -->
+    <div class="tab-content" id="demos-d2"><div style="text-align:center;padding:60px 20px;color:var(--text3)"><div style="font-size:3rem;margin-bottom:16px">🔨</div><p>Day 2 demos include: Phong-lit 3D object, textured sphere, and a fully lit scene with a moving sun.<br><br><button class="btn-primary" onclick="agentAsk('Show me the Phong lighting demo code for Module 5')">Ask Raushan for Code ↗</button></p></div></div>
+    <div class="tab-content" id="demos-d3"><div style="text-align:center;padding:60px 20px;color:var(--text3)"><div style="font-size:3rem;margin-bottom:16px">🔨</div><p>Day 3 demos include: FBO post-processing with effects toggle, instanced mine field, and stencil buffer outline.<br><br><button class="btn-primary" onclick="agentAsk('Show me the FBO post-processing demo code for Module 8')">Ask Raushan for Code ↗</button></p></div></div>
+    <div class="tab-content" id="demos-d5"><div style="text-align:center;padding:60px 20px;color:var(--text3)"><div style="font-size:3rem;margin-bottom:16px">🔨</div><p>Day 5 demos include: GPU compute blur, full Vulkan model loader, and the capstone naval scene.<br><br><button class="btn-primary" onclick="agentAsk('Show me the Vulkan compute shader demo for Module 13')">Ask Raushan for Code ↗</button></p></div></div>
+
+  </div>
+</div>
+
+<!-- ── ABOUT VIEW ── -->
+<div class="view" id="view-about">
+  <div class="container section" style="max-width:760px">
+    <div style="display:flex;align-items:center;gap:24px;margin-bottom:40px;flex-wrap:wrap">
+      <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--accent),var(--accent3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0">RR</div>
+      <div>
+        <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:4px"><a href="https://raushan-ranjan.azurewebsites.net",target="_blank">Raushan Ranjan</a></h1>
+        <p style="color:var(--accent2);font-weight:700;margin-bottom:4px">Microsoft Certified Trainer (MCT)</p>
+        <p style="color:var(--text3);font-size:13px">RR Skillverse · Greater Noida, India</p>
+      </div>
+    </div>
+    <div class="reading-panel">
+      <h2>About This Site</h2>
+      <p>This is the official courseware blog for the <strong>5-Day OpenGL &amp; Vulkan Training</strong> delivered by Raushan Ranjan, MCT. It covers all 15 modules of the course with reading notes, annotated code demos, lab guides, and enterprise use cases.</p>
+      <h2>How to Use</h2>
+      <p><strong>Reading material:</strong> Click any module in the Modules tab to read the full notes — theory, analogies, diagrams, and code explanations.</p>
+      <p><strong>Demos tab:</strong> Step-by-step labs with complete code you can copy and run on your VM. Build with the 3-command CMake workflow.</p>
+      <p><strong>Ask Raushan:</strong> Use the floating button or the tab on the right side to ask anything about the notes, code, or concepts. The AI agent is trained on this courseware.</p>
+      <h2>Technical Contact</h2>
+      <p>Email: <strong>raushanr1107@gmail.com</strong><br>WhatsApp: <strong>+91 82858 62455</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ── AGENT SIDEBAR TAB ── -->
+<div class="agent-tab">
+  <button class="agent-tab-btn" onclick="toggleAgent()">✦ Ask Raushan</button>
+</div>
+
+<!-- ── FLOATING FAB ── -->
+<button class="agent-fab" onclick="toggleAgent()" title="Ask Raushan">✦</button>
+
+<!-- ── AGENT PANEL ── -->
+<div class="agent-panel" id="agentPanel">
+  <div class="agent-header">
+    <div class="agent-avatar">✦</div>
+    <div class="agent-info">
+      <div class="agent-name">Ask Raushan</div>
+      <div class="agent-status">Online — AI Assistant</div>
+    </div>
+    <button class="agent-close" onclick="toggleAgent()">✕</button>
+  </div>
+
+  <div class="agent-messages" id="agentMessages">
+    <div class="msg bot">
+      <div class="msg-avatar bot-av">✦</div>
+      <div>
+        <div class="msg-bubble">Hey! I'm Raushan's AI assistant. I can explain any concept from the 15 modules, walk you through demo code, help debug your shaders, or answer questions about OpenGL &amp; Vulkan. What would you like to know? 🚀</div>
+        <div class="msg-time">RR Graphics Lab</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-chips" id="quickChips">
+    <div class="chip" onclick="sendChip('What is the difference between VBO and VAO?')">VBO vs VAO</div>
+    <div class="chip" onclick="sendChip('Explain the MVP matrix pipeline')">MVP Matrices</div>
+    <div class="chip" onclick="sendChip('Why does Vulkan need semaphores?')">Vulkan Sync</div>
+    <div class="chip" onclick="sendChip('How does Phong lighting work?')">Phong Lighting</div>
+    <div class="chip" onclick="sendChip('What is the staging buffer pattern in Vulkan?')">Staging Buffers</div>
+    <div class="chip" onclick="sendChip('How do I set up the CMake build for these demos?')">CMake Setup</div>
+  </div>
+
+  <div class="agent-input-row">
+    <textarea class="agent-input" id="agentInput" rows="1" placeholder="Ask anything about the notes or demos…" onkeydown="handleAgentKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="agent-send" onclick="sendAgentMessage()">▲</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand" style="background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent">RR Graphics Lab</div>
+  <div class="footer-sub">OpenGL &amp; Vulkan Training by Raushan Ranjan, MCT · RR Skillverse</div>
+  <div class="footer-links">
+    <a href="#" onclick="showView('home')">Home</a>
+    <a href="#" onclick="showView('modules')">Modules</a>
+    <a href="#" onclick="showView('demos')">Demos</a>
+    <a href="mailto:raushanr1107@gmail.com">Contact</a>
+  </div>
+  <div style="font-size:11px;color:var(--text3);margin-top:12px">© 2026 RR Skillverse · Raushan's AI-Courseware · v1.0</div>
+</footer>
+
+<script>
+const MODULES = {
+  m1:{title:"Module 1 — Introduction to Graphics Programming",day:"Day 1",tags:["Foundation","Theory"],content:`
+<div class="reading-meta"><span class="tag tag-blue">Foundation</span><span class="tag tag-purple">Theory</span><span class="time">⏱ 45 min read</span></div>
+<div class="progress-bar" style="width:10%"></div>
+<h1>Introduction to Graphics Programming</h1>
+<p style="color:var(--text3);font-size:13px">Notes by Raushan Ranjan, MCT · RR Graphics Lab</p>
+
+<h2>What Is Computer Graphics Programming?</h2>
+<p>Think of yourself as a <strong>film director</strong>. You decide what the scene looks like — where the camera is, how things are lit, what moves. But you don't physically paint every frame. Your <strong>GPU</strong> is the crew that does that physical work, painting millions of pixels every second based on your instructions.</p>
+<p>In code: your <strong>C++ program</strong> is the director, the <strong>GPU driver</strong> is the translator, and the <strong>GPU</strong> is the factory floor with thousands of workers all doing tiny tasks in parallel.</p>
+
+<h2>GPU vs CPU — Why Does the GPU Exist?</h2>
+<p>A <strong>CPU</strong> is like a brilliant professor — it solves complex problems but works mostly sequentially. A modern CPU has 8–32 cores.</p>
+<p>A <strong>GPU</strong> is like a factory with 3,000–10,000 workers, each doing one tiny task simultaneously. No single worker is smart, but together they can compute the color of 2 million pixels 60 times a second — something a CPU physically cannot do.</p>
+<ul>
+<li><strong>1080p screen:</strong> 2,073,600 pixels × 60fps = 124 million pixel calculations/second</li>
+<li><strong>Only the GPU</strong> can handle this through massive parallelism</li>
+</ul>
+
+<h2>OpenGL vs Vulkan vs DirectX</h2>
+<p><strong>OpenGL (1992):</strong> High-level, driver-managed. Like an automatic car — you say "draw this" and the driver figures out how. Great for learning.</p>
+<p><strong>Vulkan (2016):</strong> Low-level, explicit. Like a manual racing car — you control memory, sync, and command recording. Maximum performance, more code.</p>
+<p><strong>DirectX:</strong> Microsoft's version. Windows/Xbox only. Direct3D 12 ≈ Vulkan in explicitness.</p>
+<p><em>We start with OpenGL to build the mental model, then Vulkan makes sense because you know what it's exposing.</em></p>
+
+<h2>The Rendering Pipeline</h2>
+<p>The pipeline is a GPU assembly line. Raw numbers go in, colored pixels come out. The stages you <strong>write code for</strong> are highlighted.</p>
+<ul>
+<li><strong>Vertex Shader (YOU write):</strong> Runs once per vertex corner. Transforms 3D positions to 2D screen positions.</li>
+<li><strong>Primitive Assembly (GPU):</strong> Connects vertices into triangles automatically.</li>
+<li><strong>Rasterization (GPU):</strong> Figures out which pixels each triangle covers.</li>
+<li><strong>Fragment Shader (YOU write):</strong> Runs once per pixel. Decides the final color.</li>
+<li><strong>Framebuffer:</strong> The final image stored in GPU memory and shown on screen.</li>
+</ul>
+
+<h2>🏢 Enterprise Use Case — Naval Radar Display</h2>
+<p>A ship's radar visualization must refresh at 30Hz. The sweep arc, blips, range rings — all pass through the rendering pipeline. Understanding the pipeline tells you exactly where to look when the display stutters (vertex bottleneck?), when blips don't fade (blending config?), or when the display tears (vsync/framebuffer issue?).</p>
+  `},
+  m3:{title:"Module 3 — OpenGL Data Flow",day:"Day 1",tags:["GPU Memory","Buffers"],content:`
+<div class="reading-meta"><span class="tag tag-teal">GPU Memory</span><span class="tag tag-purple">Buffers</span><span class="time">⏱ 60 min read</span></div>
+<div class="progress-bar" style="width:20%"></div>
+<h1>OpenGL Data Flow — VBO, VAO, EBO</h1>
+<p style="color:var(--text3);font-size:13px">Notes by Raushan Ranjan, MCT · RR Graphics Lab</p>
+
+<h2>The CPU/GPU Memory Gap</h2>
+<p>Here is a fact that surprises beginners: <strong>the CPU and GPU have completely separate memory</strong>. Your C++ arrays live in RAM. The GPU has its own dedicated VRAM. Before you can draw anything, you must upload your vertex data from RAM to VRAM.</p>
+<p>This is handled by the <strong>VBO</strong> (stores data) and <strong>VAO</strong> (remembers the format).</p>
+
+<h2>VBO — The Filing Cabinet</h2>
+<p>A <strong>Vertex Buffer Object</strong> is a block of memory on the GPU. Think of it as a USB drive you plug into the GPU — it holds raw vertex data. But the GPU doesn't automatically know what those numbers mean — are they positions? Colors? UVs?</p>
+
+<h2>VAO — The Instruction Manual</h2>
+<p>A <strong>Vertex Array Object</strong> stores the description of how to read the data in a VBO. If the VBO is the filing cabinet, the VAO is the manual that says "the first 3 numbers are X, Y, Z position — read them as floats."</p>
+<p>The VAO remembers this so you don't reconfigure it every frame. Binding a VAO instantly restores all attribute settings.</p>
+
+<h2>EBO — Saving Memory with Indices</h2>
+<p>To draw a rectangle (2 triangles), naively you'd repeat two vertices. An <strong>Element Buffer Object</strong> stores indices instead — each vertex is stored once, and the EBO lists which vertices form each triangle. For complex meshes this can save 40–60% of GPU memory.</p>
+
+<h2>🏢 Enterprise Use Case — Ship Icon Display</h2>
+<p>A tactical display shows 500 ship icons. Each icon is a triangle. Instead of uploading all 500 triangles separately, the triangle geometry is uploaded to one VBO once. The position of each ship is updated via shader uniforms. The VAO remembers the triangle format. This is how real defense display systems work — static geometry, dynamic positions.</p>
+  `},
+  m10:{title:"Module 10 — Vulkan Overview",day:"Day 4",tags:["Vulkan","Architecture"],content:`
+<div class="reading-meta"><span class="tag tag-purple">Vulkan</span><span class="tag tag-blue">Architecture</span><span class="time">⏱ 55 min read</span></div>
+<div class="progress-bar" style="width:67%"></div>
+<h1>Vulkan Overview</h1>
+<p style="color:var(--text3);font-size:13px">Notes by Raushan Ranjan, MCT · RR Graphics Lab</p>
+
+<h2>Why Vulkan? The Honest Answer</h2>
+<p>By 2014, three problems with OpenGL were critical: (1) the driver did enormous hidden work causing unpredictable CPU overhead, (2) OpenGL was single-threaded by design so all those extra CPU cores sat idle, (3) mobile GPUs had different architectures (tile-based) that OpenGL's model mapped to poorly.</p>
+<p>Vulkan was designed from scratch to fix all three — simultaneously.</p>
+
+<h2>The Core Philosophy Shift</h2>
+<p><strong>OpenGL:</strong> "Tell me what you want, I'll figure out how." — Like ordering food at a restaurant.</p>
+<p><strong>Vulkan:</strong> "You know your workload. You tell me everything, exactly." — Like being the chef yourself.</p>
+<p>More code upfront. But dramatically better performance, predictability, and multi-threading capability.</p>
+
+<h2>What Vulkan Exposes That OpenGL Hid</h2>
+<ul>
+<li><strong>Memory allocation:</strong> You choose which GPU memory heap (device-local, host-visible) to allocate from.</li>
+<li><strong>Command recording:</strong> Commands are recorded into buffers first, then submitted in batches.</li>
+<li><strong>Synchronization:</strong> You manage semaphores and fences — no automatic GPU/CPU sync.</li>
+<li><strong>Pipeline state:</strong> All render state baked into one immutable Pipeline Object, created upfront.</li>
+<li><strong>Validation:</strong> Opt-in layers catch API misuse during development; zero overhead in release.</li>
+</ul>
+
+<h2>SPIR-V — Vulkan's Shader Format</h2>
+<p>Vulkan does not accept GLSL source code. It requires pre-compiled <strong>SPIR-V</strong> bytecode. You still write GLSL, but compile it offline with <code>glslc</code>:</p>
+<pre style="background:var(--code-bg);padding:12px;border-radius:8px;font-size:13px;overflow-x:auto">glslc shader.vert -o vert.spv
+glslc shader.frag -o frag.spv</pre>
+
+<h2>🏢 Enterprise Use Case — Migrating a Naval Simulation</h2>
+<p>A 15-year-old naval simulation on OpenGL runs at 28–35fps. After migrating to Vulkan: 85fps on the same hardware. CPU frame time drops from 12ms to 2ms. GPU utilization rises from 45% to 88%. The key: Vulkan eliminated the hidden driver overhead that OpenGL was spending 40% of each frame on.</p>
+  `}
+};
+
+function showView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const navEl = document.getElementById('nav-'+v);
+  if(navEl) navEl.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function openModule(id){
+  const m = MODULES[id];
+  if(!m){
+    agentAsk('Tell me about '+id+' in detail from the OpenGL Vulkan courseware');
+    return;
+  }
+  showView('modules');
+  document.getElementById('module-list-view').style.display='none';
+  document.getElementById('module-read-view').style.display='block';
+  document.getElementById('module-content').innerHTML = m.content;
+  const toc = document.getElementById('module-toc');
+  toc.innerHTML='';
+  document.querySelectorAll('#module-content h2').forEach(h=>{
+    const id2 = h.textContent.replace(/[^a-z0-9]/gi,'-').toLowerCase();
+    h.id = id2;
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="#${id2}">${h.textContent}</a>`;
+    toc.appendChild(li);
+  });
+  window.scrollTo(0,0);
+}
+
+function backToList(){
+  document.getElementById('module-list-view').style.display='block';
+  document.getElementById('module-read-view').style.display='none';
+}
+
+function switchDemoTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('demos-'+id).classList.add('active');
+}
+
+function toggleDemo(header){
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span:last-child');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.demo-body').forEach(b=>{b.classList.remove('open');b.style.display='none'});
+  document.querySelectorAll('.demo-header span:last-child').forEach(a=>a.textContent='›');
+  if(!isOpen){body.classList.add('open');body.style.display='block';arrow.textContent='⌄';}
+}
+
+function copyCode(btn){
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText || pre.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
+  });
+}
+
+// ── AGENT ──
+let agentOpen = false;
+const AGENT_KEY = 'rr_agent_msgs';
+
+const knowledgeBase = {
+  vbo:'A VBO (Vertex Buffer Object) is a block of GPU memory that stores raw vertex data. Use glGenBuffers, glBindBuffer(GL_ARRAY_BUFFER), then glBufferData to upload. The VAO remembers how to read the VBO.',
+  vao:'A VAO (Vertex Array Object) remembers the vertex attribute configuration — which VBO, what layout, stride, and offset. Binding a VAO instantly restores all those settings without reconfiguring.',
+  mvp:'The MVP pipeline transforms vertices from local object space to screen pixels. Model matrix places the object in the world. View matrix simulates the camera. Projection adds perspective (closer=bigger). In the vertex shader: gl_Position = projection * view * model * vec4(aPos, 1.0).',
+  phong:'Phong lighting = Ambient (constant base light) + Diffuse (angle-based brightness via dot product of normal and light direction) + Specular (shiny highlight using the halfway vector in Blinn-Phong). Implemented entirely in GLSL fragment shader.',
+  vulkan:'Vulkan is an explicit graphics API. Unlike OpenGL, it requires you to manage GPU memory, record commands into buffers, synchronize CPU/GPU manually with semaphores and fences, and create full pipeline state objects upfront. More code, dramatically better performance.',
+  semaphore:'Semaphores in Vulkan synchronize GPU-to-GPU operations between queues. imageAvailableSemaphore signals when the swap image is ready for rendering. renderFinishedSemaphore signals when rendering is done so the image can be presented.',
+  fence:'Fences synchronize GPU-to-CPU. Call vkWaitForFences at the start of each frame to ensure the GPU finished the previous frame before the CPU reuses the command buffer.',
+  staging:'The staging buffer pattern uploads data to GPU-fast DEVICE_LOCAL memory. Step 1: create HOST_VISIBLE staging buffer, write CPU data into it via vkMapMemory. Step 2: create DEVICE_LOCAL vertex buffer. Step 3: vkCmdCopyBuffer copies staging→device. Step 4: delete staging buffer.',
+  cmake:'CMake build: cd into your lab folder, run: cmake -B build -G "Visual Studio 17 2022" -A x64, then cmake --build build --config Release. Run the exe from build\\Release\\lab.exe',
+  glsl:'GLSL is the shader language for OpenGL. Key qualifiers: "in" receives per-vertex data from VBO, "out" passes data to the next stage, "uniform" is the same for all vertices in a draw call (set from C++). Swizzling: vec4.rgb, vec3.xz, vec4.rrrr.',
+  depth:'Depth testing solves 3D overlap. The depth buffer stores a 0.0-1.0 depth value per pixel. When a new fragment arrives, it compares its depth to the stored value — if it is closer, it overwrites; if farther, it is discarded. Enable with glEnable(GL_DEPTH_TEST) and clear with GL_DEPTH_BUFFER_BIT every frame.',
+  texture:'Textures are images stored on the GPU. UV coordinates (0-1 range) map surface points to image pixels. Use stb_image.h to load JPG/PNG. Call glTexImage2D to upload. Always call glGenerateMipmap after uploading. Set GL_LINEAR_MIPMAP_LINEAR for best quality.',
+  fbo:'FBO (Framebuffer Object) lets you render to a texture instead of the screen. Create with glGenFramebuffers, attach a color texture with glFramebufferTexture2D, add a depth renderbuffer. In pass 1: bind FBO, render scene. In pass 2: bind default FBO, draw full-screen quad sampling the FBO texture.',
+};
+
+function findAnswer(q){
+  const ql = q.toLowerCase();
+  for(const [key,ans] of Object.entries(knowledgeBase)){
+    if(ql.includes(key)) return ans;
+  }
+  const kws = {
+    'difference between':'The key differences depend on context — could you specify? For VBO vs VAO: VBO stores the raw data, VAO remembers the format. For OpenGL vs Vulkan: OpenGL is driver-managed and easier; Vulkan is explicit and faster.',
+    'how does':'Great question! Based on the courseware: check the relevant module notes or ask me more specifically.',
+    'explain':'Happy to explain! Based on the 15-module courseware by Raushan Ranjan, please ask about a specific concept like VBO, VAO, MVP, Phong lighting, Vulkan sync, or any other topic.',
+    'error':'Common errors: (1) Include GLEW before GLFW. (2) Call glfwMakeContextCurrent before glewInit. (3) In Vulkan: always set sType. (4) For MVP: always clear GL_DEPTH_BUFFER_BIT every frame.',
+    'setup':'VM Setup: Install Visual Studio 2022 with C++ workload, CMake 3.28+, place GLFW in C:\\libs\\glfw, GLEW in C:\\libs\\glew, GLM in C:\\libs\\glm. Set environment variables GLFW_DIR, GLEW_DIR, GLM_DIR. For Vulkan: install LunarG Vulkan SDK from vulkan.lunarg.com.',
+  };
+  for(const [kw,ans] of Object.entries(kws)){
+    if(ql.includes(kw)) return ans;
+  }
+  return `That's a great question about "${q.substring(0,40)}...". Based on the RR Graphics Lab courseware: this topic is covered across the 15 modules by Raushan Ranjan (MCT). For a detailed answer, I recommend checking the relevant module notes. The most related modules would be Modules 1–3 for OpenGL basics, 4–6 for 3D rendering, 7–9 for advanced OpenGL, and 10–14 for Vulkan. Would you like me to point you to a specific module?`;
+}
+
+function toggleAgent(){
+  agentOpen = !agentOpen;
+  document.getElementById('agentPanel').classList.toggle('open',agentOpen);
+}
+
+function agentAsk(q){
+  if(!agentOpen) toggleAgent();
+  setTimeout(()=>{addUserMsg(q);respondToMsg(q);},300);
+}
+
+function sendChip(q){
+  document.getElementById('quickChips').style.display='none';
+  addUserMsg(q);respondToMsg(q);
+}
+
+function sendAgentMessage(){
+  const inp = document.getElementById('agentInput');
+  const q = inp.value.trim();
+  if(!q) return;
+  inp.value=''; autoResize(inp);
+  document.getElementById('quickChips').style.display='none';
+  addUserMsg(q); respondToMsg(q);
+}
+
+function handleAgentKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAgentMessage();}
+}
+
+function autoResize(el){
+  el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';
+}
+
+function addUserMsg(text){
+  const msgs = document.getElementById('agentMessages');
+  msgs.innerHTML += `<div class="msg user"><div class="msg-avatar user-av">👤</div><div><div class="msg-bubble">${esc(text)}</div><div class="msg-time" style="text-align:right">You</div></div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function respondToMsg(q){
+  const msgs = document.getElementById('agentMessages');
+  msgs.innerHTML += `<div class="msg bot" id="typing-indicator"><div class="msg-avatar bot-av">✦</div><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(()=>{
+    const ti = document.getElementById('typing-indicator');
+    if(ti) ti.remove();
+    const ans = findAnswer(q);
+    msgs.innerHTML += `<div class="msg bot"><div class="msg-avatar bot-av">✦</div><div><div class="msg-bubble">${esc(ans)}</div><div class="msg-time">Raushan AI · RR Graphics Lab</div></div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200 + Math.random()*600);
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>

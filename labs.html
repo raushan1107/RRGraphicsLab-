@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lab Manuals — RR Graphics Lab</title>
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222636;
+  --border:#2a2f40;--border2:#3a4055;
+  --accent:#6c63ff;--accent2:#a78bfa;--accent3:#38bdf8;
+  --teal:#2dd4bf;--coral:#f87171;--amber:#fbbf24;--green:#4ade80;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --card:#161b27;
+  --r:10px;--r2:16px;--r3:24px;
+  --shadow:0 4px 24px rgba(0,0,0,.5);
+  --glow:0 0 32px rgba(108,99,255,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,15,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;gap:14px}
+.nav-back{display:flex;align-items:center;gap:6px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;padding:6px 14px;border:1px solid var(--border);border-radius:20px;transition:.2s;flex-shrink:0;white-space:nowrap}
+.nav-back:hover{background:var(--bg3);color:var(--text)}
+.nav-brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1rem;color:var(--text);text-decoration:none}
+.nav-badge{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;letter-spacing:.4px}
+.nav-spacer{flex:1}
+
+/* ── HERO ── */
+.hero{padding:110px 2rem 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:900px;height:700px;background:radial-gradient(circle,rgba(108,99,255,.1) 0%,transparent 65%);pointer-events:none}
+.hero-eye{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:.3px;margin-bottom:20px}
+.hero-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.15;letter-spacing:-.025em;margin-bottom:16px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent3),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text2);font-size:1rem;max-width:580px;margin:0 auto 28px;line-height:1.75}
+.hero-stats{display:flex;gap:0;justify-content:center;margin-top:40px;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;max-width:520px;margin-left:auto;margin-right:auto}
+.stat{flex:1;padding:16px 12px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-n{font-size:1.6rem;font-weight:800;color:var(--accent2);line-height:1}
+.stat-l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+
+/* ── PROGRESS OVERVIEW ── */
+.progress-section{max-width:900px;margin:0 auto;padding:0 2rem 60px}
+.prog-bar-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem 2rem;margin-bottom:2.5rem}
+.prog-bar-label{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px}
+.prog-bar-label span:first-child{color:var(--text2);font-weight:600}
+.prog-bar-label span:last-child{color:var(--accent2);font-weight:700}
+.prog-track{height:6px;background:var(--border);border-radius:6px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--teal));border-radius:6px;width:20%;transition:width .6s}
+.prog-dots{display:flex;justify-content:space-between;margin-top:12px}
+.prog-dot{display:flex;flex-direction:column;align-items:center;gap:4px}
+.prog-dot-circle{width:10px;height:10px;border-radius:50%;border:2px solid var(--border2)}
+.prog-dot-circle.done{background:var(--accent);border-color:var(--accent)}
+.prog-dot-circle.active{background:transparent;border-color:var(--accent);box-shadow:0 0 8px rgba(108,99,255,.6)}
+.prog-dot span{font-size:9px;color:var(--text3);white-space:nowrap}
+
+/* ── MAIN GRID ── */
+.labs-container{max-width:1100px;margin:0 auto;padding:0 2rem 80px}
+.section-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
+.section-eyebrow h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em}
+.section-eyebrow::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(108,99,255,.12);color:var(--accent2);letter-spacing:.05em;text-transform:uppercase;flex-shrink:0}
+
+/* ── DAY CARDS ── */
+.day-card{border-radius:var(--r3);border:1px solid var(--border);overflow:hidden;margin-bottom:24px;transition:border-color .25s,box-shadow .25s;position:relative}
+.day-card:hover{box-shadow:var(--glow)}
+.day-card.d1:hover{border-color:rgba(108,99,255,.4)}
+.day-card.d2:hover{border-color:rgba(45,212,191,.4)}
+.day-card.d3:hover{border-color:rgba(251,191,36,.4)}
+.day-card.d4:hover{border-color:rgba(139,92,246,.4)}
+.day-card.d5:hover{border-color:rgba(248,113,113,.4)}
+
+.day-card-top{display:flex;gap:0}
+.day-accent{width:5px;flex-shrink:0}
+.d1 .day-accent{background:linear-gradient(180deg,#6c63ff,#38bdf8)}
+.d2 .day-accent{background:linear-gradient(180deg,#2dd4bf,#4ade80)}
+.d3 .day-accent{background:linear-gradient(180deg,#f59e0b,#f87171)}
+.d4 .day-accent{background:linear-gradient(180deg,#8b5cf6,#ec4899)}
+.d5 .day-accent{background:linear-gradient(180deg,#f87171,#fbbf24)}
+
+.day-main{flex:1;padding:1.75rem 2rem;background:var(--card)}
+.day-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.day-meta{display:flex;flex-direction:column;gap:4px}
+.day-num{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.day-title{font-size:1.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.3}
+.day-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.day-status{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.status-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.s-ready{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2)}
+.s-soon{background:rgba(251,191,36,.08);color:var(--amber);border:1px solid rgba(251,191,36,.2)}
+.s-locked{background:rgba(100,116,139,.08);color:var(--text3);border:1px solid var(--border)}
+.lab-count{font-size:11px;color:var(--text3);font-weight:600}
+
+.day-desc{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.7;max-width:640px}
+
+/* Module pills */
+.module-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.mod-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:5px 11px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);transition:.15s}
+.mod-pill:hover{border-color:var(--border2);color:var(--text)}
+.mod-dot{width:6px;height:6px;border-radius:50%}
+.dot-blue{background:#6c63ff}.dot-teal{background:#2dd4bf}.dot-amber{background:#fbbf24}
+.dot-coral{background:#f87171}.dot-purple{background:#8b5cf6}
+
+/* Lab buttons inside card */
+.lab-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px}
+.lab-btn{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;text-decoration:none;transition:.2s;cursor:pointer}
+.lab-btn:hover{background:var(--bg4);border-color:var(--border2);transform:translateY(-1px)}
+.lab-btn.disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
+.lab-btn-num{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.lb1{background:linear-gradient(135deg,#6c63ff,#38bdf8)}
+.lb2{background:linear-gradient(135deg,#2dd4bf,#4ade80)}
+.lb3{background:linear-gradient(135deg,#f59e0b,#f87171)}
+.lb4{background:linear-gradient(135deg,#8b5cf6,#ec4899)}
+.lb5{background:linear-gradient(135deg,#f87171,#fbbf24)}
+.lab-btn-info{flex:1;min-width:0}
+.lab-btn-title{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lab-btn-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.lab-btn-arrow{color:var(--text3);font-size:12px;flex-shrink:0;transition:.2s}
+.lab-btn:hover .lab-btn-arrow{color:var(--accent2);transform:translateX(2px)}
+
+/* Open day CTA */
+.day-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btn-open{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;text-decoration:none;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;transition:.2s;border:none;cursor:pointer}
+.btn-open:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(108,99,255,.4)}
+.btn-open.disabled{opacity:.4;cursor:not-allowed;pointer-events:none;background:var(--bg3);color:var(--text3);box-shadow:none}
+.btn-time{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px}
+
+/* ── TOOLS STRIP ── */
+.tools-section{max-width:1100px;margin:0 auto;padding:0 2rem 60px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:1.25rem}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;text-align:center;transition:.2s}
+.tool-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.tool-icon{font-size:1.6rem;margin-bottom:8px}
+.tool-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.tool-desc{font-size:11px;color:var(--text3);line-height:1.5}
+
+/* ── VM CARD ── */
+.vm-section{max-width:1100px;margin:0 auto;padding:0 2rem 80px}
+.vm-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+@media(max-width:700px){.vm-card{grid-template-columns:1fr}}
+.vm-col h3{font-size:1rem;font-weight:700;margin-bottom:12px;color:var(--accent2)}
+.vm-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.vm-row:last-child{border-bottom:none}
+.vm-row span:first-child{color:var(--text2)}
+.vm-row code{font-family:'Cascadia Code',monospace;font-size:12px;background:var(--bg3);padding:2px 7px;border-radius:5px;color:var(--accent3);border:1px solid var(--border)}
+.cmd-list{display:flex;flex-direction:column;gap:6px}
+.cmd-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;font-family:'Cascadia Code',monospace;font-size:12px;color:#c3e88d;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.cmd-copy{font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:2px 8px;border-radius:5px;cursor:pointer;transition:.15s;white-space:nowrap}
+.cmd-copy:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 2rem;text-align:center}
+.footer-brand{font-size:1.1rem;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-sub{font-size:12px;color:var(--text3);margin-bottom:16px}
+.footer-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.footer-links a{color:var(--text3);font-size:12px;text-decoration:none;transition:.2s}
+.footer-links a:hover{color:var(--accent2)}
+
+@media(max-width:768px){
+  .day-card-top{flex-direction:column}
+  .day-accent{width:100%;height:5px}
+  .hero-stats{max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-back" href="index.html">← RR Graphics Lab</a>
+  <a class="nav-brand" href="labs.html">
+    <span style="background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.2rem">⬡</span>
+    Lab Manuals
+    <span class="nav-badge">Hands-On</span>
+  </a>
+  <div class="nav-spacer"></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eye"><span class="hero-dot"></span>5-Day Hands-On Lab Program · Raushan Ranjan (MCT)</div>
+  <h1>Practical <em>Lab Manuals</em><br>for Every Day</h1>
+  <p class="hero-sub">Step-by-step lab guides to run on your VM. Each lab builds on the last — from your first OpenGL window to a complete Vulkan rendering application.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">15</div><div class="stat-l">Labs Total</div></div>
+    <div class="stat"><div class="stat-n">5</div><div class="stat-l">Days</div></div>
+    <div class="stat"><div class="stat-n">60+</div><div class="stat-l">Code Demos</div></div>
+    <div class="stat"><div class="stat-n">VM</div><div class="stat-l">Pre-Configured</div></div>
+  </div>
+</section>
+
+<!-- PROGRESS -->
+<div class="progress-section">
+  <div class="prog-bar-wrap">
+    <div class="prog-bar-label">
+      <span>Your overall lab progress</span>
+      <span id="progPct">Day 1 available · 4 days upcoming</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progBar"></div></div>
+    <div class="prog-dots">
+      <div class="prog-dot"><div class="prog-dot-circle active"></div><span>Day 1</span></div>
+      <div class="prog-dot"><div class="prog-dot-circle"></div><span>Day 2</span></div>
+      <div class="prog-dot"><div class="prog-dot-circle"></div><span>Day 3</span></div>
+      <div class="prog-dot"><div class="prog-dot-circle"></div><span>Day 4</span></div>
+      <div class="prog-dot"><div class="prog-dot-circle"></div><span>Day 5</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN DAY CARDS -->
+<div class="labs-container">
+  <div class="section-eyebrow">
+    <span class="section-tag">All Days</span>
+    <h2>Lab Schedule</h2>
+  </div>
+
+  <!-- ── DAY 1 ── -->
+  <div class="day-card d1">
+    <div class="day-card-top">
+      <div class="day-accent"></div>
+      <div class="day-main">
+        <div class="day-header">
+          <div class="day-meta">
+            <div class="day-num">Day 1 · Modules 1 – 3</div>
+            <div class="day-title">OpenGL Foundations</div>
+            <div class="day-sub">Graphics system, environment setup, first window, triangle, buffers</div>
+          </div>
+          <div class="day-status">
+            <span class="status-badge s-ready">● Available</span>
+            <span class="lab-count">5 labs · ~3 hours</span>
+          </div>
+        </div>
+
+        <p class="day-desc">Build the complete mental model of GPU graphics programming. Set up Visual Studio, CMake, GLFW, GLEW, and GLM. Write your first C++ OpenGL application — a working window — then draw a triangle from scratch, add per-vertex colour, build a rectangle with index buffers, and animate it with shader uniforms.</p>
+
+        <div class="module-row">
+          <span class="mod-pill"><span class="mod-dot dot-blue"></span>M1: Graphics Programming Intro</span>
+          <span class="mod-pill"><span class="mod-dot dot-blue"></span>M2: OpenGL Setup & Window</span>
+          <span class="mod-pill"><span class="mod-dot dot-teal"></span>M3: VBO · VAO · EBO · Shaders</span>
+        </div>
+
+        <div class="lab-list">
+          <a class="lab-btn" href="lab-day1.html#lab1">
+            <span class="lab-btn-num lb1">1</span>
+            <div class="lab-btn-info"><div class="lab-btn-title">First OpenGL Window</div><div class="lab-btn-sub">GLFW · GLEW · Render loop</div></div>
+            <span class="lab-btn-arrow">›</span>
+          </a>
+          <a class="lab-btn" href="lab-day1.html#lab2">
+            <span class="lab-btn-num lb1">2</span>
+            <div class="lab-btn-info"><div class="lab-btn-title">First Triangle</div><div class="lab-btn-sub">VBO · VAO · Shaders</div></div>
+            <span class="lab-btn-arrow">›</span>
+          </a>
+          <a class="lab-btn" href="lab-day1.html#lab3">
+            <span class="lab-btn-num lb1">3</span>
+            <div class="lab-btn-info"><div class="lab-btn-title">Coloured Triangle</div><div class="lab-btn-sub">Multiple attributes · Interpolation</div></div>
+            <span class="lab-btn-arrow">›</span>
+          </a>
+          <a class="lab-btn" href="lab-day1.html#lab4">
+            <span class="lab-btn-num lb1">4</span>
+            <div class="lab-btn-info"><div class="lab-btn-title">Rectangle with EBO</div><div class="lab-btn-sub">Index buffer · glDrawElements</div></div>
+            <span class="lab-btn-arrow">›</span>
+          </a>
+          <a class="lab-btn" href="lab-day1.html#lab5">
+            <span class="lab-btn-num lb1">5</span>
+            <div class="lab-btn-info"><div class="lab-btn-title">Animated Uniforms</div><div class="lab-btn-sub">glfwGetTime · glUniform</div></div>
+            <span class="lab-btn-arrow">›</span>
+          </a>
+        </div>
+
+        <div class="day-cta">
+          <a class="btn-open" href="lab-day1.html">Open Day 1 Lab Manual →</a>
+          <span class="btn-time">⏱ ~3 hours · Beginner → Intermediate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAY 2 ── -->
+  <div class="day-card d2">
+    <div class="day-card-top">
+      <div class="day-accent"></div>
+      <div class="day-main">
+        <div class="day-header">
+          <div class="day-meta">
+            <div class="day-num">Day 2 · Modules 4 – 6</div>
+            <div class="day-title">3D Space, Lighting & Textures</div>
+            <div class="day-sub">MVP matrices, Phong shading, texture mapping, skyboxes</div>
+          </div>
+          <div class="day-status">
+            <span class="status-badge s-soon">◌ Coming Soon</span>
+            <span class="lab-count">5 labs · ~3.5 hours</span>
+          </div>
+        </div>
+
+        <p class="day-desc">Step into full 3D rendering. Build the Model-View-Projection camera system, enable depth testing, render a rotating textured cube, implement Phong and Blinn-Phong lighting in GLSL, load image files as textures, and build a skybox with a cube map.</p>
+
+        <div class="module-row">
+          <span class="mod-pill"><span class="mod-dot dot-teal"></span>M4: Transformations · MVP · Depth</span>
+          <span class="mod-pill"><span class="mod-dot dot-amber"></span>M5: Lighting · Phong · Blinn-Phong</span>
+          <span class="mod-pill"><span class="mod-dot dot-amber"></span>M6: Textures · Mipmaps · Skybox</span>
+        </div>
+
+        <div class="lab-list">
+          <a class="lab-btn disabled"><span class="lab-btn-num lb2">1</span><div class="lab-btn-info"><div class="lab-btn-title">Rotating 3D Cube</div><div class="lab-btn-sub">MVP · glm::lookAt · perspective</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb2">2</span><div class="lab-btn-info"><div class="lab-btn-title">Phong Lighting</div><div class="lab-btn-sub">Ambient · Diffuse · Specular</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb2">3</span><div class="lab-btn-info"><div class="lab-btn-title">Apply a Texture</div><div class="lab-btn-sub">STB Image · UV · Mipmaps</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb2">4</span><div class="lab-btn-info"><div class="lab-btn-title">Multi-Texturing</div><div class="lab-btn-sub">Specular map · Two texture units</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb2">5</span><div class="lab-btn-info"><div class="lab-btn-title">Skybox</div><div class="lab-btn-sub">Cube map · Infinite background</div></div><span class="lab-btn-arrow">›</span></a>
+        </div>
+
+        <div class="day-cta">
+          <span class="btn-open disabled">Day 2 Lab Manual — Coming Soon</span>
+          <span class="btn-time">⏱ ~3.5 hours · Intermediate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAY 3 ── -->
+  <div class="day-card d3">
+    <div class="day-card-top">
+      <div class="day-accent"></div>
+      <div class="day-main">
+        <div class="day-header">
+          <div class="day-meta">
+            <div class="day-num">Day 3 · Modules 7 – 9</div>
+            <div class="day-title">Advanced OpenGL Techniques</div>
+            <div class="day-sub">GLSL mastery, post-processing, optimization & profiling</div>
+          </div>
+          <div class="day-status">
+            <span class="status-badge s-locked">🔒 Upcoming</span>
+            <span class="lab-count">5 labs · ~3.5 hours</span>
+          </div>
+        </div>
+
+        <p class="day-desc">Go deep on GLSL — swizzling, geometry shaders, and GPU instancing. Build a post-processing pipeline with FBO, implement transparency and blending, add MSAA anti-aliasing, use the stencil buffer for object outlines, and profile the scene with RenderDoc.</p>
+
+        <div class="module-row">
+          <span class="mod-pill"><span class="mod-dot dot-coral"></span>M7: GLSL · Instancing · Geometry Shaders</span>
+          <span class="mod-pill"><span class="mod-dot dot-coral"></span>M8: FBO · Post-Processing · Stencil</span>
+          <span class="mod-pill"><span class="mod-dot dot-amber"></span>M9: Optimization · RenderDoc</span>
+        </div>
+
+        <div class="lab-list">
+          <a class="lab-btn disabled"><span class="lab-btn-num lb3">1</span><div class="lab-btn-info"><div class="lab-btn-title">GLSL Deep Dive</div><div class="lab-btn-sub">Swizzle · UBO · Functions</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb3">2</span><div class="lab-btn-info"><div class="lab-btn-title">Instancing</div><div class="lab-btn-sub">10,000 objects · 1 draw call</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb3">3</span><div class="lab-btn-info"><div class="lab-btn-title">FBO Post-Processing</div><div class="lab-btn-sub">Blur · Greyscale · Edge detect</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb3">4</span><div class="lab-btn-info"><div class="lab-btn-title">Stencil Outlines</div><div class="lab-btn-sub">Object selection highlight</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb3">5</span><div class="lab-btn-info"><div class="lab-btn-title">Profile with RenderDoc</div><div class="lab-btn-sub">Frame capture · GPU debug</div></div><span class="lab-btn-arrow">›</span></a>
+        </div>
+
+        <div class="day-cta">
+          <span class="btn-open disabled">Day 3 Lab Manual — Upcoming</span>
+          <span class="btn-time">⏱ ~3.5 hours · Intermediate → Advanced</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAY 4 ── -->
+  <div class="day-card d4">
+    <div class="day-card-top">
+      <div class="day-accent"></div>
+      <div class="day-main">
+        <div class="day-header">
+          <div class="day-meta">
+            <div class="day-num">Day 4 · Modules 10 – 12</div>
+            <div class="day-title">Vulkan API Foundations</div>
+            <div class="day-sub">Instance, devices, pipelines, swap chain, sync primitives</div>
+          </div>
+          <div class="day-status">
+            <span class="status-badge s-locked">🔒 Upcoming</span>
+            <span class="lab-count">4 labs · ~4 hours</span>
+          </div>
+        </div>
+
+        <p class="day-desc">Make the leap to Vulkan. Set up the complete Vulkan object hierarchy — instance, physical device, logical device, queues. Create the swap chain and render pass. Build the full graphics pipeline. Record and submit command buffers. Your first Vulkan triangle with proper semaphore and fence synchronization.</p>
+
+        <div class="module-row">
+          <span class="mod-pill"><span class="mod-dot dot-purple"></span>M10: Vulkan Architecture · SDK Setup</span>
+          <span class="mod-pill"><span class="mod-dot dot-purple"></span>M11: Devices · Queues · Memory</span>
+          <span class="mod-pill"><span class="mod-dot dot-purple"></span>M12: Pipeline · Render Pass · Sync</span>
+        </div>
+
+        <div class="lab-list">
+          <a class="lab-btn disabled"><span class="lab-btn-num lb4">1</span><div class="lab-btn-info"><div class="lab-btn-title">Vulkan Instance & Device</div><div class="lab-btn-sub">VkInstance · VkDevice · Validation</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb4">2</span><div class="lab-btn-info"><div class="lab-btn-title">Swap Chain Setup</div><div class="lab-btn-sub">VkSwapchainKHR · Image views</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb4">3</span><div class="lab-btn-info"><div class="lab-btn-title">Graphics Pipeline</div><div class="lab-btn-sub">SPIR-V · Render pass · Pipeline</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb4">4</span><div class="lab-btn-info"><div class="lab-btn-title">First Vulkan Triangle</div><div class="lab-btn-sub">Command buffers · Semaphores</div></div><span class="lab-btn-arrow">›</span></a>
+        </div>
+
+        <div class="day-cta">
+          <span class="btn-open disabled">Day 4 Lab Manual — Upcoming</span>
+          <span class="btn-time">⏱ ~4 hours · Advanced</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAY 5 ── -->
+  <div class="day-card d5">
+    <div class="day-card-top">
+      <div class="day-accent"></div>
+      <div class="day-main">
+        <div class="day-header">
+          <div class="day-meta">
+            <div class="day-num">Day 5 · Modules 13 – 15</div>
+            <div class="day-title">Vulkan Advanced & Capstone</div>
+            <div class="day-sub">Compute shaders, model loading, descriptors, cross-platform, capstone demo</div>
+          </div>
+          <div class="day-status">
+            <span class="status-badge s-locked">🔒 Upcoming</span>
+            <span class="lab-count">4 labs · ~4 hours</span>
+          </div>
+        </div>
+
+        <p class="day-desc">Unlock GPU compute for signal processing and image analysis. Load and render a full 3D model with Assimp. Master descriptor sets and push constants. Integrate Vulkan with C#, Unity, and Android. Build the final Naval Operations rendering demo combining both APIs.</p>
+
+        <div class="module-row">
+          <span class="mod-pill"><span class="mod-dot dot-coral"></span>M13: Compute · Descriptors · Push Constants</span>
+          <span class="mod-pill"><span class="mod-dot dot-amber"></span>M14: C# · Unity · Android · Porting</span>
+          <span class="mod-pill"><span class="mod-dot dot-teal"></span>M15: Capstone Naval Demo</span>
+        </div>
+
+        <div class="lab-list">
+          <a class="lab-btn disabled"><span class="lab-btn-num lb5">1</span><div class="lab-btn-info"><div class="lab-btn-title">GPU Compute Shader</div><div class="lab-btn-sub">Image processing · Dispatch</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb5">2</span><div class="lab-btn-info"><div class="lab-btn-title">3D Model Loading</div><div class="lab-btn-sub">Assimp · Descriptor sets</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb5">3</span><div class="lab-btn-info"><div class="lab-btn-title">C# Integration</div><div class="lab-btn-sub">P/Invoke · Native renderer DLL</div></div><span class="lab-btn-arrow">›</span></a>
+          <a class="lab-btn disabled"><span class="lab-btn-num lb5">4</span><div class="lab-btn-info"><div class="lab-btn-title">Capstone — Naval Demo</div><div class="lab-btn-sub">OpenGL + Vulkan combined</div></div><span class="lab-btn-arrow">›</span></a>
+        </div>
+
+        <div class="day-cta">
+          <span class="btn-open disabled">Day 5 Lab Manual — Upcoming</span>
+          <span class="btn-time">⏱ ~4 hours · Advanced</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VM REFERENCE -->
+<div class="vm-section">
+  <div class="section-eyebrow">
+    <span class="section-tag">VM Reference</span>
+    <h2>Quick-Start Card</h2>
+  </div>
+  <div class="vm-card">
+    <div class="vm-col">
+      <h3>VM Configuration</h3>
+      <div class="vm-row"><span>OS</span><code>Windows 11 x64</code></div>
+      <div class="vm-row"><span>Compiler</span><code>MSVC v143 (VS 2022)</code></div>
+      <div class="vm-row"><span>CMake</span><code>3.28+</code></div>
+      <div class="vm-row"><span>GLFW</span><code>C:\libs\glfw</code></div>
+      <div class="vm-row"><span>GLEW</span><code>C:\libs\glew</code></div>
+      <div class="vm-row"><span>GLM</span><code>C:\libs\glm</code></div>
+      <div class="vm-row"><span>Vulkan SDK</span><code>C:\VulkanSDK\1.3.x</code></div>
+      <div class="vm-row"><span>Labs Root</span><code>C:\Labs\</code></div>
+    </div>
+    <div class="vm-col">
+      <h3>Standard Build Commands</h3>
+      <div class="cmd-list">
+        <div class="cmd-item"><span>cmake -B build -G "Visual Studio 17 2022" -A x64</span><button class="cmd-copy" onclick="cpCmd(this)">Copy</button></div>
+        <div class="cmd-item"><span>cmake --build build --config Release</span><button class="cmd-copy" onclick="cpCmd(this)">Copy</button></div>
+        <div class="cmd-item"><span>build\Release\lab.exe</span><button class="cmd-copy" onclick="cpCmd(this)">Copy</button></div>
+        <div class="cmd-item"><span>echo %GLFW_DIR%</span><button class="cmd-copy" onclick="cpCmd(this)">Copy</button></div>
+        <div class="cmd-item"><span>glslc shader.vert -o vert.spv</span><button class="cmd-copy" onclick="cpCmd(this)">Copy</button></div>
+        <div class="cmd-item"><span>vulkaninfo | findstr "Vulkan"</span><button class="cmd-copy" onclick="cpCmd(this)">Copy</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLS STRIP -->
+<div class="tools-section">
+  <div class="section-eyebrow">
+    <span class="section-tag">Tools</span>
+    <h2>Pre-Installed on Your VM</h2>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-icon">⚙️</div>
+      <div class="tool-name">Visual Studio 2022</div>
+      <div class="tool-desc">C++ compiler, debugger, CMake integration. Use Developer Command Prompt for builds.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">📐</div>
+      <div class="tool-name">CMake 3.28</div>
+      <div class="tool-desc">Build system generator. Reads CMakeLists.txt, creates VS project files.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🪟</div>
+      <div class="tool-name">GLFW 3.3</div>
+      <div class="tool-desc">Window creation, input, and OpenGL context. Used in all OpenGL labs.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔌</div>
+      <div class="tool-name">GLEW 2.2</div>
+      <div class="tool-desc">Loads modern OpenGL functions from GPU driver. Required for GL 3.3+ on Windows.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">📐</div>
+      <div class="tool-name">GLM</div>
+      <div class="tool-desc">Math library — vec3, mat4, perspective(), lookAt(). Matches GLSL types exactly.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🖼️</div>
+      <div class="tool-name">STB Image</div>
+      <div class="tool-desc">Single-header image loader. Reads JPG/PNG for texture labs on Day 2.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🌋</div>
+      <div class="tool-name">Vulkan SDK 1.3</div>
+      <div class="tool-desc">Headers, glslc compiler, validation layers, vkcube demo. Used Day 4–5.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-name">RenderDoc</div>
+      <div class="tool-desc">GPU frame debugger. Inspect every draw call, texture, shader. Day 3–5.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">📦</div>
+      <div class="tool-name">Assimp</div>
+      <div class="tool-desc">3D model loader (.obj, .fbx, .gltf). Used in Day 5 model loading lab.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">💻</div>
+      <div class="tool-name">VS Code</div>
+      <div class="tool-desc">GLSL syntax highlighting, Copilot integration, CMake tools extension.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">RR Graphics Lab — Lab Manuals</div>
+  <div class="footer-sub">OpenGL & Vulkan Training · By Raushan Ranjan (MCT) · Koenig Solutions · v1.0 April 2026</div>
+  <div class="footer-links">
+    <a href="index.html">← Main Site</a>
+    <a href="lab-day1.html">Day 1 Labs</a>
+    <a href="index.html#modules">Modules</a>
+    <a href="index.html#demos">Demos</a>
+    <a href="mailto:raushanr1107@gmail.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+function cpCmd(btn){
+  const txt=btn.previousElementSibling.textContent.trim();
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
+  });
+}
+</script>
+</body>
+</html>

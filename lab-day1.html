@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 1 Lab Manual — RR Graphics Lab</title>
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222636;
+  --border:#2a2f40;--border2:#3a4055;
+  --accent:#6c63ff;--accent2:#a78bfa;--accent3:#38bdf8;
+  --teal:#2dd4bf;--coral:#f87171;--amber:#fbbf24;--green:#4ade80;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --card:#161b27;--code-bg:#0a0c12;
+  --r:10px;--r2:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,15,20,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:12px}
+.nav-back{display:flex;align-items:center;gap:6px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;padding:6px 12px;border:1px solid var(--border);border-radius:20px;transition:.2s;flex-shrink:0}
+.nav-back:hover{background:var(--bg3);color:var(--text)}
+.nav-title{font-weight:700;font-size:.95rem;color:var(--text)}
+.nav-badge{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;margin-left:6px}
+.nav-days{display:flex;gap:4px;margin-left:auto}
+.nav-day{font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;border:1px solid var(--border);color:var(--text3);cursor:pointer;text-decoration:none;transition:.2s;white-space:nowrap}
+.nav-day.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav-day:hover:not(.active){background:var(--bg3);color:var(--text2)}
+
+/* LAYOUT */
+.page{display:flex;min-height:100vh;padding-top:56px}
+.sidebar{width:260px;flex-shrink:0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;border-right:1px solid var(--border);padding:1.5rem 1rem}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.main{flex:1;min-width:0;padding:2rem 2.5rem 4rem}
+@media(max-width:900px){.sidebar{display:none}.main{padding:1.5rem 1rem 3rem}}
+
+/* SIDEBAR */
+.sb-section{margin-bottom:1.5rem}
+.sb-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:0 8px;margin-bottom:6px}
+.sb-link{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);text-decoration:none;padding:5px 8px;border-radius:6px;transition:.15s;border-left:2px solid transparent}
+.sb-link:hover{background:var(--bg3);color:var(--text)}
+.sb-link.active{background:rgba(108,99,255,.1);border-left-color:var(--accent);color:var(--accent2)}
+.sb-num{width:18px;height:18px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text3)}
+.sb-link.active .sb-num{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* HERO BAND */
+.lab-hero{background:linear-gradient(135deg,rgba(108,99,255,.12),rgba(56,189,248,.08));border:1px solid var(--border2);border-radius:var(--r2);padding:2rem;margin-bottom:2.5rem}
+.lab-eyebrow{font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.lab-title{font-size:1.8rem;font-weight:800;line-height:1.2;margin-bottom:10px;letter-spacing:-.02em}
+.lab-sub{color:var(--text2);font-size:.95rem;margin-bottom:16px;max-width:600px}
+.lab-pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;border:1px solid}
+.pill-blue{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2);color:var(--accent3)}
+.pill-purple{background:rgba(108,99,255,.08);border-color:rgba(108,99,255,.2);color:var(--accent2)}
+.pill-green{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2);color:var(--green)}
+.pill-amber{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2);color:var(--amber)}
+
+/* SECTION TITLES */
+.section-divider{display:flex;align-items:center;gap:12px;margin:3rem 0 1.5rem}
+.section-divider h2{font-size:1.25rem;font-weight:700;white-space:nowrap}
+.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;background:rgba(108,99,255,.15);color:var(--accent2);letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+
+/* LAB CARDS */
+.lab-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);margin-bottom:1.5rem;overflow:hidden;scroll-margin-top:72px}
+.lab-card-header{display:flex;align-items:center;gap:12px;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border)}
+.lab-card-num{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent3));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0}
+.lab-card-info{flex:1}
+.lab-card-title{font-size:1rem;font-weight:700;margin-bottom:2px}
+.lab-card-sub{font-size:12px;color:var(--text3)}
+.diff{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}
+.diff-easy{background:rgba(74,222,128,.1);color:var(--green)}
+.diff-med{background:rgba(251,191,36,.1);color:var(--amber)}
+.diff-hard{background:rgba(248,113,113,.1);color:var(--coral)}
+.lab-card-body{padding:1.5rem}
+
+/* STEPS */
+.steps{counter-reset:step;list-style:none;display:flex;flex-direction:column;gap:.1rem}
+.step{counter-increment:step;display:flex;gap:16px;position:relative;padding-bottom:1.25rem}
+.step:last-child{padding-bottom:0}
+.step::before{content:counter(step);width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--accent2);flex-shrink:0;margin-top:1px;position:relative;z-index:1}
+.step:not(:last-child)::after{content:'';position:absolute;left:14px;top:29px;bottom:0;width:1px;background:var(--border);transform:translateX(-50%)}
+.step-content{flex:1;padding-top:2px}
+.step-title{font-weight:600;font-size:.9rem;color:var(--text);margin-bottom:4px}
+.step-body{font-size:13px;color:var(--text2);line-height:1.6}
+.step-body code{font-family:'Cascadia Code','Fira Code',monospace;background:var(--bg3);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--accent3);border:1px solid var(--border)}
+
+/* CALLOUTS */
+.callout{border-radius:var(--r);padding:12px 16px;margin:12px 0;font-size:13px;display:flex;gap:10px;line-height:1.6}
+.callout-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.c-info{background:rgba(56,189,248,.06);border-left:3px solid var(--accent3);color:var(--text2)}
+.c-tip{background:rgba(74,222,128,.06);border-left:3px solid var(--green);color:var(--text2)}
+.c-warn{background:rgba(251,191,36,.06);border-left:3px solid var(--amber);color:var(--text2)}
+.c-check{background:rgba(108,99,255,.06);border-left:3px solid var(--accent);color:var(--text2)}
+.callout strong{color:var(--text);font-weight:600}
+
+/* CODE */
+.code-wrap{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--r);margin:12px 0;overflow:hidden}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.code-lang{font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.05em}
+.copy-btn{font-size:10px;font-weight:700;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:3px 9px;border-radius:6px;cursor:pointer;transition:.15s}
+.copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.copy-btn.ok{background:var(--green);color:#0a1a0a;border-color:var(--green)}
+pre{padding:16px;overflow-x:auto;font-family:'Cascadia Code','Fira Code','JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;color:#e2e8f0;tab-size:4}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#4a6070;font-style:italic}.num{color:#f78c6c}.ty{color:#ffcb6b}.pp{color:#89ddff}
+
+/* EXPECTED OUTPUT */
+.output-box{background:#080b10;border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-family:'Cascadia Code',monospace;font-size:12px;color:#4ade80;line-height:1.8;margin:12px 0}
+.output-box .label{color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:block;font-family:'Segoe UI',sans-serif}
+
+/* EXPERIMENTS */
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:12px 0}
+.exp-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.exp-num{font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.exp-title{font-size:.85rem;font-weight:700;margin-bottom:6px;color:var(--text)}
+.exp-body{font-size:12px;color:var(--text2);line-height:1.6}
+.exp-body code{font-family:monospace;background:var(--bg2);padding:1px 4px;border-radius:3px;font-size:11px;color:var(--accent3)}
+
+/* WHAT/WHY TABLE */
+.ww-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.ww-table th{background:var(--bg3);padding:8px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);border-bottom:1px solid var(--border)}
+.ww-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+.ww-table tr:last-child td{border-bottom:none}
+.ww-table td:first-child{font-family:monospace;font-size:12px;color:var(--accent3);white-space:nowrap;width:30%}
+
+/* CHECKPOINT */
+.checkpoint{background:rgba(108,99,255,.06);border:1px solid rgba(108,99,255,.2);border-radius:var(--r);padding:1rem 1.25rem;margin:1rem 0}
+.checkpoint h4{font-size:.85rem;font-weight:700;color:var(--accent2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.checkpoint ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.checkpoint li{font-size:13px;color:var(--text2);display:flex;align-items:flex-start;gap:8px}
+.checkpoint li::before{content:'□';color:var(--accent);font-size:14px;flex-shrink:0;margin-top:-1px}
+
+/* SVG SUMMARY SECTION */
+.svg-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:700px){.svg-row{grid-template-columns:1fr}}
+.svg-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1rem;overflow:hidden}
+.svg-card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.svg-card svg{width:100%;height:auto;display:block}
+
+/* PROGRESS BAR */
+.lab-progress{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.prog-label{font-size:11px;color:var(--text3);white-space:nowrap}
+.prog-track{flex:1;height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:4px;transition:width .4s}
+
+/* SUMMARY STRIP */
+.summary-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
+.sum-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.sum-term{font-size:11px;font-weight:700;color:var(--accent2);margin-bottom:4px}
+.sum-def{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* FOOTER */
+.lab-footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:gap;gap:12px}
+.lab-footer-brand{font-size:13px;font-weight:700;color:var(--accent2)}
+.lab-footer-sub{font-size:11px;color:var(--text3)}
+.next-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;text-decoration:none;padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;transition:.2s}
+.next-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(108,99,255,.4)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-back" href="index.html">← RR Graphics Lab</a>
+  <span class="nav-title">Day 1 Lab Manual<span class="nav-badge">Hands-On</span></span>
+  <div class="nav-days">
+    <a class="nav-day active" href="lab-day1.html">Day 1</a>
+    <a class="nav-day" href="lab-day2.html">Day 2</a>
+    <a class="nav-day" href="lab-day3.html">Day 3</a>
+    <a class="nav-day" href="lab-day4.html">Day 4</a>
+    <a class="nav-day" href="lab-day5.html">Day 5</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-section">
+    <div class="sb-label">Labs — Day 1</div>
+    <a class="sb-link active" href="#lab1"><span class="sb-num">1</span>First OpenGL Window</a>
+    <a class="sb-link" href="#lab2"><span class="sb-num">2</span>First Triangle (VBO+VAO)</a>
+    <a class="sb-link" href="#lab3"><span class="sb-num">3</span>Coloured Triangle</a>
+    <a class="sb-link" href="#lab4"><span class="sb-num">4</span>Rectangle with EBO</a>
+    <a class="sb-link" href="#lab5"><span class="sb-num">5</span>Animated Background</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Reference</div>
+    <a class="sb-link" href="#summary">Day 1 Summary SVGs</a>
+    <a class="sb-link" href="#checklist">Completion Checklist</a>
+    <a class="sb-link" href="#troubleshoot">Troubleshooting</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">VM Quick Ref</div>
+    <a class="sb-link" href="#vmref">Build Commands</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="lab-hero">
+    <div class="lab-eyebrow">OpenGL &amp; Vulkan Training · RR Graphics Lab · Raushan Ranjan (MCT)</div>
+    <div class="lab-title">Day 1 — Hands-On Lab Manual</div>
+    <div class="lab-sub">OpenGL Foundations: Graphics System, Environment Setup, Your First Window and Triangle. 5 progressive labs — each builds on the last.</div>
+    <div class="lab-pills">
+      <span class="pill pill-blue">5 Labs</span>
+      <span class="pill pill-purple">~3 Hours</span>
+      <span class="pill pill-green">Beginner → Intermediate</span>
+      <span class="pill pill-amber">VM Ready</span>
+    </div>
+  </div>
+
+  <div class="lab-progress">
+    <span class="prog-label">Day progress</span>
+    <div class="prog-track"><div class="prog-fill" style="width:20%" id="progFill"></div></div>
+    <span class="prog-label" id="progTxt">Lab 1 of 5</span>
+  </div>
+
+  <!-- ═══════════════ LAB 1 ═══════════════ -->
+  <div class="section-divider"><span class="section-tag">Lab 1</span><h2>Your First OpenGL Window</h2></div>
+
+  <div class="lab-card" id="lab1">
+    <div class="lab-card-header">
+      <div class="lab-card-num">1</div>
+      <div class="lab-card-info">
+        <div class="lab-card-title">Opening a Window with OpenGL Context</div>
+        <div class="lab-card-sub">Module 2 · GLFW · GLEW · Render Loop · ~30 min</div>
+      </div>
+      <span class="diff diff-easy">Beginner</span>
+    </div>
+    <div class="lab-card-body">
+
+      <div class="callout c-info"><span class="callout-icon">ℹ</span><div><strong>What you will build:</strong> A navy-blue window that opens, responds to keyboard input (ESC to close), prints your GPU name to the terminal, and runs a smooth render loop. This is the foundation every OpenGL application starts with.</div></div>
+
+      <h3 style="font-size:.9rem;font-weight:700;color:var(--text);margin:1rem 0 .5rem">Step-by-step instructions</h3>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <div class="step-title">Verify your VM environment</div>
+            <div class="step-body">Open <strong>Developer Command Prompt for VS 2022</strong> from the Start menu (not regular CMD). Type each command and confirm the output:</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <div class="code-hdr"><span class="code-lang">Verify</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre>cl          <span class="cm"># Should show: Microsoft (R) C/C++ Optimizing Compiler</span>
+cmake --version   <span class="cm"># Should show: cmake version 3.28.x or higher</span>
+echo %GLFW_DIR%   <span class="cm"># Should show: C:\libs\glfw</span>
+echo %GLEW_DIR%   <span class="cm"># Should show: C:\libs\glew</span>
+echo %GLM_DIR%    <span class="cm"># Should show: C:\libs\glm</span></pre>
+            </div>
+            <div class="callout c-warn" style="margin-top:6px"><span class="callout-icon">⚠</span><div>If any environment variable is empty, close and reopen the Developer Command Prompt. Variables are loaded fresh each session.</div></div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Create the project folder structure</div>
+            <div class="step-body">Run these commands to create the lab directory:</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <div class="code-hdr"><span class="code-lang">CMD</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre>mkdir C:\Labs\Lab01_Window\src
+cd C:\Labs\Lab01_Window</pre>
+            </div>
+            <div class="step-body" style="margin-top:6px">Then open VS Code in this folder:</div>
+            <div class="code-wrap" style="margin-top:4px">
+              <div class="code-hdr"><span class="code-lang">CMD</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre>code .</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Create CMakeLists.txt — the build blueprint</div>
+            <div class="step-body">In VS Code create a new file named <code>CMakeLists.txt</code> in the root folder. Copy the code below exactly:</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <div class="code-hdr"><span class="code-lang">CMakeLists.txt</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="cm"># Minimum CMake version — below this CMake refuses to process the file</span>
+cmake_minimum_required(VERSION 3.20)
+
+<span class="cm"># Project name — becomes the name of the .sln and the .exe</span>
+<span class="cm"># You can change "lab01" to anything — no spaces allowed</span>
+project(lab01)
+
+<span class="cm"># Tell compiler we want C++17 standard features</span>
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+<span class="cm"># Find OpenGL on this machine — installed with GPU driver</span>
+<span class="cm"># REQUIRED = stop with error if not found</span>
+find_package(OpenGL REQUIRED)
+
+<span class="cm"># Read library locations from environment variables we set during VM setup</span>
+<span class="cm"># $ENV{} reads a Windows environment variable</span>
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLEW_DIR $ENV{GLEW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+
+<span class="cm"># Tell compiler WHERE to find header files (.h files)</span>
+<span class="cm"># ${GLFW_DIR} expands to C:\libs\glfw, so this adds C:\libs\glfw\include to search</span>
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLEW_DIR}/include
+    ${GLM_DIR})
+
+<span class="cm"># Define what we are building: executable named "lab01" from src/main.cpp</span>
+add_executable(lab01 src/main.cpp)
+
+<span class="cm"># Link against pre-compiled library files (.lib = Windows static library)</span>
+<span class="cm"># This connects your code to the GLFW and GLEW function implementations</span>
+target_link_libraries(lab01
+    OpenGL::GL
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+    ${GLEW_DIR}/lib/Release/x64/glew32s.lib)</pre>
+            </div>
+
+            <table class="ww-table" style="margin-top:10px">
+              <tr><th>Line / Term</th><th>What it does — plain English</th></tr>
+              <tr><td>project(lab01)</td><td>Names the project. CMake creates lab01.sln and lab01.exe. You can use any name here.</td></tr>
+              <tr><td>find_package(OpenGL REQUIRED)</td><td>CMake searches standard Windows locations for OpenGL. The GPU driver installs it. After this, <code>OpenGL::GL</code> is a valid target to link against.</td></tr>
+              <tr><td>$ENV{GLFW_DIR}</td><td>Reads the Windows environment variable GLFW_DIR. If you installed GLFW at C:\libs\glfw, this becomes C:\libs\glfw.</td></tr>
+              <tr><td>include_directories(...)</td><td>Tells the C++ compiler which folders to search when you write <code>#include &lt;GLFW/glfw3.h&gt;</code>. Without this, the compiler cannot find the header files.</td></tr>
+              <tr><td>add_executable(...)</td><td>Defines the output: compile src/main.cpp into an executable named lab01. Add more .cpp files after main.cpp separated by spaces.</td></tr>
+              <tr><td>target_link_libraries(...)</td><td>Connects compiled code to the library implementations. Without this, the linker says "I see you called glfwInit() but I don't know where that function lives."</td></tr>
+            </table>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Create src/main.cpp — the complete program</div>
+            <div class="step-body">Create <code>src/main.cpp</code> and copy this code. Read every comment — each one explains exactly what that line does and why:</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <div class="code-hdr"><span class="code-lang">C++ — src/main.cpp</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="cm">// ═══════════════════════════════════════════════════════════════
+// Lab 01 — First OpenGL Window
+// RR Graphics Lab · Raushan Ranjan (MCT)
+// ═══════════════════════════════════════════════════════════════</span>
+
+<span class="cm">// RULE: GLEW must ALWAYS be included BEFORE GLFW.
+// GLEW defines OpenGL function signatures first — GLFW also includes
+// some GL headers, creating conflicts if order is wrong.</span>
+<span class="pp">#include</span> <span class="str">&lt;GL/glew.h&gt;</span>
+
+<span class="cm">// GLFW: window creation, keyboard/mouse, OpenGL context</span>
+<span class="pp">#include</span> <span class="str">&lt;GLFW/glfw3.h&gt;</span>
+
+<span class="cm">// Standard C++ for printing to terminal</span>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+
+<span class="cm">// ───────────────────────────────────────────────────────────────
+// CALLBACK FUNCTION — called automatically by GLFW when the
+// user resizes the window. Parameters:
+//   window : which window was resized (we only have one)
+//   width  : new width in pixels
+//   height : new height in pixels
+// ───────────────────────────────────────────────────────────────</span>
+<span class="ty">void</span> <span class="fn">framebuffer_size_callback</span>(<span class="ty">GLFWwindow</span>* window, <span class="ty">int</span> width, <span class="ty">int</span> height)
+{
+    <span class="cm">// glViewport tells OpenGL: "the drawable area is from pixel (0,0)
+    // to pixel (width, height) in this window."
+    // Without this, resizing the window would not update the render area.</span>
+    <span class="fn">glViewport</span>(<span class="num">0</span>, <span class="num">0</span>, width, height);
+}
+
+<span class="cm">// ───────────────────────────────────────────────────────────────
+// INPUT HANDLER — called every frame to check keyboard state
+// ───────────────────────────────────────────────────────────────</span>
+<span class="ty">void</span> <span class="fn">process_input</span>(<span class="ty">GLFWwindow</span>* window)
+{
+    <span class="cm">// glfwGetKey asks: "Is this key currently pressed?"
+    // GLFW_KEY_ESCAPE is a constant defined in glfw3.h — its value is 256.
+    // We use the name so code is readable. GLFW_PRESS = key is down right now.</span>
+    <span class="kw">if</span> (<span class="fn">glfwGetKey</span>(window, <span class="ty">GLFW_KEY_ESCAPE</span>) == <span class="ty">GLFW_PRESS</span>)
+        <span class="fn">glfwSetWindowShouldClose</span>(window, <span class="kw">true</span>);
+        <span class="cm">// Sets a flag. The render loop checks this flag each iteration.</span>
+}
+
+<span class="cm">// ───────────────────────────────────────────────────────────────
+// MAIN — program entry point
+// ───────────────────────────────────────────────────────────────</span>
+<span class="ty">int</span> <span class="fn">main</span>()
+{
+    <span class="cm">// STEP 1: Start GLFW internal systems.
+    // Must be the very first GLFW call.
+    // Returns GL_TRUE on success, GL_FALSE on failure.</span>
+    <span class="kw">if</span> (!<span class="fn">glfwInit</span>()) {
+        std::cerr &lt;&lt; <span class="str">"ERROR: GLFW init failed\n"</span>;
+        <span class="kw">return</span> <span class="num">-1</span>;
+    }
+
+    <span class="cm">// STEP 2: Configure what kind of OpenGL context to create.
+    // These "hints" act like form fields filled before submitting.
+    // MAJOR=3, MINOR=3 → we want OpenGL 3.3
+    // CORE_PROFILE → modern OpenGL, no legacy 1990s features</span>
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MAJOR</span>, <span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MINOR</span>, <span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_OPENGL_PROFILE</span>, <span class="ty">GLFW_OPENGL_CORE_PROFILE</span>);
+
+    <span class="cm">// STEP 3: Create the window AND its OpenGL context.
+    // Parameters: width, height, title, monitor (NULL=windowed), share (NULL=none)
+    // Returns: pointer to window object — our handle for all future GLFW calls</span>
+    <span class="ty">GLFWwindow</span>* window = <span class="fn">glfwCreateWindow</span>(<span class="num">800</span>, <span class="num">600</span>,
+        <span class="str">"Lab 01 — RR Graphics Lab"</span>, <span class="ty">NULL</span>, <span class="ty">NULL</span>);
+    <span class="kw">if</span> (!window) {
+        std::cerr &lt;&lt; <span class="str">"ERROR: Window creation failed\n"</span>;
+        <span class="fn">glfwTerminate</span>();
+        <span class="kw">return</span> <span class="num">-1</span>;
+    }
+
+    <span class="cm">// STEP 4: Make this window's context "current" on this thread.
+    // OpenGL is a state machine — you activate ONE context at a time.
+    // All GL calls from now on affect THIS window.
+    // MUST happen before glewInit (GLEW needs an active context to query driver).</span>
+    <span class="fn">glfwMakeContextCurrent</span>(window);
+
+    <span class="cm">// Register our resize callback so GLFW calls it automatically on resize</span>
+    <span class="fn">glfwSetFramebufferSizeCallback</span>(window, framebuffer_size_callback);
+
+    <span class="cm">// STEP 5: Initialise GLEW — loads ALL modern OpenGL functions.
+    // glewExperimental = true: required for Core Profile contexts.
+    // Without it, GLEW may miss some extension functions.
+    // MUST be called AFTER glfwMakeContextCurrent.</span>
+    <span class="var">glewExperimental</span> = <span class="ty">GL_TRUE</span>;
+    <span class="kw">if</span> (<span class="fn">glewInit</span>() != <span class="ty">GLEW_OK</span>) {
+        std::cerr &lt;&lt; <span class="str">"ERROR: GLEW init failed\n"</span>;
+        <span class="kw">return</span> <span class="num">-1</span>;
+    }
+
+    <span class="cm">// STEP 6: Print GPU and OpenGL info — paste this when asking for help!</span>
+    std::cout &lt;&lt; <span class="str">"GPU    : "</span> &lt;&lt; <span class="fn">glGetString</span>(<span class="ty">GL_RENDERER</span>) &lt;&lt; <span class="str">"\n"</span>;
+    std::cout &lt;&lt; <span class="str">"OpenGL : "</span> &lt;&lt; <span class="fn">glGetString</span>(<span class="ty">GL_VERSION</span>)  &lt;&lt; <span class="str">"\n"</span>;
+    std::cout &lt;&lt; <span class="str">"GLSL   : "</span> &lt;&lt; <span class="fn">glGetString</span>(<span class="ty">GL_SHADING_LANGUAGE_VERSION</span>) &lt;&lt; <span class="str">"\n"</span>;
+
+    <span class="cm">// Set the initial viewport to cover the full 800x600 window</span>
+    <span class="fn">glViewport</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">800</span>, <span class="num">600</span>);
+
+    <span class="cm">// ═══════════════════════════════════════════════════════════════
+    // THE RENDER LOOP — the heartbeat of every real-time application.
+    // Runs continuously until the window is asked to close.
+    // Each complete iteration = one rendered frame on screen.
+    // ═══════════════════════════════════════════════════════════════</span>
+    <span class="kw">while</span> (!<span class="fn">glfwWindowShouldClose</span>(window))
+    {
+        <span class="cm">// Phase 1: Handle keyboard/mouse input for this frame</span>
+        <span class="fn">process_input</span>(window);
+
+        <span class="cm">// Phase 2: Set clear colour (navy blue — R:0.05 G:0.10 B:0.20)
+        // Values are 0.0–1.0. To convert from 0–255: divide by 255.
+        // glClearColor only SETS the colour — it does NOT clear yet.</span>
+        <span class="fn">glClearColor</span>(<span class="num">0.05f</span>, <span class="num">0.10f</span>, <span class="num">0.20f</span>, <span class="num">1.0f</span>);
+
+        <span class="cm">// Phase 3: Actually clear the colour buffer with that colour.
+        // GL_COLOR_BUFFER_BIT = clear colour data.
+        // Later: also use GL_DEPTH_BUFFER_BIT for 3D scenes.</span>
+        <span class="fn">glClear</span>(<span class="ty">GL_COLOR_BUFFER_BIT</span>);
+
+        <span class="cm">// Phase 4: Swap back buffer → front buffer.
+        // Double buffering: you draw on hidden canvas (back), then swap.
+        // The viewer always sees a complete frame — no flicker.</span>
+        <span class="fn">glfwSwapBuffers</span>(window);
+
+        <span class="cm">// Phase 5: Process all OS events since last frame.
+        // Keyboard, mouse, resize, close button — all queued here.
+        // Without this: window appears frozen and unresponsive.</span>
+        <span class="fn">glfwPollEvents</span>();
+    }
+
+    <span class="cm">// Cleanup — always release resources when done</span>
+    <span class="fn">glfwDestroyWindow</span>(window);
+    <span class="fn">glfwTerminate</span>();
+    std::cout &lt;&lt; <span class="str">"Window closed cleanly.\n"</span>;
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Build and run — three commands</div>
+            <div class="step-body">In Developer Command Prompt, from <code>C:\Labs\Lab01_Window</code>:</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <div class="code-hdr"><span class="code-lang">Build</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="cm"># Command 1: Generate Visual Studio project files
+# -B build    → put generated files in a "build" subfolder
+# -G "..."    → generate for Visual Studio 2022
+# -A x64      → target 64-bit architecture (matches our 64-bit libraries)</span>
+cmake -B build -G "Visual Studio 17 2022" -A x64
+
+<span class="cm"># Command 2: Compile everything
+# --config Release → optimised build (no debug symbols)</span>
+cmake --build build --config Release
+
+<span class="cm"># Command 3: Run the program</span>
+build\Release\lab01.exe</pre>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="output-box">
+        <span class="label">Expected terminal output</span>
+        GPU    : NVIDIA GeForce RTX 3060 / Intel UHD Graphics (your GPU here)
+        OpenGL : 4.6.0 NVIDIA 537.xx / 4.6.0 (any 3.3+ version)
+        GLSL   : 4.60 NVIDIA (any version)
+        Window closed cleanly.
+      </div>
+
+      <div class="callout c-tip"><span class="callout-icon">✓</span><div><strong>Expected visual result:</strong> A navy blue window, 800×600 pixels, with the title "Lab 01 — RR Graphics Lab". Press ESC to close it. No crashes, no black screen.</div></div>
+
+      <h3 style="font-size:.9rem;font-weight:700;color:var(--text);margin:1.25rem 0 .75rem">Experiments — do these now</h3>
+      <div class="exp-grid">
+        <div class="exp-card">
+          <div class="exp-num">Experiment A</div>
+          <div class="exp-title">Change the background colour</div>
+          <div class="exp-body">Replace <code>glClearColor(0.05f, 0.10f, 0.20f, 1.0f)</code> with <code>glClearColor(1.0f, 0.0f, 0.0f, 1.0f)</code>. Rebuild and run. Try green, yellow, black. Values are 0.0–1.0 — NOT 0–255.</div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-num">Experiment B</div>
+          <div class="exp-title">Remove glfwPollEvents()</div>
+          <div class="exp-body">Comment out <code>glfwPollEvents();</code>. Rebuild. The window appears but is completely frozen — you cannot move or close it. This proves why PollEvents is essential every frame.</div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-num">Experiment C</div>
+          <div class="exp-title">Remove glfwSwapBuffers()</div>
+          <div class="exp-body">Comment out <code>glfwSwapBuffers(window);</code>. Rebuild. The window shows black even though you set a colour. You drew on the back buffer but never showed it — proof of double buffering.</div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-num">Experiment D</div>
+          <div class="exp-title">Animated colour (bonus)</div>
+          <div class="exp-body">Replace glClearColor with:<br><code>float t=(float)glfwGetTime();</code><br><code>glClearColor(sin(t)*.5f+.5f, 0.1f, 0.3f, 1.0f);</code><br>Add <code>#include &lt;cmath&gt;</code> at top. The window pulses colour.</div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <h4>✦ Lab 1 completion checklist</h4>
+        <ul>
+          <li>Window opens without crashing</li>
+          <li>Terminal shows your real GPU name and OpenGL version 3.3+</li>
+          <li>ESC key closes the window cleanly</li>
+          <li>You have run all 4 experiments and understand WHY each one has the effect it does</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ LAB 2 ═══════════════ -->
+  <div class="section-divider"><span class="section-tag">Lab 2</span><h2>First Triangle — VBO and VAO</h2></div>
+
+  <div class="lab-card" id="lab2">
+    <div class="lab-card-header">
+      <div class="lab-card-num">2</div>
+      <div class="lab-card-info">
+        <div class="lab-card-title">Drawing a Triangle with Vertex Buffers and Shaders</div>
+        <div class="lab-card-sub">Module 3 · VBO · VAO · Vertex Shader · Fragment Shader · ~40 min</div>
+      </div>
+      <span class="diff diff-easy">Beginner</span>
+    </div>
+    <div class="lab-card-body">
+
+      <div class="callout c-info"><span class="callout-icon">ℹ</span><div><strong>What you will build:</strong> An orange triangle rendered from a C++ float array uploaded to the GPU. You will write your first vertex shader and fragment shader in GLSL. This is the "Hello World" of GPU rendering.</div></div>
+
+      <h3 style="font-size:.9rem;font-weight:700;color:var(--text);margin:1rem 0 .5rem">Concepts to understand before coding</h3>
+
+      <table class="ww-table">
+        <tr><th>Term</th><th>What it really means</th></tr>
+        <tr><td>VBO</td><td>A block of GPU memory (VRAM) holding your raw vertex data. Think of it as a USB drive plugged into the GPU. Just raw numbers — the GPU doesn't know what they mean yet.</td></tr>
+        <tr><td>VAO</td><td>Stores the description of how to read the VBO. Not data — the format. "Read 3 floats starting at byte 0, stride 12 bytes." Binding a VAO restores this description instantly.</td></tr>
+        <tr><td>Vertex Shader</td><td>A small program in GLSL that runs once per vertex on the GPU. Its job: take a 3D position and output where it appears on the 2D screen. For now it passes positions straight through.</td></tr>
+        <tr><td>Fragment Shader</td><td>Runs once per pixel the triangle covers. Its job: decide the colour of that pixel. For now: output solid orange for every pixel.</td></tr>
+        <tr><td>NDC</td><td>Normalised Device Coordinates. The visible screen area is -1.0 to +1.0 in X and Y. (0,0) is screen centre. Our triangle vertices stay in this range so no transformation is needed yet.</td></tr>
+        <tr><td>glsl location=0</td><td>Links the VAO attribute index to the shader input variable. If you use index 0 in glVertexAttribPointer, your shader must declare layout(location=0) for that attribute.</td></tr>
+      </table>
+
+      <h3 style="font-size:.9rem;font-weight:700;color:var(--text);margin:1rem 0 .5rem">Step-by-step instructions</h3>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <div class="step-title">Create Lab 2 folder and copy CMakeLists.txt</div>
+            <div class="step-body">Copy Lab 1's CMakeLists.txt to <code>C:\Labs\Lab02_Triangle\</code>. Change <code>project(lab01)</code> to <code>project(lab02)</code> and <code>add_executable(lab01 ...)</code> to <code>add_executable(lab02 ...)</code>. Create <code>src\main.cpp</code>.</div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Write src/main.cpp</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <div class="code-hdr"><span class="code-lang">C++ — Lab 2 complete</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="pp">#include</span> <span class="str">&lt;GL/glew.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;GLFW/glfw3.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+
+<span class="cm">// ─── VERTEX SHADER SOURCE ────────────────────────────────────────
+// Written in GLSL. Stored as a C++ string. Compiled at runtime by the GPU driver.
+// #version 330 core — matches OpenGL 3.3 Core Profile we requested.
+// layout(location=0) — links to VAO attribute index 0.
+//   YOU choose the index. Must match glVertexAttribPointer first param.
+// in vec3 aPos — "in" = comes from VBO. vec3 = 3 floats. "aPos" = YOUR name choice.
+// gl_Position — built-in output. OpenGL reads this for screen placement.
+// vec4(aPos, 1.0) — wraps (x,y,z) into (x,y,z,w). w=1.0 for regular positions.</span>
+<span class="kw">const char</span>* vertexShaderSource = <span class="str">R"(
+    #version 330 core
+    layout (location = 0) in vec3 aPos;
+    void main() {
+        gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    }
+)"</span>;
+
+<span class="cm">// ─── FRAGMENT SHADER SOURCE ──────────────────────────────────────
+// Runs once per pixel the triangle covers.
+// out vec4 FragColor — "out" = goes to framebuffer. vec4 = RGBA. "FragColor" = YOUR name.
+// vec4(1.0, 0.5, 0.2, 1.0) = R:1.0 G:0.5 B:0.2 A:1.0 = orange, fully opaque.</span>
+<span class="kw">const char</span>* fragmentShaderSource = <span class="str">R"(
+    #version 330 core
+    out vec4 FragColor;
+    void main() {
+        FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    }
+)"</span>;
+
+<span class="cm">// ─── HELPER: compile one shader, check for errors ────────────────
+// type: GL_VERTEX_SHADER or GL_FRAGMENT_SHADER
+// src:  pointer to the GLSL source string
+// returns: the shader's ID on the GPU</span>
+<span class="ty">unsigned int</span> <span class="fn">compileShader</span>(<span class="ty">unsigned int</span> type, <span class="kw">const char</span>* src)
+{
+    <span class="ty">unsigned int</span> id = <span class="fn">glCreateShader</span>(type);  <span class="cm">// allocate a shader slot</span>
+    <span class="fn">glShaderSource</span>(id, <span class="num">1</span>, &amp;src, <span class="ty">NULL</span>);       <span class="cm">// attach the source string</span>
+    <span class="fn">glCompileShader</span>(id);                      <span class="cm">// compile on GPU driver</span>
+
+    <span class="cm">// Check for compile errors — never skip this in development</span>
+    <span class="ty">int</span> success;
+    <span class="ty">char</span> infoLog[<span class="num">512</span>];
+    <span class="fn">glGetShaderiv</span>(id, <span class="ty">GL_COMPILE_STATUS</span>, &amp;success);
+    <span class="kw">if</span> (!success) {
+        <span class="fn">glGetShaderInfoLog</span>(id, <span class="num">512</span>, <span class="ty">NULL</span>, infoLog);
+        std::cerr &lt;&lt; <span class="str">"Shader compile error:\n"</span> &lt;&lt; infoLog &lt;&lt; <span class="str">"\n"</span>;
+    }
+    <span class="kw">return</span> id;
+}
+
+<span class="ty">void</span> <span class="fn">framebuffer_size_callback</span>(<span class="ty">GLFWwindow</span>* w, <span class="ty">int</span> wd, <span class="ty">int</span> h) { <span class="fn">glViewport</span>(<span class="num">0</span>,<span class="num">0</span>,wd,h); }
+
+<span class="ty">int</span> <span class="fn">main</span>()
+{
+    <span class="cm">// ─── WINDOW SETUP (same as Lab 1) ───────────────────────────────</span>
+    <span class="fn">glfwInit</span>();
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MAJOR</span>, <span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_CONTEXT_VERSION_MINOR</span>, <span class="num">3</span>);
+    <span class="fn">glfwWindowHint</span>(<span class="ty">GLFW_OPENGL_PROFILE</span>, <span class="ty">GLFW_OPENGL_CORE_PROFILE</span>);
+    <span class="ty">GLFWwindow</span>* window = <span class="fn">glfwCreateWindow</span>(<span class="num">800</span>, <span class="num">600</span>, <span class="str">"Lab 02 — Triangle"</span>, <span class="ty">NULL</span>, <span class="ty">NULL</span>);
+    <span class="fn">glfwMakeContextCurrent</span>(window);
+    <span class="fn">glfwSetFramebufferSizeCallback</span>(window, framebuffer_size_callback);
+    <span class="var">glewExperimental</span> = <span class="ty">GL_TRUE</span>;
+    <span class="fn">glewInit</span>();
+
+    <span class="cm">// ─── BUILD SHADER PROGRAM ───────────────────────────────────────
+    // Compile each shader, link them into a "program" the GPU uses during draw.</span>
+    <span class="ty">unsigned int</span> vertShader = <span class="fn">compileShader</span>(<span class="ty">GL_VERTEX_SHADER</span>,   vertexShaderSource);
+    <span class="ty">unsigned int</span> fragShader = <span class="fn">compileShader</span>(<span class="ty">GL_FRAGMENT_SHADER</span>, fragmentShaderSource);
+
+    <span class="ty">unsigned int</span> shaderProgram = <span class="fn">glCreateProgram</span>();
+    <span class="fn">glAttachShader</span>(shaderProgram, vertShader);   <span class="cm">// attach vertex shader</span>
+    <span class="fn">glAttachShader</span>(shaderProgram, fragShader);   <span class="cm">// attach fragment shader</span>
+    <span class="fn">glLinkProgram</span>(shaderProgram);               <span class="cm">// link them together</span>
+
+    <span class="cm">// After linking, individual shader objects are no longer needed</span>
+    <span class="fn">glDeleteShader</span>(vertShader);
+    <span class="fn">glDeleteShader</span>(fragShader);
+
+    <span class="cm">// ─── VERTEX DATA ────────────────────────────────────────────────
+    // 3 vertices × 3 floats (x,y,z) = 9 floats = 36 bytes.
+    // Positions in NDC: visible range is -1.0 to +1.0 in X and Y.
+    // (0,0) = screen centre. These span -0.5 to +0.5 → centred triangle.</span>
+    <span class="ty">float</span> vertices[] = {
+        <span class="num">-0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,   <span class="cm">// vertex 0: bottom-left</span>
+         <span class="num">0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,   <span class="cm">// vertex 1: bottom-right</span>
+         <span class="num">0.0f</span>,  <span class="num">0.5f</span>, <span class="num">0.0f</span>    <span class="cm">// vertex 2: top-centre</span>
+    };
+
+    <span class="cm">// ─── CREATE VAO AND VBO ─────────────────────────────────────────</span>
+    <span class="ty">unsigned int</span> VAO, VBO;
+
+    <span class="cm">// glGenVertexArrays: allocate 1 VAO on GPU, get its ID number.
+    // The ID is just an unsigned int — think of it as a locker number.</span>
+    <span class="fn">glGenVertexArrays</span>(<span class="num">1</span>, &amp;VAO);
+
+    <span class="cm">// glGenBuffers: allocate 1 buffer on GPU, get its ID.</span>
+    <span class="fn">glGenBuffers</span>(<span class="num">1</span>, &amp;VBO);
+
+    <span class="cm">// ALWAYS bind VAO FIRST — it starts "recording" all attribute config calls below.</span>
+    <span class="fn">glBindVertexArray</span>(VAO);
+
+    <span class="cm">// Bind VBO to GL_ARRAY_BUFFER slot (the "vertex data" slot).</span>
+    <span class="fn">glBindBuffer</span>(<span class="ty">GL_ARRAY_BUFFER</span>, VBO);
+
+    <span class="cm">// Upload: COPY 36 bytes from CPU RAM (vertices array) to GPU VRAM (the VBO).
+    // GL_STATIC_DRAW = hint: data won't change often, optimise for reading.</span>
+    <span class="fn">glBufferData</span>(<span class="ty">GL_ARRAY_BUFFER</span>, <span class="kw">sizeof</span>(vertices), vertices, <span class="ty">GL_STATIC_DRAW</span>);
+
+    <span class="cm">// Tell OpenGL how to interpret the VBO data:
+    // Param 1 (0)      : attribute INDEX — must match layout(location=0) in shader
+    // Param 2 (3)      : 3 components per attribute (x, y, z)
+    // Param 3          : data type is float
+    // Param 4 (FALSE)  : do not normalise — leave values as-is
+    // Param 5 (12)     : STRIDE = bytes from one vertex start to next vertex start
+    //                    = 3 floats × 4 bytes = 12 bytes
+    // Param 6 ((void*)0): OFFSET = where does this attribute START within a vertex?
+    //                    = 0 bytes (position is the first and only thing here)</span>
+    <span class="fn">glVertexAttribPointer</span>(<span class="num">0</span>, <span class="num">3</span>, <span class="ty">GL_FLOAT</span>, <span class="ty">GL_FALSE</span>,
+                          <span class="num">3</span> * <span class="kw">sizeof</span>(<span class="ty">float</span>), (<span class="ty">void</span>*)<span class="num">0</span>);
+
+    <span class="cm">// Enable attribute slot 0 — attributes are DISABLED by default.</span>
+    <span class="fn">glEnableVertexAttribArray</span>(<span class="num">0</span>);
+
+    <span class="cm">// Unbind — good practice to prevent accidental modification.</span>
+    <span class="fn">glBindVertexArray</span>(<span class="num">0</span>);
+
+    <span class="cm">// ─── RENDER LOOP ────────────────────────────────────────────────</span>
+    <span class="kw">while</span> (!<span class="fn">glfwWindowShouldClose</span>(window))
+    {
+        <span class="kw">if</span> (<span class="fn">glfwGetKey</span>(window, <span class="ty">GLFW_KEY_ESCAPE</span>) == <span class="ty">GLFW_PRESS</span>)
+            <span class="fn">glfwSetWindowShouldClose</span>(window, <span class="kw">true</span>);
+
+        <span class="fn">glClearColor</span>(<span class="num">0.1f</span>, <span class="num">0.1f</span>, <span class="num">0.15f</span>, <span class="num">1.0f</span>);
+        <span class="fn">glClear</span>(<span class="ty">GL_COLOR_BUFFER_BIT</span>);
+
+        <span class="cm">// ── DRAW — 3 calls, same order every single time: ────────────
+        // 1. Activate our shader program
+        // 2. Bind VAO (restores attribute config instantly — 1 call)
+        // 3. Draw</span>
+        <span class="fn">glUseProgram</span>(shaderProgram);
+        <span class="fn">glBindVertexArray</span>(VAO);
+        <span class="cm">// GL_TRIANGLES: every 3 vertices = 1 triangle
+        // 0: start from vertex index 0
+        // 3: process 3 vertices total → 1 triangle</span>
+        <span class="fn">glDrawArrays</span>(<span class="ty">GL_TRIANGLES</span>, <span class="num">0</span>, <span class="num">3</span>);
+
+        <span class="fn">glfwSwapBuffers</span>(window);
+        <span class="fn">glfwPollEvents</span>();
+    }
+
+    <span class="cm">// Cleanup GPU resources</span>
+    <span class="fn">glDeleteVertexArrays</span>(<span class="num">1</span>, &amp;VAO);
+    <span class="fn">glDeleteBuffers</span>(<span class="num">1</span>, &amp;VBO);
+    <span class="fn">glDeleteProgram</span>(shaderProgram);
+    <span class="fn">glfwTerminate</span>();
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Build and run</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">Build</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre>cd C:\Labs\Lab02_Triangle
+cmake -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+build\Release\lab02.exe</pre>
+            </div>
+            <div class="callout c-tip" style="margin-top:8px"><span class="callout-icon">✓</span><div>An orange triangle centred on a dark background. The triangle is centred because NDC (0,0) is the screen centre and our vertices span -0.5 to +0.5.</div></div>
+          </div>
+        </li>
+      </ol>
+
+      <h3 style="font-size:.9rem;font-weight:700;color:var(--text);margin:1.25rem 0 .75rem">Experiments</h3>
+      <div class="exp-grid">
+        <div class="exp-card">
+          <div class="exp-num">Experiment A</div>
+          <div class="exp-title">Move the triangle</div>
+          <div class="exp-body">Change all X values in the vertex array by adding 0.3f. What happens? Then try adding to Y values. NDC range is -1 to +1 — go beyond and the triangle gets clipped.</div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-num">Experiment B</div>
+          <div class="exp-title">Change triangle colour</div>
+          <div class="exp-body">In the fragment shader string, change <code>vec4(1.0f, 0.5f, 0.2f, 1.0f)</code> to a different colour. Remember to rebuild. The fragment shader controls every pixel's colour.</div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-num">Experiment C</div>
+          <div class="exp-title">Skip glEnableVertexAttribArray</div>
+          <div class="exp-body">Comment out <code>glEnableVertexAttribArray(0)</code>. Rebuild. The triangle disappears. This proves attributes are disabled by default — you must explicitly enable each one.</div>
+        </div>
+        <div class="exp-card">
+          <div class="exp-num">Experiment D</div>
+          <div class="exp-title">Draw two triangles</div>
+          <div class="exp-body">Add 3 more vertices to the array and change <code>glDrawArrays(GL_TRIANGLES, 0, 3)</code> to <code>glDrawArrays(GL_TRIANGLES, 0, 6)</code>. Position the second triangle so both are visible.</div>
+        </div>
+      </div>
+
+      <div class="checkpoint">
+        <h4>✦ Lab 2 completion checklist</h4>
+        <ul>
+          <li>Orange triangle visible on dark background — no error messages in terminal</li>
+          <li>You can explain what VAO stores (format) vs what VBO stores (data)</li>
+          <li>You understand all 6 parameters of glVertexAttribPointer</li>
+          <li>Experiments A and B completed successfully</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LAB 3 ═══════════════ -->
+  <div class="section-divider"><span class="section-tag">Lab 3</span><h2>Per-Vertex Colours — Interpolation</h2></div>
+
+  <div class="lab-card" id="lab3">
+    <div class="lab-card-header">
+      <div class="lab-card-num">3</div>
+      <div class="lab-card-info">
+        <div class="lab-card-title">Coloured Triangle with Two Vertex Attributes</div>
+        <div class="lab-card-sub">Module 3 · Multiple Attributes · Interpolation · ~25 min</div>
+      </div>
+      <span class="diff diff-easy">Beginner</span>
+    </div>
+    <div class="lab-card-body">
+
+      <div class="callout c-info"><span class="callout-icon">ℹ</span><div><strong>What you will build:</strong> A triangle with red, green, and blue corners. The GPU automatically blends the colours across the surface — you do not compute this. This demonstrates interpolation and multi-attribute vertex data.</div></div>
+
+      <h3 style="font-size:.9rem;font-weight:700;color:var(--text);margin:1rem 0 .5rem">Key change from Lab 2</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Each vertex now has <strong>6 floats</strong> instead of 3: (X, Y, Z, R, G, B). The stride becomes 24 bytes. A second <code>glVertexAttribPointer</code> call describes the colour attribute at index 1, with offset 12 bytes (skip the 3 position floats).</p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <div class="step-title">Update shaders to pass colour through</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">Updated Vertex Shader</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="kw">const char</span>* vertexShaderSource = <span class="str">R"(
+    #version 330 core
+    layout (location = 0) in vec3 aPos;    // attribute 0: position
+    layout (location = 1) in vec3 aColor;  // attribute 1: colour (YOUR name choice)
+    out vec3 ourColor;    // pass to fragment shader — "out" keyword
+    void main() {
+        gl_Position = vec4(aPos, 1.0);
+        ourColor = aColor;  // just pass it through, GPU interpolates
+    }
+)"</span>;
+
+<span class="kw">const char</span>* fragmentShaderSource = <span class="str">R"(
+    #version 330 core
+    in vec3 ourColor;      // "in" — receives interpolated colour from vertex shader
+    out vec4 FragColor;
+    void main() {
+        FragColor = vec4(ourColor, 1.0);  // use the interpolated colour
+    }
+)"</span>;</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Update vertex data — 6 floats per vertex</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">C++ — Vertex Array</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="ty">float</span> vertices[] = {
+    <span class="cm">// X      Y      Z      R     G     B</span>
+    <span class="num">-0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,  <span class="num">1.0f</span>, <span class="num">0.0f</span>, <span class="num">0.0f</span>,  <span class="cm">// bottom-left:  red</span>
+     <span class="num">0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,  <span class="num">0.0f</span>, <span class="num">1.0f</span>, <span class="num">0.0f</span>,  <span class="cm">// bottom-right: green</span>
+     <span class="num">0.0f</span>,  <span class="num">0.5f</span>, <span class="num">0.0f</span>,  <span class="num">0.0f</span>, <span class="num">0.0f</span>, <span class="num">1.0f</span>   <span class="cm">// top-centre:   blue</span>
+};</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Update glVertexAttribPointer — two attribute descriptions</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">C++ — Attribute Configuration</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="cm">// ATTRIBUTE 0: position
+// Index=0, Components=3, Type=FLOAT, Normalise=NO
+// Stride = 6 floats × 4 bytes = 24 bytes (vertex-to-vertex distance)
+// Offset = 0 bytes (position starts at the very beginning of each vertex)</span>
+<span class="fn">glVertexAttribPointer</span>(<span class="num">0</span>, <span class="num">3</span>, <span class="ty">GL_FLOAT</span>, <span class="ty">GL_FALSE</span>,
+                      <span class="num">6</span> * <span class="kw">sizeof</span>(<span class="ty">float</span>), (<span class="ty">void</span>*)<span class="num">0</span>);
+<span class="fn">glEnableVertexAttribArray</span>(<span class="num">0</span>);
+
+<span class="cm">// ATTRIBUTE 1: colour
+// Index=1, Components=3, Type=FLOAT, Normalise=NO
+// Stride = 24 (same — still 6 floats apart)
+// Offset = 12 bytes (skip 3 position floats × 4 bytes = 12 bytes first)</span>
+<span class="fn">glVertexAttribPointer</span>(<span class="num">1</span>, <span class="num">3</span>, <span class="ty">GL_FLOAT</span>, <span class="ty">GL_FALSE</span>,
+                      <span class="num">6</span> * <span class="kw">sizeof</span>(<span class="ty">float</span>), (<span class="ty">void</span>*)(<span class="num">3</span> * <span class="kw">sizeof</span>(<span class="ty">float</span>)));
+<span class="fn">glEnableVertexAttribArray</span>(<span class="num">1</span>);</pre>
+            </div>
+            <div class="callout c-tip" style="margin-top:8px"><span class="callout-icon">✓</span><div>Build and run. A triangle with red, green, and blue corners — yellow, cyan, and magenta appear in between. The GPU interpolated the colours across the surface automatically during rasterization. You did not compute any of those middle colours.</div></div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="checkpoint">
+        <h4>✦ Lab 3 completion checklist</h4>
+        <ul>
+          <li>Triangle shows smooth colour gradient between red, green, and blue corners</li>
+          <li>You understand why stride is 24 and the colour offset is 12</li>
+          <li>You can explain what "interpolation" means in the context of rasterization</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LAB 4 ═══════════════ -->
+  <div class="section-divider"><span class="section-tag">Lab 4</span><h2>Rectangle with EBO — Index Buffer</h2></div>
+
+  <div class="lab-card" id="lab4">
+    <div class="lab-card-header">
+      <div class="lab-card-num">4</div>
+      <div class="lab-card-info">
+        <div class="lab-card-title">Drawing a Rectangle Without Duplicating Vertices</div>
+        <div class="lab-card-sub">Module 3 · EBO · glDrawElements · Memory Efficiency · ~25 min</div>
+      </div>
+      <span class="diff diff-med">Intermediate</span>
+    </div>
+    <div class="lab-card-body">
+
+      <div class="callout c-info"><span class="callout-icon">ℹ</span><div><strong>What you will build:</strong> A coloured rectangle made of 2 triangles. Instead of storing 6 vertices (duplicating 2), you store 4 unique vertices and an EBO with 6 indices. The EBO tells OpenGL which vertices form each triangle.</div></div>
+
+      <table class="ww-table">
+        <tr><th>Without EBO</th><th>With EBO</th></tr>
+        <tr><td>6 vertex entries (2 duplicated)<br>6 × 6 floats × 4 bytes = 144 bytes</td><td>4 unique vertices + 6 indices<br>4×6×4 + 6×4 = 120 bytes — saves 17%. For 50k triangle models: saves hundreds of MB.</td></tr>
+      </table>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <div class="step-title">Define 4 unique vertices and the index array</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">C++ — Vertices and Indices</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="cm">// 4 unique corner vertices of a rectangle
+//        X      Y      Z      R     G     B</span>
+<span class="ty">float</span> vertices[] = {
+     <span class="num">0.5f</span>,  <span class="num">0.5f</span>, <span class="num">0.0f</span>,  <span class="num">1.0f</span>, <span class="num">0.0f</span>, <span class="num">0.0f</span>,  <span class="cm">// 0: top-right    red</span>
+     <span class="num">0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,  <span class="num">0.0f</span>, <span class="num">1.0f</span>, <span class="num">0.0f</span>,  <span class="cm">// 1: bottom-right green</span>
+    <span class="num">-0.5f</span>, <span class="num">-0.5f</span>, <span class="num">0.0f</span>,  <span class="num">0.0f</span>, <span class="num">0.0f</span>, <span class="num">1.0f</span>,  <span class="cm">// 2: bottom-left  blue</span>
+    <span class="num">-0.5f</span>,  <span class="num">0.5f</span>, <span class="num">0.0f</span>,  <span class="num">1.0f</span>, <span class="num">1.0f</span>, <span class="num">0.0f</span>   <span class="cm">// 3: top-left     yellow</span>
+};
+
+<span class="cm">// Index buffer: which vertices form each triangle
+// Triangle 1: vertices 0, 1, 2  (top-right → bottom-right → bottom-left)
+// Triangle 2: vertices 0, 2, 3  (top-right → bottom-left → top-left)
+// Vertex 0 and 2 are shared — stored once, referenced twice!</span>
+<span class="ty">unsigned int</span> indices[] = {
+    <span class="num">0</span>, <span class="num">1</span>, <span class="num">2</span>,  <span class="cm">// first triangle</span>
+    <span class="num">0</span>, <span class="num">2</span>, <span class="num">3</span>   <span class="cm">// second triangle</span>
+};</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Add the EBO — bind while VAO is still active</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">C++ — EBO Creation</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="ty">unsigned int</span> VAO, VBO, EBO;
+<span class="fn">glGenVertexArrays</span>(<span class="num">1</span>, &amp;VAO);
+<span class="fn">glGenBuffers</span>(<span class="num">1</span>, &amp;VBO);
+<span class="fn">glGenBuffers</span>(<span class="num">1</span>, &amp;EBO);   <span class="cm">// EBO is just another buffer with a different binding target</span>
+
+<span class="fn">glBindVertexArray</span>(VAO);  <span class="cm">// start recording</span>
+
+<span class="fn">glBindBuffer</span>(<span class="ty">GL_ARRAY_BUFFER</span>, VBO);
+<span class="fn">glBufferData</span>(<span class="ty">GL_ARRAY_BUFFER</span>, <span class="kw">sizeof</span>(vertices), vertices, <span class="ty">GL_STATIC_DRAW</span>);
+
+<span class="cm">// EBO: bind to GL_ELEMENT_ARRAY_BUFFER while VAO is active.
+// The VAO remembers this EBO binding too.</span>
+<span class="fn">glBindBuffer</span>(<span class="ty">GL_ELEMENT_ARRAY_BUFFER</span>, EBO);
+<span class="fn">glBufferData</span>(<span class="ty">GL_ELEMENT_ARRAY_BUFFER</span>, <span class="kw">sizeof</span>(indices), indices, <span class="ty">GL_STATIC_DRAW</span>);
+
+<span class="cm">// Attribute 0: position (same as Lab 3)</span>
+<span class="fn">glVertexAttribPointer</span>(<span class="num">0</span>, <span class="num">3</span>, <span class="ty">GL_FLOAT</span>, <span class="ty">GL_FALSE</span>,
+                      <span class="num">6</span>*<span class="kw">sizeof</span>(<span class="ty">float</span>), (<span class="ty">void</span>*)<span class="num">0</span>);
+<span class="fn">glEnableVertexAttribArray</span>(<span class="num">0</span>);
+
+<span class="cm">// Attribute 1: colour (same as Lab 3)</span>
+<span class="fn">glVertexAttribPointer</span>(<span class="num">1</span>, <span class="num">3</span>, <span class="ty">GL_FLOAT</span>, <span class="ty">GL_FALSE</span>,
+                      <span class="num">6</span>*<span class="kw">sizeof</span>(<span class="ty">float</span>), (<span class="ty">void</span>*)(<span class="num">3</span>*<span class="kw">sizeof</span>(<span class="ty">float</span>)));
+<span class="fn">glEnableVertexAttribArray</span>(<span class="num">1</span>);
+
+<span class="fn">glBindVertexArray</span>(<span class="num">0</span>);  <span class="cm">// stop recording</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Change draw call from glDrawArrays to glDrawElements</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">C++ — Draw Call</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="fn">glUseProgram</span>(shaderProgram);
+<span class="fn">glBindVertexArray</span>(VAO);
+
+<span class="cm">// glDrawElements: "draw using the index buffer, not sequential vertices"
+// Param 1: GL_TRIANGLES — primitive type
+// Param 2: 6 — total number of INDICES to process (6 indices = 2 triangles)
+// Param 3: GL_UNSIGNED_INT — data type of each index value
+// Param 4: 0 — byte offset into the EBO (0 = start from beginning)</span>
+<span class="fn">glDrawElements</span>(<span class="ty">GL_TRIANGLES</span>, <span class="num">6</span>, <span class="ty">GL_UNSIGNED_INT</span>, <span class="num">0</span>);</pre>
+            </div>
+            <div class="callout c-tip" style="margin-top:8px"><span class="callout-icon">✓</span><div>A coloured rectangle appears — red top-right, green bottom-right, blue bottom-left, yellow top-left with smooth colour blending across the two triangles.</div></div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="checkpoint">
+        <h4>✦ Lab 4 completion checklist</h4>
+        <ul>
+          <li>Coloured rectangle renders — you can see the diagonal split between the two triangles in the colour blend</li>
+          <li>You understand why EBO must be bound while VAO is active</li>
+          <li>You can explain the difference between glDrawArrays and glDrawElements</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LAB 5 ═══════════════ -->
+  <div class="section-divider"><span class="section-tag">Lab 5</span><h2>Animated Scene — Time-Based Updates</h2></div>
+
+  <div class="lab-card" id="lab5">
+    <div class="lab-card-header">
+      <div class="lab-card-num">5</div>
+      <div class="lab-card-info">
+        <div class="lab-card-title">Dynamic Colour and Shader Uniforms</div>
+        <div class="lab-card-sub">Module 3 · Uniforms · glfwGetTime · Shader Communication · ~20 min</div>
+      </div>
+      <span class="diff diff-med">Intermediate</span>
+    </div>
+    <div class="lab-card-body">
+
+      <div class="callout c-info"><span class="callout-icon">ℹ</span><div><strong>What you will build:</strong> The Lab 2 triangle with a colour that pulses over time. You will pass a time value from C++ to the fragment shader using a <strong>uniform</strong> — values that are the same for all pixels in one draw call but can change between frames.</div></div>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <div class="step-title">Add a uniform to the fragment shader</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">Updated Fragment Shader</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="kw">const char</span>* fragmentShaderSource = <span class="str">R"(
+    #version 330 core
+    out vec4 FragColor;
+
+    // uniform: same value for ALL pixels in this draw call.
+    // Set from C++ code every frame.
+    // "uTime" — the 'u' prefix is a convention meaning uniform. You choose the name.
+    uniform float uTime;
+
+    void main() {
+        // sin() oscillates between -1 and 1.
+        // * 0.5 + 0.5 maps it to 0.0–1.0 range.
+        // All three channels oscillate at different phases → colour cycling.
+        float r = sin(uTime * 1.0f) * 0.5f + 0.5f;
+        float g = sin(uTime * 0.7f + 1.0f) * 0.5f + 0.5f;
+        float b = sin(uTime * 1.3f + 2.0f) * 0.5f + 0.5f;
+        FragColor = vec4(r, g, b, 1.0f);
+    }
+)"</span>;</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">Send the uniform value every frame</div>
+            <div class="code-wrap" style="margin-top:6px">
+              <div class="code-hdr"><span class="code-lang">C++ — Inside Render Loop</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+              <pre><span class="kw">while</span> (!<span class="fn">glfwWindowShouldClose</span>(window))
+{
+    <span class="kw">if</span> (<span class="fn">glfwGetKey</span>(window, <span class="ty">GLFW_KEY_ESCAPE</span>) == <span class="ty">GLFW_PRESS</span>)
+        <span class="fn">glfwSetWindowShouldClose</span>(window, <span class="kw">true</span>);
+
+    <span class="fn">glClearColor</span>(<span class="num">0.08f</span>, <span class="num">0.08f</span>, <span class="num">0.12f</span>, <span class="num">1.0f</span>);
+    <span class="fn">glClear</span>(<span class="ty">GL_COLOR_BUFFER_BIT</span>);
+
+    <span class="fn">glUseProgram</span>(shaderProgram);  <span class="cm">// must be active before setting uniforms</span>
+
+    <span class="cm">// glfwGetTime() returns seconds since glfwInit() — increases every frame.
+    // glGetUniformLocation: find where "uTime" lives in the compiled shader.
+    // glUniform1f: set a float uniform. "1f" = 1 float value.</span>
+    <span class="ty">float</span> timeValue = (<span class="ty">float</span>)<span class="fn">glfwGetTime</span>();
+    <span class="ty">int</span> timeLoc = <span class="fn">glGetUniformLocation</span>(shaderProgram, <span class="str">"uTime"</span>);
+    <span class="fn">glUniform1f</span>(timeLoc, timeValue);
+
+    <span class="fn">glBindVertexArray</span>(VAO);
+    <span class="fn">glDrawArrays</span>(<span class="ty">GL_TRIANGLES</span>, <span class="num">0</span>, <span class="num">3</span>);
+
+    <span class="fn">glfwSwapBuffers</span>(window);
+    <span class="fn">glfwPollEvents</span>();
+}</pre>
+            </div>
+            <div class="callout c-tip" style="margin-top:8px"><span class="callout-icon">✓</span><div>The triangle slowly cycles through every colour of the rainbow. This demonstrates the uniform system — the core mechanism for all per-frame shader data: lighting positions, camera matrices, time values.</div></div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="checkpoint">
+        <h4>✦ Lab 5 completion checklist</h4>
+        <ul>
+          <li>Triangle animates smoothly through colours — no stuttering</li>
+          <li>You understand what a uniform is (same for all pixels, set from CPU)</li>
+          <li>You understand why glUseProgram must come before glUniform1f</li>
+          <li>Bonus: Add a second uniform uSpeed and use it to control how fast the colour changes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SUMMARY SVGs ═══════════════ -->
+  <div class="section-divider" id="summary"><span class="section-tag">Visual Summary</span><h2>Day 1 — Key Concepts at a Glance</h2></div>
+
+  <div class="svg-row">
+    <!-- SVG 1: Rendering Pipeline -->
+    <div class="svg-card">
+      <div class="svg-card-title">The rendering pipeline</div>
+      <svg viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg" style="max-height:340px">
+        <defs>
+          <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M1 1L7 4L1 7" fill="none" stroke="#4a5568" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+          <marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M1 1L7 4L1 7" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <!-- Stage boxes -->
+        <g>
+          <!-- Vertex Data -->
+          <rect x="70" y="10" width="160" height="36" rx="6" fill="#1a1e28" stroke="#3a4055" stroke-width="1"/>
+          <text x="150" y="24" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#94a3b8">Vertex Data</text>
+          <text x="150" y="38" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#4a5568">C++ float array → GPU VRAM</text>
+          <line x1="150" y1="46" x2="150" y2="58" stroke="#4a5568" stroke-width="1" marker-end="url(#a)"/>
+
+          <!-- Vertex Shader (highlighted) -->
+          <rect x="50" y="58" width="200" height="40" rx="6" fill="rgba(108,99,255,0.15)" stroke="#6c63ff" stroke-width="1.5"/>
+          <text x="90" y="73" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#a78bfa">YOU WRITE</text>
+          <text x="150" y="89" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#e2e8f0">Vertex Shader</text>
+          <text x="270" y="80" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#6c63ff">×3</text>
+          <line x1="150" y1="98" x2="150" y2="110" stroke="#4a5568" stroke-width="1" marker-end="url(#a)"/>
+
+          <!-- Primitive Assembly -->
+          <rect x="70" y="110" width="160" height="36" rx="6" fill="#1a1e28" stroke="#3a4055" stroke-width="1"/>
+          <text x="150" y="124" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#94a3b8">Primitive Assembly</text>
+          <text x="150" y="138" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#4a5568">3 vertices → 1 triangle</text>
+          <line x1="150" y1="146" x2="150" y2="158" stroke="#4a5568" stroke-width="1" marker-end="url(#a)"/>
+
+          <!-- Rasterization -->
+          <rect x="70" y="158" width="160" height="36" rx="6" fill="#1a1e28" stroke="#3a4055" stroke-width="1"/>
+          <text x="150" y="172" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#94a3b8">Rasterization</text>
+          <text x="150" y="186" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#4a5568">Which pixels does this cover?</text>
+          <line x1="150" y1="194" x2="150" y2="206" stroke="#4a5568" stroke-width="1" marker-end="url(#a)"/>
+
+          <!-- Fragment Shader (highlighted) -->
+          <rect x="50" y="206" width="200" height="40" rx="6" fill="rgba(108,99,255,0.15)" stroke="#6c63ff" stroke-width="1.5"/>
+          <text x="90" y="221" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#a78bfa">YOU WRITE</text>
+          <text x="150" y="237" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#e2e8f0">Fragment Shader</text>
+          <text x="270" y="228" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#6c63ff">×N pixels</text>
+          <line x1="150" y1="246" x2="150" y2="258" stroke="#4a5568" stroke-width="1" marker-end="url(#a)"/>
+
+          <!-- Tests -->
+          <rect x="70" y="258" width="160" height="36" rx="6" fill="#1a1e28" stroke="#3a4055" stroke-width="1"/>
+          <text x="150" y="272" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#94a3b8">Per-Fragment Tests</text>
+          <text x="150" y="286" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#4a5568">Depth test, blending</text>
+          <line x1="150" y1="294" x2="150" y2="306" stroke="#4a5568" stroke-width="1" marker-end="url(#a)"/>
+
+          <!-- Framebuffer -->
+          <rect x="70" y="306" width="160" height="28" rx="6" fill="#0f6e56" stroke="#2dd4bf" stroke-width="1"/>
+          <text x="150" y="324" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#e2e8f0">Framebuffer → Screen</text>
+        </g>
+        <!-- Legend -->
+        <rect x="10" y="318" width="10" height="10" rx="2" fill="rgba(108,99,255,0.3)" stroke="#6c63ff" stroke-width="1"/>
+        <text x="24" y="327" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">= you write shader code here</text>
+      </svg>
+    </div>
+
+    <!-- SVG 2: VBO/VAO/EBO relationship -->
+    <div class="svg-card">
+      <div class="svg-card-title">VBO, VAO, and EBO relationship</div>
+      <svg viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg" style="max-height:340px">
+        <defs>
+          <marker id="c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M1 1L7 4L1 7" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <!-- CPU Side -->
+        <rect x="8" y="8" width="128" height="100" rx="8" fill="rgba(108,99,255,0.06)" stroke="rgba(108,99,255,0.3)" stroke-width="1"/>
+        <text x="72" y="24" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#a78bfa">CPU — RAM</text>
+        <rect x="18" y="32" width="108" height="64" rx="5" fill="#1a1e28" stroke="#3a4055" stroke-width="1"/>
+        <text x="72" y="48" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#e2e8f0">float verts[] = {</text>
+        <text x="72" y="62" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#c3e88d">-0.5, -0.5, 0.0,</text>
+        <text x="72" y="75" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#c3e88d"> 0.5, -0.5, 0.0,</text>
+        <text x="72" y="88" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#c3e88d"> 0.0,  0.5, 0.0 };</text>
+
+        <!-- Arrow CPU → GPU -->
+        <path d="M136 56 L164 56" stroke="#38bdf8" stroke-width="1.5" fill="none" marker-end="url(#c)" stroke-dasharray="3,2"/>
+        <text x="150" y="50" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#38bdf8">glBufferData</text>
+
+        <!-- GPU Side -->
+        <rect x="164" y="8" width="128" height="100" rx="8" fill="rgba(45,212,191,0.06)" stroke="rgba(45,212,191,0.3)" stroke-width="1"/>
+        <text x="228" y="24" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#2dd4bf">GPU — VRAM</text>
+        <!-- VBO -->
+        <rect x="174" y="32" width="108" height="32" rx="5" fill="#1a1e28" stroke="#2dd4bf" stroke-width="1"/>
+        <text x="228" y="48" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#2dd4bf">VBO</text>
+        <text x="228" y="60" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#4a5568">raw float data</text>
+        <!-- EBO -->
+        <rect x="174" y="70" width="108" height="32" rx="5" fill="#1a1e28" stroke="#fbbf24" stroke-width="1"/>
+        <text x="228" y="86" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#fbbf24">EBO</text>
+        <text x="228" y="98" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#4a5568">0,1,2  0,2,3</text>
+
+        <!-- VAO -->
+        <rect x="70" y="130" width="160" height="70" rx="8" fill="rgba(167,139,250,0.08)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="150" y="148" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#a78bfa">VAO</text>
+        <text x="150" y="162" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">Remembers the format description:</text>
+        <text x="150" y="174" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#e2e8f0">attr 0: 3 floats, stride 12, offset 0</text>
+        <text x="150" y="186" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#e2e8f0">attr 1: 3 floats, stride 24, offset 12</text>
+        <text x="150" y="198" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#6c63ff">↳ references VBO + EBO</text>
+
+        <!-- Arrows VAO pointing at VBO/EBO -->
+        <line x1="150" y1="128" x2="150" y2="112" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="150" y1="112" x2="200" y2="112" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="200" y1="112" x2="200" y2="102" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3,2"/>
+
+        <!-- Draw Call box -->
+        <rect x="70" y="220" width="160" height="50" rx="8" fill="rgba(74,222,128,0.06)" stroke="rgba(74,222,128,0.3)" stroke-width="1"/>
+        <text x="150" y="237" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#4ade80">Draw Call</text>
+        <text x="150" y="252" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#e2e8f0">glBindVertexArray(VAO)</text>
+        <text x="150" y="264" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#e2e8f0">glDrawArrays / glDrawElements</text>
+        <line x1="150" y1="200" x2="150" y2="218" stroke="#64748b" stroke-width="1" marker-end="url(#c)"/>
+
+        <!-- Legend row -->
+        <rect x="10" y="295" width="8" height="8" rx="1" fill="#1a1e28" stroke="#2dd4bf" stroke-width="1"/>
+        <text x="22" y="303" font-family="Segoe UI,sans-serif" font-size="8" fill="#64748b">VBO = raw data</text>
+        <rect x="90" y="295" width="8" height="8" rx="1" fill="#1a1e28" stroke="#fbbf24" stroke-width="1"/>
+        <text x="102" y="303" font-family="Segoe UI,sans-serif" font-size="8" fill="#64748b">EBO = indices</text>
+        <rect x="170" y="295" width="8" height="8" rx="1" fill="rgba(167,139,250,0.2)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="182" y="303" font-family="Segoe UI,sans-serif" font-size="8" fill="#64748b">VAO = format</text>
+
+        <!-- Memory note -->
+        <rect x="10" y="308" width="280" height="24" rx="4" fill="rgba(108,99,255,0.05)" stroke="transparent"/>
+        <text x="150" y="322" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#6c63ff">Bind VAO once → restores all config. Upload data once → draw many times.</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="svg-row">
+    <!-- SVG 3: Render Loop -->
+    <div class="svg-card">
+      <div class="svg-card-title">The render loop — one frame</div>
+      <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="max-height:280px">
+        <defs>
+          <marker id="d" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M1 1L7 4L1 7" fill="none" stroke="#4a5568" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <!-- Loop container -->
+        <rect x="20" y="10" width="260" height="250" rx="10" fill="rgba(13,15,20,0.5)" stroke="#2a2f40" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="150" y="28" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#4a5568">while(!glfwWindowShouldClose)</text>
+
+        <!-- Phase 1 -->
+        <rect x="60" y="38" width="180" height="34" rx="6" fill="#1a1e28" stroke="#6c63ff" stroke-width="1"/>
+        <text x="150" y="52" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#a78bfa">1 — Input</text>
+        <text x="150" y="64" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">process_input(window)</text>
+        <line x1="150" y1="72" x2="150" y2="82" stroke="#4a5568" stroke-width="1" marker-end="url(#d)"/>
+
+        <!-- Phase 2 -->
+        <rect x="60" y="82" width="180" height="34" rx="6" fill="#1a1e28" stroke="#38bdf8" stroke-width="1"/>
+        <text x="150" y="96" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#38bdf8">2 — Clear</text>
+        <text x="150" y="108" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">glClearColor + glClear</text>
+        <line x1="150" y1="116" x2="150" y2="126" stroke="#4a5568" stroke-width="1" marker-end="url(#d)"/>
+
+        <!-- Phase 3 -->
+        <rect x="60" y="126" width="180" height="34" rx="6" fill="#1a1e28" stroke="#4ade80" stroke-width="1"/>
+        <text x="150" y="140" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#4ade80">3 — Draw</text>
+        <text x="150" y="152" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">glUseProgram → Bind VAO → Draw</text>
+        <line x1="150" y1="160" x2="150" y2="170" stroke="#4a5568" stroke-width="1" marker-end="url(#d)"/>
+
+        <!-- Phase 4 -->
+        <rect x="60" y="170" width="180" height="34" rx="6" fill="#1a1e28" stroke="#fbbf24" stroke-width="1"/>
+        <text x="150" y="184" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#fbbf24">4 — Swap</text>
+        <text x="150" y="196" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">glfwSwapBuffers (show frame)</text>
+        <line x1="150" y1="204" x2="150" y2="214" stroke="#4a5568" stroke-width="1" marker-end="url(#d)"/>
+
+        <!-- Phase 5 -->
+        <rect x="60" y="214" width="180" height="34" rx="6" fill="#1a1e28" stroke="#f87171" stroke-width="1"/>
+        <text x="150" y="228" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#f87171">5 — Poll</text>
+        <text x="150" y="240" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">glfwPollEvents (process OS events)</text>
+
+        <!-- Loop back arrow -->
+        <path d="M240 248 Q268 248 268 158 Q268 38 240 38" stroke="#2a2f40" stroke-width="1" fill="none" stroke-dasharray="3,2"/>
+        <text x="275" y="160" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#4a5568" transform="rotate(-90 275 160)">↻ next frame</text>
+      </svg>
+    </div>
+
+    <!-- SVG 4: Shader Data Flow -->
+    <div class="svg-card">
+      <div class="svg-card-title">Shader data flow — in / out / uniform</div>
+      <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="max-height:280px">
+        <!-- C++ Layer -->
+        <rect x="10" y="10" width="280" height="40" rx="6" fill="rgba(108,99,255,0.08)" stroke="rgba(108,99,255,0.3)" stroke-width="1"/>
+        <text x="150" y="26" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#a78bfa">C++ (CPU)</text>
+        <text x="150" y="40" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">float vertices[], glUniform*()</text>
+
+        <!-- Arrows down -->
+        <!-- VBO arrow -->
+        <line x1="80" y1="50" x2="80" y2="90" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="80" y="80" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#2dd4bf" dx="20">VBO via</text>
+        <text x="80" y="90" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#2dd4bf" dx="25">VAO "in"</text>
+        <!-- Uniform arrow -->
+        <line x1="220" y1="50" x2="220" y2="90" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="220" y="72" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#fbbf24">uniform</text>
+        <text x="220" y="84" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="8" fill="#fbbf24">(same all verts)</text>
+
+        <!-- Vertex Shader -->
+        <rect x="10" y="98" width="280" height="56" rx="6" fill="rgba(108,99,255,0.12)" stroke="#6c63ff" stroke-width="1.5"/>
+        <text x="150" y="115" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#a78bfa">Vertex Shader (×1 per vertex)</text>
+        <text x="40" y="133" font-family="Segoe UI,sans-serif" font-size="9" fill="#2dd4bf">in vec3 aPos</text>
+        <text x="150" y="133" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#fbbf24">uniform mat4 mvp</text>
+        <text x="260" y="133" text-anchor="end" font-family="Segoe UI,sans-serif" font-size="9" fill="#82aaff">gl_Position ↓</text>
+        <text x="150" y="147" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">out vec3 colour → passed to fragment shader</text>
+
+        <!-- Rasterizer -->
+        <rect x="60" y="170" width="180" height="26" rx="5" fill="#1a1e28" stroke="#3a4055" stroke-width="1"/>
+        <text x="150" y="187" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#64748b">Rasterizer (auto interpolation)</text>
+        <line x1="150" y1="154" x2="150" y2="168" stroke="#4a5568" stroke-width="1"/>
+        <line x1="150" y1="196" x2="150" y2="208" stroke="#4a5568" stroke-width="1"/>
+
+        <!-- Fragment Shader -->
+        <rect x="10" y="208" width="280" height="50" rx="6" fill="rgba(108,99,255,0.12)" stroke="#6c63ff" stroke-width="1.5"/>
+        <text x="150" y="224" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="#a78bfa">Fragment Shader (×1 per pixel)</text>
+        <text x="50" y="242" font-family="Segoe UI,sans-serif" font-size="9" fill="#2dd4bf">in vec3 colour</text>
+        <text x="220" y="242" text-anchor="end" font-family="Segoe UI,sans-serif" font-size="9" fill="#fbbf24">uniform uTime</text>
+        <text x="150" y="253" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#4ade80">out vec4 FragColor → framebuffer</text>
+
+        <!-- Legend -->
+        <rect x="10" y="268" width="6" height="6" rx="1" fill="#2dd4bf" opacity=".7"/>
+        <text x="20" y="274" font-family="Segoe UI,sans-serif" font-size="8" fill="#64748b">in = per-vertex</text>
+        <rect x="100" y="268" width="6" height="6" rx="1" fill="#fbbf24" opacity=".7"/>
+        <text x="110" y="274" font-family="Segoe UI,sans-serif" font-size="8" fill="#64748b">uniform = per-draw</text>
+        <rect x="205" y="268" width="6" height="6" rx="1" fill="#4ade80" opacity=".7"/>
+        <text x="215" y="274" font-family="Segoe UI,sans-serif" font-size="8" fill="#64748b">out = to next stage</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- COMPLETION CHECKLIST -->
+  <div class="section-divider" id="checklist"><span class="section-tag">Completion</span><h2>Day 1 — Full Checklist</h2></div>
+
+  <div class="summary-strip">
+    <div class="sum-item"><div class="sum-term">Rendering Pipeline</div><div class="sum-def">7 stages. You write Vertex Shader + Fragment Shader. Rest is automatic.</div></div>
+    <div class="sum-item"><div class="sum-term">VBO</div><div class="sum-def">GPU memory block holding raw vertex floats. Upload once with glBufferData.</div></div>
+    <div class="sum-item"><div class="sum-term">VAO</div><div class="sum-def">Remembers attribute format. Bind before drawing to restore config in one call.</div></div>
+    <div class="sum-item"><div class="sum-term">EBO</div><div class="sum-def">Index buffer. Store vertices once, reference by index. Use glDrawElements.</div></div>
+    <div class="sum-item"><div class="sum-term">Vertex Shader</div><div class="sum-def">GLSL. Runs ×1 per vertex. Takes position in, outputs gl_Position.</div></div>
+    <div class="sum-item"><div class="sum-term">Fragment Shader</div><div class="sum-def">GLSL. Runs ×1 per pixel. Outputs FragColor (RGBA).</div></div>
+    <div class="sum-item"><div class="sum-term">Uniform</div><div class="sum-def">Shader variable set from CPU. Same value for all vertices/fragments in one draw.</div></div>
+    <div class="sum-item"><div class="sum-term">Render Loop</div><div class="sum-def">input → clear → draw → swap → poll. Repeats 60+ times/second.</div></div>
+  </div>
+
+  <div class="checkpoint" style="margin-top:1.5rem">
+    <h4>✦ Full Day 1 sign-off checklist</h4>
+    <ul>
+      <li>Lab 1: OpenGL window opens, GPU name printed, colour experiments done</li>
+      <li>Lab 2: Orange triangle rendered, understand all glVertexAttribPointer parameters</li>
+      <li>Lab 3: Per-vertex colour interpolation working, understand in/out flow</li>
+      <li>Lab 4: Rectangle using EBO, understand glDrawElements vs glDrawArrays</li>
+      <li>Lab 5: Animated uniform, understand why glUseProgram comes before glUniform</li>
+      <li>Can draw the 7-stage pipeline from memory and name which stages you write</li>
+      <li>Can explain VBO vs VAO in one sentence each without looking at notes</li>
+    </ul>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="section-divider" id="troubleshoot"><span class="section-tag">Help</span><h2>Troubleshooting — Common Issues</h2></div>
+
+  <div class="lab-card" style="margin-bottom:1rem">
+    <div class="lab-card-body" style="padding:1.25rem">
+      <table class="ww-table">
+        <tr><th>Symptom</th><th>Most likely cause and fix</th></tr>
+        <tr><td>cl not found in CMD</td><td>You opened regular CMD, not Developer Command Prompt for VS 2022. Open the correct prompt from Start menu.</td></tr>
+        <tr><td>cmake: GLFW_DIR empty</td><td>Environment variable not set or terminal not restarted after setting. Run <code>echo %GLFW_DIR%</code> to verify. Restart the prompt after setting variables.</td></tr>
+        <tr><td>Black screen, no triangle</td><td>Shader compile error — check terminal for error messages. Most common: GLEW included after GLFW, or missing #version 330 core in shader.</td></tr>
+        <tr><td>Triangle invisible / wrong colour</td><td>glEnableVertexAttribArray(0) missing, or the wrong shader program is active. Add error check after glCompileShader.</td></tr>
+        <tr><td>Window freezes on resize</td><td>framebuffer_size_callback not registered. Call glfwSetFramebufferSizeCallback after creating the window.</td></tr>
+        <tr><td>Link error: cannot find glfw3.lib</td><td>lib-vc2022 path is wrong in CMakeLists.txt, or GLFW_DIR environment variable points to wrong folder.</td></tr>
+        <tr><td>GLEW init failed</td><td>glfwMakeContextCurrent called after glewInit, or in wrong order. Context must be current before GLEW.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- BUILD QUICK REF -->
+  <div class="section-divider" id="vmref"><span class="section-tag">Quick Ref</span><h2>Build Commands — VM Reference Card</h2></div>
+
+  <div class="lab-card" style="margin-bottom:1rem">
+    <div class="lab-card-body" style="padding:1.25rem">
+      <div class="code-wrap">
+        <div class="code-hdr"><span class="code-lang">Standard 3-command build (use for every lab)</span><button class="copy-btn" onclick="cp(this)">Copy</button></div>
+        <pre><span class="cm"># From inside your lab folder (C:\Labs\LabXX_Name\)</span>
+cmake -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+build\Release\labXX.exe
+
+<span class="cm"># If you change only main.cpp (no CMake changes), just rebuild:</span>
+cmake --build build --config Release
+
+<span class="cm"># Open in VS Code from Developer Command Prompt:</span>
+code .
+
+<span class="cm"># Verify libraries are found:</span>
+echo %GLFW_DIR%   <span class="cm"># should print: C:\libs\glfw</span>
+echo %GLEW_DIR%   <span class="cm"># should print: C:\libs\glew</span>
+echo %GLM_DIR%    <span class="cm"># should print: C:\libs\glm</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="lab-footer">
+    <div>
+      <div class="lab-footer-brand">RR Graphics Lab · Day 1 Lab Manual</div>
+      <div class="lab-footer-sub">By Raushan Ranjan (MCT) · Koenig Solutions · v1.0 April 2026</div>
+    </div>
+    <a class="next-btn" href="lab-day2.html">Day 2 Labs — 3D, Lighting &amp; Textures →</a>
+  </div>
+
+</main>
+</div>
+
+<script>
+function cp(btn){
+  const pre=btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText||pre.textContent).then(()=>{
+    btn.textContent='Copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000);
+  });
+}
+
+const labs=['lab1','lab2','lab3','lab4','lab5'];
+const sbLinks=document.querySelectorAll('.sb-link[href^="#lab"]');
+
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id=e.target.id;
+      sbLinks.forEach(l=>{
+        l.classList.toggle('active',l.getAttribute('href')==='#'+id);
+      });
+      const idx=labs.indexOf(id);
+      if(idx>=0){
+        document.getElementById('progFill').style.width=((idx+1)/labs.length*100)+'%';
+        document.getElementById('progTxt').textContent='Lab '+(idx+1)+' of '+labs.length;
+      }
+    }
+  });
+},{threshold:.3,rootMargin:'-56px 0px 0px 0px'});
+
+labs.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
+</script>
+</body>
+</html>

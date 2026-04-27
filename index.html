@@ -3,782 +3,1923 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RR Graphics Lab — OpenGL & Vulkan Notes</title>
+<title>RR Graphics Lab — OpenGL & Vulkan by Raushan Ranjan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════════
+   ROOT VARIABLES & RESET
+═══════════════════════════════════════════════════════ */
 :root{
-  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222636;
-  --border:#2a2f40;--border2:#3a4055;
-  --accent:#6c63ff;--accent2:#a78bfa;--accent3:#38bdf8;
-  --teal:#2dd4bf;--coral:#f87171;--amber:#fbbf24;--green:#4ade80;
-  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
-  --card:#161b27;--code-bg:#0a0c12;
-  --r:10px;--r2:16px;--r3:24px;
-  --shadow:0 4px 24px rgba(0,0,0,.5);
-  --glow:0 0 32px rgba(108,99,255,.15);
+  --bg:#080a0f;
+  --bg2:#0d1017;
+  --bg3:#12161f;
+  --bg4:#181d28;
+  --bg5:#1e2333;
+  --border:#1e2535;
+  --border2:#2a3148;
+  --text:#e2e8f0;
+  --text2:#94a3b8;
+  --text3:#64748b;
+  --accent:#6366f1;
+  --accent2:#818cf8;
+  --cyan:#22d3ee;
+  --green:#4ade80;
+  --orange:#fb923c;
+  --red:#f87171;
+  --yellow:#fbbf24;
+  --pink:#f472b6;
+
+  /* Day colours */
+  --d1:#6366f1;
+  --d2:#22d3ee;
+  --d3:#4ade80;
+  --d4:#fb923c;
+  --d5:#f472b6;
+
+  --nav-h:62px;
+  --radius:12px;
+  --font-body:'Sora',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-display:'Space Mono',monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;overflow-x:hidden}
 
-/* ── SHARED NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,15,20,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;padding:0 2rem;gap:0}
-.nav-brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1rem;color:var(--text);text-decoration:none;margin-right:28px;white-space:nowrap}
-.nav-brand-icon{background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.3rem;line-height:1}
-.nav-badge{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.4px}
-.nav-tabs{display:flex;gap:2px;flex:1}
-.nav-tab{display:flex;align-items:center;gap:6px;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text3);text-decoration:none;transition:.18s;border:1px solid transparent;white-space:nowrap}
-.nav-tab:hover{color:var(--text2);background:var(--bg3)}
-.nav-tab.active{color:var(--text);background:var(--bg3);border-color:var(--border)}
-.nav-tab-icon{font-size:14px}
-.nav-tab-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;background:rgba(108,99,255,.2);color:var(--accent2)}
-.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
-.nav-ask{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.18s}
-.nav-ask:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(108,99,255,.4)}
-@media(max-width:768px){.nav-tabs{display:none}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:15px}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit}
+img{display:block}
+::selection{background:rgba(99,102,241,.35);color:#fff}
 
-/* ── HERO ── */
-.hero{padding:96px 2rem 56px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(circle,rgba(108,99,255,.1) 0%,transparent 65%);pointer-events:none}
-.hero-pill{display:inline-flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--accent2);font-weight:700;letter-spacing:.3px;margin-bottom:18px}
-.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-size:clamp(1.9rem,4vw,3rem);font-weight:800;line-height:1.18;letter-spacing:-.025em;margin-bottom:14px}
-.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{color:var(--text2);font-size:.97rem;max-width:560px;margin:0 auto 28px;line-height:1.75}
-.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.btn-p{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;text-decoration:none;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;transition:.18s;border:none;cursor:pointer}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(108,99,255,.4)}
-.btn-g{display:inline-flex;align-items:center;gap:7px;background:transparent;color:var(--text);text-decoration:none;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:600;border:1px solid var(--border2);transition:.18s}
-.btn-g:hover{background:var(--bg3)}
+/* ═══════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════ */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 
-/* ── DAY FILTER TABS ── */
-.day-filter{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:32px 2rem 0;margin-bottom:0}
-.day-tab{padding:7px 18px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid var(--border);background:var(--bg2);color:var(--text3);cursor:pointer;transition:.18s;white-space:nowrap}
-.day-tab:hover{border-color:var(--border2);color:var(--text2)}
+/* ═══════════════════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:var(--nav-h);
+  background:rgba(8,10,15,.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 2rem;gap:1rem;
+}
+.nav-brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--font-display);
+  font-size:15px;font-weight:700;
+  color:var(--text);
+  white-space:nowrap;
+}
+.nav-brand-hex{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;color:#fff;
+  flex-shrink:0;
+}
+.nav-mct{
+  font-size:9px;font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  border:1px solid rgba(99,102,241,.3);
+  padding:2px 8px;border-radius:20px;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+.nav-links{
+  display:flex;align-items:center;gap:4px;
+  flex:1;margin-left:1.5rem;
+}
+.nav-link{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:8px;
+  font-size:12.5px;font-weight:600;
+  color:var(--text2);
+  border:1px solid transparent;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.nav-link.active{
+  color:var(--accent2);
+  background:rgba(99,102,241,.1);
+  border-color:rgba(99,102,241,.25);
+}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-author{font-size:11px;color:var(--text3);font-weight:600}
+.nav-btn{
+  padding:7px 16px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),#4f46e5);
+  color:#fff;font-size:12px;font-weight:700;
+  border:none;cursor:pointer;
+  transition:opacity .2s;
+}
+.nav-btn:hover{opacity:.85}
+
+/* ═══════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════ */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+  padding:calc(var(--nav-h) + 4rem) 2rem 4rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);
+}
+.hero-glow{
+  position:absolute;
+  width:700px;height:700px;
+  background:radial-gradient(circle,rgba(99,102,241,.12) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent2);
+  border:1px solid rgba(99,102,241,.3);
+  background:rgba(99,102,241,.07);
+  padding:6px 16px;border-radius:30px;
+  margin-bottom:2rem;
+}
+.hero-eyebrow-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,5vw,4rem);
+  font-weight:700;line-height:1.15;
+  margin-bottom:1.5rem;
+  position:relative;z-index:1;
+}
+.hero-title-line1{color:var(--text)}
+.hero-title-line2{
+  background:linear-gradient(135deg,var(--accent) 0%,var(--cyan) 50%,var(--green) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:block;
+}
+.hero-sub{
+  font-size:1.05rem;color:var(--text2);
+  max-width:620px;margin:0 auto 2.5rem;
+  line-height:1.8;
+}
+.hero-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:3.5rem}
+.btn-primary{
+  padding:12px 28px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),#4f46e5);
+  color:#fff;font-size:13.5px;font-weight:700;
+  border:none;cursor:pointer;transition:all .2s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(99,102,241,.4)}
+.btn-ghost{
+  padding:12px 28px;border-radius:10px;
+  background:transparent;
+  color:var(--text);font-size:13.5px;font-weight:700;
+  border:1px solid var(--border2);cursor:pointer;transition:all .2s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-ghost:hover{background:var(--bg3);border-color:var(--accent);transform:translateY(-2px)}
+
+.hero-stats{
+  display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;
+  position:relative;z-index:1;
+}
+.stat-item{text-align:center}
+.stat-val{
+  font-family:var(--font-display);
+  font-size:2rem;font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:block;
+}
+.stat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION HEADERS
+═══════════════════════════════════════════════════════ */
+.section{padding:5rem 2rem;max-width:1300px;margin:0 auto}
+.sec-eyebrow{
+  font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent2);margin-bottom:.75rem;
+}
+.sec-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.6rem,3vw,2.2rem);
+  font-weight:700;color:var(--text);
+  margin-bottom:.5rem;
+}
+.sec-sub{font-size:.95rem;color:var(--text2);max-width:580px;margin-bottom:3rem}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:1px 0}
+
+/* ═══════════════════════════════════════════════════════
+   DAY TABS
+═══════════════════════════════════════════════════════ */
+.day-tabs{
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-bottom:2.5rem;
+}
+.day-tab{
+  padding:8px 20px;border-radius:30px;
+  font-size:12px;font-weight:700;
+  border:1px solid var(--border2);
+  background:var(--bg3);color:var(--text2);
+  cursor:pointer;transition:all .2s;
+}
+.day-tab:hover{border-color:var(--accent);color:var(--text)}
 .day-tab.active{color:#fff;border-color:transparent}
-.dt-all.active{background:var(--accent)}
-.dt-1.active{background:linear-gradient(135deg,#6c63ff,#38bdf8)}
-.dt-2.active{background:linear-gradient(135deg,#2dd4bf,#4ade80)}
-.dt-3.active{background:linear-gradient(135deg,#f59e0b,#f87171)}
-.dt-4.active{background:linear-gradient(135deg,#8b5cf6,#ec4899)}
-.dt-5.active{background:linear-gradient(135deg,#f87171,#fbbf24)}
+.day-tab[data-day="1"].active{background:var(--d1)}
+.day-tab[data-day="2"].active{background:var(--d2);color:#000}
+.day-tab[data-day="3"].active{background:var(--d3);color:#000}
+.day-tab[data-day="4"].active{background:var(--d4);color:#000}
+.day-tab[data-day="5"].active{background:var(--d5)}
 
-/* ── MAIN LAYOUT ── */
-.container{max-width:1100px;margin:0 auto;padding:0 2rem}
-.section{padding:48px 0}
+/* ═══════════════════════════════════════════════════════
+   MODULE CARDS
+═══════════════════════════════════════════════════════ */
+.modules-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+  gap:1.5rem;
+}
+.module-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  transition:all .25s;
+  cursor:pointer;
+}
+.module-card:hover{
+  border-color:var(--border2);
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(0,0,0,.4);
+}
+.module-card-bar{height:3px}
+.module-card-head{padding:1.5rem 1.5rem 1rem}
+.module-num{
+  font-family:var(--font-display);
+  font-size:10px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;color:var(--text3);
+  margin-bottom:.5rem;
+}
+.module-title{
+  font-size:1.05rem;font-weight:700;color:var(--text);
+  margin-bottom:.75rem;line-height:1.4;
+}
+.module-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
+.tag{
+  font-size:10px;font-weight:600;
+  padding:3px 9px;border-radius:20px;
+  background:var(--bg4);border:1px solid var(--border2);
+  color:var(--text2);
+}
+.module-topics{
+  list-style:none;
+  padding:0 1.5rem 1rem;
+}
+.module-topics li{
+  font-size:13px;color:var(--text2);
+  padding:5px 0;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:8px;
+}
+.module-topics li:last-child{border-bottom:none}
+.topic-bullet{
+  width:5px;height:5px;border-radius:50%;
+  flex-shrink:0;margin-top:7px;
+}
+.module-actions{
+  padding:1rem 1.5rem;
+  border-top:1px solid var(--border);
+  display:flex;gap:8px;
+}
+.act-btn{
+  flex:1;padding:8px;border-radius:8px;
+  font-size:11.5px;font-weight:700;
+  text-align:center;
+  border:1px solid var(--border2);
+  background:var(--bg3);color:var(--text2);
+  cursor:pointer;transition:all .2s;
+}
+.act-btn:hover{background:var(--bg4);color:var(--text)}
+.act-btn.primary{
+  background:rgba(99,102,241,.15);
+  border-color:rgba(99,102,241,.35);
+  color:var(--accent2);
+}
+.act-btn.primary:hover{background:rgba(99,102,241,.25)}
 
-/* ── MODULE CARDS GRID ── */
-.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;padding:24px 2rem;max-width:1100px;margin:0 auto}
-.mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:22px;cursor:pointer;transition:.22s;position:relative;overflow:hidden}
-.mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:.22s}
-.mod-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--glow)}
-.mod-card:hover::before{opacity:1}
-.mc-d1::before{background:linear-gradient(90deg,#6c63ff,#38bdf8)}
-.mc-d2::before{background:linear-gradient(90deg,#2dd4bf,#4ade80)}
-.mc-d3::before{background:linear-gradient(90deg,#f59e0b,#f87171)}
-.mc-d4::before{background:linear-gradient(90deg,#8b5cf6,#ec4899)}
-.mc-d5::before{background:linear-gradient(90deg,#f87171,#fbbf24)}
-.mod-day{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.mod-num{font-size:1rem;font-weight:800;margin-bottom:6px;line-height:1.35}
-.mod-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px}
-.mod-topics{display:flex;flex-direction:column;gap:3px;margin-bottom:14px}
-.mod-topic{font-size:11px;color:var(--text3);display:flex;align-items:flex-start;gap:6px;line-height:1.5}
-.mod-topic::before{content:'·';color:var(--accent2);flex-shrink:0;font-weight:700}
-.mod-tags{display:flex;gap:5px;flex-wrap:wrap}
-.tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:7px;letter-spacing:.3px;text-transform:uppercase}
-.t-blue{background:rgba(56,189,248,.1);color:var(--accent3)}
-.t-purple{background:rgba(108,99,255,.1);color:var(--accent2)}
-.t-teal{background:rgba(45,212,191,.1);color:var(--teal)}
-.t-amber{background:rgba(251,191,36,.1);color:var(--amber)}
-.t-coral{background:rgba(248,113,113,.1);color:var(--coral)}
+/* ═══════════════════════════════════════════════════════
+   MODULE DETAIL PANEL
+═══════════════════════════════════════════════════════ */
+.detail-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.8);
+  backdrop-filter:blur(8px);
+  display:none;align-items:flex-start;justify-content:flex-end;
+}
+.detail-overlay.open{display:flex}
+.detail-panel{
+  width:min(780px,96vw);
+  height:100vh;
+  background:var(--bg2);
+  border-left:1px solid var(--border2);
+  overflow-y:auto;
+  position:relative;
+  animation:slideIn .3s ease;
+}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.detail-close{
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.5rem;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+}
+.close-btn{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.close-btn:hover{background:var(--bg4);color:var(--text)}
+.detail-content{padding:2rem}
 
-/* ── NOTE READER PANEL ── */
-.reader-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}
-.reader-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:58px 1rem 1rem;overflow-y:auto}
-.reader-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r3);width:100%;max-width:780px;overflow:hidden;position:relative;margin:auto}
-.reader-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.75rem;border-bottom:1px solid var(--border);background:var(--bg3)}
-.reader-header-left{flex:1}
-.reader-tag{font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.reader-title{font-size:1.1rem;font-weight:800;line-height:1.3}
-.reader-close{width:32px;height:32px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:.15s;flex-shrink:0}
-.reader-close:hover{background:var(--coral);border-color:var(--coral);color:#fff}
-.reader-body{padding:1.75rem;overflow-y:auto;max-height:calc(90vh - 120px)}
-.reader-body h2{font-size:1.1rem;font-weight:700;color:var(--accent2);margin:1.5rem 0 .6rem;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.reader-body h2:first-child{margin-top:0}
-.reader-body h3{font-size:.95rem;font-weight:700;color:var(--text);margin:1.1rem 0 .5rem}
-.reader-body p{font-size:13.5px;color:var(--text2);line-height:1.8;margin-bottom:.8rem}
-.reader-body ul,.reader-body ol{color:var(--text2);margin:0 0 .8rem 1.2rem;font-size:13.5px}
-.reader-body li{margin-bottom:.3rem;line-height:1.7}
-.reader-body strong{color:var(--text);font-weight:700}
-.reader-body code{font-family:'Cascadia Code',monospace;background:var(--bg3);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--accent3);border:1px solid var(--border)}
-.analogy-box{background:rgba(108,99,255,.07);border:1px solid rgba(108,99,255,.2);border-radius:var(--r);padding:14px 16px;margin:.75rem 0;font-size:13px;color:var(--text2);line-height:1.7}
-.analogy-box strong{color:var(--accent2);display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
-.callout{border-radius:var(--r);padding:12px 14px;margin:.75rem 0;font-size:13px;display:flex;gap:9px;line-height:1.6}
-.c-info{background:rgba(56,189,248,.06);border-left:3px solid var(--accent3);color:var(--text2)}
-.c-tip{background:rgba(74,222,128,.06);border-left:3px solid var(--green);color:var(--text2)}
-.c-warn{background:rgba(251,191,36,.06);border-left:3px solid var(--amber);color:var(--text2)}
-.reader-nav{display:flex;justify-content:space-between;padding:1rem 1.75rem;border-top:1px solid var(--border);background:var(--bg3)}
-.r-nav-btn{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;background:none;border:none;transition:.15s;padding:4px}
-.r-nav-btn:hover{color:var(--accent2)}
-.r-nav-btn:disabled{opacity:.3;cursor:default}
+/* Notes typography */
+.notes-title{
+  font-family:var(--font-display);
+  font-size:1.5rem;font-weight:700;
+  color:var(--text);margin-bottom:.5rem;
+}
+.notes-sub{font-size:.9rem;color:var(--text3);margin-bottom:2rem}
+.notes-section{margin-bottom:2.5rem}
+.notes-h2{
+  font-size:1rem;font-weight:700;
+  color:var(--text);
+  margin-bottom:1rem;
+  padding-bottom:.5rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.notes-h2-icon{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 8px var(--accent);
+}
+.notes-h3{
+  font-size:.9rem;font-weight:700;
+  color:var(--text2);margin-bottom:.6rem;
+  margin-top:1.2rem;
+}
+.notes-p{font-size:.9rem;color:var(--text2);line-height:1.85;margin-bottom:1rem}
+.notes-ul{list-style:none;margin-bottom:1rem}
+.notes-ul li{
+  font-size:.88rem;color:var(--text2);
+  padding:5px 0 5px 20px;
+  position:relative;line-height:1.7;
+}
+.notes-ul li::before{
+  content:'▸';position:absolute;left:0;
+  color:var(--accent);font-size:.7rem;top:7px;
+}
+.analogy-box{
+  background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(34,211,238,.05));
+  border:1px solid rgba(99,102,241,.2);
+  border-left:3px solid var(--accent);
+  border-radius:var(--radius);
+  padding:1.25rem;margin:1rem 0;
+}
+.analogy-label{
+  font-size:10px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;color:var(--accent2);margin-bottom:.5rem;
+}
+.analogy-text{font-size:.88rem;color:var(--text2);line-height:1.8;font-style:italic}
+.tip-box{
+  background:rgba(74,222,128,.06);
+  border:1px solid rgba(74,222,128,.2);
+  border-left:3px solid var(--green);
+  border-radius:var(--radius);
+  padding:1.25rem;margin:1rem 0;
+}
+.tip-label{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--green);margin-bottom:.5rem}
+.warn-box{
+  background:rgba(251,146,60,.06);
+  border:1px solid rgba(251,146,60,.2);
+  border-left:3px solid var(--orange);
+  border-radius:var(--radius);
+  padding:1.25rem;margin:1rem 0;
+}
+.warn-label{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--orange);margin-bottom:.5rem}
+.demo-link-box{
+  background:rgba(34,211,238,.05);
+  border:1px solid rgba(34,211,238,.2);
+  border-radius:var(--radius);
+  padding:1rem 1.25rem;margin:1rem 0;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.demo-link-box-text{font-size:.88rem;color:var(--text2)}
+.demo-link-box-text strong{color:var(--cyan)}
+.demo-link-btn{
+  flex-shrink:0;
+  padding:7px 16px;border-radius:8px;
+  background:rgba(34,211,238,.12);
+  border:1px solid rgba(34,211,238,.3);
+  color:var(--cyan);font-size:11.5px;font-weight:700;
+  cursor:pointer;white-space:nowrap;
+  transition:all .2s;
+}
+.demo-link-btn:hover{background:rgba(34,211,238,.2)}
 
-/* ── PIPELINE VISUAL ── */
-.pipeline-strip{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:1rem 2rem;max-width:900px;margin:0 auto;-webkit-overflow-scrolling:touch}
-.pipe-stage{flex-shrink:0;text-align:center;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:.18s;min-width:90px}
-.pipe-stage.you-write{border-color:var(--accent);background:rgba(108,99,255,.1)}
-.pipe-stage:hover{border-color:var(--accent2)}
-.pipe-name{font-size:10px;font-weight:700;color:var(--text);line-height:1.3}
-.pipe-sub{font-size:9px;color:var(--text3);margin-top:3px}
-.you-label{font-size:8px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px}
-.pipe-arrow{color:var(--text3);font-size:14px;flex-shrink:0}
+/* Code inline */
+code{
+  font-family:var(--font-mono);
+  font-size:.82rem;
+  background:var(--bg4);
+  border:1px solid var(--border2);
+  padding:2px 7px;border-radius:5px;
+  color:var(--cyan);
+}
+.code-block{
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:1.25rem;
+  margin:1rem 0;
+  overflow-x:auto;
+  position:relative;
+}
+.code-block pre{
+  font-family:var(--font-mono);
+  font-size:.82rem;
+  color:var(--text2);
+  line-height:1.7;
+  white-space:pre;
+}
+.code-label{
+  font-size:10px;font-weight:700;letter-spacing:.8px;
+  color:var(--text3);text-transform:uppercase;
+  margin-bottom:.75rem;
+}
 
-/* ── STATS ROW ── */
-.stats-row{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;max-width:600px;margin:0 auto 0}
-.stat-cell{flex:1;padding:14px 8px;text-align:center;border-right:1px solid var(--border)}
-.stat-cell:last-child{border-right:none}
-.stat-n{font-size:1.5rem;font-weight:800;color:var(--accent2);line-height:1}
-.stat-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+/* SVG / ASCII diagrams */
+.diagram-box{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.5rem;
+  margin:1.5rem 0;
+  overflow-x:auto;
+}
+.diagram-title{
+  font-size:10.5px;font-weight:700;
+  color:var(--text3);text-transform:uppercase;
+  letter-spacing:.8px;margin-bottom:1rem;
+  text-align:center;
+}
 
-/* ── SECTION HEADER ── */
-.sec-hdr{text-align:center;margin-bottom:6px;padding:0 2rem}
-.sec-eyebrow{font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(108,99,255,.12);color:var(--accent2);letter-spacing:.05em;text-transform:uppercase;display:inline-block;margin-bottom:10px}
-.sec-title{font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:800;letter-spacing:-.02em}
-.sec-sub{color:var(--text2);font-size:.93rem;max-width:500px;margin:.6rem auto 0}
+/* ═══════════════════════════════════════════════════════
+   PIPELINE DIAGRAM
+═══════════════════════════════════════════════════════ */
+.pipeline-row{
+  display:flex;align-items:center;
+  gap:0;overflow-x:auto;
+  padding:.5rem 0;
+}
+.pipe-stage{
+  flex-shrink:0;
+  padding:.6rem 1rem;
+  border-radius:6px;
+  font-size:11px;font-weight:700;
+  text-align:center;min-width:90px;
+}
+.pipe-arrow{
+  flex-shrink:0;
+  width:30px;height:2px;
+  background:var(--border2);
+  position:relative;
+}
+.pipe-arrow::after{
+  content:'';
+  position:absolute;right:-5px;top:-4px;
+  border:5px solid transparent;
+  border-left-color:var(--border2);
+}
+.pipe-cpu{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:var(--accent2)}
+.pipe-prog{background:rgba(99,102,241,.3);border:1px solid rgba(99,102,241,.6);color:#fff}
+.pipe-gpu{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);color:var(--cyan)}
+.pipe-fixed{background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.2);color:var(--text3)}
 
-/* ── FOOTER ── */
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 2rem;text-align:center}
-.footer-brand{font-size:1rem;font-weight:800;margin-bottom:5px;background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.footer-sub{font-size:11px;color:var(--text3);margin-bottom:14px}
-.footer-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
-.footer-links a{color:var(--text3);font-size:11px;text-decoration:none;transition:.15s}
-.footer-links a:hover{color:var(--accent2)}
+/* ═══════════════════════════════════════════════════════
+   TOOLS SECTION
+═══════════════════════════════════════════════════════ */
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:1rem;
+}
+.tool-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.25rem;
+  transition:all .2s;
+}
+.tool-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.tool-icon{font-size:1.5rem;margin-bottom:.75rem}
+.tool-name{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+.tool-desc{font-size:.8rem;color:var(--text3);line-height:1.6}
+.tool-version{
+  font-family:var(--font-mono);
+  font-size:.75rem;color:var(--accent2);margin-top:.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════
+   QUICK NAV / TABLE OF CONTENTS
+═══════════════════════════════════════════════════════ */
+.toc-strip{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.5rem;margin-bottom:3rem;
+}
+.toc-title{font-size:.85rem;font-weight:700;color:var(--text2);margin-bottom:1rem}
+.toc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:.5rem;
+}
+.toc-link{
+  font-size:.82rem;color:var(--text3);
+  padding:.4rem .75rem;border-radius:6px;
+  border:1px solid transparent;
+  transition:all .15s;
+  display:flex;align-items:center;gap:6px;
+}
+.toc-link:hover{
+  background:var(--bg3);
+  border-color:var(--border);
+  color:var(--text);
+}
+.toc-link-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* ═══════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════ */
+footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:3rem 2rem;
+  text-align:center;
+}
+.footer-brand{
+  font-family:var(--font-display);
+  font-size:1.1rem;font-weight:700;
+  color:var(--text);margin-bottom:.5rem;
+}
+.footer-sub{font-size:.82rem;color:var(--text3);margin-bottom:1.5rem}
+.footer-links{
+  display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;
+  margin-bottom:1.5rem;
+}
+.footer-link{font-size:.82rem;color:var(--text3);transition:color .2s}
+.footer-link:hover{color:var(--accent2)}
+.footer-copy{
+  font-size:.78rem;color:var(--text3);
+  border-top:1px solid var(--border);
+  padding-top:1.5rem;margin-top:1rem;
+}
+
+/* Day badge filter */
+.module-panel{display:none}
+.module-panel.active{display:grid}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .modules-grid{grid-template-columns:1fr}
+  .detail-panel{width:100vw;border-left:none}
+  .hero-stats{gap:1.5rem}
+  .stat-val{font-size:1.5rem}
+}
 </style>
 </head>
 <body>
 
-<!-- ── SHARED NAV ── -->
+<!-- ═══ NAVBAR ═══ -->
 <nav>
   <a class="nav-brand" href="index.html">
-    <span class="nav-brand-icon">⬡</span>
+    <div class="nav-brand-hex">⬡</div>
     RR Graphics Lab
-    <span class="nav-badge">MCT</span>
+    <span class="nav-mct">MCT</span>
   </a>
-  <div class="nav-tabs">
-    <a class="nav-tab active" href="index.html">
-      <span class="nav-tab-icon">📖</span> Notes
-      <span class="nav-tab-badge">15 modules</span>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">
+      <span class="nav-dot" style="background:var(--accent)"></span>Module Notes
     </a>
-    <a class="nav-tab" href="demos.html">
-      <span class="nav-tab-icon">▶</span> Demos
-      <span class="nav-tab-badge">concept code</span>
+    <a class="nav-link" href="demos.html">
+      <span class="nav-dot" style="background:var(--cyan)"></span>Code Demos
     </a>
-    <a class="nav-tab" href="labs.html">
-      <span class="nav-tab-icon">⚗</span> Labs
-      <span class="nav-tab-badge">hands-on</span>
+    <a class="nav-link" href="labs.html">
+      <span class="nav-dot" style="background:var(--green)"></span>Lab Challenges
     </a>
   </div>
-  <div class="nav-right">
-    <button class="nav-ask" onclick="alert('Ask Raushan agent — coming soon!')">✦ Ask Raushan</button>
+  <div class="nav-actions">
+    <span class="nav-author">Raushan Ranjan · MCT | Educator</span>
+    <a href="labs.html" class="nav-btn">Start Labs →</a>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ═══ HERO ═══ -->
 <section class="hero">
-  <div class="hero-pill"><span class="live-dot"></span>OpenGL & Vulkan Training · Raushan Ranjan (MCT) · Koenig Solutions</div>
-  <h1>Module <em>Notes & Theory</em><br>All 15 Modules</h1>
-  <p class="hero-sub">Detailed reading material for every module — concepts, analogies, diagrams, and explanations. Your complete reference throughout the 5-day course.</p>
-  <div class="hero-actions">
-    <a class="btn-p" href="#modules">Browse Modules ↓</a>
-    <a class="btn-g" href="demos.html">▶ View Demos</a>
-    <a class="btn-g" href="labs.html">⚗ Open Labs</a>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow">
+    <span class="hero-eyebrow-dot"></span>
+    Raushan Ranjan · 5-Day Corporate Training · OpenGL & Vulkan
   </div>
 
-  <div style="margin-top:36px">
-    <div class="stats-row">
-      <div class="stat-cell"><div class="stat-n">15</div><div class="stat-l">Modules</div></div>
-      <div class="stat-cell"><div class="stat-n">5</div><div class="stat-l">Days</div></div>
-      <div class="stat-cell"><div class="stat-n">2</div><div class="stat-l">APIs</div></div>
-      <div class="stat-cell"><div class="stat-n">MCT</div><div class="stat-l">Instructor</div></div>
+  <h1 class="hero-title">
+    <span class="hero-title-line1">Computer Graphics with</span>
+    <span class="hero-title-line2">OpenGL & Vulkan</span>
+  </h1>
+
+  <p class="hero-sub">
+    Complete module-wise reading material, concept notes, real-world analogies, 
+    and direct links to live code demos. Learn how GPUs work, how to write shaders, 
+    and how to build real rendering applications from scratch.
+  </p>
+
+  <div class="hero-cta-row">
+    <a href="#modules" class="btn-primary">📖 Browse Modules</a>
+    <a href="demos.html" class="btn-ghost">⚡ Code Demos</a>
+    <a href="labs.html" class="btn-ghost">🔬 Lab Challenges</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-val">15</span>
+      <span class="stat-lbl">Modules</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val">5</span>
+      <span class="stat-lbl">Days</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val">60+</span>
+      <span class="stat-lbl">Code Demos</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val">25+</span>
+      <span class="stat-lbl">Lab Challenges</span>
     </div>
   </div>
 </section>
 
-<!-- ── PIPELINE QUICK REF ── -->
-<div style="padding:16px 0 32px">
-  <div class="sec-hdr" style="margin-bottom:14px">
-    <div class="sec-eyebrow">Rendering Pipeline — click any stage</div>
-  </div>
-  <div class="pipeline-strip">
-    <div class="pipe-stage" onclick="openNote('m1')"><div class="pipe-name">Vertex Data</div><div class="pipe-sub">CPU arrays</div></div>
-    <div class="pipe-arrow">→</div>
-    <div class="pipe-stage you-write" onclick="openNote('m3')"><span class="you-label">★ you write</span><div class="pipe-name">Vertex Shader</div><div class="pipe-sub">3D → 2D</div></div>
-    <div class="pipe-arrow">→</div>
-    <div class="pipe-stage" onclick="openNote('m1')"><div class="pipe-name">Primitive Assembly</div><div class="pipe-sub">GPU auto</div></div>
-    <div class="pipe-arrow">→</div>
-    <div class="pipe-stage" onclick="openNote('m1')"><div class="pipe-name">Rasterization</div><div class="pipe-sub">pixels covered</div></div>
-    <div class="pipe-arrow">→</div>
-    <div class="pipe-stage you-write" onclick="openNote('m5')"><span class="you-label">★ you write</span><div class="pipe-name">Fragment Shader</div><div class="pipe-sub">colour/pixel</div></div>
-    <div class="pipe-arrow">→</div>
-    <div class="pipe-stage" onclick="openNote('m8')"><div class="pipe-name">Tests & Blending</div><div class="pipe-sub">depth, stencil</div></div>
-    <div class="pipe-arrow">→</div>
-    <div class="pipe-stage" onclick="openNote('m3')"><div class="pipe-name">Framebuffer</div><div class="pipe-sub">screen output</div></div>
+<div class="divider"></div>
+
+<!-- ═══ QUICK TOC ═══ -->
+<div class="section" style="padding-bottom:0">
+  <div class="toc-strip">
+    <div class="toc-title">Quick Navigation — All 15 Modules</div>
+    <div class="toc-grid">
+      <a class="toc-link" href="#" onclick="openModule(1);return false"><span class="toc-link-dot" style="background:var(--d1)"></span>M1 · Intro to Graphics Programming</a>
+      <a class="toc-link" href="#" onclick="openModule(2);return false"><span class="toc-link-dot" style="background:var(--d1)"></span>M2 · Getting Started with OpenGL</a>
+      <a class="toc-link" href="#" onclick="openModule(3);return false"><span class="toc-link-dot" style="background:var(--d1)"></span>M3 · OpenGL Data Flow</a>
+      <a class="toc-link" href="#" onclick="openModule(4);return false"><span class="toc-link-dot" style="background:var(--d2)"></span>M4 · Transformations & 3D Space</a>
+      <a class="toc-link" href="#" onclick="openModule(5);return false"><span class="toc-link-dot" style="background:var(--d2)"></span>M5 · Lighting & Materials</a>
+      <a class="toc-link" href="#" onclick="openModule(6);return false"><span class="toc-link-dot" style="background:var(--d2)"></span>M6 · Textures & Mapping</a>
+      <a class="toc-link" href="#" onclick="openModule(7);return false"><span class="toc-link-dot" style="background:var(--d3)"></span>M7 · Shaders with GLSL</a>
+      <a class="toc-link" href="#" onclick="openModule(8);return false"><span class="toc-link-dot" style="background:var(--d3)"></span>M8 · Framebuffers & Effects</a>
+      <a class="toc-link" href="#" onclick="openModule(9);return false"><span class="toc-link-dot" style="background:var(--d3)"></span>M9 · Optimization & Performance</a>
+      <a class="toc-link" href="#" onclick="openModule(10);return false"><span class="toc-link-dot" style="background:var(--d4)"></span>M10 · Vulkan Overview</a>
+      <a class="toc-link" href="#" onclick="openModule(11);return false"><span class="toc-link-dot" style="background:var(--d4)"></span>M11 · Vulkan Core Concepts</a>
+      <a class="toc-link" href="#" onclick="openModule(12);return false"><span class="toc-link-dot" style="background:var(--d4)"></span>M12 · Rendering with Vulkan</a>
+      <a class="toc-link" href="#" onclick="openModule(13);return false"><span class="toc-link-dot" style="background:var(--d5)"></span>M13 · Vulkan Compute & Advanced</a>
+      <a class="toc-link" href="#" onclick="openModule(14);return false"><span class="toc-link-dot" style="background:var(--d5)"></span>M14 · Integration & Cross-Platform</a>
+      <a class="toc-link" href="#" onclick="openModule(15);return false"><span class="toc-link-dot" style="background:var(--d5)"></span>M15 · Capstone & Review</a>
+    </div>
   </div>
 </div>
 
-<!-- ── DAY FILTER ── -->
-<div class="day-filter" id="modules">
-  <button class="day-tab dt-all active" onclick="filterDay('all',this)">All Days</button>
-  <button class="day-tab dt-1" onclick="filterDay('1',this)">Day 1 — OpenGL Foundations</button>
-  <button class="day-tab dt-2" onclick="filterDay('2',this)">Day 2 — 3D, Lighting & Textures</button>
-  <button class="day-tab dt-3" onclick="filterDay('3',this)">Day 3 — Advanced OpenGL</button>
-  <button class="day-tab dt-4" onclick="filterDay('4',this)">Day 4 — Vulkan</button>
-  <button class="day-tab dt-5" onclick="filterDay('5',this)">Day 5 — Advanced & Capstone</button>
-</div>
+<!-- ═══ MODULES SECTION ═══ -->
+<section class="section" id="modules">
+  <div class="sec-eyebrow">Course Content</div>
+  <h2 class="sec-title">Module-Wise Notes</h2>
+  <p class="sec-sub">Click any module to read detailed notes, analogies, concept diagrams, and find the matching live demo.</p>
 
-<!-- ── MODULE CARDS ── -->
-<div class="modules-grid" id="modGrid">
-
-  <!-- Day 1 -->
-  <div class="mod-card mc-d1" data-day="1" onclick="openNote('m1')">
-    <div class="mod-day">Day 1 · Module 1</div>
-    <div class="mod-num">Introduction to Graphics Programming</div>
-    <div class="mod-desc">Build the mental model before writing a single line of code.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Overview of computer graphics systems</div>
-      <div class="mod-topic">GPU vs CPU — architecture and data flow</div>
-      <div class="mod-topic">OpenGL, Vulkan, DirectX — what and why</div>
-      <div class="mod-topic">The rendering pipeline — vertex to pixel</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-blue">Foundation</span><span class="tag t-purple">Theory</span></div>
+  <!-- Day Filter Tabs -->
+  <div class="day-tabs">
+    <button class="day-tab active" data-day="all" onclick="filterDay('all',this)">All Days</button>
+    <button class="day-tab" data-day="1" onclick="filterDay(1,this)">Day 1 — Foundations</button>
+    <button class="day-tab" data-day="2" onclick="filterDay(2,this)">Day 2 — 3D World</button>
+    <button class="day-tab" data-day="3" onclick="filterDay(3,this)">Day 3 — Advanced OpenGL</button>
+    <button class="day-tab" data-day="4" onclick="filterDay(4,this)">Day 4 — Vulkan</button>
+    <button class="day-tab" data-day="5" onclick="filterDay(5,this)">Day 5 — Advanced & Integration</button>
   </div>
 
-  <div class="mod-card mc-d1" data-day="1" onclick="openNote('m2')">
-    <div class="mod-day">Day 1 · Module 2</div>
-    <div class="mod-num">Getting Started with OpenGL</div>
-    <div class="mod-desc">Environment setup and your first working window.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Setting up GLFW, GLEW, GLM, CMake</div>
-      <div class="mod-topic">Understanding the OpenGL context</div>
-      <div class="mod-topic">The render loop — input, clear, draw, swap</div>
-      <div class="mod-topic">Coordinate systems and NDC</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-blue">Setup</span><span class="tag t-teal">Environment</span></div>
-  </div>
+  <!-- Modules Grid -->
+  <div class="modules-grid" id="modulesGrid">
 
-  <div class="mod-card mc-d1" data-day="1" onclick="openNote('m3')">
-    <div class="mod-day">Day 1 · Module 3</div>
-    <div class="mod-num">OpenGL Data Flow</div>
-    <div class="mod-desc">How vertex data travels from your C++ array to GPU pixels.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">CPU → GPU memory transfer</div>
-      <div class="mod-topic">Vertex Buffer Objects (VBO) — raw GPU storage</div>
-      <div class="mod-topic">Vertex Array Objects (VAO) — format memory</div>
-      <div class="mod-topic">Element Buffer Objects (EBO) — index buffers</div>
-      <div class="mod-topic">Framebuffer overview</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-teal">GPU Memory</span><span class="tag t-purple">Buffers</span></div>
-  </div>
-
-  <!-- Day 2 -->
-  <div class="mod-card mc-d2" data-day="2" onclick="openNote('m4')">
-    <div class="mod-day">Day 2 · Module 4</div>
-    <div class="mod-num">Transformations and 3D Space</div>
-    <div class="mod-desc">Move from flat 2D to a proper 3D world with a camera.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Model, View, Projection matrices</div>
-      <div class="mod-topic">GLM — matrix math in C++</div>
-      <div class="mod-topic">Depth testing and perspective projection</div>
-      <div class="mod-topic">glm::lookAt and glm::perspective</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-teal">3D Math</span><span class="tag t-blue">MVP</span></div>
-  </div>
-
-  <div class="mod-card mc-d2" data-day="2" onclick="openNote('m5')">
-    <div class="mod-day">Day 2 · Module 5</div>
-    <div class="mod-num">Lighting and Materials</div>
-    <div class="mod-desc">Make objects look real with physics-based light approximation.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Ambient, diffuse, specular components</div>
-      <div class="mod-topic">Phong and Blinn-Phong shading models</div>
-      <div class="mod-topic">Normal vectors and the normal matrix</div>
-      <div class="mod-topic">Implementing lighting entirely in GLSL</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-amber">Lighting</span><span class="tag t-purple">GLSL</span></div>
-  </div>
-
-  <div class="mod-card mc-d2" data-day="2" onclick="openNote('m6')">
-    <div class="mod-day">Day 2 · Module 6</div>
-    <div class="mod-num">Textures and Mapping</div>
-    <div class="mod-desc">Apply images to 3D surfaces using UV coordinate mapping.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">UV coordinates — mapping surface to image</div>
-      <div class="mod-topic">Loading images with STB — glTexImage2D</div>
-      <div class="mod-topic">Mipmaps and texture filtering</div>
-      <div class="mod-topic">Multi-texturing, cube maps, skyboxes</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-amber">Textures</span><span class="tag t-teal">UV</span></div>
-  </div>
-
-  <!-- Day 3 -->
-  <div class="mod-card mc-d3" data-day="3" onclick="openNote('m7')">
-    <div class="mod-day">Day 3 · Module 7</div>
-    <div class="mod-num">Shaders with GLSL</div>
-    <div class="mod-desc">Master the GPU shader language — types, flow, data passing.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">GLSL type system and swizzling</div>
-      <div class="mod-topic">in / out / uniform qualifier flow</div>
-      <div class="mod-topic">Passing data — attributes and uniforms</div>
-      <div class="mod-topic">Geometry shaders and GPU instancing</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-coral">GLSL</span><span class="tag t-purple">Instancing</span></div>
-  </div>
-
-  <div class="mod-card mc-d3" data-day="3" onclick="openNote('m8')">
-    <div class="mod-day">Day 3 · Module 8</div>
-    <div class="mod-num">Framebuffers and Effects</div>
-    <div class="mod-desc">Render to texture and apply screen-space post-processing.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Custom FBO — render to texture</div>
-      <div class="mod-topic">Post-processing — blur, greyscale, edge detect</div>
-      <div class="mod-topic">Transparency and alpha blending</div>
-      <div class="mod-topic">MSAA anti-aliasing · Stencil buffer</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-coral">FBO</span><span class="tag t-amber">Effects</span></div>
-  </div>
-
-  <div class="mod-card mc-d3" data-day="3" onclick="openNote('m9')">
-    <div class="mod-day">Day 3 · Module 9</div>
-    <div class="mod-num">Optimization and Performance</div>
-    <div class="mod-desc">Profile, measure, and fix real bottlenecks in your rendering.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Draw call reduction — batching and instancing</div>
-      <div class="mod-topic">Frustum culling and LOD strategies</div>
-      <div class="mod-topic">Efficient GPU memory management</div>
-      <div class="mod-topic">Profiling with RenderDoc and Nsight</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-coral">Performance</span><span class="tag t-blue">Profiling</span></div>
-  </div>
-
-  <!-- Day 4 -->
-  <div class="mod-card mc-d4" data-day="4" onclick="openNote('m10')">
-    <div class="mod-day">Day 4 · Module 10</div>
-    <div class="mod-num">Vulkan Overview</div>
-    <div class="mod-desc">Why Vulkan exists — the explicit API philosophy and architecture.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">OpenGL vs Vulkan — automatic vs explicit</div>
-      <div class="mod-topic">Vulkan architecture and object hierarchy</div>
-      <div class="mod-topic">SPIR-V shaders — compile with glslc</div>
-      <div class="mod-topic">Validation layers — developer safety net</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-purple">Vulkan</span><span class="tag t-blue">Architecture</span></div>
-  </div>
-
-  <div class="mod-card mc-d4" data-day="4" onclick="openNote('m11')">
-    <div class="mod-day">Day 4 · Module 11</div>
-    <div class="mod-num">Vulkan Core Concepts</div>
-    <div class="mod-desc">The complete object model — from instance to command buffer.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">VkInstance, VkPhysicalDevice, VkDevice</div>
-      <div class="mod-topic">Queue families and VkQueue</div>
-      <div class="mod-topic">Command pools and command buffers</div>
-      <div class="mod-topic">Explicit memory — heaps, staging buffers</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-purple">Vulkan</span><span class="tag t-coral">Memory</span></div>
-  </div>
-
-  <div class="mod-card mc-d4" data-day="4" onclick="openNote('m12')">
-    <div class="mod-day">Day 4 · Module 12</div>
-    <div class="mod-num">Rendering with Vulkan</div>
-    <div class="mod-desc">The complete render loop — swap chain to semaphore.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Swap chain creation and image views</div>
-      <div class="mod-topic">Render pass and framebuffers</div>
-      <div class="mod-topic">Graphics pipeline — all state baked in</div>
-      <div class="mod-topic">Sync — semaphores and fences</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-purple">Vulkan</span><span class="tag t-teal">Rendering</span></div>
-  </div>
-
-  <!-- Day 5 -->
-  <div class="mod-card mc-d5" data-day="5" onclick="openNote('m13')">
-    <div class="mod-day">Day 5 · Module 13</div>
-    <div class="mod-num">Vulkan Compute & Advanced Rendering</div>
-    <div class="mod-desc">GPU compute pipelines beyond graphics.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Compute shaders — workgroups and dispatch</div>
-      <div class="mod-topic">Descriptor sets and uniforms</div>
-      <div class="mod-topic">Push constants — fastest per-draw data</div>
-      <div class="mod-topic">Model loading with Assimp</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-coral">Compute</span><span class="tag t-purple">Advanced</span></div>
-  </div>
-
-  <div class="mod-card mc-d5" data-day="5" onclick="openNote('m14')">
-    <div class="mod-day">Day 5 · Module 14</div>
-    <div class="mod-num">Integration and Cross-Platform</div>
-    <div class="mod-desc">Take Vulkan and OpenGL into the real world.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">C++ / C# / Unity / Android integration</div>
-      <div class="mod-topic">Validation layer debugging</div>
-      <div class="mod-topic">Porting OpenGL code to Vulkan</div>
-      <div class="mod-topic">Common porting pitfalls checklist</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-amber">Integration</span><span class="tag t-teal">Cross-Platform</span></div>
-  </div>
-
-  <div class="mod-card mc-d5" data-day="5" onclick="openNote('m15')">
-    <div class="mod-day">Day 5 · Module 15</div>
-    <div class="mod-num">Capstone Project and Review</div>
-    <div class="mod-desc">Bring everything together in a naval operations rendering demo.</div>
-    <div class="mod-topics">
-      <div class="mod-topic">Project brief — Naval Operations Demo</div>
-      <div class="mod-topic">OpenGL + Vulkan combined pipeline</div>
-      <div class="mod-topic">Best practices checklist — all 15 modules</div>
-      <div class="mod-topic">Q&A and review</div>
-    </div>
-    <div class="mod-tags"><span class="tag t-amber">Capstone</span><span class="tag t-blue">Review</span></div>
-  </div>
-
-</div>
-
-<!-- ── NOTE READER OVERLAY ── -->
-<div class="reader-overlay" id="readerOverlay" onclick="closeReader(event)">
-  <div class="reader-panel" id="readerPanel">
-    <div class="reader-header">
-      <div class="reader-header-left">
-        <div class="reader-tag" id="rTag">Day 1 · Module 1</div>
-        <div class="reader-title" id="rTitle">Module Title</div>
+    <!-- M1 -->
+    <div class="module-card" data-day="1" onclick="openModule(1)">
+      <div class="module-card-bar" style="background:var(--d1)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 1 · Module 1</div>
+        <div class="module-title">Introduction to Graphics Programming</div>
+        <div class="module-tags">
+          <span class="tag">Foundations</span>
+          <span class="tag">GPU Architecture</span>
+          <span class="tag">Pipeline</span>
+        </div>
       </div>
-      <button class="reader-close" onclick="closeReaderBtn()">✕</button>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Overview of computer graphics systems</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>GPU vs CPU: architecture and data flow</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>OpenGL, Vulkan, DirectX comparison</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>The rendering pipeline: vertex data to pixels</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="day1-demos.html#demo-pipeline" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
     </div>
-    <div class="reader-body" id="rBody"></div>
-    <div class="reader-nav">
-      <button class="r-nav-btn" id="rPrev" onclick="navNote(-1)">← Previous module</button>
-      <button class="r-nav-btn" id="rNext" onclick="navNote(1)">Next module →</button>
+
+    <!-- M2 -->
+    <div class="module-card" data-day="1" onclick="openModule(2)">
+      <div class="module-card-bar" style="background:var(--d1)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 1 · Module 2</div>
+        <div class="module-title">Getting Started with OpenGL</div>
+        <div class="module-tags">
+          <span class="tag">Setup</span><span class="tag">GLFW</span><span class="tag">Context</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Setting up the OpenGL development environment</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Understanding contexts and buffers</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Coordinate systems and transformations</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Drawing basic shapes and primitives</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="day1-demos.html#demo-window" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
     </div>
+
+    <!-- M3 -->
+    <div class="module-card" data-day="1" onclick="openModule(3)">
+      <div class="module-card-bar" style="background:var(--d1)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 1 · Module 3</div>
+        <div class="module-title">OpenGL Data Flow</div>
+        <div class="module-tags">
+          <span class="tag">VBO</span><span class="tag">VAO</span><span class="tag">EBO</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Data transfer between CPU and GPU</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Vertex Buffer Objects (VBO) and Vertex Array Objects (VAO)</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Element Buffer Objects (EBO)</li>
+        <li><span class="topic-bullet" style="background:var(--d1)"></span>Framebuffer overview</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="day1-demos.html#demo-vbo" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="module-card" data-day="2" onclick="openModule(4)">
+      <div class="module-card-bar" style="background:var(--d2)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 2 · Module 4</div>
+        <div class="module-title">Transformations and 3D Space</div>
+        <div class="module-tags">
+          <span class="tag">MVP Matrix</span><span class="tag">Depth Testing</span><span class="tag">Camera</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Model, View, and Projection transformations</li>
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Understanding matrices in OpenGL</li>
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Depth testing and perspective projection</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="day1-demos.html" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="module-card" data-day="2" onclick="openModule(5)">
+      <div class="module-card-bar" style="background:var(--d2)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 2 · Module 5</div>
+        <div class="module-title">Lighting and Materials</div>
+        <div class="module-tags">
+          <span class="tag">Phong</span><span class="tag">Diffuse</span><span class="tag">Specular</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Basic lighting models (ambient, diffuse, specular)</li>
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Phong and Blinn-Phong shading</li>
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Implementing lighting with shaders</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M6 -->
+    <div class="module-card" data-day="2" onclick="openModule(6)">
+      <div class="module-card-bar" style="background:var(--d2)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 2 · Module 6</div>
+        <div class="module-title">Textures and Mapping</div>
+        <div class="module-tags">
+          <span class="tag">UV Mapping</span><span class="tag">Mipmaps</span><span class="tag">Skybox</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Loading and applying textures</li>
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Multi-texturing and texture filtering</li>
+        <li><span class="topic-bullet" style="background:var(--d2)"></span>Cube maps and skyboxes</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M7 -->
+    <div class="module-card" data-day="3" onclick="openModule(7)">
+      <div class="module-card-bar" style="background:var(--d3)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 3 · Module 7</div>
+        <div class="module-title">Shaders with GLSL</div>
+        <div class="module-tags">
+          <span class="tag">GLSL</span><span class="tag">Instancing</span><span class="tag">Geometry</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Introduction to GLSL</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Vertex and fragment shader structure</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Passing data to shaders</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Geometry shaders and instancing</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M8 -->
+    <div class="module-card" data-day="3" onclick="openModule(8)">
+      <div class="module-card-bar" style="background:var(--d3)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 3 · Module 8</div>
+        <div class="module-title">Framebuffers and Effects</div>
+        <div class="module-tags">
+          <span class="tag">FBO</span><span class="tag">Post-Processing</span><span class="tag">MSAA</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Using framebuffers for post-processing</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Implementing transparency and blending</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Anti-aliasing and multisampling techniques</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Depth and stencil buffers</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M9 -->
+    <div class="module-card" data-day="3" onclick="openModule(9)">
+      <div class="module-card-bar" style="background:var(--d3)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 3 · Module 9</div>
+        <div class="module-title">Optimization and Performance</div>
+        <div class="module-tags">
+          <span class="tag">Draw Calls</span><span class="tag">RenderDoc</span><span class="tag">Memory</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Draw call reduction strategies</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Efficient memory management</li>
+        <li><span class="topic-bullet" style="background:var(--d3)"></span>Profiling and debugging OpenGL applications</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M10 -->
+    <div class="module-card" data-day="4" onclick="openModule(10)">
+      <div class="module-card-bar" style="background:var(--d4)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 4 · Module 10</div>
+        <div class="module-title">Vulkan Overview</div>
+        <div class="module-tags">
+          <span class="tag">Vulkan SDK</span><span class="tag">Architecture</span><span class="tag">SPIR-V</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Introduction to Vulkan and its architecture</li>
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Differences between Vulkan and OpenGL</li>
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Setting up the Vulkan development environment</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M11 -->
+    <div class="module-card" data-day="4" onclick="openModule(11)">
+      <div class="module-card-bar" style="background:var(--d4)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 4 · Module 11</div>
+        <div class="module-title">Vulkan Core Concepts</div>
+        <div class="module-tags">
+          <span class="tag">Devices</span><span class="tag">Command Buffers</span><span class="tag">Memory</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Instances, physical and logical devices</li>
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Queues and command buffers</li>
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Memory management in Vulkan</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M12 -->
+    <div class="module-card" data-day="4" onclick="openModule(12)">
+      <div class="module-card-bar" style="background:var(--d4)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 4 · Module 12</div>
+        <div class="module-title">Rendering with Vulkan</div>
+        <div class="module-tags">
+          <span class="tag">Swapchain</span><span class="tag">Pipeline</span><span class="tag">Sync</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Creating swap chains, pipelines, and render passes</li>
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Recording and submitting command buffers</li>
+        <li><span class="topic-bullet" style="background:var(--d4)"></span>Synchronization with semaphores and fences</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M13 -->
+    <div class="module-card" data-day="5" onclick="openModule(13)">
+      <div class="module-card-bar" style="background:var(--d5)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 5 · Module 13</div>
+        <div class="module-title">Vulkan Compute & Advanced Rendering</div>
+        <div class="module-tags">
+          <span class="tag">GPU Compute</span><span class="tag">Descriptors</span><span class="tag">Models</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Using Vulkan for GPU computing</li>
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Model loading and rendering</li>
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Descriptor sets and uniforms</li>
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Performance tuning</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M14 -->
+    <div class="module-card" data-day="5" onclick="openModule(14)">
+      <div class="module-card-bar" style="background:var(--d5)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 5 · Module 14</div>
+        <div class="module-title">Integration & Cross-Platform Development</div>
+        <div class="module-tags">
+          <span class="tag">C#</span><span class="tag">Unity</span><span class="tag">Android</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Integrating Vulkan/OpenGL with C++, C#, Unity, Android</li>
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Debugging and validation layers</li>
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Porting OpenGL code to Vulkan</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+      </div>
+    </div>
+
+    <!-- M15 -->
+    <div class="module-card" data-day="5" onclick="openModule(15)">
+      <div class="module-card-bar" style="background:var(--d5)"></div>
+      <div class="module-card-head">
+        <div class="module-num">Day 5 · Module 15</div>
+        <div class="module-title">Capstone Project & Review</div>
+        <div class="module-tags">
+          <span class="tag">Capstone</span><span class="tag">Best Practices</span><span class="tag">Q&A</span>
+        </div>
+      </div>
+      <ul class="module-topics">
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Building a graphics demo using both APIs</li>
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Recap of key concepts</li>
+        <li><span class="topic-bullet" style="background:var(--d5)"></span>Q&A and best practices</li>
+      </ul>
+      <div class="module-actions">
+        <div class="act-btn primary">📖 Read Notes</div>
+        <a href="labs.html" class="act-btn" onclick="event.stopPropagation()">🔬 Final Lab</a>
+      </div>
+    </div>
+
+  </div><!-- end modules-grid -->
+</section>
+
+<!-- ═══ SOFTWARE STACK ═══ -->
+<section class="section" style="padding-top:2rem">
+  <div class="sec-eyebrow">Environment</div>
+  <h2 class="sec-title">Software Stack</h2>
+  <p class="sec-sub">Every tool on your VM — what it is and exactly why it exists in this course.</p>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-icon">🖥️</div>
+      <div class="tool-name">Visual Studio 2022 Community</div>
+      <div class="tool-desc">Your IDE and C++ compiler. Every lab written in C++17. Industry standard for Windows graphics development.</div>
+      <div class="tool-version">MSVC v143 · C++17</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔨</div>
+      <div class="tool-name">CMake 3.28+</div>
+      <div class="tool-desc">Build system generator. Converts your CMakeLists.txt into VS project files automatically — no manual config.</div>
+      <div class="tool-version">cmake --version</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🪟</div>
+      <div class="tool-name">GLFW 3.3</div>
+      <div class="tool-desc">Creates OS windows and OpenGL contexts. Handles keyboard, mouse, resize events. Cross-platform.</div>
+      <div class="tool-version">C:\libs\glfw\</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔌</div>
+      <div class="tool-name">GLEW 2.2</div>
+      <div class="tool-desc">OpenGL function loader. Finds all GL functions inside the GPU driver at runtime and gives you pointers to them.</div>
+      <div class="tool-version">C:\libs\glew\</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">📐</div>
+      <div class="tool-name">GLM (OpenGL Mathematics)</div>
+      <div class="tool-desc">C++ math library matching GLSL. Gives you vec3, mat4, perspective(), lookAt(). Header-only.</div>
+      <div class="tool-version">C:\libs\glm\</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🖼️</div>
+      <div class="tool-name">STB Image</div>
+      <div class="tool-desc">Single-header library to load JPG, PNG, BMP into memory. Used in Module 6 for texture loading.</div>
+      <div class="tool-version">stb_image.h</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">📦</div>
+      <div class="tool-name">Assimp</div>
+      <div class="tool-desc">Open Asset Importer. Loads .obj, .fbx, .gltf 3D model files into C++ data structures for rendering.</div>
+      <div class="tool-version">Module 9, 13</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔺</div>
+      <div class="tool-name">Vulkan SDK 1.3 (LunarG)</div>
+      <div class="tool-desc">Complete Vulkan package: headers, validation layers, SPIR-V compiler (glslc), vulkaninfo tool.</div>
+      <div class="tool-version">Days 4–5</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-name">RenderDoc</div>
+      <div class="tool-desc">GPU frame debugger. Pause any frame, inspect every draw call, texture, uniform, and buffer on the GPU.</div>
+      <div class="tool-version">Free · From Module 7</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">📊</div>
+      <div class="tool-name">NVIDIA Nsight Graphics</div>
+      <div class="tool-desc">Deep GPU profiler for Vulkan. Shows GPU timeline, memory bottlenecks, shader occupancy.</div>
+      <div class="tool-version">Modules 13–15</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DETAIL PANEL (slides in) ═══ -->
+<div class="detail-overlay" id="detailOverlay" onclick="closePanel(event)">
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-close">
+      <div id="panelModuleLabel" style="font-family:var(--font-display);font-size:12px;color:var(--text3)">Module Notes</div>
+      <button class="close-btn" onclick="closeModule()">✕</button>
+    </div>
+    <div class="detail-content" id="panelContent"><!-- filled by JS --></div>
   </div>
 </div>
 
+<!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="footer-brand">RR Graphics Lab</div>
-  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan (MCT) · Koenig Solutions · v1.0 April 2026</div>
+  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan</div>
   <div class="footer-links">
-    <a href="index.html">Notes</a>
-    <a href="demos.html">Demos</a>
-    <a href="labs.html">Labs</a>
-    <a href="mailto:raushanr1107@gmail.com">Contact</a>
+    <a class="footer-link" href="index.html">Module Notes</a>
+    <a class="footer-link" href="demos.html">Code Demos</a>
+    <a class="footer-link" href="labs.html">Lab Challenges</a>
+  </div>
+  <div class="footer-copy">
+    By <strong>Raushan Ranjan</strong> (MCT | Educator) · Koenig Solutions · Koenig Original AI-Courseware<br>
+    <span style="color:var(--text3);font-size:.75rem">Computer Graphics with OpenGL and Vulkan — v1.0 · 2026</span>
   </div>
 </footer>
 
+<!-- ═══ MODULE NOTES DATA ═══ -->
 <script>
-/* ── DAY FILTER ── */
-function filterDay(day, btn) {
-  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+const MODULES = {
+  1: {
+    day:1, color:'#6366f1',
+    title:'Introduction to Graphics Programming',
+    subtitle:'Module 1 · Day 1 · The complete mental model before any code',
+    demoLink:'day1-demos.html#demo-pipeline',
+    demoLabel:'Demo: Rendering Pipeline Walkthrough',
+    content: `
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>What Is Computer Graphics?</div>
+  <p class="notes-p">Computer graphics is the science and art of making computers produce visual output — images, animations, simulations. But at the hardware level, it's really one thing: <strong>computing what colour each pixel on your screen should be, thousands of times per second.</strong></p>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — The Factory Floor</div>
+    <div class="analogy-text">Think of your screen as a giant grid of tiny light bulbs — 1920×1080 = about 2 million of them. At 60fps, a computer must decide the colour of every single bulb 60 times per second. That's 124 million colour decisions per second. Only one piece of hardware is built for this: the <strong>GPU</strong>.</div>
+  </div>
+  <p class="notes-p">In defense systems — radar displays, sonar visualisers, tactical maps, flight simulators — every pixel on every screen is computed using exactly the technology you'll learn this week.</p>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>GPU vs CPU — Architecture & Data Flow</div>
+  <p class="notes-p">Understanding the difference between CPU and GPU is the single most important mental model in this course. Everything else flows from it.</p>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — The Professor vs The Factory</div>
+    <div class="analogy-text">A CPU is like a brilliant professor — it can solve incredibly complex problems, make decisions, handle conditions and loops. But it works mostly one task at a time (serially). A GPU is like a factory with 4,000 workers — none of them individually smart, but together they can paint millions of pixels simultaneously in parallel.</div>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-title">CPU vs GPU — Architecture Comparison</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.6">
+┌──────────────────────────────┐    ┌──────────────────────────────────────┐
+│         CPU                  │    │         GPU                          │
+│  ┌─────┐ ┌─────┐ ┌─────┐   │    │  ┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐ │
+│  │Core1│ │Core2│ │Core3│   │    │  │SM││SM││SM││SM││SM││SM││SM││SM│ │
+│  └─────┘ └─────┘ └─────┘   │    │  └──┘└──┘└──┘└──┘└──┘└──┘└──┘└──┘ │
+│  Complex serial tasks        │    │  ┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐ │
+│  4–32 cores typically        │    │  │SM││SM││SM││SM││SM││SM││SM││SM│ │
+│  High clock speed (5GHz)     │    │  └──┘└──┘└──┘└──┘└──┘└──┘└──┘└──┘ │
+│  Large cache per core        │    │  4,000–10,000+ shader cores         │
+│  Game logic, AI, physics     │    │  Lower clock (2GHz) but massively   │
+└──────────────────────────────┘    │  parallel — all pixels at once      │
+         │                          └──────────────────────────────────────┘
+         │  Your C++ code                        ↑
+         │  runs here               You command it via an API:
+         └─────────────────────────→ OpenGL / Vulkan / DirectX
+    </pre>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">✅ Key Point</div>
+    <p class="notes-p" style="margin:0">Your C++ program always runs on the CPU. The GPU only executes the small programs you send to it — called <strong>shaders</strong>. The CPU prepares data and issues commands; the GPU executes those commands in parallel across millions of elements.</p>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Graphics APIs — OpenGL vs Vulkan vs DirectX</div>
+  <p class="notes-p">A Graphics API is a layer of software that lets your C++ program talk to the GPU driver without knowing what brand or model of GPU the user has. Think of it as a universal remote control for GPUs.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">API Comparison Table</div>
+    <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+      <tr style="border-bottom:1px solid #2a3148">
+        <th style="padding:.5rem;text-align:left;color:#94a3b8">Feature</th>
+        <th style="padding:.5rem;text-align:left;color:#6366f1">OpenGL</th>
+        <th style="padding:.5rem;text-align:left;color:#fb923c">Vulkan</th>
+        <th style="padding:.5rem;text-align:left;color:#38bdf8">DirectX 12</th>
+      </tr>
+      <tr style="border-bottom:1px solid #1e2535">
+        <td style="padding:.5rem;color:#64748b">Born</td>
+        <td style="padding:.5rem;color:#e2e8f0">1992</td>
+        <td style="padding:.5rem;color:#e2e8f0">2016</td>
+        <td style="padding:.5rem;color:#e2e8f0">1995</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1e2535">
+        <td style="padding:.5rem;color:#64748b">Style</td>
+        <td style="padding:.5rem;color:#e2e8f0">Driver decides much</td>
+        <td style="padding:.5rem;color:#e2e8f0">You decide everything</td>
+        <td style="padding:.5rem;color:#e2e8f0">You decide everything</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1e2535">
+        <td style="padding:.5rem;color:#64748b">Learning</td>
+        <td style="padding:.5rem;color:#4ade80">Low — great to learn</td>
+        <td style="padding:.5rem;color:#f87171">High — more setup</td>
+        <td style="padding:.5rem;color:#f87171">High</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1e2535">
+        <td style="padding:.5rem;color:#64748b">Cross-platform</td>
+        <td style="padding:.5rem;color:#4ade80">Yes</td>
+        <td style="padding:.5rem;color:#4ade80">Yes</td>
+        <td style="padding:.5rem;color:#f87171">Windows/Xbox only</td>
+      </tr>
+      <tr>
+        <td style="padding:.5rem;color:#64748b">This course</td>
+        <td style="padding:.5rem;color:#e2e8f0">Days 1–3</td>
+        <td style="padding:.5rem;color:#e2e8f0">Days 4–5</td>
+        <td style="padding:.5rem;color:#64748b">Not covered</td>
+      </tr>
+    </table>
+  </div>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — Automatic vs Manual Car</div>
+    <div class="analogy-text">OpenGL is an automatic transmission — press the accelerator, it handles the gears. Vulkan is a manual racing gearbox — you control every gear change, so you go faster if you know what you're doing. We learn automatic first, then manual.</div>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>The Rendering Pipeline</div>
+  <p class="notes-p">The rendering pipeline is the sequence of steps the GPU follows to convert your raw 3D coordinate data into colored pixels on screen. Think of it as an assembly line — each station has exactly one job.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">The 7-Stage Rendering Pipeline</div>
+    <div class="pipeline-row" style="flex-wrap:wrap;gap:6px">
+      <div class="pipe-stage pipe-cpu">CPU<br><span style="font-size:9px;opacity:.7">Vertex Data</span></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-stage pipe-prog" style="background:rgba(99,102,241,.4);border-color:rgba(99,102,241,.8)">Vertex<br>Shader ✏️</div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-stage pipe-fixed">Primitive<br>Assembly</div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-stage pipe-fixed">Rasterization</div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-stage pipe-prog" style="background:rgba(34,211,238,.2);border-color:rgba(34,211,238,.6)">Fragment<br>Shader ✏️</div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-stage pipe-fixed">Depth/Stencil<br>Test</div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-stage pipe-gpu">Framebuffer<br>(Screen)</div>
+    </div>
+    <p style="font-size:.8rem;color:var(--text3);margin-top:1rem;text-align:center">✏️ = stages <em>you write code for</em> (shaders) · Everything else is automatic GPU hardware</p>
+  </div>
+  <div class="notes-h3">What each stage does:</div>
+  <ul class="notes-ul">
+    <li><strong>CPU — Vertex Data:</strong> You define 3D positions as float arrays in your C++ code. E.g. triangle corners at (-0.5, -0.5, 0), (0.5, -0.5, 0), (0, 0.5, 0).</li>
+    <li><strong>Vertex Shader (YOU WRITE THIS):</strong> A tiny program that runs once per vertex on the GPU. It transforms 3D world positions into 2D screen positions. This is where the camera and projection math happens.</li>
+    <li><strong>Primitive Assembly:</strong> GPU connects the transformed vertices into triangles according to your index data. Automatic.</li>
+    <li><strong>Rasterization:</strong> GPU converts each triangle into a set of screen pixels (fragments) that the triangle covers. For a triangle covering 1,000 pixels, 1,000 fragments are generated. Automatic.</li>
+    <li><strong>Fragment Shader (YOU WRITE THIS):</strong> Runs once per fragment (pixel candidate). You decide the final colour of that pixel — applying texture, lighting, shadows, effects.</li>
+    <li><strong>Depth/Stencil Test:</strong> If two fragments compete for the same pixel, the closer one wins. Automatic.</li>
+    <li><strong>Framebuffer:</strong> The winning fragment colours are written to the framebuffer — the final image shown on screen.</li>
+  </ul>
+  <div class="demo-link-box">
+    <div class="demo-link-box-text">Ready to see this pipeline in action? → <strong>Demo: Pipeline Walkthrough</strong> shows each stage with live code and output.</div>
+    <a class="demo-link-btn" href="day1-demos.html#demo-pipeline">Try Demo →</a>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Real-World Use: Naval Radar Display</div>
+  <p class="notes-p">A ship's radar display works like this: the radar hardware detects contacts (other ships, aircraft) and outputs their bearing and range as numbers. Software converts those numbers into 2D positions. Your C++ code sends those positions as vertex data to the GPU. The vertex shader places them on screen. The fragment shader colours them (green = friendly, red = hostile). At 60fps, the display stays live even as 200 contacts move simultaneously.</p>
+  <p class="notes-p">This entire process uses every stage of the rendering pipeline you just learned. The radar sweep line is a rotating geometry drawn with the vertex shader. The contact icons are fragments coloured by the fragment shader based on threat classification data passed as a uniform.</p>
+</div>
+    `
+  },
+
+  2: {
+    day:1, color:'#6366f1',
+    title:'Getting Started with OpenGL',
+    subtitle:'Module 2 · Day 1 · From zero to a working window with the render loop',
+    demoLink:'day1-demos.html#demo-window',
+    demoLabel:'Demo: First OpenGL Window',
+    content: `
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>What Does "Setting Up OpenGL" Actually Mean?</div>
+  <p class="notes-p">OpenGL is not a library you download like a DLL. It's a <strong>specification</strong> — a document describing what functions must exist and what they must do. The actual implementation lives inside your GPU driver, installed by NVIDIA/AMD/Intel. When your program calls <code>glDrawArrays()</code>, it's calling code that NVIDIA wrote for your specific GPU.</p>
+  <p class="notes-p">So "setting up OpenGL" means assembling four pieces of software that work together:</p>
+  <div class="diagram-box">
+    <div class="diagram-title">The OpenGL Software Stack</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  ┌─────────────────────────────────────────┐
+  │   Your C++ Application Code             │  ← You write this
+  └───────────────┬─────────────────────────┘
+                  │ calls
+  ┌───────────────▼─────────────────────────┐
+  │   GLEW (Function Loader)                │  ← Finds GL functions in driver
+  │   Gives you: glGenBuffers, glDrawArrays │
+  └───────────────┬─────────────────────────┘
+                  │ uses
+  ┌───────────────▼─────────────────────────┐
+  │   GLFW (Window + Context Creator)       │  ← Creates OS window + GL context
+  │   Handles: keyboard, resize, close      │
+  └───────────────┬─────────────────────────┘
+                  │ inside
+  ┌───────────────▼─────────────────────────┐
+  │   GPU Driver (OpenGL Implementation)    │  ← NVIDIA / AMD / Intel
+  │   Actual hardware commands              │
+  └───────────────┬─────────────────────────┘
+                  │ commands
+  ┌───────────────▼─────────────────────────┐
+  │   GPU Hardware                          │
+  └─────────────────────────────────────────┘
+    </pre>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Understanding the OpenGL Context</div>
+  <p class="notes-p">The <strong>OpenGL context</strong> is the most important thing GLFW creates. Think of it as the workspace or "office" where OpenGL does its work. It's a state machine that remembers:</p>
+  <ul class="notes-ul">
+    <li>Which shader program is currently active</li>
+    <li>Which buffers are bound to which targets</li>
+    <li>What the current viewport dimensions are</li>
+    <li>What the clear colour is</li>
+    <li>What blending mode is active</li>
+    <li>Hundreds of other settings</li>
+  </ul>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — The Whiteboard</div>
+    <div class="analogy-text">The OpenGL context is like a whiteboard in a meeting room. Before you can draw on it, you have to walk into the room (make the context current). Every gl function call reads or writes something on that whiteboard. Without entering the room first, you can't do anything — which is why glfwMakeContextCurrent() must come before any gl call.</div>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>The Render Loop</div>
+  <p class="notes-p">Every OpenGL application runs a loop. Every frame — 60 times per second — the same four steps happen:</p>
+  <div class="diagram-box">
+    <div class="diagram-title">The Render Loop — Every Frame</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  ┌────────────────────────────────────────────────────────┐
+  │                   RENDER LOOP                           │
+  │                                                         │
+  │   ① Input       glfwPollEvents()                       │
+  │      └─ Process keyboard/mouse/resize events           │
+  │                        ↓                               │
+  │   ② Clear       glClear(GL_COLOR_BUFFER_BIT)           │
+  │      └─ Erase the previous frame from back buffer      │
+  │                        ↓                               │
+  │   ③ Draw        glDrawArrays() / glDrawElements()      │
+  │      └─ Send geometry to GPU, shaders run              │
+  │                        ↓                               │
+  │   ④ Swap        glfwSwapBuffers(window)                │
+  │      └─ Show the completed frame (back→front swap)     │
+  │                        ↓                               │
+  │   Check: glfwWindowShouldClose() → loop or exit        │
+  └────────────────────────────────────────────────────────┘
+    </pre>
+  </div>
+  <div class="warn-box">
+    <div class="warn-label">⚠️ Common Beginner Mistakes</div>
+    <p class="notes-p" style="margin:0"><strong>Forgetting glfwPollEvents():</strong> The window freezes — can't move or close it. <strong>Forgetting glfwSwapBuffers():</strong> Screen stays black — you drew to the back buffer but never showed it. <strong>Forgetting glClear():</strong> Each frame's drawing accumulates on top of the last — ghosting effect.</p>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Coordinate Systems</div>
+  <p class="notes-p">OpenGL uses a <strong>Normalized Device Coordinate (NDC)</strong> system. The visible screen space goes from -1.0 to +1.0 in both X and Y directions. Anything outside this range is clipped (not drawn).</p>
+  <div class="diagram-box">
+    <div class="diagram-title">OpenGL NDC Coordinate System</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.6">
+              Y = +1.0 (top)
+                    │
+  X = -1.0 ────── (0,0) ────── X = +1.0
+   (left)          │              (right)
+              Y = -1.0 (bottom)
+
+  Triangle vertices example:
+  (-0.5, -0.5)  = bottom-left
+  ( 0.5, -0.5)  = bottom-right
+  ( 0.0,  0.5)  = top-center
+
+  Z-axis points OUT of the screen toward you.
+  OpenGL is right-handed by default.
+    </pre>
+  </div>
+  <div class="demo-link-box">
+    <div class="demo-link-box-text">See this in code → <strong>Demo: First OpenGL Window</strong> with complete GLFW setup and render loop explained line by line.</div>
+    <a class="demo-link-btn" href="day1-demos.html#demo-window">Try Demo →</a>
+  </div>
+</div>
+    `
+  },
+
+  3: {
+    day:1, color:'#6366f1',
+    title:'OpenGL Data Flow — VBO, VAO, EBO',
+    subtitle:'Module 3 · Day 1 · How data travels from your C++ code to the GPU',
+    demoLink:'day1-demos.html#demo-vbo',
+    demoLabel:'Demo: VBO, VAO & First Triangle',
+    content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>The Memory Gap Problem</div>
+  <p class="notes-p">Your C++ float arrays live in <strong>RAM (CPU memory)</strong>. The GPU has its own dedicated memory — <strong>VRAM</strong>. These are completely separate. The GPU cannot read your RAM directly (it's on a different chip connected by PCIe). You must explicitly copy data from RAM to VRAM before the GPU can use it. This is what VBO does.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">CPU RAM → GPU VRAM Transfer</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.7">
+  CPU RAM                          GPU VRAM
+  ┌────────────────────┐           ┌────────────────────┐
+  │ float vertices[] = │           │                    │
+  │ {-0.5,-0.5, 0.5,  │ ────────→ │  VBO (Buffer on   │
+  │  -0.5, 0.0, 0.5}  │  PCIe bus │  GPU memory)       │
+  └────────────────────┘           └────────────────────┘
+  Your C++ array                   glBufferData() copies it here
+  (disappears after upload)        GPU reads directly from VRAM
+    </pre>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>VBO — Vertex Buffer Object</div>
+  <p class="notes-p">A VBO is a chunk of GPU VRAM that you allocate and fill with vertex data. That's it. No magic — it's just memory on the GPU. Every 3D object in any game, simulation, or display you've ever seen uses VBOs.</p>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — The Filing Cabinet</div>
+    <div class="analogy-text">Your vertex data (coordinates) is paper with numbers written on it. Your C++ array is like holding that paper in your hand. The VBO is a filing cabinet located inside the factory (GPU) — you photocopy the paper and put it in the filing cabinet, and the workers (shader cores) can read from it constantly without going back to the office (CPU) each time.</div>
+  </div>
+  <div class="code-block">
+    <div class="code-label">VBO Creation Pattern (every OpenGL program uses this)</div>
+    <pre>// Step 1: Ask OpenGL to create one buffer — gives you an ID (like a filing cabinet number)
+unsigned int VBO;
+glGenBuffers(1, &VBO);        // "I need 1 buffer object" → stores ID in VBO
+
+// Step 2: Bind (select) this buffer for operations
+glBindBuffer(GL_ARRAY_BUFFER, VBO);  // "This is the active array buffer now"
+
+// Step 3: Copy your CPU data into this GPU buffer
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+// GL_ARRAY_BUFFER   = target slot (vertex data)
+// sizeof(vertices)  = how many bytes to copy
+// vertices          = pointer to your CPU float array
+// GL_STATIC_DRAW    = hint: this data won't change often</pre>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>VAO — Vertex Array Object</div>
+  <p class="notes-p">Once your data is in the VBO, you need to tell OpenGL <em>how to interpret that raw memory</em>. Is offset 0 a position? Is it 2D or 3D? Is offset 12 a colour? A normal vector? This interpretation is called the <strong>vertex attribute layout</strong>. The VAO remembers this layout for you.</p>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — The Recipe Card</div>
+    <div class="analogy-text">If the VBO is the filing cabinet full of raw data, the VAO is a recipe card taped to the front: "Position: read 3 floats starting at byte 0, stride 24. Colour: read 3 floats starting at byte 12, stride 24." When you bind the VAO later, OpenGL knows exactly how to interpret the data in the VBO — without you having to re-specify it every frame.</div>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-title">Vertex Data Layout in Memory (position + colour per vertex)</div>
+    <pre style="font-family:var(--font-mono);font-size:.78rem;color:var(--text2);line-height:1.6">
+  Byte:  0    4    8   12   16   20   24   28   32   36   40   44
+         │    │    │    │    │    │    │    │    │    │    │    │
+         ├────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┤
+         │  X │  Y │  Z │  R │  G │  B │  X │  Y │  Z │  R │  G │...
+         ├────┴────┴────┼────┴────┴────┼────┴────┴────┼────┴────┴
+         │  Position    │   Colour     │  Position    │   Colour  
+         │  Attrib 0    │   Attrib 1   │  Vertex 2    │  Vertex 2 
+         │  3 floats    │   3 floats   │              │           
+         
+  Stride = 24 bytes (6 floats × 4 bytes) — gap from one vertex to the next
+  Offset of Position = 0 bytes from start
+  Offset of Colour   = 12 bytes from start (3 floats × 4 bytes)
+    </pre>
+  </div>
+</div>
+
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>EBO — Element Buffer Object</div>
+  <p class="notes-p">To draw a rectangle you need 2 triangles — 6 vertices total. But a rectangle only has 4 corner points. Without EBO you'd duplicate 2 vertices (wasting memory). With an EBO you store just 4 unique vertices and an index list [0,1,2, 2,3,0] that tells OpenGL which vertices to use for each triangle.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">EBO — Index-Based Drawing</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.7">
+  Without EBO (6 vertices, 2 duplicated):        With EBO (4 vertices + indices):
+  v0(-0.5, 0.5)  v1(0.5, 0.5)                   Vertices:  0(-0.5,0.5) 1(0.5,0.5)
+  v2(-0.5,-0.5)  v3(0.5, 0.5) ← duplicate        (4 only)  2(0.5,-0.5) 3(-0.5,-0.5)
+  v4(0.5,-0.5)   v5(-0.5,-0.5) ← duplicate
+                                                  Indices:  0,1,2, 2,3,0
+  Memory: 6 × 24 bytes = 144 bytes               Memory: 4×24 + 6×4 = 120 bytes
+
+  For a complex model with 100,000 vertices, EBO saves ~30% memory.
+    </pre>
+  </div>
+  <div class="demo-link-box">
+    <div class="demo-link-box-text">Build this yourself → <strong>Demo: VBO + VAO + Triangle</strong> — complete annotated code with every function explained.</div>
+    <a class="demo-link-btn" href="day1-demos.html#demo-vbo">Try Demo →</a>
+  </div>
+</div>
+    `
+  },
+
+  4:{day:2,color:'#22d3ee',title:'Transformations and 3D Space',subtitle:'Module 4 · Day 2 · Model-View-Projection and the camera system',demoLink:'day1-demos.html',demoLabel:'Demo: 3D Rotating Cube',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Why Do We Need Transformations?</div>
+  <p class="notes-p">When you draw a triangle using raw NDC coordinates, it's fixed on screen. In a real 3D world, objects need to move, rotate, scale, and the camera needs to look at them from different angles. Transformations are the mathematical system that makes this possible.</p>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — The Movie Set</div>
+    <div class="analogy-text">Imagine a movie set. The actors (3D objects) can stand anywhere (Model transform). The camera moves around them (View transform). Then the camera lens determines how perspective shrinks distant objects (Projection transform). The MVP matrix combines all three into a single mathematical operation applied to every vertex.</div>
+  </div>
+</div>
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>The MVP Matrix</div>
+  <p class="notes-p">Every vertex goes through three sequential transformations: <strong>Model → View → Projection</strong>. Combined, they are the MVP matrix — the most important equation in real-time 3D graphics.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">MVP Transformation Pipeline</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  Object Space        World Space         Camera Space        Clip Space
+  (local to object)   (in the world)      (seen by camera)    (on screen)
+       ↓                   ↓                   ↓                   ↓
+  [0,0,0] origin    [5,0,-10] position    camera looks here   projected 2D
+       │                   │                   │                   │
+       └── Model Matrix ───┘     View Matrix ──┘  Projection ──────┘
+           (translate/rotate/scale)  (lookAt)      Matrix (frustum)
+
+  Final position = Projection × View × Model × vertex_position
+  In GLSL:  gl_Position = projection * view * model * vec4(aPos, 1.0);
+    </pre>
+  </div>
+  <ul class="notes-ul">
+    <li><strong>Model Matrix:</strong> Places the object in world space. Applies translation (move), rotation, scale using glm::translate(), glm::rotate(), glm::scale().</li>
+    <li><strong>View Matrix:</strong> Simulates the camera. glm::lookAt(cameraPos, targetPos, upVector) creates this. Moves the whole world so the camera appears at the origin looking forward.</li>
+    <li><strong>Projection Matrix:</strong> Creates perspective — distant objects appear smaller. glm::perspective(fov, aspect, nearPlane, farPlane) creates the frustum. Objects outside the frustum are clipped.</li>
+  </ul>
+  <div class="demo-link-box">
+    <div class="demo-link-box-text">See full rotating cube with MVP matrix → <strong>Demo: 3D Transformation</strong></div>
+    <a class="demo-link-btn" href="day1-demos.html">Try Demo →</a>
+  </div>
+</div>
+  `},
+
+  5:{day:2,color:'#22d3ee',title:'Lighting and Materials',subtitle:'Module 5 · Day 2 · The physics of light approximated in shader code',demoLink:'day1-demos.html',demoLabel:'Demo: Phong Lighting',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Why Lighting Matters</div>
+  <p class="notes-p">Without lighting, a 3D object looks completely flat — it appears as a solid silhouette shape with no depth perception. Lighting is what makes 3D objects look real. The Phong lighting model approximates real-world light interaction using three components.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">Phong Lighting Components</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.7">
+  AMBIENT   = base light everywhere, simulates indirect/scattered light
+              ambientColour = lightColour × ambientStrength (e.g. 0.1)
+              Result: object is never completely black even in shadow
+
+  DIFFUSE   = directional light from a source, angle-dependent
+              diffuseColour = lightColour × max(dot(normal, lightDir), 0.0)
+              Result: surfaces facing light are bright, facing away are dark
+
+  SPECULAR  = shiny highlight, viewer-dependent
+              reflectDir = reflect(-lightDir, normal)
+              specular = pow(max(dot(viewDir, reflectDir), 0.0), shininess)
+              Result: glossy highlight that moves as viewer moves
+
+  Final = ambient + diffuse + specular   (all multiplied by objectColour)
+    </pre>
+  </div>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — A Navy Ship at Sea</div>
+    <div class="analogy-text">Ambient = the general haze of reflected sky light — the ship is never pitch black even in shade. Diffuse = the sun illuminating the hull — one side bright, other dark based on sun angle. Specular = the glint of sunlight reflecting off the radar dome when you look at the right angle — it moves as you move.</div>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">✅ Implementation Note</div>
+    <p class="notes-p" style="margin:0">Phong lighting runs in the <strong>fragment shader</strong>, not the vertex shader. This is because we want per-pixel lighting (accurate). Running it in the vertex shader would give Gouraud shading — per-vertex lighting interpolated across the surface, which looks lower quality on large polygons.</p>
+  </div>
+</div>
+  `},
+
+  6:{day:2,color:'#22d3ee',title:'Textures and Mapping',subtitle:'Module 6 · Day 2 · UV coordinates, mipmaps, cube maps and skyboxes',demoLink:'day1-demos.html',demoLabel:'Demo: Textured 3D Object',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>What Is a Texture?</div>
+  <p class="notes-p">A texture is an image uploaded to GPU VRAM that your fragment shader can sample (read colour values from). Instead of computing surface detail mathematically, you just paint it onto a flat image and let the GPU look it up per pixel. A brick wall, camouflage pattern, hull plating, ocean surface — all textures.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">UV Coordinate System</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.6">
+  UV Space (0,0 to 1,1):         Texture Image:
+  (0,1) ─────── (1,1)           ┌───────────────────┐
+    │     UV        │            │                   │
+    │  coordinates  │            │   Your .jpg/.png  │
+    │               │            │   image file      │
+  (0,0) ─────── (1,0)           └───────────────────┘
+  bottom-left  bottom-right
+
+  Each vertex gets a UV coordinate. The fragment shader uses UV to
+  look up the pixel colour from the texture image at that location.
+  texture(ourTexture, TexCoords) → returns vec4 colour
+    </pre>
+  </div>
+  <p class="notes-p">Texture filtering (GL_LINEAR vs GL_NEAREST) controls how the texture looks when magnified or minified. Mipmaps are pre-downscaled versions that prevent aliasing when textures appear small on screen — important for fast-moving objects in simulations.</p>
+</div>
+  `},
+
+  7:{day:3,color:'#4ade80',title:'Shaders with GLSL',subtitle:'Module 7 · Day 3 · The OpenGL Shading Language — writing GPU programs',demoLink:'day1-demos.html',demoLabel:'Demo: Custom GLSL Shaders',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>What Is GLSL?</div>
+  <p class="notes-p">GLSL (OpenGL Shading Language) is a C-like programming language that runs on the GPU. It's the language you use to write vertex shaders and fragment shaders. Understanding GLSL is understanding what the GPU actually computes for every vertex and every pixel.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">Data Flow Through Shaders</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  CPU Side (C++)              Vertex Shader             Fragment Shader
+  ┌────────────────┐          ┌────────────────┐         ┌────────────────┐
+  │ glUniform*()   │ uniform  │ uniform mat4   │         │ uniform vec3   │
+  │ (per draw)     │────────→ │    MVP;        │         │    lightColor; │
+  └────────────────┘          └───────┬────────┘         └───────┬────────┘
+                                      │ out → in                 │
+  ┌────────────────┐ attribute        │                          │
+  │ VBO vertex     │────────→  in vec3 aPos    out vec2 TexCoord → in vec2 TexCoord
+  │ layout (VAO)   │           in vec2 aUV     out vec3 FragPos  → in vec3 FragPos
+  └────────────────┘          └────────────────┘         └────────────────┘
+                                      ↓                          ↓
+                               gl_Position =            out vec4 FragColor =
+                               MVP * vec4(aPos,1)       texture() + lighting
+    </pre>
+  </div>
+  <ul class="notes-ul">
+    <li><code>in</code> / <code>attribute</code> — data coming IN from VBO per vertex</li>
+    <li><code>out</code> / <code>varying</code> — data passing FROM vertex shader TO fragment shader (interpolated)</li>
+    <li><code>uniform</code> — data sent FROM CPU to shader, same value for all vertices/fragments in one draw call</li>
+    <li><code>gl_Position</code> — built-in output: the final clip-space position (required in vertex shader)</li>
+    <li><code>FragColor</code> — your output variable: the final pixel colour (your custom name, linked via layout)</li>
+  </ul>
+  <div class="tip-box">
+    <div class="tip-label">✅ Instancing — Draw 10,000 Objects in One Call</div>
+    <p class="notes-p" style="margin:0">Instancing lets you draw thousands of identical objects (minefield buoys, aircraft contacts, trees) with a single glDrawArraysInstanced() call. Each instance gets a unique transform passed via a per-instance VBO, and gl_InstanceID in the shader tells you which instance is being drawn. Critical for performance in real-time defense simulations.</p>
+  </div>
+</div>
+  `},
+
+  8:{day:3,color:'#4ade80',title:'Framebuffers and Effects',subtitle:'Module 8 · Day 3 · Post-processing, transparency, anti-aliasing',demoLink:'day1-demos.html',demoLabel:'Demo: FBO Post-Processing',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>What Is a Framebuffer?</div>
+  <p class="notes-p">A framebuffer is a collection of memory buffers that store the output of rendering. The default framebuffer is the window itself. But you can create custom framebuffers (FBOs) that render into a texture — then use that texture as input for a second render pass. This two-pass technique is the foundation of every post-processing effect.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">FBO Two-Pass Post-Processing</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  PASS 1: Render scene → custom FBO (to texture)
+  ┌────────────────────┐     ┌───────────────────────┐
+  │  3D Scene          │ ──→ │  FBO Color Texture     │
+  │  (geometry,        │     │  (complete image of    │
+  │   lighting, etc.)  │     │   the scene)           │
+  └────────────────────┘     └───────────┬───────────┘
+                                         │
+  PASS 2: Draw fullscreen quad, sample FBO texture, apply effect
+                                         ↓
+  ┌────────────────────────────────────────────────────┐
+  │  Fragment Shader applying effect to entire image   │
+  │  Grayscale, blur, edge detect, vignette, etc.     │
+  └────────────────────────────────────────────────────┘
+                                         │
+                              → Default Framebuffer (Screen)
+    </pre>
+  </div>
+  <p class="notes-p">The stencil buffer lets you mask regions — for example, drawing an outline around a selected contact on a radar screen. The depth buffer ensures correct front-to-back rendering ordering. Multi-sample anti-aliasing (MSAA) samples each pixel multiple times to smooth jagged edges.</p>
+</div>
+  `},
+
+  9:{day:3,color:'#4ade80',title:'Optimization and Performance',subtitle:'Module 9 · Day 3 · Draw call reduction, memory, profiling with RenderDoc',demoLink:'day1-demos.html',demoLabel:'Demo: Performance Profiling',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Why Performance Matters in Defense Systems</div>
+  <p class="notes-p">A radar display running at 10fps in a high-threat scenario is not acceptable. A terrain renderer dropping frames under complex conditions is a safety issue. Performance optimization in graphics is not optional — it's engineering discipline.</p>
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Draw Call Overhead</div>
+  <p class="notes-p">Every call to glDrawArrays() or glDrawElements() has CPU overhead — the driver validates state, prepares commands, sends them to the GPU. At 100+ draw calls per frame this becomes the bottleneck. Solutions:</p>
+  <ul class="notes-ul">
+    <li><strong>Instancing:</strong> Draw 10,000 identical objects in one call using glDrawArraysInstanced()</li>
+    <li><strong>Batching:</strong> Combine multiple objects into one VBO, one draw call</li>
+    <li><strong>State sorting:</strong> Sort draw calls by shader/texture to minimise GPU state changes</li>
+    <li><strong>Frustum culling:</strong> Don't submit geometry outside the camera's view at all</li>
+    <li><strong>LOD:</strong> Use simpler mesh at distance — the GPU wastes effort on invisible detail</li>
+  </ul>
+  <div class="tip-box">
+    <div class="tip-label">✅ RenderDoc</div>
+    <p class="notes-p" style="margin:0">RenderDoc is a free GPU frame debugger. Launch your application through RenderDoc, press F12 to capture a frame, then inspect every single draw call, texture state, shader uniform, and buffer content. It shows you exactly what the GPU is doing — invaluable for finding performance problems and rendering bugs.</p>
+  </div>
+</div>
+  `},
+
+  10:{day:4,color:'#fb923c',title:'Vulkan Overview',subtitle:'Module 10 · Day 4 · Why Vulkan exists and what makes it different',demoLink:'day1-demos.html',demoLabel:'Demo: Vulkan Environment Setup',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Why Vulkan?</div>
+  <p class="notes-p">OpenGL was designed in 1992 when GPUs were simple. Modern GPUs are massively parallel supercomputers. OpenGL's driver has to make thousands of assumptions and do enormous amounts of work to bridge the gap — wasting CPU time. Vulkan eliminates the clever driver and gives you <em>direct control</em>.</p>
+  <div class="analogy-box">
+    <div class="analogy-label">💡 Analogy — Chef vs Kitchen Manager</div>
+    <div class="analogy-text">OpenGL is like a restaurant with a brilliant kitchen manager — you just say "I want pasta" and they handle every detail. Vulkan is like being the chef yourself — you order every ingredient, arrange every utensil, coordinate every cook. More work upfront, but you can make exactly the dish you want with zero waste.</div>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-title">OpenGL Driver vs Vulkan — What the Driver Used to Hide</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.7">
+  OpenGL (driver handles all this automatically):
+  Memory allocation, shader compilation, pipeline state,
+  render pass management, synchronisation between frames,
+  command submission, queue management, surface management
+
+  Vulkan (you handle all this explicitly):
+  VkInstance → VkPhysicalDevice → VkLogicalDevice
+  VkQueue + VkCommandPool + VkCommandBuffer
+  VkSwapchain + VkRenderPass + VkFramebuffer
+  VkPipeline (explicit: shaders + fixed-function state)
+  VkSemaphore + VkFence (explicit sync)
+  VkDeviceMemory (explicit allocation + binding)
+
+  Result: 3–5× less CPU overhead for the same scene.
+    </pre>
+  </div>
+</div>
+  `},
+
+  11:{day:4,color:'#fb923c',title:'Vulkan Core Concepts',subtitle:'Module 11 · Day 4 · Instances, devices, queues, command buffers, memory',demoLink:'day1-demos.html',demoLabel:'Demo: Vulkan Device Setup',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>The Vulkan Object Hierarchy</div>
+  <p class="notes-p">In Vulkan you create objects explicitly in a strict hierarchy. Each level owns the level below it. This is the order you always follow:</p>
+  <div class="diagram-box">
+    <div class="diagram-title">Vulkan Object Hierarchy</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  VkInstance          ← The Vulkan library handle. Created first, destroyed last.
+    └── VkPhysicalDevice  ← The actual GPU (you SELECT one, not create)
+          └── VkDevice    ← Logical device — your interface to the GPU
+                ├── VkQueue          ← Submission channel (graphics/compute/transfer)
+                ├── VkCommandPool    ← Memory pool for command buffers
+                │     └── VkCommandBuffer  ← Records GPU commands
+                ├── VkDeviceMemory   ← Explicitly allocated GPU memory
+                └── VkBuffer / VkImage ← Resources (bound to memory)
+    </pre>
+  </div>
+  <p class="notes-p">Every Vulkan structure has an <code>sType</code> field — this is how Vulkan validates that you've filled the right struct and allows future extensions. Always set it to the matching enum (e.g. <code>VK_STRUCTURE_TYPE_APPLICATION_INFO</code>). The <code>pNext</code> chain allows extension data to be attached.</p>
+  <div class="tip-box">
+    <div class="tip-label">✅ Memory Management in Vulkan</div>
+    <p class="notes-p" style="margin:0">You choose the memory type for every allocation: device-local (fast GPU memory, not CPU-accessible), host-visible (CPU can write, used for staging), host-coherent (no cache flush needed). The staging buffer pattern: write data to a host-visible buffer, then use a transfer command to copy it to device-local memory for best performance.</p>
+  </div>
+</div>
+  `},
+
+  12:{day:4,color:'#fb923c',title:'Rendering with Vulkan',subtitle:'Module 12 · Day 4 · Swap chains, pipelines, render passes, synchronization',demoLink:'day1-demos.html',demoLabel:'Demo: Vulkan First Triangle',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>The Vulkan Render Loop</div>
+  <p class="notes-p">Vulkan rendering is more explicit than OpenGL. Each frame goes through these steps:</p>
+  <div class="diagram-box">
+    <div class="diagram-title">Vulkan Per-Frame Render Loop</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  ① vkWaitForFences()       — Wait until last frame's GPU work is done
+  ② vkAcquireNextImageKHR() — Get next swapchain image to render into
+  ③ vkResetCommandBuffer()  — Clear last frame's recorded commands
+  ④ vkBeginCommandBuffer()  — Start recording new commands
+      vkCmdBeginRenderPass()
+        vkCmdBindPipeline()
+        vkCmdBindVertexBuffers()
+        vkCmdDraw()
+      vkCmdEndRenderPass()
+  ⑤ vkEndCommandBuffer()    — Stop recording
+  ⑥ vkQueueSubmit()         — Submit commands to GPU queue
+      (signal renderFinishedSemaphore when done)
+  ⑦ vkQueuePresentKHR()     — Show finished image on screen
+      (wait for renderFinishedSemaphore first)
+    </pre>
+  </div>
+  <p class="notes-p">The <strong>VkRenderPass</strong> describes the attachments (colour, depth) and how they're used during rendering. The <strong>VkPipeline</strong> is an immutable compiled object combining shaders + all fixed-function state (rasterisation, blending, depth test). Creating it upfront avoids mid-frame recompilation.</p>
+</div>
+  `},
+
+  13:{day:5,color:'#f472b6',title:'Vulkan Compute and Advanced Rendering',subtitle:'Module 13 · Day 5 · GPU compute, model loading, descriptor sets, tuning',demoLink:'day1-demos.html',demoLabel:'Demo: Vulkan Compute Shader',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Vulkan Compute Shaders</div>
+  <p class="notes-p">Vulkan's compute pipeline lets you run arbitrary parallel programs on the GPU — not just graphics. This is used for physics simulation, image processing, AI inference, signal processing. In naval applications: sonar signal processing, RADAR return analysis, acoustic propagation modeling — all can run on GPU compute.</p>
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Descriptor Sets</div>
+  <p class="notes-p">In Vulkan, you can't just call glUniform*(). Instead, you create a descriptor set that binds resources (UBOs, textures, storage buffers) to shader binding points. A descriptor layout describes what types of resources are expected. A descriptor pool allocates the memory. A descriptor set is the actual binding.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">Descriptor System</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.7">
+  VkDescriptorSetLayout ← "Shader expects: binding 0 = UBO, binding 1 = Sampler"
+  VkDescriptorPool      ← Memory pool for allocating descriptor sets
+  VkDescriptorSet       ← Actual binding: "UBO at binding 0 is THIS VkBuffer"
+  vkUpdateDescriptorSets() ← Fill in the actual resource references
+  vkCmdBindDescriptorSets() ← Attach to pipeline before draw call
+    </pre>
+  </div>
+</div>
+  `},
+
+  14:{day:5,color:'#f472b6',title:'Integration and Cross-Platform Development',subtitle:'Module 14 · Day 5 · C++, C#, Unity, Android, porting from OpenGL',demoLink:'day1-demos.html',demoLabel:'Demo: Cross-Platform Integration',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Integrating with C# and Unity</div>
+  <p class="notes-p">To call your C++ OpenGL/Vulkan renderer from C#, you compile it as a native DLL and use P/Invoke. For Unity, you implement a native plugin interface using IUnityGraphicsVulkan — Unity's plugin system gives you access to the VkDevice and queues it already created.</p>
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Porting OpenGL to Vulkan — Key Differences</div>
+  <ul class="notes-ul">
+    <li><strong>Y-axis:</strong> Vulkan NDC has Y pointing DOWN (OpenGL: Y up). Flip in projection matrix or vertex shader.</li>
+    <li><strong>Depth range:</strong> Vulkan depth is 0 to 1 (OpenGL: -1 to 1). Adjust near/far in projection.</li>
+    <li><strong>Winding order:</strong> OpenGL default is CCW front face; Vulkan default is CW. Set explicitly in pipeline.</li>
+    <li><strong>UV V-axis:</strong> Texture V coordinate may need flipping (texture origin differs).</li>
+    <li><strong>Image barriers:</strong> All image layout transitions require explicit pipeline barriers in Vulkan.</li>
+  </ul>
+  <div class="warn-box">
+    <div class="warn-label">⚠️ Always Enable Validation Layers During Development</div>
+    <p class="notes-p" style="margin:0">Vulkan's validation layers catch API misuse, missing barriers, memory leaks, and synchronization errors at runtime. Enable VK_LAYER_KHRONOS_validation during development. Disable in release builds for performance. RenderDoc automatically handles this for captured frames.</p>
+  </div>
+</div>
+  `},
+
+  15:{day:5,color:'#f472b6',title:'Capstone Project and Review',subtitle:'Module 15 · Day 5 · Build a complete graphics demo using both APIs',demoLink:'labs.html',demoLabel:'Go to Final Lab Challenge',content:`
+<div class="notes-section">
+  <div class="notes-h2"><span class="notes-h2-icon"></span>Capstone Project Brief</div>
+  <p class="notes-p">The Day 5 capstone project requires you to build a complete graphics demo that combines concepts from all 15 modules. The suggested project is a <strong>Maritime Tactical Display</strong> — a real-time 3D visualization scene inspired by naval defense systems.</p>
+  <div class="diagram-box">
+    <div class="diagram-title">Capstone Project Checklist</div>
+    <pre style="font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8">
+  OpenGL Component (Days 1-3 skills):
+  ✓ 3D scene with multiple objects using VBO/VAO/EBO
+  ✓ MVP transformation with camera movement (M4)
+  ✓ Phong lighting on at least one object (M5)
+  ✓ Texture on at least one surface (M6)
+  ✓ Custom GLSL shader (vertex + fragment) (M7)
+  ✓ One post-processing effect via FBO (M8)
+  ✓ Instancing OR batching for repeated objects (M9)
+
+  Vulkan Component (Days 4-5 skills):
+  ✓ Vulkan instance, device, swapchain setup (M10-11)
+  ✓ Complete render pass and graphics pipeline (M12)
+  ✓ At least one descriptor set (uniform buffer) (M13)
+  ✓ Renders the same scene as the OpenGL component (M14)
+
+  Deliverable: 10-minute live demo + Q&A
+    </pre>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">✅ Best Practices Summary</div>
+    <p class="notes-p" style="margin:0"><strong>OpenGL:</strong> Always check shader compilation errors. Always unbind VAO before deleting. Use GL_KHR_debug for error callbacks. Profile with RenderDoc before optimising. <strong>Vulkan:</strong> Enable validation layers during development always. Use staging buffers for static geometry. Prefer pipeline barriers over global memory barriers. Batch descriptor set updates.</p>
+  </div>
+  <div class="demo-link-box">
+    <div class="demo-link-box-text">Ready to build? → Head to <strong>Lab Challenges</strong> for your Day 5 capstone lab.</div>
+    <a class="demo-link-btn" href="labs.html">Open Lab Challenges →</a>
+  </div>
+</div>
+  `}
+};
+
+// ─── FILTER ───
+function filterDay(day, btn){
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.mod-card').forEach(c => {
-    c.style.display = (day === 'all' || c.dataset.day === day) ? '' : 'none';
+  document.querySelectorAll('.module-card').forEach(card=>{
+    if(day==='all' || card.dataset.day == day){
+      card.style.display='';
+    } else {
+      card.style.display='none';
+    }
   });
 }
 
-/* ── NOTE CONTENT ── */
-const NOTES = [
-  {
-    id:'m1', tag:'Day 1 · Module 1', title:'Introduction to Graphics Programming',
-    body:`
-<h2>What is Computer Graphics Programming?</h2>
-<div class="analogy-box"><strong>The Film Director Analogy</strong>Imagine you are a film director shooting a naval scene. You decide: camera angle, lighting, where the submarine surfaces. But you don't personally paint every frame of film. Your crew does that physical work based on your instructions.<br><br><strong>YOU (C++ code)</strong> = the director. You decide what to draw, where, how.<br><strong>The GPU</strong> = the crew. Thousands of workers executing your instructions in parallel.<br><strong>OpenGL / Vulkan</strong> = the production language between you and the crew.<br><strong>The screen</strong> = the finished film the audience sees.</div>
-
-<h2>GPU vs CPU — Why the Difference Matters</h2>
-<p>A <strong>CPU</strong> is like a brilliant professor — it solves complex problems but works mostly sequentially. A modern CPU has 8–32 powerful cores. A <strong>GPU</strong> is like a factory floor with 4,000 workers, each doing one tiny task simultaneously.</p>
-<p>A 1080p screen has <strong>2,073,600 pixels</strong>. At 60fps that is 124 million pixel decisions per second. The CPU cannot do this. The GPU is built for exactly this kind of massive parallelism.</p>
-<div class="callout c-info"><div><strong>Key fact:</strong> The CPU and GPU have completely separate memory. Your C++ arrays live in RAM. The GPU has its own dedicated VRAM. Getting data between them requires explicit action — that is what VBOs are for.</div></div>
-
-<h2>OpenGL vs Vulkan vs DirectX</h2>
-<p><strong>OpenGL (1992):</strong> Driver-managed, high-level. Like an automatic car — you say "draw this" and the driver decides how. Great for learning. Some hidden performance overhead.</p>
-<p><strong>Vulkan (2016):</strong> Explicit, low-level. Like a manual racing car — you control memory, synchronisation, and commands directly. More code, dramatically better performance.</p>
-<p><strong>DirectX 12:</strong> Microsoft's equivalent of Vulkan. Windows/Xbox only. Not covered in this course.</p>
-<div class="callout c-tip"><div><strong>Course strategy:</strong> We learn OpenGL first to build the mental model. When you see Vulkan doing the same things with 10x more code, you'll understand exactly what it's doing and why.</div></div>
-
-<h2>The Rendering Pipeline</h2>
-<p>The pipeline is a GPU assembly line. Raw numbers go in one end, coloured pixels come out the other. Two stages are programmable — those are the ones you write code for.</p>
-<ol>
-<li><strong>Vertex Data</strong> — your C++ float array, uploaded to GPU VRAM</li>
-<li><strong>Vertex Shader ★ (you write)</strong> — runs once per vertex. Transforms 3D position to 2D screen position.</li>
-<li><strong>Primitive Assembly</strong> — GPU connects vertices into triangles automatically</li>
-<li><strong>Rasterization</strong> — GPU determines which pixels each triangle covers</li>
-<li><strong>Fragment Shader ★ (you write)</strong> — runs once per pixel. Outputs the final RGBA colour.</li>
-<li><strong>Per-Fragment Tests</strong> — depth test, stencil, blending</li>
-<li><strong>Framebuffer</strong> — final image stored in GPU memory, shown on screen</li>
-</ol>
-<div class="callout c-warn"><div><strong>Remember:</strong> You write exactly two stages — the Vertex Shader and the Fragment Shader. Everything else the GPU handles automatically.</div></div>
-
-<h2>Enterprise Use Case — Naval Radar Display</h2>
-<p>A ship's radar sweep display runs at 30Hz. The sweep arc geometry → vertex shader (position it correctly) → rasterize → fragment shader (apply green glow) → depth test → framebuffer. Understanding this pipeline tells you exactly where to look when the display stutters (vertex bottleneck?), blips don't fade (blending?), or the display tears (framebuffer/vsync?).</p>`
-  },
-  {
-    id:'m2', tag:'Day 1 · Module 2', title:'Getting Started with OpenGL',
-    body:`
-<h2>Why We Need Multiple Libraries</h2>
-<div class="analogy-box"><strong>Building Analogy</strong>GLFW is the building — it gives you a room (window) to work in. GLEW is the electricity — without it, none of the modern tools work. GLM is the calculator — it does the maths in the language the GPU understands.</div>
-<ul>
-<li><strong>GLFW</strong> — creates the OS window and OpenGL context. OpenGL itself cannot open windows.</li>
-<li><strong>GLEW</strong> — loads all modern OpenGL functions from the GPU driver at runtime. Without it, only OpenGL 1.1 works on Windows.</li>
-<li><strong>GLM</strong> — C++ math library matching GLSL types. vec3, mat4, perspective(), lookAt().</li>
-</ul>
-
-<h2>The OpenGL Context</h2>
-<p>The context is the "workspace" for all OpenGL state — what shader is active, what buffer is bound, what viewport size is used. GLFW creates it when it creates the window. Everything OpenGL does operates on the current context.</p>
-<div class="callout c-warn"><div><strong>Order matters:</strong> glfwMakeContextCurrent() MUST come before glewInit(). GLEW needs an active context to query the GPU driver. And always include GLEW before GLFW in your headers.</div></div>
-
-<h2>Double Buffering</h2>
-<p>OpenGL uses two framebuffers. The <strong>back buffer</strong> is where you draw (invisible). The <strong>front buffer</strong> is what the screen shows. When you finish drawing a frame, <code>glfwSwapBuffers()</code> instantly swaps them. The viewer always sees a complete frame — no flickering, no tearing.</p>
-
-<h2>The Render Loop — One Frame</h2>
-<p>Every real-time graphics application has a loop that runs 60+ times per second. Each iteration is one frame:</p>
-<ol>
-<li><strong>Input</strong> — check keyboard and mouse state</li>
-<li><strong>Clear</strong> — wipe the back buffer with a background colour</li>
-<li><strong>Draw</strong> — issue all draw calls</li>
-<li><strong>Swap</strong> — glfwSwapBuffers() — show the finished frame</li>
-<li><strong>Poll</strong> — glfwPollEvents() — process OS events (without this, the window freezes)</li>
-</ol>
-
-<h2>CMake — The Build Blueprint</h2>
-<p>CMake reads your CMakeLists.txt and generates Visual Studio project files. It is NOT the compiler — it generates the files that then compile your code. Key functions:</p>
-<ul>
-<li><code>cmake_minimum_required(VERSION 3.20)</code> — minimum CMake version to process this file</li>
-<li><code>project(lab)</code> — names the project and the output .exe</li>
-<li><code>find_package(OpenGL REQUIRED)</code> — locates OpenGL on this system</li>
-<li><code>include_directories(...)</code> — tells the compiler where to find header files</li>
-<li><code>add_executable(lab src/main.cpp)</code> — what to build and from what source</li>
-<li><code>target_link_libraries(lab ...)</code> — connects your code to library implementations</li>
-</ul>`
-  },
-  {
-    id:'m3', tag:'Day 1 · Module 3', title:'OpenGL Data Flow — VBO, VAO, EBO',
-    body:`
-<h2>The CPU/GPU Memory Gap</h2>
-<p>Your C++ arrays live in CPU RAM. The GPU has completely separate VRAM. To draw anything, you must explicitly copy vertex data from RAM to VRAM. This is what the VBO handles.</p>
-<div class="callout c-info"><div><strong>Performance principle:</strong> Upload data once. Draw many times. The cost is in the upload (CPU→GPU), not in the draw call. Never re-upload unchanged geometry every frame.</div></div>
-
-<h2>VBO — The Filing Cabinet</h2>
-<p>A <strong>Vertex Buffer Object</strong> is a block of GPU VRAM holding raw vertex data — just floats. The GPU doesn't know what these numbers mean until you tell it. Upload with <code>glBufferData()</code>.</p>
-
-<h2>VAO — The Instruction Manual</h2>
-<p>A <strong>Vertex Array Object</strong> stores the description of how to read the VBO. It answers: which VBO? Which attribute index? How many components? What type? What stride? What byte offset? Binding a VAO restores all this configuration instantly — one call replaces many.</p>
-<div class="analogy-box"><strong>Filing Cabinet Analogy</strong>The VBO is the filing cabinet full of numbered papers. The VAO is the manual on top that says "each paper is one vertex record — columns 1-3 are X/Y/Z position, columns 4-6 are R/G/B colour."</div>
-
-<h2>Understanding glVertexAttribPointer</h2>
-<p>This is the most important — and most confusing — function in OpenGL for beginners. It describes one vertex attribute:</p>
-<ul>
-<li><strong>Index (0)</strong> — which attribute slot. Must match <code>layout(location=0)</code> in the vertex shader</li>
-<li><strong>Size (3)</strong> — components per attribute: 3 for vec3 (x,y,z)</li>
-<li><strong>Type (GL_FLOAT)</strong> — data type of each component</li>
-<li><strong>Normalise (GL_FALSE)</strong> — for float data, always false</li>
-<li><strong>Stride (12)</strong> — bytes from one vertex start to the next. 3 floats × 4 bytes = 12</li>
-<li><strong>Offset (0)</strong> — byte offset within a vertex where this attribute starts</li>
-</ul>
-
-<h2>EBO — Index Buffers</h2>
-<p>An <strong>Element Buffer Object</strong> stores integer indices that reference vertices, allowing vertices to be shared across triangles. A rectangle needs 4 vertices but 6 index entries (two triangles, two shared corners). For complex 3D models this saves 40–60% of GPU memory.</p>
-<p>Use <code>glDrawElements()</code> instead of <code>glDrawArrays()</code> when an EBO is active.</p>
-
-<h2>Framebuffer Overview</h2>
-<p>The framebuffer holds the final rendered image: a <strong>colour buffer</strong> (RGBA per pixel), a <strong>depth buffer</strong> (0.0–1.0 depth value per pixel for front/back ordering), and optionally a <strong>stencil buffer</strong> for masking. The default framebuffer is created by GLFW. Custom framebuffers (FBOs) are covered in Module 8.</p>`
-  },
-  {
-    id:'m4', tag:'Day 2 · Module 4', title:'Transformations and 3D Space',
-    body:`
-<h2>The Model-View-Projection Pipeline</h2>
-<p>Every 3D scene uses three matrix transforms applied in sequence to every vertex. In the vertex shader: <code>gl_Position = projection * view * model * vec4(aPos, 1.0);</code></p>
-<ul>
-<li><strong>Model matrix</strong> — places the object in the world. Translation, rotation, scale.</li>
-<li><strong>View matrix</strong> — simulates a camera. Moves the entire world relative to the camera position.</li>
-<li><strong>Projection matrix</strong> — adds perspective (closer = bigger) and defines the frustum.</li>
-</ul>
-<div class="analogy-box"><strong>Photography Analogy</strong>Model = positioning the subject. View = where you stand with the camera and what direction you point it. Projection = the lens — wide angle vs telephoto, near vs far clipping.</div>
-
-<h2>GLM Functions</h2>
-<ul>
-<li><code>glm::mat4(1.0f)</code> — identity matrix (no transformation)</li>
-<li><code>glm::translate(mat, vec3)</code> — move object</li>
-<li><code>glm::rotate(mat, angle_radians, axis)</code> — rotate object</li>
-<li><code>glm::scale(mat, vec3)</code> — resize object</li>
-<li><code>glm::lookAt(eye, target, up)</code> — create view matrix from camera position</li>
-<li><code>glm::perspective(fov, aspect, near, far)</code> — create projection matrix</li>
-</ul>
-
-<h2>Depth Testing</h2>
-<p>Without depth testing, the last drawn object always appears on top, regardless of actual 3D depth. Enable with <code>glEnable(GL_DEPTH_TEST)</code> and clear the depth buffer every frame: <code>glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)</code>.</p>`
-  },
-  {
-    id:'m5', tag:'Day 2 · Module 5', title:'Lighting and Materials',
-    body:`
-<h2>The Phong Lighting Model</h2>
-<p>Phong lighting approximates real-world light interaction with three additive components computed in the <strong>fragment shader</strong> (per pixel, not per vertex).</p>
-<ul>
-<li><strong>Ambient</strong> — constant base light everywhere. Prevents completely dark areas. Formula: <code>ambientStrength * lightColor</code></li>
-<li><strong>Diffuse</strong> — angle-dependent brightness. Bright where surface faces the light. Formula: <code>max(dot(normal, lightDir), 0.0) * lightColor</code></li>
-<li><strong>Specular</strong> — shiny highlight. Depends on both light and viewer direction. Blinn-Phong uses the halfway vector for better results.</li>
-</ul>
-<div class="analogy-box"><strong>Real World</strong>Ambient = the general brightness in a room from all indirect light. Diffuse = how directly a surface faces a light bulb — side-on is dim, face-on is bright. Specular = the bright spot on a polished metal surface that moves as you move your head.</div>
-
-<h2>Normal Vectors</h2>
-<p>Each vertex needs a normal — a unit vector perpendicular to the surface at that point. The normal tells the lighting formula "which way is outward" from this surface.</p>
-<p>For non-uniform scaling, normals must be transformed with the <strong>normal matrix</strong>: <code>transpose(inverse(mat3(model)))</code>. Using the model matrix directly gives incorrect normals under non-uniform scale.</p>
-
-<h2>Blinn-Phong vs Phong</h2>
-<p>Blinn-Phong uses the <strong>halfway vector</strong> between light direction and view direction instead of the full reflection vector. It is more physically accurate at grazing angles and slightly cheaper to compute. Industry standard for real-time rendering.</p>`
-  },
-  {
-    id:'m6', tag:'Day 2 · Module 6', title:'Textures and Mapping', body:`
-<h2>UV Coordinates</h2>
-<p>UV coordinates (also called texture coordinates) map each surface point to a location in an image. U goes 0 (left) to 1 (right), V goes 0 (bottom) to 1 (top). Assigned per vertex, interpolated by the rasterizer across the triangle.</p>
-
-<h2>Loading and Uploading Textures</h2>
-<p>Use STB Image to load any JPG/PNG from disk into a CPU pixel array, then <code>glTexImage2D()</code> to upload to GPU VRAM. Always call <code>glGenerateMipmap()</code> after uploading.</p>
-<p><strong>Mipmaps</strong> — pre-generated smaller versions (512→256→128→...). The GPU selects the appropriate level based on distance. Prevents aliasing on distant surfaces. Always generate them.</p>
-
-<h2>Cube Maps and Skyboxes</h2>
-<p>A cube map is 6 images (one per face of a cube) sampled by a 3D direction vector. For a skybox: draw a large cube centred on the camera, remove translation from the view matrix so the cube appears infinitely far, sample the cube map using vertex positions as directions.</p>`
-  },
-  {
-    id:'m7', tag:'Day 3 · Module 7', title:'Shaders with GLSL', body:`
-<h2>GLSL Type System</h2>
-<p>GLSL types mirror GPU hardware: <code>float, int, bool</code> for scalars. <code>vec2, vec3, vec4</code> for 2–4 component float vectors. <code>mat2, mat3, mat4</code> for matrices. <code>sampler2D, samplerCube</code> for textures.</p>
-<p><strong>Swizzling</strong> — access and reorder components freely: <code>color.rgb</code>, <code>pos.xz</code>, <code>col.rrrr</code>, <code>color.bgr</code>.</p>
-
-<h2>Data Qualifiers</h2>
-<ul>
-<li><code>in</code> — data entering from the previous stage (VBO via VAO in vertex shader, interpolated from vertex shader in fragment shader)</li>
-<li><code>out</code> — data leaving to the next stage</li>
-<li><code>uniform</code> — same value for ALL vertices/fragments in one draw call. Set from C++ via <code>glUniform*()</code>.</li>
-</ul>
-
-<h2>Instancing</h2>
-<p>Draw N identical objects in a single draw call using <code>glDrawArraysInstanced()</code>. Per-instance data (position, colour, transform) goes in a separate VBO with <code>glVertexAttribDivisor(index, 1)</code> — advances once per instance rather than per vertex. Eliminates thousands of draw calls.</p>`
-  },
-  {
-    id:'m8', tag:'Day 3 · Module 8', title:'Framebuffers and Effects', body:`
-<h2>Custom Framebuffer Objects (FBO)</h2>
-<p>Instead of rendering directly to the screen, render to a texture. Then use that texture as input to a second pass that applies effects. Standard post-processing pipeline:</p>
-<ol><li>Bind custom FBO — render scene to texture</li><li>Bind default FBO (screen) — draw full-screen quad sampling the texture</li><li>Apply effects in the fragment shader — blur, greyscale, edge detect, invert</li></ol>
-
-<h2>Transparency and Blending</h2>
-<p>Enable with <code>glEnable(GL_BLEND)</code> and <code>glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)</code>. Transparent objects must be drawn <strong>back to front</strong> — sort by distance from camera before drawing. Opaque objects first, transparent last.</p>
-
-<h2>Stencil Buffer</h2>
-<p>A per-pixel integer mask. Write 1 where the object renders. In a second pass, draw a slightly enlarged version of the same object but only where stencil ≠ 1. The ring that appears is the outline. Used for object selection highlighting in defence displays.</p>`
-  },
-  {
-    id:'m9', tag:'Day 3 · Module 9', title:'Optimization and Performance', body:`
-<h2>The Golden Rule</h2>
-<p>Never optimise what you have not measured. Profile first — identify the actual bottleneck — then fix it. The bottleneck is almost never where you assume it is.</p>
-
-<h2>Draw Call Reduction</h2>
-<p><strong>Instancing</strong> — one draw call for N identical objects. <strong>Batching</strong> — merge objects sharing the same material into one VBO. <strong>Frustum culling</strong> — skip draw calls for objects outside the camera view. <strong>LOD</strong> — simpler geometry at greater distance.</p>
-
-<h2>RenderDoc Workflow</h2>
-<p>Launch your application through RenderDoc. Press F12 to capture a frame. Inspect: Event Browser (all draw calls), Pipeline State (active shaders, bound textures), Mesh Viewer (vertex data pre/post shader), Shader Debugger (step through GLSL line by line).</p>`
-  },
-  {
-    id:'m10', tag:'Day 4 · Module 10', title:'Vulkan Overview', body:`
-<h2>Why Vulkan Exists</h2>
-<p>By 2014 three problems with OpenGL were critical: (1) driver overhead was unpredictable and uncontrollable, (2) OpenGL was single-threaded — all extra CPU cores sat idle, (3) mobile GPU tile-based architectures mapped poorly to OpenGL's model. Vulkan was designed from scratch to fix all three.</p>
-<div class="analogy-box"><strong>The Car Analogy</strong>OpenGL is an automatic car — press the accelerator, the driver handles gears. Vulkan is a manual racing car — you control every gear change. More skill required, dramatically better performance.</div>
-
-<h2>What Vulkan Exposes</h2>
-<ul>
-<li><strong>Memory</strong> — you choose which GPU memory heap to allocate from (device-local vs host-visible)</li>
-<li><strong>Commands</strong> — record into command buffers first, submit batches to queues</li>
-<li><strong>Sync</strong> — manage semaphores (GPU↔GPU) and fences (GPU↔CPU) explicitly</li>
-<li><strong>Pipeline</strong> — all render state baked into one immutable Pipeline Object upfront</li>
-</ul>
-
-<h2>SPIR-V Shaders</h2>
-<p>Vulkan does not accept GLSL source code. It requires pre-compiled SPIR-V bytecode. Compile offline with glslc: <code>glslc shader.vert -o vert.spv</code>. Load the .spv binary at runtime.</p>
-
-<h2>Validation Layers</h2>
-<p>Opt-in safety checks that intercept every Vulkan call and report misuse, sync errors, and performance warnings. Always enable <code>VK_LAYER_KHRONOS_validation</code> during development. Zero overhead in release builds — just remove them.</p>`
-  },
-  {
-    id:'m11', tag:'Day 4 · Module 11', title:'Vulkan Core Concepts', body:`
-<h2>Object Hierarchy</h2>
-<p>Every Vulkan object has a parent. Destroy children before parents:</p>
-<p><strong>VkInstance</strong> → <strong>VkPhysicalDevice</strong> (queried, not created) → <strong>VkDevice</strong> → Queues, Buffers, Images, Pipelines, Command Pools → <strong>VkCommandBuffer</strong></p>
-
-<h2>Queue Families</h2>
-<p>GPUs have families of queues — groups with shared capabilities. The graphics family can execute draw calls. The compute family runs compute shaders. The transfer family handles memory copies. You must find and select appropriate families when creating the device.</p>
-
-<h2>Explicit Memory Management</h2>
-<ul>
-<li><strong>DEVICE_LOCAL</strong> — fastest for GPU reads. Not CPU-accessible. Use for vertex buffers, textures.</li>
-<li><strong>HOST_VISIBLE + HOST_COHERENT</strong> — CPU can write directly. Slower GPU reads. Use for staging buffers, uniforms.</li>
-</ul>
-<p><strong>Staging buffer pattern:</strong> Write CPU data to a HOST_VISIBLE staging buffer. Use a command buffer to copy staging → DEVICE_LOCAL. Delete staging buffer. The DEVICE_LOCAL copy is fast for all future GPU reads.</p>`
-  },
-  {
-    id:'m12', tag:'Day 4 · Module 12', title:'Rendering with Vulkan', body:`
-<h2>The Vulkan Frame Loop</h2>
-<ol>
-<li><strong>vkWaitForFences</strong> — CPU waits until GPU finished previous frame</li>
-<li><strong>vkAcquireNextImageKHR</strong> — get next available swap chain image</li>
-<li><strong>Record command buffer</strong> — begin render pass, bind pipeline, draw, end render pass</li>
-<li><strong>vkQueueSubmit</strong> — send to GPU. Wait on imageAvailableSemaphore. Signal renderFinishedSemaphore.</li>
-<li><strong>vkQueuePresentKHR</strong> — show on screen. Wait on renderFinishedSemaphore.</li>
-</ol>
-
-<h2>Semaphores vs Fences</h2>
-<p><strong>Semaphores</strong> — GPU↔GPU sync. One queue signals, another waits. Used to sequence: acquire image → render → present. <strong>Fences</strong> — GPU↔CPU sync. CPU calls vkWaitForFences to block until GPU signals. Used to prevent reusing a command buffer while GPU is still using it.</p>
-
-<h2>The Graphics Pipeline Object</h2>
-<p>In Vulkan ALL render state is baked into one immutable VkPipeline: shaders, vertex format, topology, viewport, rasterization, multisampling, blending, depth/stencil. Create all pipelines at load time. Using them is then extremely fast — no state validation at draw time.</p>`
-  },
-  {id:'m13', tag:'Day 5 · Module 13', title:'Vulkan Compute & Advanced Rendering', body:`<h2>GPU Compute Pipeline</h2><p>The compute pipeline has a single stage — the compute shader. No vertex processing, no rasterization, no fragments. Just parallel computation on thousands of GPU cores simultaneously.</p><p>Compute shaders run in workgroups: <code>layout(local_size_x=8, local_size_y=8) in;</code>. Dispatch with <code>vkCmdDispatch(cmdBuf, groupsX, groupsY, groupsZ)</code>. Each invocation gets a unique ID via <code>gl_GlobalInvocationID</code>.</p><h2>Descriptor Sets</h2><p>Descriptor sets are pre-configured bundles of resources (uniform buffers, textures, storage buffers) that shaders access. They replace OpenGL's per-draw glUniform* calls with an efficient GPU-side binding mechanism. Layout → Pool → Set → Write → Bind.</p><h2>Push Constants</h2><p>Small data (≤128 bytes) embedded directly in the command buffer. No buffer, no descriptor set. Fastest way to pass per-draw shader data — model matrix, object ID, colour tint.</p>`},
-  {id:'m14', tag:'Day 5 · Module 14', title:'Integration and Cross-Platform', body:`<h2>C# Integration</h2><p>Expose the renderer as plain C functions via <code>extern "C"</code> and <code>__declspec(dllexport)</code>. C# calls these through P/Invoke with <code>[DllImport("renderer.dll")]</code>. This pattern is used in defence systems embedding 3D visualisation in C# mission planning tools.</p><h2>Porting Pitfalls — OpenGL to Vulkan</h2><ul><li><strong>Y-axis flip</strong> — Vulkan clip space Y is inverted. Add <code>proj[1][1] *= -1</code> for all GLM projection matrices.</li><li><strong>Image layouts</strong> — Vulkan images must be in the correct layout before use. Add VkImageMemoryBarrier transitions.</li><li><strong>Winding order</strong> — set VK_FRONT_FACE_COUNTER_CLOCKWISE if meshes use CCW winding.</li><li><strong>Missing barriers</strong> — always add pipeline barriers between dependent operations.</li></ul>`},
-  {id:'m15', tag:'Day 5 · Module 15', title:'Capstone Project and Review', body:`<h2>Project — Naval Operations Rendering Demo</h2><p>Build a complete real-time rendering application combining OpenGL and Vulkan. The scenario: a naval operational display showing vessel contacts, terrain, atmospheric effects, and sensor overlays.</p><h2>Best Practices Checklist</h2><ul><li>Enable GL_KHR_debug and Vulkan validation layers in dev builds</li><li>Always generate mipmaps for every texture</li><li>Clear GL_DEPTH_BUFFER_BIT every frame</li><li>Sort transparent objects back-to-front</li><li>Create all Vulkan pipelines at load time</li><li>proj[1][1] *= -1 for all GLM projections in Vulkan</li><li>vkDeviceWaitIdle before destroying any Vulkan object</li></ul><h2>Key Concepts Recap</h2><p>15 modules, 5 days, 2 APIs. The rendering pipeline is the thread connecting everything — from the vertex data you upload in Module 3 to the compute shaders you dispatch in Module 13. OpenGL taught you what; Vulkan taught you how.</p>`},
-];
-
-const moduleOrder = NOTES.map(n => n.id);
-let currentNoteId = null;
-
-function openNote(id) {
-  const note = NOTES.find(n => n.id === id);
-  if (!note) return;
-  currentNoteId = id;
-  document.getElementById('rTag').textContent = note.tag;
-  document.getElementById('rTitle').textContent = note.title;
-  document.getElementById('rBody').innerHTML = note.body;
-  document.getElementById('readerOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  updateNavBtns();
+// ─── OPEN MODULE PANEL ───
+function openModule(id){
+  const m = MODULES[id];
+  if(!m) return;
+  const colorsMap = {1:'#6366f1',2:'#22d3ee',3:'#4ade80',4:'#fb923c',5:'#f472b6'};
+  const dayColor = colorsMap[m.day] || '#6366f1';
+  document.getElementById('panelModuleLabel').textContent = `Day ${m.day} · Module ${id}`;
+  document.getElementById('panelContent').innerHTML = `
+    <div style="height:4px;background:${m.color};margin:-2rem -2rem 2rem;border-radius:0"></div>
+    <div class="notes-title">${m.title}</div>
+    <div class="notes-sub">${m.subtitle}</div>
+    ${m.demoLink ? `<div class="demo-link-box" style="margin-bottom:2rem">
+      <div class="demo-link-box-text">🎬 Jump to live demo: <strong>${m.demoLabel}</strong></div>
+      <a class="demo-link-btn" href="${m.demoLink}">Try Demo →</a>
+    </div>` : ''}
+    ${m.content}
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);font-size:.8rem;color:var(--text3);text-align:center">
+      By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator) · Koenig Original AI-Courseware
+    </div>
+  `;
+  document.getElementById('detailOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
 }
-
-function updateNavBtns() {
-  const idx = moduleOrder.indexOf(currentNoteId);
-  document.getElementById('rPrev').disabled = idx <= 0;
-  document.getElementById('rNext').disabled = idx >= moduleOrder.length - 1;
+function closeModule(){
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.body.style.overflow='';
 }
-
-function navNote(dir) {
-  const idx = moduleOrder.indexOf(currentNoteId);
-  const newIdx = idx + dir;
-  if (newIdx >= 0 && newIdx < moduleOrder.length) openNote(moduleOrder[newIdx]);
+function closePanel(e){
+  if(e.target===document.getElementById('detailOverlay')) closeModule();
 }
-
-function closeReader(e) {
-  if (e.target === document.getElementById('readerOverlay')) closeReaderBtn();
-}
-function closeReaderBtn() {
-  document.getElementById('readerOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeReaderBtn();
-  if (e.key === 'ArrowRight' && currentNoteId) navNote(1);
-  if (e.key === 'ArrowLeft' && currentNoteId) navNote(-1);
-});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModule(); });
 </script>
 </body>
 </html>

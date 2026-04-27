@@ -3,236 +3,122 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Day 1 Lab — Tactical Contact Display | RR Graphics Lab</title>
+<title>Day 1 Labs — Tactical Contact Display | RR Graphics Lab</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;
-  --border:#1e2535;--border2:#2a3148;
-  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
-  --accent:#6366f1;--accent2:#818cf8;
-  --cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--pink:#f472b6;--yellow:#fbbf24;--red:#f87171;
-  --d1:#6366f1;
-  --nav-h:62px;--radius:12px;
-  --font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace;
-}
+:root{--bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;--border:#1e2535;--border2:#2a3148;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--accent:#6366f1;--accent2:#818cf8;--cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--pink:#f472b6;--yellow:#fbbf24;--red:#f87171;--nav-h:62px;--radius:12px;--font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 ::selection{background:rgba(74,222,128,.25);color:#fff}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-
-/* ─── NAV ─── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
-  background:rgba(8,10,15,.95);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);background:rgba(8,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
 .nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;font-weight:700;white-space:nowrap}
-.nav-brand-hex{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--cyan));
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0}
-.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  border:1px solid rgba(99,102,241,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-hex{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--cyan));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0}
+.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;border:1px solid rgba(99,102,241,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
 .nav-links{display:flex;align-items:center;gap:4px;flex:1;margin-left:1.5rem}
-.nav-link{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;
-  font-size:12px;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
 .nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
 .nav-link.active{color:var(--green);background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2)}
 .nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.nav-badge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;
-  background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:var(--accent2)}
-
-/* ─── LAYOUT ─── */
+.nav-badge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:var(--accent2)}
 .page{display:flex;padding-top:var(--nav-h)}
-.sidebar{
-  width:270px;flex-shrink:0;
-  position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));
-  overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);
-  padding:1.5rem 0;
-}
+.sidebar{width:270px;flex-shrink:0;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0}
 .main{flex:1;min-width:0;padding:3rem 2.5rem;max-width:1050px}
-
-/* SIDEBAR */
-.sb-section-title{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--text3);padding:0 1.25rem;margin-bottom:.5rem;margin-top:1rem}
-.sb-link{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;font-size:12px;font-weight:600;
-  color:var(--text2);transition:all .15s;cursor:pointer;border-left:2px solid transparent}
+.sb-grp{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);padding:0 1.25rem;margin-bottom:.5rem;margin-top:1rem}
+.sb-link{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;cursor:pointer;border-left:2px solid transparent;text-decoration:none}
 .sb-link:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border2)}
 .sb-link.active{background:rgba(74,222,128,.06);color:var(--green);border-left-color:var(--green)}
-.sb-lab-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;font-size:9px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
-.sb-link.active .sb-lab-num{background:rgba(74,222,128,.15);border-color:rgba(74,222,128,.35);color:var(--green)}
+.sb-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
+.sb-link.active .sb-num{background:rgba(74,222,128,.15);border-color:rgba(74,222,128,.35);color:var(--green)}
 .sb-sep{height:1px;background:var(--border);margin:.75rem 1.25rem}
-.sb-progress{padding:1rem 1.25rem}
-.sb-progress-title{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:.5rem}
-.progress-bar{height:4px;background:var(--border2);border-radius:2px;margin-bottom:.3rem;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:2px;transition:width .4s}
-
-/* ─── PAGE HEADER ─── */
-.page-header{margin-bottom:3rem}
-.page-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;
-  letter-spacing:1.5px;text-transform:uppercase;color:var(--green);
-  border:1px solid rgba(74,222,128,.25);background:rgba(74,222,128,.06);
-  padding:5px 14px;border-radius:30px;margin-bottom:1rem}
-.page-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.page-title{font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--text);margin-bottom:.75rem;line-height:1.2}
-.page-desc{font-size:.93rem;color:var(--text2);line-height:1.85;max-width:700px;margin-bottom:1.5rem}
-.page-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
-.page-tag{font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text3)}
-
-/* ─── SCENARIO BOX ─── */
-.scenario-box{
-  background:linear-gradient(135deg,rgba(74,222,128,.05),rgba(34,211,238,.03));
-  border:1px solid rgba(74,222,128,.2);border-radius:var(--radius);
-  padding:1.5rem;margin-bottom:2.5rem;
-}
-.scenario-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem}
-.scenario-icon-big{font-size:2rem;flex-shrink:0}
-.scenario-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:.3rem}
-.scenario-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
-.scenario-desc{font-size:.85rem;color:var(--text2);line-height:1.75}
-.build-progress{margin-top:1rem}
-.build-steps{display:flex;gap:6px;flex-wrap:wrap}
-.build-step{
-  display:flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:8px;font-size:11px;font-weight:600;
-}
-.bs-done{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.25);color:var(--green)}
-.bs-active{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);color:var(--accent2)}
-.bs-todo{background:var(--bg4);border:1px solid var(--border);color:var(--text3)}
-
-/* ─── LAB SECTION ─── */
-.lab-section{padding:2.5rem 0;border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--nav-h) + 1rem)}
-.lab-section:last-of-type{border-bottom:none}
-.lab-header{margin-bottom:2rem}
-.lab-num-row{display:flex;align-items:center;gap:12px;margin-bottom:.75rem}
-.lab-num{
-  font-family:var(--font-display);font-size:.8rem;font-weight:700;
-  padding:4px 14px;border-radius:20px;
-  background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);color:var(--accent2);
-}
-.lab-difficulty{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3)}
-.lab-title{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:700;color:var(--text);margin-bottom:.5rem}
-.lab-desc{font-size:.9rem;color:var(--text2);line-height:1.8;max-width:680px;margin-bottom:1rem}
-.lab-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
-.meta-pill{font-size:11px;color:var(--text3);font-weight:600;background:var(--bg3);
-  border:1px solid var(--border);padding:4px 12px;border-radius:20px;
-  display:flex;align-items:center;gap:6px}
-
-/* ─── OBJECTIVES ─── */
-.objectives{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem}
-.obj-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
+.sb-prog{padding:1rem 1.25rem}
+.sb-prog-title{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:.4rem;display:flex;justify-content:space-between}
+.prog-bar{height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:2px;transition:width .4s}
+.lab-sec{padding:3rem 0;border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--nav-h) + 1rem)}
+.lab-sec:last-of-type{border-bottom:none}
+.eyebrow-row{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.lab-badge{font-family:var(--font-display);font-size:10px;font-weight:700;padding:3px 14px;border-radius:20px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);color:var(--accent2)}
+.lab-diff{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3)}
+.lab-title{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:700;color:var(--text);margin-bottom:.5rem;line-height:1.25}
+.lab-desc{font-size:.9rem;color:var(--text2);line-height:1.85;max-width:700px;margin-bottom:1rem}
+.lab-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.meta-chip{font-size:11px;color:var(--text3);font-weight:600;background:var(--bg3);border:1px solid var(--border);padding:4px 12px;border-radius:20px}
+.adds-over{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.adds-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);margin-bottom:.6rem}
+.adds-list{list-style:none}
+.adds-list li{font-size:.86rem;color:var(--text2);padding:3px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.65}
+.adds-dot{color:var(--green);flex-shrink:0;font-size:.8rem;margin-top:3px}
+.out-box{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.2);border-left:3px solid var(--green);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.out-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
+.out-item{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--text2);line-height:1.6;margin-top:.3rem}
+.out-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px}
+.concept{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(34,211,238,.03));border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.concept-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
+.concept p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.warn{background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.2);border-left:3px solid var(--orange);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:.4rem}
+.warn p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.tip{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.2);border-left:3px solid var(--green);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.tip-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:.4rem}
+.tip p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.obj-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem}
+.obj-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
 .obj-list{list-style:none}
-.obj-list li{font-size:.85rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px}
-.obj-check{width:16px;height:16px;border-radius:4px;border:1px solid var(--border2);flex-shrink:0;margin-top:3px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s}
-.obj-check:hover{border-color:var(--green);background:rgba(74,222,128,.1)}
-.obj-check.checked{background:var(--green);border-color:var(--green);color:var(--bg)}
-
-/* ─── BEFORE YOU BEGIN ─── */
-.before-begin{
-  background:rgba(34,211,238,.04);border:1px solid rgba(34,211,238,.18);border-left:3px solid var(--cyan);
-  border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem;
-}
-.bb-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);margin-bottom:.5rem}
-.bb-list{list-style:none}
-.bb-list li{font-size:.85rem;color:var(--text2);padding:3px 0;display:flex;align-items:flex-start;gap:8px}
-.bb-bullet{color:var(--cyan);flex-shrink:0;margin-top:2px}
-
-/* ─── FILE TREE ─── */
-.file-tree{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:1.25rem;margin:1.25rem 0}
-.ft-title{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:.65rem}
-.file-tree pre{font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8}
-.f-orange{color:var(--orange)}.f-cyan{color:var(--cyan)}.f-green{color:var(--green)}.f-purple{color:var(--accent2)}
-
-/* ─── STEP-BY-STEP ─── */
-.steps-list{counter-reset:step;margin:1.5rem 0}
-.step-item{display:flex;gap:1rem;margin-bottom:1.5rem;counter-increment:step}
-.step-circle{
-  width:30px;height:30px;border-radius:50%;flex-shrink:0;
-  background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);
-  color:var(--accent2);font-family:var(--font-display);font-size:11px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;margin-top:3px;
-}
-.step-body{flex:1}
-.step-heading{font-size:.93rem;font-weight:700;color:var(--text);margin-bottom:.4rem}
-.step-text{font-size:.85rem;color:var(--text2);line-height:1.75}
-.step-text code{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--cyan)}
-
-/* ─── CODE BLOCKS ─── */
-.code-wrap{position:relative;margin:1rem 0}
-.code-header{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg3);border:1px solid var(--border2);border-bottom:none;
-  border-radius:var(--radius) var(--radius) 0 0;padding:.6rem 1rem;
-}
+.obj-list li{font-size:.86rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.65}
+.obj-chk{width:16px;height:16px;border-radius:4px;border:1px solid var(--border2);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s}
+.obj-chk:hover{border-color:var(--green);background:rgba(74,222,128,.1)}
+.obj-chk.done{background:var(--green);border-color:var(--green);color:var(--bg)}
+.sh{font-size:.92rem;font-weight:700;color:var(--text);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:8px}
+.sh-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+p.note{font-size:.87rem;color:var(--text2);line-height:1.8;margin:.35rem 0}
+.diag{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin:1.25rem 0;overflow-x:auto}
+.diag-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;text-align:center}
+.diag pre{font-family:var(--font-mono);font-size:.77rem;color:var(--text2);line-height:1.65}
+.ftree{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.ftree-title{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
+.ftree pre{font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8}
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:.6rem 1rem}
 .code-fname{font-family:var(--font-mono);font-size:11px;color:var(--text2);font-weight:600}
 .code-meta{display:flex;align-items:center;gap:.75rem}
 .code-lang{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
-.copy-btn{padding:3px 10px;border-radius:5px;background:var(--bg4);border:1px solid var(--border2);
-  color:var(--text3);font-size:10.5px;font-weight:600;cursor:pointer;transition:all .2s}
+.copy-btn{padding:4px 14px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
 .copy-btn:hover{border-color:var(--green);color:var(--green)}
 .copy-btn.ok{color:var(--green);border-color:var(--green)}
-.code-block{background:#040609;border:1px solid var(--border2);border-radius:0 0 var(--radius) var(--radius);
-  padding:1.25rem 1.5rem;overflow-x:auto}
-.code-block pre{font-family:var(--font-mono);font-size:.8rem;line-height:1.9;white-space:pre}
-/* colours */
-.cm{color:#4a5568;font-style:italic}.ck{color:#81a1c1}.ct{color:#88c0d0}
-.cf{color:#8fbcbb}.cs{color:#a3be8c}.cn{color:#b48ead}.cp{color:#5e81ac}.cv{color:#d8dee9}
-
-/* ─── CMD ─── */
-.cmd-wrap{background:#030508;border:1px solid rgba(74,222,128,.2);border-left:3px solid var(--green);
-  border-radius:var(--radius);padding:1rem 1.25rem;margin:.75rem 0;position:relative}
+.code-block{background:#03050a;border:1px solid var(--border2);border-radius:0 0 var(--radius) var(--radius);overflow:auto;max-height:700px}
+.code-block pre{font-family:var(--font-mono);font-size:.78rem;line-height:1.9;padding:1.25rem 1.5rem;white-space:pre;color:#cdd6f4;min-width:max-content}
+.cmd-wrap{background:#030508;border:1px solid rgba(74,222,128,.18);border-left:3px solid var(--green);border-radius:var(--radius);padding:1rem 1.25rem;margin:.75rem 0;position:relative}
 .cmd-label{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--green);margin-bottom:.4rem}
 .cmd-wrap pre{font-family:var(--font-mono);font-size:.8rem;color:var(--green);line-height:1.7}
-.cmd-copy-btn{position:absolute;top:.75rem;right:.75rem;padding:3px 10px;border-radius:5px;
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text3);font-size:10px;cursor:pointer;transition:all .2s}
+.cmd-copy-btn{position:absolute;top:.75rem;right:.75rem;padding:3px 10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);font-size:10px;cursor:pointer;transition:all .2s}
 .cmd-copy-btn:hover{color:var(--green);border-color:var(--green)}
-
-/* ─── BOXES ─── */
-.info-box{background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
-.info-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
-.info-box p,.info-box li{font-size:.85rem;color:var(--text2);line-height:1.75}
-.tip-box{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.2);border-left:3px solid var(--green);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
-.tip-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:.4rem}
-.tip-box p{font-size:.85rem;color:var(--text2);line-height:1.75}
-.warn-box{background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.2);border-left:3px solid var(--orange);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
-.warn-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:.4rem}
-.warn-box p{font-size:.85rem;color:var(--text2);line-height:1.75}
-
-/* ─── DELIVERABLE ─── */
-.deliverable{
-  background:linear-gradient(135deg,rgba(74,222,128,.07),rgba(34,211,238,.04));
-  border:1px solid rgba(74,222,128,.25);border-radius:var(--radius);
-  padding:1.5rem;margin-top:2rem;
-}
-.del-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:.75rem}
+.del-box{background:linear-gradient(135deg,rgba(74,222,128,.07),rgba(34,211,238,.04));border:1px solid rgba(74,222,128,.25);border-radius:var(--radius);padding:1.5rem;margin-top:2rem}
+.del-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
 .del-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
-.del-desc{font-size:.85rem;color:var(--text2);line-height:1.75}
-.del-checklist{list-style:none;margin-top:1rem}
-.del-checklist li{font-size:.85rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px}
+.del-desc{font-size:.85rem;color:var(--text2);line-height:1.75;margin-bottom:.75rem}
+.del-list{list-style:none}
+.del-list li{font-size:.85rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px}
 .del-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:7px}
-
-/* ─── DIAGRAM ─── */
-.diagram{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin:1.25rem 0;overflow-x:auto}
-.diagram-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;text-align:center}
-.diagram pre{font-family:var(--font-mono);font-size:.78rem;color:var(--text2);line-height:1.65}
-
-/* ─── LAB NAV ─── */
-.lab-nav{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;margin-top:2rem;border-top:1px solid var(--border)}
-.lab-nav-btn{
-  display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;
-  font-size:13px;font-weight:700;border:1px solid var(--border2);background:var(--bg3);
-  color:var(--text2);cursor:pointer;transition:all .2s;
-}
-.lab-nav-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--green)}
-.lab-nav-btn.next{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:var(--green)}
-.lab-nav-btn.next:hover{background:rgba(74,222,128,.2)}
-
+.exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--pink);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.exp-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--pink);margin-bottom:.5rem}
+.exp-list{list-style:none;margin:.3rem 0}
+.exp-list li{font-size:.86rem;color:var(--text2);padding:3px 0 3px 18px;position:relative;line-height:1.7}
+.exp-list li::before{content:"\25B8";position:absolute;left:0;color:var(--pink);font-size:.75rem;top:5px}
+code.ic{font-family:var(--font-mono);font-size:.79rem;background:var(--bg4);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+.terminal{background:#020408;border:1px solid rgba(74,222,128,.25);border-radius:var(--radius);overflow:hidden;margin:1rem 0}
+.term-bar{background:#0a0e17;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(74,222,128,.1)}
+.t-dot{width:10px;height:10px;border-radius:50%}
+.term-title{font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem}
+.term-body{padding:1rem 1.25rem;font-family:var(--font-mono);font-size:.8rem;line-height:1.85}
+.ts{color:var(--green)}.th{color:var(--cyan)}.to{color:#94a3b8}.t-hr{border:none;border-top:1px solid #1a2233;margin:.4rem 0}
+.page-foot{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:1px solid var(--border);margin-top:3rem}
+.foot-btn{padding:9px 20px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.foot-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--green)}
+.foot-btn.green{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:var(--green)}
 @media(max-width:900px){.sidebar{display:none}.nav-links{display:none}}
 </style>
 </head>
@@ -240,7 +126,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
 
 <nav>
   <a class="nav-brand" href="index.html">
-    <div class="nav-brand-hex">⬡</div>
+    <div class="nav-hex">&#x2736;</div>
     RR Graphics Lab <span class="nav-mct">MCT</span>
   </a>
   <div class="nav-links">
@@ -249,1104 +135,1572 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
     <a class="nav-link active" href="labs.html"><span class="nav-dot" style="background:var(--green)"></span>Lab Challenges</a>
   </div>
   <div class="nav-right">
-    <span class="nav-badge">Day 1 · OpenGL Foundations</span>
-    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan · MCT</span>
+    <span class="nav-badge">Day 1 &middot; OpenGL Foundations</span>
+    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan &middot; MCT</span>
   </div>
 </nav>
-
 <div class="page">
+<aside class="sidebar">
+  <div class="sb-grp">Day 1 &mdash; 5 Labs</div>
+  <a class="sb-link active" href="#lab1"><span class="sb-num">L1</span>Display Window</a>
+  <a class="sb-link" href="#lab2"><span class="sb-num">L2</span>Contact Markers</a>
+  <a class="sb-link" href="#lab3"><span class="sb-num">L3</span>Threat Colours</a>
+  <a class="sb-link" href="#lab4"><span class="sb-num">L4</span>Boundary + Grid</a>
+  <a class="sb-link" href="#lab5"><span class="sb-num">L5</span>Live Animation</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Your Progress</div>
+  <div class="sb-prog">
+    <div class="sb-prog-title"><span>Objectives done</span><span id="prog-count">0</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Navigation</div>
+  <a class="sb-link" href="demos.html"><span class="sb-num" style="font-size:9px">&#9889;</span>Day 1 Demos</a>
+  <a class="sb-link" href="labs.html"><span class="sb-num" style="font-size:9px">&#8592;</span>All Labs</a>
+</aside>
+<main class="main">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-section-title">Day 1 Labs</div>
-    <a class="sb-link active" href="#lab1"><span class="sb-lab-num">L1</span>Display Window Setup</a>
-    <a class="sb-link" href="#lab2"><span class="sb-lab-num">L2</span>Contact Marker Geometry</a>
-    <a class="sb-link" href="#lab3"><span class="sb-lab-num">L3</span>Threat Classification</a>
-    <a class="sb-link" href="#lab4"><span class="sb-lab-num">L4</span>Boundary & Grid</a>
-    <a class="sb-link" href="#lab5"><span class="sb-lab-num">L5</span>Live Threat Animation</a>
-    <div class="sb-sep"></div>
-    <div class="sb-progress">
-      <div class="sb-progress-title">Your Progress</div>
-      <div id="progress-bar-wrap">
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px">
-          <span>Labs complete</span><span id="prog-count">0 / 5</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-      </div>
-    </div>
-    <div class="sb-sep"></div>
-    <div class="sb-section-title">Quick Links</div>
-    <a class="sb-link" href="day1-demos.html"><span class="sb-lab-num" style="font-size:9px">⚡</span>Day 1 Demos</a>
-    <a class="sb-link" href="labs.html"><span class="sb-lab-num" style="font-size:9px">←</span>All Labs</a>
-  </aside>
 
-  <!-- MAIN -->
-  <main class="main">
+<div style="margin-bottom:3rem">
+  <div style="display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);border:1px solid rgba(74,222,128,.25);background:rgba(74,222,128,.06);padding:5px 14px;border-radius:30px;margin-bottom:1rem">
+    <span style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite"></span>
+    Day 1 Capstone &middot; 5 Labs &middot; Build a Real System
+  </div>
+  <div style="font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--text);margin-bottom:.75rem;line-height:1.2">Tactical Contact Display</div>
+  <div style="font-size:.93rem;color:var(--text2);line-height:1.85;max-width:700px;margin-bottom:1.5rem">You are building a 2D naval operations display &mdash; the kind used to track contacts (ships, aircraft, submarines) on a tactical screen. Each lab builds on the previous one. By Lab 5, you have a fully animated, real-time contact display with threat-level colour coding and a pulsing hostile indicator. <strong style="color:var(--text)">Every lab is one complete <code class="ic">main.cpp</code> &mdash; copy the whole file, build, run.</strong></div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">VBO</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">VAO</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">EBO</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">GLSL Shaders</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Uniforms</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Real-time Animation</span>
+  </div>
+</div>
+<style>@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}</style>
 
-    <!-- PAGE HEADER -->
-    <div class="page-header">
-      <div class="page-eyebrow"><span class="page-eyebrow-dot"></span>Day 1 Capstone · 5 Labs · Build a Real System</div>
-      <div class="page-title">Tactical Contact Display</div>
-      <div class="page-desc">
-        You are building a 2D naval operations display — the kind used to track contacts (ships, aircraft, submarines) on a tactical screen. Each lab adds one layer to the system. By Lab 5, you have a fully animated, real-time contact display with threat-level colour coding and a pulsing danger indicator.
-      </div>
-      <div class="page-tags">
-        <span class="page-tag">VBO</span><span class="page-tag">VAO</span><span class="page-tag">EBO</span>
-        <span class="page-tag">GLSL Shaders</span><span class="page-tag">Uniforms</span>
-        <span class="page-tag">Real-time Animation</span><span class="page-tag">Defense Systems</span>
-      </div>
-    </div>
 
-    <!-- SCENARIO -->
-    <div class="scenario-box">
-      <div class="scenario-header">
-        <div class="scenario-icon-big">🛡️</div>
-        <div>
-          <div class="scenario-label">Mission Scenario</div>
-          <div class="scenario-title">Naval Operations Centre — Tactical Display System</div>
-          <div class="scenario-desc">The operations centre tracks 5 contact types: friendly surface vessels (blue triangles), hostile vessels (red triangles), unknown contacts (yellow triangles), the display boundary (white rectangle via EBO), and a threat pulse indicator (animated, urgent when hostile contacts detected). Your OpenGL program IS the display rendering engine.</div>
-        </div>
-      </div>
-      <div class="build-progress">
-        <div style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:.5rem">WHAT YOU BUILD — LAB BY LAB</div>
-        <div class="build-steps">
-          <div class="build-step bs-active">L1 · Display Window</div>
-          <div class="build-step bs-todo">→ L2 · Contact Markers</div>
-          <div class="build-step bs-todo">→ L3 · Threat Colours</div>
-          <div class="build-step bs-todo">→ L4 · Boundary Grid</div>
-          <div class="build-step bs-todo">→ L5 · Live Animation</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════
-         LAB 1 — DISPLAY WINDOW
-    ═══════════════════════════════════ -->
-    <div class="lab-section" id="lab1">
-      <div class="lab-header">
-        <div class="lab-num-row">
-          <span class="lab-num">Lab 1 of 5</span>
-          <span class="lab-difficulty">⬛ Beginner · ~25 min</span>
-        </div>
-        <div class="lab-title">Setting Up the Tactical Display Window</div>
-        <div class="lab-desc">Create the display window — the "screen" of the tactical system. A dark background with correct viewport, a working render loop, and the GPU name printed to confirm the environment is working. This is the foundation everything else runs on.</div>
-        <div class="lab-meta">
-          <span class="meta-pill">📋 Concepts: GLFW · GLEW · Context · Render Loop</span>
-          <span class="meta-pill">⚡ Repeat first: Demo 2 (First Window)</span>
-          <span class="meta-pill">📁 Folder: C:\Labs\TacticalDisplay\</span>
-        </div>
-      </div>
-
-      <div class="before-begin">
-        <div class="bb-title">📚 Before You Begin — Do This First</div>
-        <ul class="bb-list">
-          <li><span class="bb-bullet">▸</span>Read Module 2 notes in index.html (GLFW, context, render loop)</li>
-          <li><span class="bb-bullet">▸</span>Complete Demo 2 (First Window) in day1-demos.html — type every line yourself</li>
-          <li><span class="bb-bullet">▸</span>Your VM already has GLFW, GLEW, GLM at C:\libs\ — environment variables are set</li>
-        </ul>
-      </div>
-
-      <div class="objectives">
-        <div class="obj-title">Lab Objectives — Check Off As You Complete</div>
-        <ul class="obj-list">
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Create the project folder and file structure</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Write CMakeLists.txt from memory (refer to notes if needed)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Initialise GLFW with correct version hints (3.3 core)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Create a 1024×768 window titled "Tactical Contact Display"</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Initialise GLEW after making context current</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Set background to near-black (tactical display colour)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Print GPU name and OpenGL version to terminal</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>ESC key closes the window cleanly</li>
-        </ul>
-      </div>
-
-      <!-- STEP 1 -->
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin-bottom:1rem">Step 1 — Create Project Structure</h3>
-      <div class="steps-list">
-        <div class="step-item">
-          <div class="step-circle">1</div>
-          <div class="step-body">
-            <div class="step-heading">Open VS Code → Open Folder</div>
-            <div class="step-text">Navigate to <code>C:\Labs\</code> and create a new folder called <code>TacticalDisplay</code>. Open this folder in VS Code (File → Open Folder). This single folder will hold all 5 labs — each lab adds to it.</div>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle">2</div>
-          <div class="step-body">
-            <div class="step-heading">Create the files below</div>
-            <div class="step-text">In VS Code, create two files: <code>CMakeLists.txt</code> in the root and <code>src/main.cpp</code> inside a new <code>src</code> subfolder.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="file-tree">
-        <div class="ft-title">Project Structure — Create This Now</div>
-        <pre>
-C:\Labs\TacticalDisplay\
-├── <span class="f-orange">CMakeLists.txt</span>        ← build configuration
-└── src\
-    └── <span class="f-cyan">main.cpp</span>              ← your program (write this yourself)
-        </pre>
-      </div>
-
-      <!-- STEP 2 -->
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin:1.5rem 0 1rem">Step 2 — Write CMakeLists.txt</h3>
-      <div class="info-box">
-        <div class="info-label">💡 Try Writing From Memory First</div>
-        <p>Before looking at the code below, try writing CMakeLists.txt from scratch using what you remember from Demo 2. You need: cmake_minimum_required, project name, C++ standard, find OpenGL, set lib dirs from env vars, include_directories, add_executable, target_link_libraries. Check back if you get stuck.</p>
-      </div>
-
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">CMakeLists.txt</span>
-          <div class="code-meta"><span class="code-lang">CMake</span><button class="copy-btn" onclick="cp(this,'cmake1')">Copy</button></div>
-        </div>
-        <div class="code-block" id="cmake1"><pre><span class="cm"># Lab 1 — Tactical Display Window</span>
-cmake_minimum_required(VERSION 3.20)
+<div class="concept" style="margin-bottom:2.5rem">
+  <div class="concept-lbl">&#128193; Project Setup &mdash; Do This Once Before Lab 1</div>
+  <p class="note">All 5 labs share <strong>one project folder</strong>: <code class="ic">C:\Labs\TacticalDisplay\</code>. The <strong>CMakeLists.txt is identical for all labs</strong> &mdash; you write it once and never change it. Each lab replaces only <code class="ic">src\main.cpp</code>. Build once after Lab 1 setup, then just replace main.cpp + rebuild for each subsequent lab.</p>
+</div>
+<div class="ftree">
+  <div class="ftree-title">Create This Folder Structure — Before Lab 1</div>
+  <pre>C:\Labs\TacticalDisplay\
+&#9500;&#9472;&#9472; CMakeLists.txt     &#8592; write once, same for all 5 labs
+&#9492;&#9472;&#9472; src\
+    &#9492;&#9472;&#9472; main.cpp           &#8592; replace with each lab's complete file</pre>
+</div>
+<div class="code-wrap"><div class="code-header"><span class="code-fname">CMakeLists.txt — same for all 5 labs</span><div class="code-meta"><span class="code-lang">CMake</span><button class="copy-btn" onclick="cp(this,&apos;cmake_all&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake_all">cmake_minimum_required(VERSION 3.20)
 project(TacticalDisplay)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 find_package(OpenGL REQUIRED)
-
 set(GLFW_DIR $ENV{GLFW_DIR})
 set(GLEW_DIR $ENV{GLEW_DIR})
 set(GLM_DIR  $ENV{GLM_DIR})
-
 include_directories(
     ${GLFW_DIR}/include
     ${GLEW_DIR}/include
     ${GLM_DIR}
 )
-
 add_executable(TacticalDisplay src/main.cpp)
-
 target_link_libraries(TacticalDisplay
     OpenGL::GL
     ${GLFW_DIR}/lib-vc2022/glfw3.lib
     ${GLEW_DIR}/lib/Release/x64/glew32s.lib
-)</pre></div>
-      </div>
+)</pre></div></div>
+<div class="cmd-wrap"><div class="cmd-label">Build &amp; Run — Developer Command Prompt for VS 2022</div><button class="cmd-copy-btn" onclick="cpCmd(this,&apos;build_all&apos;)">Copy</button><pre id="build_all">cd C:\Labs\TacticalDisplay
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+build\Release\TacticalDisplay.exe</pre></div>
+<div class="tip">
+  <div class="tip-lbl">&#10003; Build Procedure — Same Every Lab</div>
+  <p>Write your lab&apos;s <code class="ic">main.cpp</code> (or copy the complete file above) &rarr; open Developer Command Prompt for VS 2022 &rarr; run the 4 build commands above. The CMakeLists.txt and the folder path never change. Only <code class="ic">src\main.cpp</code> changes between labs.</p>
+</div>
 
-      <!-- STEP 3 -->
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin:1.5rem 0 1rem">Step 3 — Write main.cpp Section by Section</h3>
-      <div class="warn-box">
-        <div class="warn-label">📝 Write It — Don't Just Copy</div>
-        <p>Type this code yourself line by line. As you type each function, say what it does out loud. If you can explain it to yourself, you understand it. Use the copy button only to verify after you've written it.</p>
-      </div>
 
-      <p style="font-size:.88rem;color:var(--text2);margin-bottom:.75rem"><strong style="color:var(--text)">Section A — Includes and callback function</strong> (type this first):</p>
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">src/main.cpp — Section A: Includes</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab1a')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab1a"><pre><span class="cp">#define</span> GLEW_STATIC
-<span class="cp">#include</span> <span class="cs">&lt;GL/glew.h&gt;</span>
-<span class="cp">#include</span> <span class="cs">&lt;GLFW/glfw3.h&gt;</span>
-<span class="cp">#include</span> <span class="cs">&lt;iostream&gt;</span>
+<div class="lab-sec" id="lab1">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 1 of 5</span>
+    <span class="lab-diff">&#11035; Beginner &middot; ~25 min</span>
+  </div>
+  <div class="lab-title">Display Window Setup</div>
+  <div class="lab-desc">Create the operational display window &mdash; the blank screen your tactical system will run on. Near-black background, correct viewport, working render loop, ESC to quit. GPU info printed to terminal to confirm the environment is live. This is identical to Demo 2 (First Window) but with tactical display settings.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: GLFW &middot; GLEW &middot; Context &middot; Render Loop</span>
+    <span class="meta-chip">&#9889; Do Demo 2 first (First Window)</span>
+  </div>
 
-<span class="cm">// Called by GLFW whenever the window is resized
-// Keeps the GL drawing area matching window size</span>
-<span class="ck">void</span> <span class="cf">onResize</span>(GLFWwindow* <span class="cv">win</span>, <span class="ct">int</span> <span class="cv">w</span>, <span class="ct">int</span> <span class="cv">h</span>) {
-    <span class="cf">glViewport</span>(0, 0, w, h);
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Build in This Lab</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>1024&times;768 window titled &ldquo;Tactical Contact Display &mdash; Naval Ops&rdquo;</li>
+      <li><span class="adds-dot">&#9658;</span>Near-black background (R=0.02, G=0.03, B=0.07) &mdash; ops-room dark display colour</li>
+      <li><span class="adds-dot">&#9658;</span>GPU name + OpenGL version + ready message printed to terminal</li>
+      <li><span class="adds-dot">&#9658;</span>ESC closes cleanly, resize maintains correct viewport</li>
+    </ul>
+  </div>
+
+  <div class="out-box">
+    <div class="out-label">&#127919; What You Will See When This Runs</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Screen:</strong> Dark near-black window 1024&times;768 with title &ldquo;Tactical Contact Display &mdash; Naval Ops&rdquo;</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Terminal:</strong> GPU name, OpenGL version, and &ldquo;Display ready. Press ESC to shut down.&rdquo;</div>
+    <div class="out-item"><span class="out-dot"></span><strong>ESC:</strong> Window closes with no crash, no hang</div>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives &mdash; Check Off As You Complete</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>CMakeLists.txt written (use the shared one above)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>GLFW initialised with correct OpenGL 3.3 core hints</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Window created 1024&times;768 with correct title</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>GLEW initialised after making context current</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>GPU info printed to terminal on startup</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Near-black tactical background colour set</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>ESC closes the window cleanly</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Window resize keeps viewport correct</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <div class="warn-lbl">&#9997;&#65039; Write It First &mdash; Then Verify</div>
+    <p>Try writing <code class="ic">main.cpp</code> from memory using what you learned in Demo 2. The 5-step GLFW sequence is always the same: Init &rarr; Hints &rarr; CreateWindow &rarr; MakeContextCurrent &rarr; GLEW. Only refer to the complete file below if you get stuck after trying.</p>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Copy Entire File</div>
+
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 1 Complete File</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,&apos;lab1_main&apos;)">Copy All</button></div></div><div class="code-block"><pre id="lab1_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 1 · LAB 1 of 5
+//  Tactical Contact Display — Display Window Setup
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME:  TacticalDisplay  (use this in CMakeLists.txt)
+//  FOLDER:        C:\Labs\TacticalDisplay\
+//
+//  WHAT THIS LAB DOES:
+//  Creates the tactical operations display window — dark background,
+//  correct viewport, working render loop, ESC to quit.
+//  GPU info printed to terminal to confirm environment is live.
+//
+//  WHAT YOU WILL SEE:
+//  - Window titled &quot;Tactical Contact Display — Naval Ops&quot; at 1024x768
+//  - Near-black background (ops-room display colour)
+//  - Terminal: GPU name + OpenGL version + &quot;Display ready&quot; message
+//  - ESC closes cleanly
+// ═══════════════════════════════════════════════════════════════════════════
+
+// GLEW must always be included BEFORE GLFW — no exceptions
+// GLEW_STATIC = static link, no .dll needed at runtime
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Called automatically by GLFW whenever the window is resized.
+// Keeps the OpenGL drawing area matching the new window dimensions.
+// ─────────────────────────────────────────────────────────────────────────────
+void onResize(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
 }
 
-<span class="cm">// Check ESC key every frame — close window if pressed</span>
-<span class="ck">void</span> <span class="cf">processInput</span>(GLFWwindow* <span class="cv">win</span>) {
-    <span class="ck">if</span> (<span class="cf">glfwGetKey</span>(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        <span class="cf">glfwSetWindowShouldClose</span>(win, <span class="cn">true</span>);
-}</pre></div>
-      </div>
+// ─────────────────────────────────────────────────────────────────────────────
+// Checked every frame inside the render loop.
+// If ESC is pressed, signals the window to close on next iteration.
+// ─────────────────────────────────────────────────────────────────────────────
+void processInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
 
-      <p style="font-size:.88rem;color:var(--text2);margin:.75rem 0"><strong style="color:var(--text)">Section B — main() function with GLFW setup</strong>:</p>
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">src/main.cpp — Section B: main() Setup</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab1b')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab1b"><pre><span class="ck">int</span> <span class="cf">main</span>() {
-    <span class="cm">// ── Initialise GLFW ──────────────────────────────────────────────</span>
-    <span class="ck">if</span> (!<span class="cf">glfwInit</span>()) {
-        std::cerr &lt;&lt; <span class="cs">"GLFW init failed\n"</span>;
-        <span class="ck">return</span> <span class="cn">-1</span>;
+// ─────────────────────────────────────────────────────────────────────────────
+// MAIN
+// ─────────────────────────────────────────────────────────────────────────────
+int main() {
+
+    // ── STEP 1: Initialise GLFW ───────────────────────────────────────────────
+    // Must be the very first GLFW call — sets up its internal state.
+    if (!glfwInit()) {
+        std::cerr &lt;&lt; &quot;ERROR: GLFW init failed\n&quot;;
+        return -1;
     }
 
-    <span class="cm">// Request OpenGL 3.3 Core Profile
-    // Must be set BEFORE glfwCreateWindow</span>
-    <span class="cf">glfwWindowHint</span>(GLFW_CONTEXT_VERSION_MAJOR, <span class="cn">3</span>);
-    <span class="cf">glfwWindowHint</span>(GLFW_CONTEXT_VERSION_MINOR, <span class="cn">3</span>);
-    <span class="cf">glfwWindowHint</span>(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // ── STEP 2: Context hints — what kind of OpenGL we want ───────────────────
+    // MUST be called before glfwCreateWindow — they are like a spec form.
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);   // OpenGL 3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    <span class="cm">// ── Create Window + Context ──────────────────────────────────────
+    // ── STEP 3: Create the OS window AND the OpenGL context ───────────────────
     // 1024x768 = common tactical display resolution
-    // NULL, NULL = windowed mode, no context sharing</span>
-    GLFWwindow* <span class="cv">window</span> = <span class="cf">glfwCreateWindow</span>(
-        <span class="cn">1024</span>, <span class="cn">768</span>,
-        <span class="cs">"Tactical Contact Display — Naval Ops"</span>,
-        <span class="cn">NULL</span>, <span class="cn">NULL</span>
+    GLFWwindow* window = glfwCreateWindow(
+        1024, 768,
+        &quot;Tactical Contact Display — Naval Ops&quot;,
+        NULL,   // NULL = windowed (not fullscreen)
+        NULL    // NULL = no shared context
     );
-    <span class="ck">if</span> (!window) {
-        std::cerr &lt;&lt; <span class="cs">"Window creation failed\n"</span>;
-        <span class="cf">glfwTerminate</span>();
-        <span class="ck">return</span> <span class="cn">-1</span>;
+    if (!window) {
+        std::cerr &lt;&lt; &quot;ERROR: Window creation failed\n&quot;;
+        glfwTerminate();
+        return -1;
     }
 
-    <span class="cm">// Make this window's context active on this thread
-    // GLEW init will fail if no context is current</span>
-    <span class="cf">glfwMakeContextCurrent</span>(window);
+    // ── STEP 4: Make the context current on this thread ───────────────────────
+    // All gl* calls from this point forward go to this context.
+    // CRITICAL: glewInit() will fail silently without a current context.
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, onResize);
 
-    <span class="cm">// Register resize callback</span>
-    <span class="cf">glfwSetFramebufferSizeCallback</span>(window, onResize);
-
-    <span class="cm">// ── Initialise GLEW ──────────────────────────────────────────────
-    // Finds all OpenGL function pointers in the GPU driver
-    // Must come after glfwMakeContextCurrent</span>
-    glewExperimental = <span class="cn">GL_TRUE</span>;
-    <span class="ck">if</span> (<span class="cf">glewInit</span>() != GLEW_OK) {
-        std::cerr &lt;&lt; <span class="cs">"GLEW init failed\n"</span>;
-        <span class="ck">return</span> <span class="cn">-1</span>;
+    // ── STEP 5: Initialise GLEW ───────────────────────────────────────────────
+    // Loads all OpenGL function pointers from the GPU driver.
+    // Without this, calling glClear() = crash.
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK) {
+        std::cerr &lt;&lt; &quot;ERROR: GLEW init failed\n&quot;;
+        return -1;
     }
 
-    <span class="cm">// Print system info — confirms environment is working</span>
-    std::cout &lt;&lt; <span class="cs">"[ Tactical Display System ]\n"</span>;
-    std::cout &lt;&lt; <span class="cs">"GPU:            "</span> &lt;&lt; <span class="cf">glGetString</span>(GL_RENDERER) &lt;&lt; <span class="cs">"\n"</span>;
-    std::cout &lt;&lt; <span class="cs">"OpenGL Version: "</span> &lt;&lt; <span class="cf">glGetString</span>(GL_VERSION)  &lt;&lt; <span class="cs">"\n"</span>;
-    std::cout &lt;&lt; <span class="cs">"Display ready. Press ESC to shut down.\n"</span>;</pre></div>
-      </div>
+    // Confirm the environment is working — print GPU info to terminal
+    std::cout &lt;&lt; &quot;\n[ Tactical Contact Display — System Check ]\n&quot;;
+    std::cout &lt;&lt; &quot;GPU:            &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;OpenGL Version: &quot; &lt;&lt; glGetString(GL_VERSION)  &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;GLSL Version:   &quot; &lt;&lt; glGetString(GL_SHADING_LANGUAGE_VERSION) &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;Display ready.  Press ESC to shut down.\n\n&quot;;
 
-      <p style="font-size:.88rem;color:var(--text2);margin:.75rem 0"><strong style="color:var(--text)">Section C — The render loop and cleanup</strong>:</p>
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">src/main.cpp — Section C: Render Loop</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab1c')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab1c"><pre>    <span class="cm">// ── Render Loop ──────────────────────────────────────────────────
-    // Runs every frame until window is closed
-    // Tactical displays run at 60fps for smooth contact updates</span>
-    <span class="ck">while</span> (!<span class="cf">glfwWindowShouldClose</span>(window)) {
+    // ── STEP 6: RENDER LOOP ───────────────────────────────────────────────────
+    // Runs 60 times per second until window is closed.
+    // Each iteration = one frame on screen.
+    while (!glfwWindowShouldClose(window)) {
 
-        <span class="cm">// ① Check for ESC key press</span>
-        <span class="cf">processInput</span>(window);
+        // ① Check for ESC key
+        processInput(window);
 
-        <span class="cm">// ② Clear display to tactical dark background
-        // RGB(5, 8, 18) ÷ 255 = (0.02, 0.03, 0.07) — near-black with slight blue tint
-        // This matches real operational display colours (reduces eye strain in dark ops rooms)</span>
-        <span class="cf">glClearColor</span>(<span class="cn">0.02f</span>, <span class="cn">0.03f</span>, <span class="cn">0.07f</span>, <span class="cn">1.0f</span>);
-        <span class="cf">glClear</span>(GL_COLOR_BUFFER_BIT);
+        // ② Clear to tactical display dark background
+        // RGB(5, 8, 18) / 255 = (0.02, 0.03, 0.07) — near-black with blue tint
+        // Matches real operational display colours (reduces eye strain in dark ops rooms)
+        glClearColor(0.02f, 0.03f, 0.07f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        <span class="cm">// ③ Draw contact markers HERE (we add these in Labs 2-5)</span>
+        // ③ Draw contact markers HERE — added from Lab 2 onward
+        // (Nothing drawn yet — proving the window and loop work first)
 
-        <span class="cm">// ④ Show the completed frame</span>
-        <span class="cf">glfwSwapBuffers</span>(window);
+        // ④ Show completed frame
+        glfwSwapBuffers(window);
 
-        <span class="cm">// ⑤ Process input events</span>
-        <span class="cf">glfwPollEvents</span>();
+        // ⑤ Process OS events — keyboard, mouse, resize
+        glfwPollEvents();
     }
 
-    <span class="cm">// ── Cleanup ───────────────────────────────────────────────────────</span>
-    <span class="cf">glfwTerminate</span>();
-    <span class="ck">return</span> <span class="cn">0</span>;
-}</pre></div>
-      </div>
+    // ── CLEANUP ───────────────────────────────────────────────────────────────
+    glfwTerminate();
+    std::cout &lt;&lt; &quot;Display shutdown cleanly.\n&quot;;
+    return 0;
+}
+</pre></div></div>
 
-      <!-- BUILD -->
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin:1.5rem 0 .75rem">Step 4 — Build and Run</h3>
-      <div class="cmd-wrap">
-        <div class="cmd-label">Open Developer Command Prompt for VS 2022</div>
-        <button class="cmd-copy-btn" onclick="cpCmd(this,'cmd-lab1')">Copy</button>
-        <pre id="cmd-lab1">cd C:\Labs\TacticalDisplay
-cmake -B build -G "Visual Studio 17 2022" -A x64
-cmake --build build --config Release
-build\Release\TacticalDisplay.exe</pre>
-      </div>
-
-      <div class="deliverable">
-        <div class="del-label">✅ Lab 1 Deliverable — Show This to Your Instructor</div>
-        <div class="del-title">A working tactical display window</div>
-        <div class="del-desc">Your window must show all of the following before moving to Lab 2:</div>
-        <ul class="del-checklist">
-          <li><span class="del-dot"></span>Window opens titled "Tactical Contact Display — Naval Ops" at 1024×768</li>
-          <li><span class="del-dot"></span>Background is near-black (deep space/ops-room dark)</li>
-          <li><span class="del-dot"></span>Terminal prints your GPU name + OpenGL version + ready message</li>
-          <li><span class="del-dot"></span>ESC closes the window cleanly (no crash, no hang)</li>
-          <li><span class="del-dot"></span>Resizing the window doesn't distort the viewport</li>
-        </ul>
-      </div>
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="th">[ Tactical Contact Display &mdash; System Check ]</span></div>
+      <div><span class="ts">GPU:            NVIDIA GeForce RTX 3080 Laptop GPU/PCIe/SSE2</span></div>
+      <div><span class="ts">OpenGL Version: 3.3.0 NVIDIA 546.01</span></div>
+      <div><span class="ts">GLSL Version:   3.30 NVIDIA via Cg compiler</span></div>
+      <div><span class="ts">Display ready.  Press ESC to shut down.</span></div>
     </div>
+  </div>
+  <div class="exp">
+    <div class="exp-lbl">&#128300; 3 Experiments Before Moving to Lab 2</div>
+    <ul class="exp-list">
+      <li><strong>Change background:</strong> Try <code class="ic">glClearColor(0.0f, 0.1f, 0.05f, 1.0f)</code> &rarr; dark green (submarine sonar display colour). Rebuild.</li>
+      <li><strong>Comment out glfwPollEvents():</strong> Rebuild &rarr; window freezes immediately. Ctrl+C to kill. Proves why polling is mandatory.</li>
+      <li><strong>Comment out glfwSwapBuffers():</strong> Rebuild &rarr; window stays black even with glClearColor set. Proves double buffering.</li>
+    </ul>
+  </div>
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 1 Deliverable</div>
+    <div class="del-title">A working tactical display window</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Window opens at 1024&times;768 with correct title</li>
+      <li><span class="del-dot"></span>Near-black background visible (not pure black &mdash; slight blue tint)</li>
+      <li><span class="del-dot"></span>Terminal shows GPU name + version + ready message</li>
+      <li><span class="del-dot"></span>ESC closes without crash</li>
+    </ul>
+  </div>
+</div>
 
-    <!-- ══════════════════════════════════
-         LAB 2 — CONTACT MARKERS
-    ═══════════════════════════════════ -->
-    <div class="lab-section" id="lab2">
-      <div class="lab-header">
-        <div class="lab-num-row">
-          <span class="lab-num">Lab 2 of 5</span>
-          <span class="lab-difficulty">⬛⬛ Intermediate · ~35 min</span>
-        </div>
-        <div class="lab-title">Drawing Contact Markers on the Display</div>
-        <div class="lab-desc">Add geometry to the display — triangle markers representing contacts at fixed positions. You will write your first vertex and fragment shaders in GLSL, upload vertex data with VBO and VAO, and draw three contact triangles representing a friendly vessel, a hostile vessel, and an unknown contact.</div>
-        <div class="lab-meta">
-          <span class="meta-pill">📋 Concepts: VBO · VAO · Vertex Shader · Fragment Shader</span>
-          <span class="meta-pill">⚡ Repeat first: Demos 3, 4, 5</span>
-        </div>
-      </div>
 
-      <div class="before-begin">
-        <div class="bb-title">📚 Before You Begin</div>
-        <ul class="bb-list">
-          <li><span class="bb-bullet">▸</span>Read Module 3 notes — VBO, VAO, and the data flow diagram</li>
-          <li><span class="bb-bullet">▸</span>Complete Demo 5 (First Triangle) — write the complete shader program yourself</li>
-          <li><span class="bb-bullet">▸</span>Understand what glVertexAttribPointer arguments mean (stride, offset) — Demo 4</li>
-        </ul>
-      </div>
+<div class="lab-sec" id="lab2">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 2 of 5</span>
+    <span class="lab-diff">&#11035;&#11035; Intermediate &middot; ~35 min</span>
+  </div>
+  <div class="lab-title">Contact Marker Geometry</div>
+  <div class="lab-desc">Add geometry to the display. Three small triangle markers appear on screen, each representing a naval contact at a fixed position. You write your first GLSL shaders, upload vertex data with VBO + VAO, and draw three contacts as dim white triangles. This is Demo 3 (VBO+VAO+Triangle) applied to the tactical scenario.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: VBO &middot; VAO &middot; Vertex Shader &middot; Fragment Shader</span>
+    <span class="meta-chip">&#9889; Do Demo 3 first</span>
+  </div>
 
-      <div class="objectives">
-        <div class="obj-title">Lab Objectives</div>
-        <ul class="obj-list">
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Write a vertex shader that positions contacts using NDC coordinates</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Write a fragment shader that outputs a solid colour</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Compile and link both shaders into a shader program (with error checking)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Upload 3 triangle contact markers using one VBO</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Configure a VAO to record the vertex layout</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Draw all 3 contacts in the render loop</li>
-        </ul>
-      </div>
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What This Lab Adds Over Lab 1</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Vertex shader + fragment shader written in GLSL and compiled by the GPU driver</li>
+      <li><span class="adds-dot">&#9658;</span>3 contact triangles uploaded to GPU VRAM with VBO (108 bytes = 27 floats)</li>
+      <li><span class="adds-dot">&#9658;</span>VAO records the vertex layout (3 floats per vertex, stride=12, offset=0)</li>
+      <li><span class="adds-dot">&#9658;</span>All 3 contacts drawn in one <code class="ic">glDrawArrays(GL_TRIANGLES, 0, 9)</code> call</li>
+      <li><span class="adds-dot">&#9658;</span>Terminal prints 4 confirmation steps: shader ID, bytes uploaded, attribute info</li>
+    </ul>
+  </div>
 
-      <div class="diagram">
-        <div class="diagram-title">Contact Positions on the Tactical Display (NDC Coordinates)</div>
-        <pre>
-  NDC Screen Space (-1 to +1 each axis):
+  <div class="diag">
+    <div class="diag-title">Contact Positions on the Tactical Display (NDC Space &mdash; range -1.0 to +1.0)</div>
+    <pre>
+          Y=+1.0 (top)
+              |
+  &#9650; Friendly  |     &#9650; Unknown
+  (0.0, 0.6)  |     (0.5, 0.3)
+              |
+  X=-1 ------+------- X=+1
+              |
+  &#9650; Hostile   |
+  (-0.4,-0.4) |
+              |
+          Y=-1.0 (bottom)
 
-                    Y=+1 (top)
-                       │
-          ▲ Friendly   │   ▲ Unknown
-          (0.0, 0.6)   │   (0.5, 0.3)
-                       │
-  X=-1 ───────────── (0,0) ─────────────── X=+1
-                       │
-          ▲ Hostile    │
-         (-0.4,-0.4)   │
-                       │
-                    Y=-1 (bottom)
+  Each contact = small upward-pointing triangle
+  Triangle size: tip at Y+0.06, base at Y-0.06 from centre
+  All the same dim-white colour in Lab 2 (colours added in Lab 3)</pre>
+  </div>
 
-  Each contact = a small triangle (±0.05 NDC units)
-  Tiny triangles = contact icons on the tactical map
-        </pre>
-      </div>
+  <div class="concept">
+    <div class="concept-lbl">&#128161; Why We Draw All 3 Contacts in ONE Draw Call</div>
+    <p class="note">All 27 float values (9 vertices &times; 3 floats each) for all 3 contacts go into a single float array and one VBO. <code class="ic">glDrawArrays(GL_TRIANGLES, 0, 9)</code> draws them all: the GPU reads vertices 0,1,2 as triangle 1, vertices 3,4,5 as triangle 2, vertices 6,7,8 as triangle 3. One draw call = three contacts. We split into separate draw calls in Lab 5 when we need different uniform values per contact.</p>
+  </div>
 
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin:1.5rem 0 1rem">Step 1 — Add Shader Source Strings to main.cpp</h3>
-      <div class="info-box">
-        <div class="info-label">💡 Where to Add This</div>
-        <p>Add these shader strings ABOVE your <code>main()</code> function. They are global constants — just like Demo 5. Same pattern, same structure. The only difference is the name of the output variable.</p>
-      </div>
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>Vertex shader written: aPos at location=0, outputs gl_Position</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader written: outputs fixed dim-white colour</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>compileShader helper written with error checking</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Contact geometry defined: 9 vertices &times; 3 floats = 27 floats</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>VAO bound FIRST, then VBO created and data uploaded</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>glVertexAttribPointer: 3 floats, stride=12, offset=0</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Render loop draws all 9 vertices in one call</li>
+    </ul>
+  </div>
 
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Add above main(): Shader source strings</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab2-shaders')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab2-shaders"><pre><span class="cm">// Vertex shader: positions each contact vertex on screen
-// aPos comes from our VBO — the x, y, z float triplets we upload
-// gl_Position is required — it sets the final clip-space position</span>
-<span class="ck">const char</span>* <span class="cv">vertSrc</span> = <span class="cs">R"(
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Replace Entire File with This</div>
+
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 2 Complete File</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,&apos;lab2_main&apos;)">Copy All</button></div></div><div class="code-block"><pre id="lab2_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 1 · LAB 2 of 5
+//  Tactical Contact Display — Contact Marker Geometry
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME:  TacticalDisplay
+//  FOLDER:        C:\Labs\TacticalDisplay\
+//
+//  WHAT THIS LAB ADDS OVER LAB 1:
+//  - Vertex + Fragment shaders (GLSL) compiled and linked at runtime
+//  - 3 contact triangle markers uploaded to GPU with VBO + VAO
+//  - All 3 contacts drawn in the render loop as dim white triangles
+//  - Terminal prints setup confirmation steps
+//
+//  WHAT YOU WILL SEE:
+//  - Same dark window as Lab 1
+//  - 3 small white triangles: top-centre, lower-left, right-centre
+//  - Terminal: shader compiled, VBO/VAO ready messages
+//
+//  CONTACT POSITIONS (NDC — range -1.0 to +1.0):
+//   Contact 1 (Friendly): centre (0.0,  0.6) — top-centre
+//   Contact 2 (Hostile):  centre (-0.4,-0.4) — lower-left
+//   Contact 3 (Unknown):  centre (0.5,  0.3) — right-centre
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VERTEX SHADER
+// Runs once per vertex on the GPU.
+// Takes aPos (X,Y,Z) from the VBO and places it on screen.
+// layout(location=0) MUST match glVertexAttribPointer(0, ...) below.
+// ─────────────────────────────────────────────────────────────────────────────
+const char* vertSrc = R&quot;GLSL(
     #version 330 core
     layout(location = 0) in vec3 aPos;
     void main() {
-        gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+        gl_Position = vec4(aPos, 1.0);
     }
-)"</span>;
+)GLSL&quot;;
 
-<span class="cm">// Fragment shader: assigns a uniform colour to all fragments
-// We will change this colour per contact type in Lab 3
-// For now: all contacts render as dim white</span>
-<span class="ck">const char</span>* <span class="cv">fragSrc</span> = <span class="cs">R"(
+// ─────────────────────────────────────────────────────────────────────────────
+// FRAGMENT SHADER
+// Runs once per pixel the triangle covers.
+// Returns dim white for all contacts — we add threat colours in Lab 3.
+// ─────────────────────────────────────────────────────────────────────────────
+const char* fragSrc = R&quot;GLSL(
     #version 330 core
     out vec4 FragColor;
     void main() {
-        FragColor = vec4(0.85, 0.85, 0.85, 1.0);
+        FragColor = vec4(0.85, 0.85, 0.85, 1.0);  // dim white
     }
-)"</span>;</pre></div>
-      </div>
+)GLSL&quot;;
 
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin:1.5rem 0 1rem">Step 2 — Add Shader Compilation Helper Function</h3>
-      <div class="info-box">
-        <div class="info-label">💡 Why a Helper Function?</div>
-        <p>We compile both shaders the same way (glCreateShader → glShaderSource → glCompileShader → check error). Instead of writing this 8-line block twice, we put it in one function. This is a real pattern used in production OpenGL codebases.</p>
-      </div>
-
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Add above main(): compileShader helper</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab2-compile')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab2-compile"><pre><span class="cm">// Compile a shader from source. Returns its ID.
-// type = GL_VERTEX_SHADER or GL_FRAGMENT_SHADER
-// source = the GLSL source code string</span>
-<span class="ct">unsigned int</span> <span class="cf">compileShader</span>(<span class="ct">unsigned int</span> <span class="cv">type</span>, <span class="ck">const char</span>* <span class="cv">source</span>) {
-    <span class="ct">unsigned int</span> <span class="cv">id</span> = <span class="cf">glCreateShader</span>(type);
-    <span class="cf">glShaderSource</span>(id, <span class="cn">1</span>, &source, <span class="cn">NULL</span>);
-    <span class="cf">glCompileShader</span>(id);
-
-    <span class="cm">// Always check for compilation errors
-    // The driver compiles GLSL at runtime — syntax errors show here</span>
-    <span class="ct">int</span> <span class="cv">ok</span>; <span class="ct">char</span> <span class="cv">log</span>[<span class="cn">512</span>];
-    <span class="cf">glGetShaderiv</span>(id, GL_COMPILE_STATUS, &ok);
-    <span class="ck">if</span> (!ok) {
-        <span class="cf">glGetShaderInfoLog</span>(id, <span class="cn">512</span>, <span class="cn">NULL</span>, log);
-        std::cerr &lt;&lt; <span class="cs">"Shader compile error:\n"</span> &lt;&lt; log &lt;&lt; <span class="cs">"\n"</span>;
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPER: compileShader
+// Compiles one shader (vertex or fragment) and returns its GPU-side ID.
+// Always checks for errors — GLSL errors only appear at runtime.
+// ─────────────────────────────────────────────────────────────────────────────
+unsigned int compileShader(unsigned int type, const char* source) {
+    unsigned int id = glCreateShader(type);
+    glShaderSource(id, 1, &amp;source, NULL);
+    glCompileShader(id);
+    int ok; char log[512];
+    glGetShaderiv(id, GL_COMPILE_STATUS, &amp;ok);
+    if (!ok) {
+        glGetShaderInfoLog(id, 512, NULL, log);
+        std::cerr &lt;&lt; &quot;Shader compile error:\n&quot; &lt;&lt; log &lt;&lt; &quot;\n&quot;;
     }
-    <span class="ck">return</span> id;
+    return id;
 }
 
-<span class="cm">// Link vertex + fragment into a complete shader program.
-// Returns the program ID.</span>
-<span class="ct">unsigned int</span> <span class="cf">createProgram</span>(<span class="ck">const char</span>* <span class="cv">vertSrc</span>, <span class="ck">const char</span>* <span class="cv">fragSrc</span>) {
-    <span class="ct">unsigned int</span> <span class="cv">vs</span> = <span class="cf">compileShader</span>(GL_VERTEX_SHADER,   vertSrc);
-    <span class="ct">unsigned int</span> <span class="cv">fs</span> = <span class="cf">compileShader</span>(GL_FRAGMENT_SHADER, fragSrc);
-    <span class="ct">unsigned int</span> <span class="cv">prog</span> = <span class="cf">glCreateProgram</span>();
-    <span class="cf">glAttachShader</span>(prog, vs);
-    <span class="cf">glAttachShader</span>(prog, fs);
-    <span class="cf">glLinkProgram</span>(prog);
-    <span class="cm">// Individual shaders no longer needed once linked</span>
-    <span class="cf">glDeleteShader</span>(vs);
-    <span class="cf">glDeleteShader</span>(fs);
-    <span class="ck">return</span> prog;
-}</pre></div>
-      </div>
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPER: createShaderProgram
+// Links vertex + fragment into one shader program. Returns program ID.
+// ─────────────────────────────────────────────────────────────────────────────
+unsigned int createShaderProgram(const char* vSrc, const char* fSrc) {
+    unsigned int vs = compileShader(GL_VERTEX_SHADER,   vSrc);
+    unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fSrc);
+    unsigned int prog = glCreateProgram();
+    glAttachShader(prog, vs);
+    glAttachShader(prog, fs);
+    glLinkProgram(prog);
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+    return prog;
+}
 
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin:1.5rem 0 1rem">Step 3 — Define Contact Geometry and Upload to GPU</h3>
-      <div class="info-box">
-        <div class="info-label">💡 How to Think About This</div>
-        <p>Three contacts = three small triangles. Each triangle has 3 vertices = 9 floats × 3 contacts = 27 floats total. All 27 floats go into ONE VBO. We draw them all in one glDrawArrays call — start=0, count=9 (9 vertices total = 3 triangles).</p>
-      </div>
+void onResize(GLFWwindow* w, int W, int H) { glViewport(0, 0, W, H); }
+void processInput(GLFWwindow* w) {
+    if (glfwGetKey(w, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(w, true);
+}
 
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — inside main(), after glewInit()</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab2-geo')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab2-geo"><pre>    <span class="cm">// ── Create Shader Program ────────────────────────────────────────</span>
-    <span class="ct">unsigned int</span> <span class="cv">shaderProg</span> = <span class="cf">createProgram</span>(vertSrc, fragSrc);
+int main() {
 
-    <span class="cm">// ── Contact Geometry ────────────────────────────────────────────
-    // 3 contacts × 3 vertices × 3 floats (x,y,z) = 27 floats
-    //
-    // Contact 1: FRIENDLY vessel — centre (0.0, 0.6), small triangle
-    // Contact 2: HOSTILE vessel  — centre (-0.4, -0.4)
-    // Contact 3: UNKNOWN contact — centre (0.5, 0.3)
-    //
-    // Triangle size: ±0.05 in X, ±0.06 in Y (small tactical icon)</span>
-    <span class="ct">float</span> <span class="cv">contacts</span>[] = {
-        <span class="cm">// Contact 1 — FRIENDLY (top-centre of display)</span>
-        <span class="cm">// X      Y      Z</span>
-         <span class="cn">0.00f</span>, <span class="cn">0.66f</span>, <span class="cn">0.0f</span>,    <span class="cm">// tip (top)</span>
-        -<span class="cn">0.05f</span>, <span class="cn">0.54f</span>, <span class="cn">0.0f</span>,    <span class="cm">// bottom-left</span>
-         <span class="cn">0.05f</span>, <span class="cn">0.54f</span>, <span class="cn">0.0f</span>,    <span class="cm">// bottom-right</span>
+    // Window + context setup (same as Lab 1)
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window = glfwCreateWindow(1024, 768, &quot;Tactical Contact Display — Naval Ops&quot;, NULL, NULL);
+    if (!window) { glfwTerminate(); return -1; }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, onResize);
+    glewExperimental = GL_TRUE;
+    glewInit();
+    std::cout &lt;&lt; &quot;GPU: &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n\n&quot;;
 
-        <span class="cm">// Contact 2 — HOSTILE (lower-left quadrant)</span>
-        -<span class="cn">0.40f</span>,-<span class="cn">0.34f</span>, <span class="cn">0.0f</span>,    <span class="cm">// tip</span>
-        -<span class="cn">0.45f</span>,-<span class="cn">0.46f</span>, <span class="cn">0.0f</span>,    <span class="cm">// bottom-left</span>
-        -<span class="cn">0.35f</span>,-<span class="cn">0.46f</span>, <span class="cn">0.0f</span>,    <span class="cm">// bottom-right</span>
+    // ── Compile shader program ────────────────────────────────────────────────
+    unsigned int shaderProg = createShaderProgram(vertSrc, fragSrc);
+    std::cout &lt;&lt; &quot;[1] Shader program compiled + linked. ID = &quot; &lt;&lt; shaderProg &lt;&lt; &quot;\n&quot;;
 
-        <span class="cm">// Contact 3 — UNKNOWN (right-centre area)</span>
-         <span class="cn">0.50f</span>, <span class="cn">0.36f</span>, <span class="cn">0.0f</span>,    <span class="cm">// tip</span>
-         <span class="cn">0.45f</span>, <span class="cn">0.24f</span>, <span class="cn">0.0f</span>,    <span class="cm">// bottom-left</span>
-         <span class="cn">0.55f</span>, <span class="cn">0.24f</span>, <span class="cn">0.0f</span>,    <span class="cm">// bottom-right</span>
+    // ── Contact geometry ──────────────────────────────────────────────────────
+    // 3 contacts x 3 vertices x 3 floats (x,y,z) = 27 floats = 108 bytes
+    // Each contact = a small upward-pointing triangle (tactical icon)
+    // All vertices use position ONLY — colour added in Lab 3
+    float contacts[] = {
+    //    X        Y       Z
+        // Contact 1 — FRIENDLY vessel (top-centre of display)
+         0.00f,  0.66f,  0.0f,   // tip (top)
+        -0.05f,  0.54f,  0.0f,   // bottom-left
+         0.05f,  0.54f,  0.0f,   // bottom-right
+
+        // Contact 2 — HOSTILE vessel (lower-left quadrant)
+        -0.40f, -0.34f,  0.0f,   // tip
+        -0.45f, -0.46f,  0.0f,   // bottom-left
+        -0.35f, -0.46f,  0.0f,   // bottom-right
+
+        // Contact 3 — UNKNOWN contact (right-centre area)
+         0.50f,  0.36f,  0.0f,   // tip
+         0.45f,  0.24f,  0.0f,   // bottom-left
+         0.55f,  0.24f,  0.0f,   // bottom-right
     };
+    // 9 vertices × 3 floats = 27 floats × 4 bytes = 108 bytes
 
-    <span class="cm">// ── Upload to GPU with VAO + VBO ─────────────────────────────────</span>
-    <span class="ct">unsigned int</span> <span class="cv">VAO</span>, <span class="cv">VBO</span>;
-    <span class="cf">glGenVertexArrays</span>(<span class="cn">1</span>, &VAO);
-    <span class="cf">glGenBuffers</span>(<span class="cn">1</span>, &VBO);
+    // ── VAO + VBO setup ───────────────────────────────────────────────────────
+    // VAO bind FIRST → then VBO → then glVertexAttribPointer
+    // (VAO must be recording before you describe the layout)
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &amp;VAO);
+    glBindVertexArray(VAO);              // ← RECORDING STARTS
 
-    <span class="cf">glBindVertexArray</span>(VAO);              <span class="cm">// start recording</span>
-      <span class="cf">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);
-      <span class="cf">glBufferData</span>(GL_ARRAY_BUFFER, <span class="ck">sizeof</span>(contacts), contacts, GL_STATIC_DRAW);
-      <span class="cm">// Tell GPU: attribute 0 = 3 floats, no gap (pure positions only)</span>
-      <span class="cf">glVertexAttribPointer</span>(<span class="cn">0</span>, <span class="cn">3</span>, GL_FLOAT, GL_FALSE, <span class="cn">3</span>*<span class="ck">sizeof</span>(<span class="ct">float</span>), (<span class="ck">void</span>*)<span class="cn">0</span>);
-      <span class="cf">glEnableVertexAttribArray</span>(<span class="cn">0</span>);
-    <span class="cf">glBindVertexArray</span>(<span class="cn">0</span>);               <span class="cm">// stop recording</span></pre></div>
-      </div>
+    glGenBuffers(1, &amp;VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(contacts), contacts, GL_STATIC_DRAW);
+    std::cout &lt;&lt; &quot;[2] &quot; &lt;&lt; sizeof(contacts) &lt;&lt; &quot; bytes uploaded to GPU VRAM (VBO ID=&quot; &lt;&lt; VBO &lt;&lt; &quot;)\n&quot;;
 
-      <h3 style="font-size:.93rem;font-weight:700;color:var(--text2);margin:1.5rem 0 1rem">Step 4 — Draw in the Render Loop</h3>
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — replace the render loop body</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab2-draw')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab2-draw"><pre>    <span class="ck">while</span> (!<span class="cf">glfwWindowShouldClose</span>(window)) {
-        <span class="cf">processInput</span>(window);
+    // Attribute 0: position — 3 floats, stride=12 (3x4), offset=0
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    std::cout &lt;&lt; &quot;[3] VAO recorded. Attribute 0: 3 floats, stride=12, offset=0\n&quot;;
 
-        <span class="cm">// Clear to tactical dark background</span>
-        <span class="cf">glClearColor</span>(<span class="cn">0.02f</span>, <span class="cn">0.03f</span>, <span class="cn">0.07f</span>, <span class="cn">1.0f</span>);
-        <span class="cf">glClear</span>(GL_COLOR_BUFFER_BIT);
+    glBindVertexArray(0);               // ← RECORDING STOPS
+    std::cout &lt;&lt; &quot;[4] Setup complete. Render loop starting...\n&quot;;
+    std::cout &lt;&lt; &quot;    ESC = quit\n\n&quot;;
 
-        <span class="cm">// Activate our shader program</span>
-        <span class="cf">glUseProgram</span>(shaderProg);
+    // ── RENDER LOOP ───────────────────────────────────────────────────────────
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
 
-        <span class="cm">// Bind VAO — restores VBO + attribute layout</span>
-        <span class="cf">glBindVertexArray</span>(VAO);
+        glClearColor(0.02f, 0.03f, 0.07f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        <span class="cm">// Draw all 3 contacts (9 vertices = 3 triangles)
-        // GL_TRIANGLES: every 3 vertices = 1 filled triangle
-        // 0 = start at vertex index 0
-        // 9 = draw 9 vertices total</span>
-        <span class="cf">glDrawArrays</span>(GL_TRIANGLES, <span class="cn">0</span>, <span class="cn">9</span>);
+        // Activate shader program
+        glUseProgram(shaderProg);
 
-        <span class="cf">glfwSwapBuffers</span>(window);
-        <span class="cf">glfwPollEvents</span>();
+        // Bind VAO — restores VBO + attribute layout in one call
+        glBindVertexArray(VAO);
+
+        // Draw all 3 contacts: 9 vertices = 3 triangles
+        // GL_TRIANGLES: every 3 consecutive vertices = 1 filled triangle
+        glDrawArrays(GL_TRIANGLES, 0, 9);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
-    <span class="cm">// Cleanup GPU resources before exit</span>
-    <span class="cf">glDeleteVertexArrays</span>(<span class="cn">1</span>, &VAO);
-    <span class="cf">glDeleteBuffers</span>(<span class="cn">1</span>, &VBO);
-    <span class="cf">glDeleteProgram</span>(shaderProg);
-    <span class="cf">glfwTerminate</span>();
-    <span class="ck">return</span> <span class="cn">0</span>;</pre></div>
-      </div>
+    // ── CLEANUP ───────────────────────────────────────────────────────────────
+    glDeleteVertexArrays(1, &amp;VAO);
+    glDeleteBuffers(1, &amp;VBO);
+    glDeleteProgram(shaderProg);
+    glfwTerminate();
+    return 0;
+}
+</pre></div></div>
 
-      <div class="deliverable">
-        <div class="del-label">✅ Lab 2 Deliverable</div>
-        <div class="del-title">Three white triangle contact markers on dark display</div>
-        <ul class="del-checklist">
-          <li><span class="del-dot"></span>Three small triangles visible on the dark tactical background</li>
-          <li><span class="del-dot"></span>Positions match the diagram (top-centre, lower-left, right-centre)</li>
-          <li><span class="del-dot"></span>No shader compilation errors in terminal</li>
-          <li><span class="del-dot"></span>Window stays responsive — ESC closes cleanly</li>
-        </ul>
-      </div>
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="to">GPU: NVIDIA GeForce RTX 3080 Laptop GPU/PCIe/SSE2</span></div>
+      <hr class="t-hr">
+      <div><span class="ts">[1] Shader program compiled + linked. ID = 1</span></div>
+      <div><span class="ts">[2] 108 bytes uploaded to GPU VRAM (VBO ID=2)</span></div>
+      <div><span class="ts">[3] VAO recorded. Attribute 0: 3 floats, stride=12, offset=0</span></div>
+      <div><span class="ts">[4] Setup complete. Render loop starting...</span></div>
+      <div><span class="to">    ESC = quit</span></div>
+      <hr class="t-hr">
+      <div><span class="th">Screen: 3 small white triangles on dark background</span></div>
     </div>
+  </div>
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>Comment out glUseProgram():</strong> Black screen. GPU has no shader to run. Restore and verify it works again.</li>
+      <li><strong>Comment out glBindVertexArray(VAO):</strong> Black screen. GPU has no data to read. Restore.</li>
+      <li><strong>Move a contact:</strong> Change the X,Y values of Contact 1&apos;s vertices (first 9 floats) to move it to a different position on screen.</li>
+      <li><strong>Add a 4th contact:</strong> Add 3 more vertices after the Unknown contact in the float array and change the draw count from 9 to 12.</li>
+    </ul>
+  </div>
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 2 Deliverable</div>
+    <div class="del-title">Three white contact marker triangles on the dark display</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Three small triangles visible: top-centre, lower-left, right-centre</li>
+      <li><span class="del-dot"></span>No shader compile errors in terminal</li>
+      <li><span class="del-dot"></span>Terminal shows the 4 setup confirmation messages</li>
+      <li><span class="del-dot"></span>ESC closes cleanly</li>
+    </ul>
+  </div>
+</div>
 
-    <!-- ══════════════════════════════════
-         LAB 3 — THREAT COLOURS
-    ═══════════════════════════════════ -->
-    <div class="lab-section" id="lab3">
-      <div class="lab-header">
-        <div class="lab-num-row">
-          <span class="lab-num">Lab 3 of 5</span>
-          <span class="lab-difficulty">⬛⬛ Intermediate · ~30 min</span>
-        </div>
-        <div class="lab-title">Threat Classification Colours</div>
-        <div class="lab-desc">Add per-vertex colour data to the contact markers. Friendly contacts render blue, hostile contacts render red, unknown contacts render yellow. This uses a second vertex attribute (colour) in the same VBO — the interleaved layout pattern.</div>
-        <div class="lab-meta">
-          <span class="meta-pill">📋 Concepts: Interleaved VBO · Multiple Attributes · Colour Interpolation</span>
-          <span class="meta-pill">⚡ Repeat first: Demo 4 (VAO stride/offset)</span>
-        </div>
-      </div>
 
-      <div class="before-begin">
-        <div class="bb-title">📚 Before You Begin</div>
-        <ul class="bb-list">
-          <li><span class="bb-bullet">▸</span>Understand the stride/offset diagram from Demo 4 — draw it on paper if needed</li>
-          <li><span class="bb-bullet">▸</span>Each vertex now has 6 floats: X, Y, Z (position) then R, G, B (colour)</li>
-          <li><span class="bb-bullet">▸</span>The fragment shader needs to receive colour from the vertex shader via <code>out/in</code></li>
-        </ul>
-      </div>
+<div class="lab-sec" id="lab3">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 3 of 5</span>
+    <span class="lab-diff">&#11035;&#11035; Intermediate &middot; ~30 min</span>
+  </div>
+  <div class="lab-title">Threat Classification Colours</div>
+  <div class="lab-desc">Add per-vertex colour data to classify each contact by threat level. Friendly = blue, Hostile = red, Unknown = yellow. Each vertex now carries 6 floats (X Y Z R G B) in an interleaved VBO. The VAO records two attributes. The GPU interpolates colour automatically across each triangle. This is Demo 4 (per-vertex colour) applied to the tactical scenario.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: Interleaved VBO &middot; Two Attributes &middot; Stride/Offset</span>
+    <span class="meta-chip">&#9889; Do Demo 4 first</span>
+  </div>
 
-      <div class="objectives">
-        <div class="obj-title">Lab Objectives</div>
-        <ul class="obj-list">
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Update vertex data to include RGB colour per vertex (6 floats per vertex)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Update vertex shader to accept and pass colour attribute</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Update fragment shader to use the interpolated colour</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Update glVertexAttribPointer for both attributes (correct stride = 24 bytes)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Friendly = blue, Hostile = red, Unknown = yellow</li>
-        </ul>
-      </div>
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What This Lab Adds Over Lab 2</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Each vertex now has 6 floats: X Y Z R G B (was 3 floats: X Y Z)</li>
+      <li><span class="adds-dot">&#9658;</span>Vertex shader receives aColour at location=1 and passes it to fragment shader</li>
+      <li><span class="adds-dot">&#9658;</span>Fragment shader uses vColour from vertex shader instead of hardcoded white</li>
+      <li><span class="adds-dot">&#9658;</span>VAO records TWO glVertexAttribPointer calls: pos (stride=24, offset=0) and colour (stride=24, offset=12)</li>
+      <li><span class="adds-dot">&#9658;</span>Render loop is IDENTICAL to Lab 2 &mdash; only the data description changed</li>
+    </ul>
+  </div>
 
-      <div class="diagram">
-        <div class="diagram-title">Interleaved Vertex Layout — Position + Colour per Vertex</div>
-        <pre>
-  Each vertex now = 6 floats = 24 bytes:
+  <div class="diag">
+    <div class="diag-title">Interleaved VBO Memory Layout &mdash; 6 Floats = 24 Bytes per Vertex</div>
+    <pre>
+  Byte:  0    4    8   12   16   20  |  24   28   32   36   40   44  | ...
+         [X ] [Y ] [Z ] [R ] [G ] [B ]  [X ] [Y ] [Z ] [R ] [G ] [B ]  ...
+         |&#9472;&#9472;&#9472;position&#9472;&#9472;&#9472;|&#9472;&#9472;colour&#9472;&#9472;|  |&#9472;&#9472;&#9472;position&#9472;&#9472;&#9472;|&#9472;&#9472;colour&#9472;&#9472;|
+                 Vertex 0 (24 bytes)              Vertex 1 (24 bytes)
 
-  Byte: 0    4    8   12   16   20   24   ...
-        [X ] [Y ] [Z ] [R ] [G ] [B ] [X ] next vertex...
-        ├──position──┤├───colour───┤
+  Stride = 24 bytes (6 floats &times; 4 bytes) &mdash; SAME for both attributes
+  Position offset =  0 bytes (starts at byte 0 of each vertex)
+  Colour   offset = 12 bytes (starts after 3 position floats: 3 &times; 4 = 12)</pre>
+  </div>
 
-  Stride = 24 bytes (6 floats × 4 bytes)
-  Position offset = 0  bytes (starts at byte 0)
-  Colour   offset = 12 bytes (starts at byte 12, after XYZ)
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>Vertex shader: aColour at location=1, out vec3 vColour passes colour to fragment shader</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader: in vec3 vColour (must match vertex shader name), FragColor = vec4(vColour, 1.0)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Contact data updated: 9 vertices &times; 6 floats = 54 floats &times; 4 bytes = 216 bytes</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Friendly contact (first 3 vertices): all blue (0.20, 0.50, 1.00)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Hostile contact (next 3 vertices): all red (1.00, 0.20, 0.20)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Unknown contact (last 3 vertices): all yellow (1.00, 0.85, 0.10)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Attribute 0 (pos): stride=24, offset=0 &mdash; Attribute 1 (colour): stride=24, offset=12</li>
+    </ul>
+  </div>
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, (void*)0 );  ← position
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (void*)12);  ← colour
-        </pre>
-      </div>
+  <div class="tip">
+    <div class="tip-lbl">&#10003; Why Render Loop Is Identical to Lab 2</div>
+    <p>The draw call <code class="ic">glDrawArrays(GL_TRIANGLES, 0, 9)</code> is unchanged. The VAO recorded the new 2-attribute layout during setup, so it restores everything with one bind in the loop. This is exactly the VAO power you saw in Demo 4: describe the data once, the draw call never changes.</p>
+  </div>
 
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Updated shaders (replace existing)</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab3-shaders')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab3-shaders"><pre><span class="cm">// Vertex shader now receives TWO attributes:
-//   location 0 = position (xyz)
-//   location 1 = colour (rgb)
-// It passes colour to fragment shader via "out" variable</span>
-<span class="ck">const char</span>* <span class="cv">vertSrc</span> = <span class="cs">R"(
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Replace Entire File with This</div>
+
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 3 Complete File</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,&apos;lab3_main&apos;)">Copy All</button></div></div><div class="code-block"><pre id="lab3_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 1 · LAB 3 of 5
+//  Tactical Contact Display — Threat Classification Colours
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME:  TacticalDisplay
+//  FOLDER:        C:\Labs\TacticalDisplay\
+//
+//  WHAT THIS LAB ADDS OVER LAB 2:
+//  - Each vertex now carries 6 floats: X Y Z R G B (interleaved VBO)
+//  - VAO records TWO attributes (position + colour)
+//  - Vertex shader receives and passes colour to fragment shader
+//  - GPU auto-interpolates colour between vertices
+//  - Friendly = BLUE, Hostile = RED, Unknown = YELLOW
+//
+//  KEY CONCEPT — Interleaved stride/offset:
+//  Stride = 24 bytes (6 floats × 4 bytes per float)
+//  Position offset =  0 bytes (starts at byte 0)
+//  Colour   offset = 12 bytes (after the 3 position floats)
+//
+//  WHAT YOU WILL SEE:
+//  - Top-centre triangle: BLUE (friendly)
+//  - Lower-left triangle: RED (hostile)
+//  - Right-centre triangle: YELLOW (unknown)
+//  - Render loop is IDENTICAL to Lab 2 — only data description changed
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VERTEX SHADER — receives TWO attributes now
+// location=0: aPos    (x,y,z) — position
+// location=1: aColour (r,g,b) — threat colour
+// &quot;out vec3 vColour&quot; passes colour to fragment shader (GPU interpolates between vertices)
+// ─────────────────────────────────────────────────────────────────────────────
+const char* vertSrc = R&quot;GLSL(
     #version 330 core
     layout(location = 0) in vec3 aPos;
     layout(location = 1) in vec3 aColour;
 
-    out vec3 vColour;   // passed to fragment shader (interpolated between vertices)
+    out vec3 vColour;   // GPU will interpolate this between the 3 vertices
 
+    void main() {
+        gl_Position = vec4(aPos, 1.0);
+        vColour = aColour;   // pass threat colour through unchanged
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FRAGMENT SHADER — receives the interpolated colour from vertex shader
+// &quot;in vec3 vColour&quot; MUST match &quot;out vec3 vColour&quot; name in vertex shader
+// ─────────────────────────────────────────────────────────────────────────────
+const char* fragSrc = R&quot;GLSL(
+    #version 330 core
+    in vec3 vColour;
+    out vec4 FragColor;
+    void main() {
+        FragColor = vec4(vColour, 1.0);  // RGB from vertex shader, Alpha=1 (fully opaque)
+    }
+)GLSL&quot;;
+
+unsigned int compileShader(unsigned int type, const char* source) {
+    unsigned int id = glCreateShader(type);
+    glShaderSource(id, 1, &amp;source, NULL);
+    glCompileShader(id);
+    int ok; char log[512];
+    glGetShaderiv(id, GL_COMPILE_STATUS, &amp;ok);
+    if (!ok) { glGetShaderInfoLog(id, 512, NULL, log); std::cerr &lt;&lt; &quot;Shader error:\n&quot; &lt;&lt; log &lt;&lt; &quot;\n&quot;; }
+    return id;
+}
+unsigned int createShaderProgram(const char* vSrc, const char* fSrc) {
+    unsigned int vs = compileShader(GL_VERTEX_SHADER, vSrc);
+    unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fSrc);
+    unsigned int prog = glCreateProgram();
+    glAttachShader(prog, vs); glAttachShader(prog, fs); glLinkProgram(prog);
+    glDeleteShader(vs); glDeleteShader(fs);
+    return prog;
+}
+void onResize(GLFWwindow* w, int W, int H) { glViewport(0, 0, W, H); }
+void processInput(GLFWwindow* w) {
+    if (glfwGetKey(w, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(w, true);
+}
+
+int main() {
+
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window = glfwCreateWindow(1024, 768, &quot;Tactical Contact Display — Naval Ops&quot;, NULL, NULL);
+    if (!window) { glfwTerminate(); return -1; }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, onResize);
+    glewExperimental = GL_TRUE; glewInit();
+    std::cout &lt;&lt; &quot;GPU: &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n\n&quot;;
+
+    unsigned int shaderProg = createShaderProgram(vertSrc, fragSrc);
+    std::cout &lt;&lt; &quot;[1] Shader compiled. ID = &quot; &lt;&lt; shaderProg &lt;&lt; &quot;\n&quot;;
+
+    // ── Contact geometry: X Y Z R G B per vertex (6 floats = 24 bytes) ───────
+    //
+    // Memory layout per vertex (24 bytes):
+    //  Byte: 0    4    8   12   16   20
+    //        [X ] [Y ] [Z ] [R ] [G ] [B ]
+    //        |position  |  |colour    |
+    //
+    // Stride = 24 (6 × 4), Position offset = 0, Colour offset = 12
+    float contacts[] = {
+    //    X        Y       Z      R      G      B
+        // Contact 1 — FRIENDLY (BLUE)
+         0.00f,  0.66f,  0.0f,  0.20f, 0.50f, 1.00f,   // tip
+        -0.05f,  0.54f,  0.0f,  0.20f, 0.50f, 1.00f,   // bottom-left
+         0.05f,  0.54f,  0.0f,  0.20f, 0.50f, 1.00f,   // bottom-right
+
+        // Contact 2 — HOSTILE (RED)
+        -0.40f, -0.34f,  0.0f,  1.00f, 0.20f, 0.20f,
+        -0.45f, -0.46f,  0.0f,  1.00f, 0.20f, 0.20f,
+        -0.35f, -0.46f,  0.0f,  1.00f, 0.20f, 0.20f,
+
+        // Contact 3 — UNKNOWN (YELLOW)
+         0.50f,  0.36f,  0.0f,  1.00f, 0.85f, 0.10f,
+         0.45f,  0.24f,  0.0f,  1.00f, 0.85f, 0.10f,
+         0.55f,  0.24f,  0.0f,  1.00f, 0.85f, 0.10f,
+    };
+    // 9 vertices × 6 floats = 54 floats × 4 bytes = 216 bytes
+
+    // ── VAO + VBO with TWO attributes ────────────────────────────────────────
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &amp;VAO);
+    glBindVertexArray(VAO);                // ← RECORDING STARTS
+
+    glGenBuffers(1, &amp;VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(contacts), contacts, GL_STATIC_DRAW);
+    std::cout &lt;&lt; &quot;[2] &quot; &lt;&lt; sizeof(contacts) &lt;&lt; &quot; bytes on GPU (6 floats/vertex)\n&quot;;
+
+    // Attribute 0: POSITION — 3 floats, stride=24, offset=0
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    std::cout &lt;&lt; &quot;[3] Attr 0 (position): stride=24, offset=0\n&quot;;
+
+    // Attribute 1: COLOUR — 3 floats, stride=24, offset=12
+    // offset=12 because position (3 floats × 4 bytes) takes the first 12 bytes
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    std::cout &lt;&lt; &quot;[4] Attr 1 (colour):   stride=24, offset=12\n&quot;;
+
+    glBindVertexArray(0);                  // ← RECORDING STOPS
+    std::cout &lt;&lt; &quot;[5] Setup complete. Render loop starting...\n&quot;;
+    std::cout &lt;&lt; &quot;    ESC = quit\n\n&quot;;
+
+    // ── RENDER LOOP ───────────────────────────────────────────────────────────
+    // IDENTICAL to Lab 2 render loop.
+    // Same glDrawArrays(GL_TRIANGLES, 0, 9) call.
+    // Different output because VAO now has 2 attributes.
+    // This proves VAO power: describe once, change data not draw calls.
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+
+        glClearColor(0.02f, 0.03f, 0.07f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shaderProg);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 9);   // 9 vertices = 3 contacts
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glDeleteVertexArrays(1, &amp;VAO);
+    glDeleteBuffers(1, &amp;VBO);
+    glDeleteProgram(shaderProg);
+    glfwTerminate();
+    return 0;
+}
+</pre></div></div>
+
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 3 Deliverable</div>
+    <div class="del-title">Three colour-coded threat contacts on the display</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Top-centre contact = BLUE (friendly vessel)</li>
+      <li><span class="del-dot"></span>Lower-left contact = RED (hostile vessel)</li>
+      <li><span class="del-dot"></span>Right-centre contact = YELLOW (unknown contact)</li>
+      <li><span class="del-dot"></span>Each triangle is a solid uniform colour (no gradient per vertex &mdash; all 3 vertices same colour)</li>
+      <li><span class="del-dot"></span>Terminal shows 5 setup messages with correct stride/offset values</li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="lab-sec" id="lab4">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 4 of 5</span>
+    <span class="lab-diff">&#11035;&#11035;&#11035; Intermediate+ &middot; ~35 min</span>
+  </div>
+  <div class="lab-title">Display Boundary and Grid Lines with EBO</div>
+  <div class="lab-desc">Add the tactical display boundary rectangle and crosshair grid lines. The boundary uses an EBO (Element Buffer Object) with 4 corner vertices and 4 indices, drawn with GL_LINE_LOOP. The crosshair is drawn with GL_LINES. A second VAO + VBO + EBO is created alongside the contact VAO from Lab 3. Press W to toggle wireframe. This is Demo 5 (EBO) applied to the tactical scenario.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: EBO &middot; glDrawElements &middot; GL_LINE_LOOP &middot; GL_LINES &middot; Two VAOs</span>
+    <span class="meta-chip">&#9889; Do Demo 5 first</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What This Lab Adds Over Lab 3</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Second VAO + VBO + EBO for the display boundary + crosshair grid</li>
+      <li><span class="adds-dot">&#9658;</span>8 grid vertices total: 4 boundary corners (vertices 0-3) + 4 crosshair points (vertices 4-7)</li>
+      <li><span class="adds-dot">&#9658;</span>EBO index list {0,1,2,3} + GL_LINE_LOOP draws boundary as a closed rectangle outline</li>
+      <li><span class="adds-dot">&#9658;</span>GL_LINES draws vertices 4-7 as 2 crosshair line segments (horizontal + vertical)</li>
+      <li><span class="adds-dot">&#9658;</span>Render loop now has 3 draw calls: contacts + boundary + crosshair</li>
+      <li><span class="adds-dot">&#9658;</span>W key toggles wireframe mode on contact triangles</li>
+    </ul>
+  </div>
+
+  <div class="diag">
+    <div class="diag-title">Grid VAO Vertex Layout &mdash; 8 Vertices Total</div>
+    <pre>
+  Vertices 0-3: boundary rectangle corners
+  0(-0.9, 0.9) ──────────────────── 1(0.9, 0.9)
+        |                                  |
+        |         tactical display         |
+        |                                  |
+  3(-0.9,-0.9) ──────────────────── 2(0.9,-0.9)
+
+  EBO index list {0, 1, 2, 3} + GL_LINE_LOOP = closed rectangle outline
+  (draws: 0&#8594;1, 1&#8594;2, 2&#8594;3, 3&#8594;0)
+
+  Vertices 4-5: horizontal crosshair
+  4(-0.9, 0.0) ─── vertical centre ─── 5(0.9, 0.0)
+
+  Vertices 6-7: vertical crosshair
+                6(0.0, 0.9)
+                     |
+                     |
+                7(0.0,-0.9)
+
+  GL_LINES with start=4, count=4 draws: 4&#8594;5 (horizontal) and 6&#8594;7 (vertical)</pre>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>Contact VAO + VBO from Lab 3 unchanged and still working</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>8 grid vertices defined (X Y Z R G B format, dim grey colour)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>EBO index list {0,1,2,3} created for boundary rectangle</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Grid VAO + VBO + EBO created and configured</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Boundary drawn with glDrawElements(GL_LINE_LOOP, 4, ...)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Crosshair drawn with glDrawArrays(GL_LINES, 4, 4)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>W key toggles wireframe on/off</li>
+    </ul>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Replace Entire File with This</div>
+
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 4 Complete File</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,&apos;lab4_main&apos;)">Copy All</button></div></div><div class="code-block"><pre id="lab4_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 1 · LAB 4 of 5
+//  Tactical Contact Display — Boundary + Grid Lines with EBO
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME:  TacticalDisplay
+//  FOLDER:        C:\Labs\TacticalDisplay\
+//
+//  WHAT THIS LAB ADDS OVER LAB 3:
+//  - A second VAO + VBO + EBO for the display boundary + grid lines
+//  - EBO (Element Buffer Object) stores index list for boundary rectangle
+//  - GL_LINE_LOOP draws the 4 corners as a closed rectangle outline
+//  - GL_LINES draws 2 crosshair lines dividing display into quadrants
+//  - Two separate draw calls per frame: one for contacts, one for grid
+//  - Press W to toggle wireframe on contacts (to see triangle edges)
+//
+//  WHAT YOU WILL SEE:
+//  - Blue/red/yellow contact triangles (same as Lab 3)
+//  - Dim grey rectangle outline around the display boundary
+//  - Dim horizontal + vertical crosshair lines (quadrant dividers)
+//  - W key: toggle wireframe
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VERTEX SHADER — unchanged from Lab 3 (position + colour, 2 attributes)
+// ─────────────────────────────────────────────────────────────────────────────
+const char* vertSrc = R&quot;GLSL(
+    #version 330 core
+    layout(location = 0) in vec3 aPos;
+    layout(location = 1) in vec3 aColour;
+    out vec3 vColour;
     void main() {
         gl_Position = vec4(aPos, 1.0);
         vColour = aColour;
     }
-)"</span>;
+)GLSL&quot;;
 
-<span class="cm">// Fragment shader receives interpolated colour from vertex shader
-// "in" must match the "out" name in vertex shader exactly</span>
-<span class="ck">const char</span>* <span class="cv">fragSrc</span> = <span class="cs">R"(
+// ─────────────────────────────────────────────────────────────────────────────
+// FRAGMENT SHADER — unchanged from Lab 3
+// ─────────────────────────────────────────────────────────────────────────────
+const char* fragSrc = R&quot;GLSL(
+    #version 330 core
+    in vec3 vColour;
+    out vec4 FragColor;
+    void main() {
+        FragColor = vec4(vColour, 1.0);
+    }
+)GLSL&quot;;
+
+unsigned int compileShader(unsigned int type, const char* source) {
+    unsigned int id = glCreateShader(type);
+    glShaderSource(id, 1, &amp;source, NULL);
+    glCompileShader(id);
+    int ok; char log[512];
+    glGetShaderiv(id, GL_COMPILE_STATUS, &amp;ok);
+    if (!ok) { glGetShaderInfoLog(id, 512, NULL, log); std::cerr &lt;&lt; &quot;Shader error:\n&quot; &lt;&lt; log; }
+    return id;
+}
+unsigned int createShaderProgram(const char* vSrc, const char* fSrc) {
+    unsigned int vs = compileShader(GL_VERTEX_SHADER, vSrc);
+    unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fSrc);
+    unsigned int prog = glCreateProgram();
+    glAttachShader(prog, vs); glAttachShader(prog, fs); glLinkProgram(prog);
+    glDeleteShader(vs); glDeleteShader(fs);
+    return prog;
+}
+void onResize(GLFWwindow* w, int W, int H) { glViewport(0, 0, W, H); }
+void processInput(GLFWwindow* w) {
+    if (glfwGetKey(w, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(w, true);
+}
+
+int main() {
+
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window = glfwCreateWindow(1024, 768, &quot;Tactical Contact Display — Naval Ops&quot;, NULL, NULL);
+    if (!window) { glfwTerminate(); return -1; }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, onResize);
+    glewExperimental = GL_TRUE; glewInit();
+    std::cout &lt;&lt; &quot;GPU: &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n\n&quot;;
+
+    unsigned int shaderProg = createShaderProgram(vertSrc, fragSrc);
+    std::cout &lt;&lt; &quot;[1] Shader compiled. ID = &quot; &lt;&lt; shaderProg &lt;&lt; &quot;\n&quot;;
+
+    // ── SHAPE 1: Contact markers (from Lab 3, unchanged) ─────────────────────
+    // Format: X Y Z R G B (6 floats = 24 bytes per vertex)
+    float contacts[] = {
+    //    X        Y       Z      R      G      B
+        // Contact 1 — FRIENDLY (BLUE)
+         0.00f,  0.66f,  0.0f,  0.20f, 0.50f, 1.00f,
+        -0.05f,  0.54f,  0.0f,  0.20f, 0.50f, 1.00f,
+         0.05f,  0.54f,  0.0f,  0.20f, 0.50f, 1.00f,
+        // Contact 2 — HOSTILE (RED)
+        -0.40f, -0.34f,  0.0f,  1.00f, 0.20f, 0.20f,
+        -0.45f, -0.46f,  0.0f,  1.00f, 0.20f, 0.20f,
+        -0.35f, -0.46f,  0.0f,  1.00f, 0.20f, 0.20f,
+        // Contact 3 — UNKNOWN (YELLOW)
+         0.50f,  0.36f,  0.0f,  1.00f, 0.85f, 0.10f,
+         0.45f,  0.24f,  0.0f,  1.00f, 0.85f, 0.10f,
+         0.55f,  0.24f,  0.0f,  1.00f, 0.85f, 0.10f,
+    };
+
+    // Contact VAO + VBO (same as Lab 3)
+    unsigned int contactVAO, contactVBO;
+    glGenVertexArrays(1, &amp;contactVAO);
+    glBindVertexArray(contactVAO);
+    glGenBuffers(1, &amp;contactVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, contactVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(contacts), contacts, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    std::cout &lt;&lt; &quot;[2] Contact VAO+VBO ready\n&quot;;
+
+    // ── SHAPE 2: Display boundary + crosshair grid ────────────────────────────
+    //
+    // 8 vertices total — same format: X Y Z R G B (6 floats, 24 bytes each)
+    // All grid geometry = dim grey (R=0.22, G=0.28, B=0.36)
+    //
+    // Vertices 0-3: 4 corners of boundary rectangle
+    // Vertex 4-5:   horizontal crosshair line (left-mid to right-mid)
+    // Vertex 6-7:   vertical crosshair line (top-mid to bottom-mid)
+    //
+    // EBO index list {0,1,2,3} used with GL_LINE_LOOP to draw boundary outline
+    // Vertices 4-7 used with GL_LINES to draw crosshair (2 line segments)
+    float gridVerts[] = {
+    //    X        Y       Z       R      G      B
+        // Corners 0-3: boundary rectangle
+        -0.90f,  0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 0: top-left
+         0.90f,  0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 1: top-right
+         0.90f, -0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 2: bottom-right
+        -0.90f, -0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 3: bottom-left
+        // Vertices 4-5: horizontal crosshair
+        -0.90f,  0.00f,  0.0f,  0.18f, 0.23f, 0.30f,   // 4: left-mid
+         0.90f,  0.00f,  0.0f,  0.18f, 0.23f, 0.30f,   // 5: right-mid
+        // Vertices 6-7: vertical crosshair
+         0.00f,  0.90f,  0.0f,  0.18f, 0.23f, 0.30f,   // 6: top-mid
+         0.00f, -0.90f,  0.0f,  0.18f, 0.23f, 0.30f,   // 7: bottom-mid
+    };
+
+    // EBO index list for the boundary rectangle
+    // GL_LINE_LOOP will draw edges: 0→1, 1→2, 2→3, 3→0 (automatically closes)
+    unsigned int boundaryIdx[] = { 0, 1, 2, 3 };
+
+    // Grid VAO + VBO + EBO
+    unsigned int gridVAO, gridVBO, gridEBO;
+    glGenVertexArrays(1, &amp;gridVAO);
+    glBindVertexArray(gridVAO);            // ← RECORDING STARTS
+    glGenBuffers(1, &amp;gridVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, gridVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(gridVerts), gridVerts, GL_STATIC_DRAW);
+    glGenBuffers(1, &amp;gridEBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gridEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boundaryIdx), boundaryIdx, GL_STATIC_DRAW);
+    // Same two attributes as contacts (stride=24, pos at 0, colour at 12)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);                  // ← RECORDING STOPS
+    std::cout &lt;&lt; &quot;[3] Grid VAO+VBO+EBO ready (4 boundary corners + 4 crosshair vertices)\n&quot;;
+    std::cout &lt;&lt; &quot;[4] Render loop starting. ESC=quit | W=wireframe toggle\n\n&quot;;
+
+    // ── RENDER LOOP ───────────────────────────────────────────────────────────
+    bool wireframe = false;
+    bool wPrev = false;
+
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+
+        // W key: toggle wireframe (edge-detect — one toggle per press)
+        bool wNow = (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS);
+        if (wNow &amp;&amp; !wPrev) {
+            wireframe = !wireframe;
+            glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+            std::cout &lt;&lt; (wireframe ? &quot;Wireframe ON\n&quot; : &quot;Wireframe OFF\n&quot;);
+        }
+        wPrev = wNow;
+
+        glClearColor(0.02f, 0.03f, 0.07f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shaderProg);
+
+        // ── Draw 1: Contact markers (triangles) ───────────────────────────────
+        glBindVertexArray(contactVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 9);   // 9 vertices = 3 contacts
+
+        // ── Draw 2: Boundary rectangle outline ───────────────────────────────
+        // GL_LINE_LOOP: connects indexed vertices as a closed line polygon
+        // 4 indices → 4 edges drawn (0→1, 1→2, 2→3, 3→0)
+        glBindVertexArray(gridVAO);
+        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
+
+        // ── Draw 3: Crosshair lines ───────────────────────────────────────────
+        // GL_LINES: every pair of vertices = one line segment
+        // Start at vertex 4 (left-mid), draw 4 vertices = 2 line segments
+        // Vertices 4,5 = horizontal line | Vertices 6,7 = vertical line
+        glDrawArrays(GL_LINES, 4, 4);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    // ── CLEANUP ───────────────────────────────────────────────────────────────
+    glDeleteVertexArrays(1, &amp;contactVAO);
+    glDeleteVertexArrays(1, &amp;gridVAO);
+    glDeleteBuffers(1, &amp;contactVBO);
+    glDeleteBuffers(1, &amp;gridVBO);
+    glDeleteBuffers(1, &amp;gridEBO);
+    glDeleteProgram(shaderProg);
+    glfwTerminate();
+    return 0;
+}
+</pre></div></div>
+
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="ts">[1] Shader compiled. ID = 1</span></div>
+      <div><span class="ts">[2] Contact VAO+VBO ready</span></div>
+      <div><span class="ts">[3] Grid VAO+VBO+EBO ready (4 boundary corners + 4 crosshair vertices)</span></div>
+      <div><span class="ts">[4] Render loop starting. ESC=quit | W=wireframe toggle</span></div>
+      <hr class="t-hr">
+      <div><span class="th">Screen: Blue/red/yellow contacts + dim boundary rectangle + crosshair</span></div>
+      <div><span class="to">Press W &rarr; Wireframe ON &mdash; see triangle edges on contacts</span></div>
+    </div>
+  </div>
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 4 Deliverable</div>
+    <div class="del-title">Contact markers + display boundary + quadrant grid</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Dim grey rectangle outline around the display area</li>
+      <li><span class="del-dot"></span>Horizontal + vertical crosshair dividing display into 4 quadrants</li>
+      <li><span class="del-dot"></span>All 3 colour-coded contact triangles still visible and correct</li>
+      <li><span class="del-dot"></span>Grid lines noticeably dimmer than contact markers</li>
+      <li><span class="del-dot"></span>W key toggles wireframe on contacts</li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="lab-sec" id="lab5">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 5 of 5</span>
+    <span class="lab-diff">&#11035;&#11035;&#11035;&#11035; Challenge &middot; ~40 min</span>
+  </div>
+  <div class="lab-title">Live Threat Pulse Animation</div>
+  <div class="lab-desc">Make the display live. The hostile contact pulses between dark-red and bright-red in a continuous warning pattern. Two new uniforms are added: uTime (current time sent every frame) and uIsHostile (1.0 for hostile, 0.0 for others). The 3 contacts are drawn in separate draw calls so each can have different uniform values. This combines Demo 6 (uniforms) with everything built in Labs 1&ndash;4.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: Uniforms &middot; glfwGetTime &middot; sin() animation &middot; Per-draw-call uniforms</span>
+    <span class="meta-chip">&#9889; Do Demo 6 first</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What This Lab Adds Over Lab 4</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Fragment shader: <code class="ic">uniform float uTime</code> receives seconds since start each frame</li>
+      <li><span class="adds-dot">&#9658;</span>Fragment shader: <code class="ic">uniform float uIsHostile</code> activates pulse logic when 1.0</li>
+      <li><span class="adds-dot">&#9658;</span>Pulse logic: <code class="ic">sin(uTime &times; 4.0)</code> oscillates colour between dark-red and bright-red</li>
+      <li><span class="adds-dot">&#9658;</span>3 separate draw calls for contacts (so each can get different uIsHostile value)</li>
+      <li><span class="adds-dot">&#9658;</span>glGetUniformLocation called once BEFORE loop, cached integer used inside loop</li>
+      <li><span class="adds-dot">&#9658;</span>Time value printed to terminal every 60 frames to confirm uniform updates</li>
+    </ul>
+  </div>
+
+  <div class="concept">
+    <div class="concept-lbl">&#128161; Why Three Separate glDrawArrays Calls in This Lab</div>
+    <p class="note">To give each contact a different uniform value (uIsHostile), we set the uniform then draw, set it again then draw, etc. <code class="ic">glDrawArrays(GL_TRIANGLES, 0, 3)</code> draws vertices 0-2 (Contact 1). <code class="ic">glDrawArrays(GL_TRIANGLES, 3, 3)</code> draws vertices 3-5 (Contact 2). <code class="ic">glDrawArrays(GL_TRIANGLES, 6, 3)</code> draws vertices 6-8 (Contact 3). The VAO is bound once &mdash; the start offset tells OpenGL which vertices to read. No data changes. Same VAO, different draw-call offsets.</p>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader has both uTime and uIsHostile uniforms declared</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader pulse logic: sin(uTime&times;4.0) mapped to 0.0&ndash;1.0, applied only when uIsHostile &gt; 0.5</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>mix(darkRed, brightRed, pulse) correctly oscillates hostile contact colour</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>uTimeLoc and uHostileLoc obtained with glGetUniformLocation BEFORE render loop</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>glfwGetTime() cast to float and sent via glUniform1f each frame</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Contact 1: glUniform1f(uHostileLoc, 0.0f) then glDrawArrays(... 0, 3)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Contact 2: glUniform1f(uHostileLoc, 1.0f) then glDrawArrays(... 3, 3)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Contact 3: glUniform1f(uHostileLoc, 0.0f) then glDrawArrays(... 6, 3)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Hostile contact visibly pulsing &mdash; friendly and unknown stay steady</li>
+    </ul>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Replace Entire File with This</div>
+
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 5 Complete File (Day 1 Capstone)</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,&apos;lab5_main&apos;)">Copy All</button></div></div><div class="code-block"><pre id="lab5_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 1 · LAB 5 of 5
+//  Tactical Contact Display — Live Threat Pulse Animation
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME:  TacticalDisplay
+//  FOLDER:        C:\Labs\TacticalDisplay\
+//
+//  WHAT THIS LAB ADDS OVER LAB 4:
+//  - uTime uniform: current time (seconds) sent to GPU every frame
+//  - uIsHostile uniform: 1.0 for hostile contact, 0.0 for others
+//  - Fragment shader: hostile contact pulses between dark-red and bright-red
+//  - Contacts drawn in 3 separate draw calls so each can have different uniform values
+//  - W key: wireframe toggle (from Lab 4)
+//
+//  HOW THE PULSING WORKS:
+//  sin(uTime × 4.0) oscillates between -1 and +1 (4× normal speed)
+//  (sin() + 1.0) / 2.0 maps to 0.0 – 1.0
+//  mix(darkRed, brightRed, 0.0–1.0) = colour oscillates between dark and bright
+//  Only applied when uIsHostile == 1.0
+//
+//  WHAT YOU WILL SEE:
+//  - Friendly (blue triangle): steady — no pulse
+//  - HOSTILE (red triangle): visibly pulsing brighter/darker — warning pattern
+//  - Unknown (yellow triangle): steady — no pulse
+//  - Boundary + crosshair: steady dim grey (same as Lab 4)
+//  - Terminal: time printed every 60 frames to confirm uniform is updating
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VERTEX SHADER — unchanged from Lab 4
+// ─────────────────────────────────────────────────────────────────────────────
+const char* vertSrc = R&quot;GLSL(
+    #version 330 core
+    layout(location = 0) in vec3 aPos;
+    layout(location = 1) in vec3 aColour;
+    out vec3 vColour;
+    void main() {
+        gl_Position = vec4(aPos, 1.0);
+        vColour = aColour;
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FRAGMENT SHADER — NEW: uses uTime and uIsHostile uniforms
+//
+// uniform float uTime      → seconds since program start, sent every frame
+// uniform float uIsHostile → 1.0 = this is hostile, 0.0 = not hostile
+//
+// if uIsHostile == 1.0: override colour with pulsing red effect
+// else:                 use vColour from vertex shader unchanged
+// ─────────────────────────────────────────────────────────────────────────────
+const char* fragSrc = R&quot;GLSL(
     #version 330 core
     in vec3 vColour;
     out vec4 FragColor;
 
-    void main() {
-        FragColor = vec4(vColour, 1.0);  // RGB from vertex shader, Alpha=1
-    }
-)"</span>;</pre></div>
-      </div>
-
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Updated vertex data with colour (replace contacts[] array)</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab3-data')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab3-data"><pre>    <span class="cm">// Each vertex: X, Y, Z, R, G, B (6 floats = 24 bytes)
-    // Colour coding: Blue=friendly, Red=hostile, Yellow=unknown</span>
-    <span class="ct">float</span> <span class="cv">contacts</span>[] = {
-        <span class="cm">// Contact 1 — FRIENDLY (all 3 vertices same blue colour)</span>
-         <span class="cn">0.00f</span>, <span class="cn">0.66f</span>, <span class="cn">0.0f</span>,  <span class="cn">0.2f</span>, <span class="cn">0.5f</span>, <span class="cn">1.0f</span>,   <span class="cm">// tip       — blue</span>
-        -<span class="cn">0.05f</span>, <span class="cn">0.54f</span>, <span class="cn">0.0f</span>,  <span class="cn">0.2f</span>, <span class="cn">0.5f</span>, <span class="cn">1.0f</span>,   <span class="cm">// btm-left  — blue</span>
-         <span class="cn">0.05f</span>, <span class="cn">0.54f</span>, <span class="cn">0.0f</span>,  <span class="cn">0.2f</span>, <span class="cn">0.5f</span>, <span class="cn">1.0f</span>,   <span class="cm">// btm-right — blue</span>
-
-        <span class="cm">// Contact 2 — HOSTILE (red)</span>
-        -<span class="cn">0.40f</span>,-<span class="cn">0.34f</span>, <span class="cn">0.0f</span>,  <span class="cn">1.0f</span>, <span class="cn">0.2f</span>, <span class="cn">0.2f</span>,
-        -<span class="cn">0.45f</span>,-<span class="cn">0.46f</span>, <span class="cn">0.0f</span>,  <span class="cn">1.0f</span>, <span class="cn">0.2f</span>, <span class="cn">0.2f</span>,
-        -<span class="cn">0.35f</span>,-<span class="cn">0.46f</span>, <span class="cn">0.0f</span>,  <span class="cn">1.0f</span>, <span class="cn">0.2f</span>, <span class="cn">0.2f</span>,
-
-        <span class="cm">// Contact 3 — UNKNOWN (yellow)</span>
-         <span class="cn">0.50f</span>, <span class="cn">0.36f</span>, <span class="cn">0.0f</span>,  <span class="cn">1.0f</span>, <span class="cn">0.85f</span>, <span class="cn">0.1f</span>,
-         <span class="cn">0.45f</span>, <span class="cn">0.24f</span>, <span class="cn">0.0f</span>,  <span class="cn">1.0f</span>, <span class="cn">0.85f</span>, <span class="cn">0.1f</span>,
-         <span class="cn">0.55f</span>, <span class="cn">0.24f</span>, <span class="cn">0.0f</span>,  <span class="cn">1.0f</span>, <span class="cn">0.85f</span>, <span class="cn">0.1f</span>,
-    };
-
-    <span class="cm">// ── VAO + VBO — same as Lab 2, but update glVertexAttribPointer calls ──</span>
-    <span class="ct">unsigned int</span> <span class="cv">VAO</span>, <span class="cv">VBO</span>;
-    <span class="cf">glGenVertexArrays</span>(<span class="cn">1</span>, &VAO);
-    <span class="cf">glGenBuffers</span>(<span class="cn">1</span>, &VBO);
-
-    <span class="cf">glBindVertexArray</span>(VAO);
-      <span class="cf">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);
-      <span class="cf">glBufferData</span>(GL_ARRAY_BUFFER, <span class="ck">sizeof</span>(contacts), contacts, GL_STATIC_DRAW);
-
-      <span class="cm">// Attribute 0: position (3 floats, stride=24, offset=0)</span>
-      <span class="cf">glVertexAttribPointer</span>(<span class="cn">0</span>, <span class="cn">3</span>, GL_FLOAT, GL_FALSE, <span class="cn">6</span>*<span class="ck">sizeof</span>(<span class="ct">float</span>), (<span class="ck">void</span>*)<span class="cn">0</span>);
-      <span class="cf">glEnableVertexAttribArray</span>(<span class="cn">0</span>);
-
-      <span class="cm">// Attribute 1: colour (3 floats, stride=24, offset=12 bytes)
-      // offset = 3 floats × 4 bytes = 12 (position takes first 12 bytes)</span>
-      <span class="cf">glVertexAttribPointer</span>(<span class="cn">1</span>, <span class="cn">3</span>, GL_FLOAT, GL_FALSE, <span class="cn">6</span>*<span class="ck">sizeof</span>(<span class="ct">float</span>), (<span class="ck">void</span>*)(<span class="cn">3</span>*<span class="ck">sizeof</span>(<span class="ct">float</span>)));
-      <span class="cf">glEnableVertexAttribArray</span>(<span class="cn">1</span>);
-    <span class="cf">glBindVertexArray</span>(<span class="cn">0</span>);</pre></div>
-      </div>
-
-      <div class="tip-box">
-        <div class="tip-label">✅ No Change to the Render Loop</div>
-        <p>The render loop stays identical to Lab 2. Only the vertex data, shaders, and VAO setup changed. This is why the VAO/VBO pattern is powerful — your draw call doesn't change when your data layout changes.</p>
-      </div>
-
-      <div class="deliverable">
-        <div class="del-label">✅ Lab 3 Deliverable</div>
-        <div class="del-title">Three colour-coded threat contacts on the display</div>
-        <ul class="del-checklist">
-          <li><span class="del-dot"></span>Top-centre contact renders BLUE (friendly)</li>
-          <li><span class="del-dot"></span>Lower-left contact renders RED (hostile)</li>
-          <li><span class="del-dot"></span>Right-centre contact renders YELLOW (unknown)</li>
-          <li><span class="del-dot"></span>No gradient within each triangle — solid uniform colour per contact</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════
-         LAB 4 — BOUNDARY & GRID
-    ═══════════════════════════════════ -->
-    <div class="lab-section" id="lab4">
-      <div class="lab-header">
-        <div class="lab-num-row">
-          <span class="lab-num">Lab 4 of 5</span>
-          <span class="lab-difficulty">⬛⬛⬛ Intermediate+ · ~35 min</span>
-        </div>
-        <div class="lab-title">Display Boundary and Grid Lines Using EBO</div>
-        <div class="lab-desc">Add the tactical display boundary — a dim rectangle drawn as lines using an EBO and glDrawElements. Add crosshair grid lines to divide the display into quadrants. This uses a second VAO + VBO + EBO alongside the contacts VAO from previous labs.</div>
-        <div class="lab-meta">
-          <span class="meta-pill">📋 Concepts: EBO · glDrawElements · GL_LINE_LOOP · Multiple VAOs</span>
-          <span class="meta-pill">⚡ Repeat first: Demo 6 (EBO Rectangle)</span>
-        </div>
-      </div>
-
-      <div class="before-begin">
-        <div class="bb-title">📚 Before You Begin</div>
-        <ul class="bb-list">
-          <li><span class="bb-bullet">▸</span>Complete Demo 6 (EBO Rectangle) — understand indices and glDrawElements</li>
-          <li><span class="bb-bullet">▸</span>In this lab you'll have TWO VAOs: one for contact markers, one for the boundary/grid</li>
-          <li><span class="bb-bullet">▸</span>GL_LINE_LOOP connects vertices as a closed outline — perfect for the display boundary</li>
-        </ul>
-      </div>
-
-      <div class="objectives">
-        <div class="obj-title">Lab Objectives</div>
-        <ul class="obj-list">
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Create a second VAO + VBO + EBO for the boundary geometry</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Define 4 corner vertices for the display boundary rectangle</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Use EBO indices and GL_LINE_LOOP to draw the border as lines (not filled)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Add two crosshair lines (horizontal + vertical) dividing display into quadrants</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Both contacts and boundary draw correctly each frame</li>
-        </ul>
-      </div>
-
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Add boundary geometry after contacts VAO setup</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab4-boundary')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab4-boundary"><pre>    <span class="cm">// ── BOUNDARY + GRID ──────────────────────────────────────────────
-    // The outer boundary rectangle + 2 crosshair lines
-    // We use a dim grey colour so contacts stand out clearly
-    //
-    // 6 vertices total:
-    //   0-3 = 4 corners of the boundary rectangle
-    //   4-5 = two extra points for the crosshair lines
-    //
-    // Vertex format: X, Y, Z (position only — 3 floats, 12 bytes each)
-    // All geometry = same dim grey colour → we set it via uniform in Lab 5</span>
-
-    <span class="ct">float</span> <span class="cv">gridVerts</span>[] = {
-        <span class="cm">// 4 corners of the display boundary</span>
-        -<span class="cn">0.90f</span>,  <span class="cn">0.90f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 0: top-left</span>
-         <span class="cn">0.90f</span>,  <span class="cn">0.90f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 1: top-right</span>
-         <span class="cn">0.90f</span>, -<span class="cn">0.90f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 2: bottom-right</span>
-        -<span class="cn">0.90f</span>, -<span class="cn">0.90f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 3: bottom-left</span>
-        <span class="cm">// Crosshair: horizontal line (left-centre to right-centre)</span>
-        -<span class="cn">0.90f</span>,  <span class="cn">0.00f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 4: left-midpoint</span>
-         <span class="cn">0.90f</span>,  <span class="cn">0.00f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 5: right-midpoint</span>
-        <span class="cm">// Crosshair: vertical line (top-centre to bottom-centre)</span>
-         <span class="cn">0.00f</span>,  <span class="cn">0.90f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 6: top-midpoint</span>
-         <span class="cn">0.00f</span>, -<span class="cn">0.90f</span>, <span class="cn">0.0f</span>,  <span class="cm">// 7: bottom-midpoint</span>
-    };
-
-    <span class="cm">// Indices for the boundary rectangle (4 corners, closed loop)
-    // GL_LINE_LOOP: draws edges 0→1, 1→2, 2→3, 3→0 (closed)</span>
-    <span class="ct">unsigned int</span> <span class="cv">boundaryIdx</span>[] = { <span class="cn">0</span>, <span class="cn">1</span>, <span class="cn">2</span>, <span class="cn">3</span> };
-
-    <span class="cm">// Create separate VAO + VBO + EBO for the grid/boundary</span>
-    <span class="ct">unsigned int</span> <span class="cv">gridVAO</span>, <span class="cv">gridVBO</span>, <span class="cv">gridEBO</span>;
-    <span class="cf">glGenVertexArrays</span>(<span class="cn">1</span>, &gridVAO);
-    <span class="cf">glGenBuffers</span>(<span class="cn">1</span>, &gridVBO);
-    <span class="cf">glGenBuffers</span>(<span class="cn">1</span>, &gridEBO);
-
-    <span class="cf">glBindVertexArray</span>(gridVAO);
-      <span class="cf">glBindBuffer</span>(GL_ARRAY_BUFFER, gridVBO);
-      <span class="cf">glBufferData</span>(GL_ARRAY_BUFFER, <span class="ck">sizeof</span>(gridVerts), gridVerts, GL_STATIC_DRAW);
-
-      <span class="cf">glBindBuffer</span>(GL_ELEMENT_ARRAY_BUFFER, gridEBO);
-      <span class="cf">glBufferData</span>(GL_ELEMENT_ARRAY_BUFFER, <span class="ck">sizeof</span>(boundaryIdx), boundaryIdx, GL_STATIC_DRAW);
-
-      <span class="cm">// Position only — 3 floats per vertex, stride = 12</span>
-      <span class="cf">glVertexAttribPointer</span>(<span class="cn">0</span>, <span class="cn">3</span>, GL_FLOAT, GL_FALSE, <span class="cn">3</span>*<span class="ck">sizeof</span>(<span class="ct">float</span>), (<span class="ck">void</span>*)<span class="cn">0</span>);
-      <span class="cf">glEnableVertexAttribArray</span>(<span class="cn">0</span>);
-    <span class="cf">glBindVertexArray</span>(<span class="cn">0</span>);</pre></div>
-      </div>
-
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Updated render loop with boundary + grid draw calls</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab4-loop')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab4-loop"><pre>    <span class="cm">// Also get the grid colour uniform location (before the loop)</span>
-    <span class="ct">int</span> <span class="cv">gridColourLoc</span> = <span class="cf">glGetUniformLocation</span>(shaderProg, <span class="cs">"uGridColour"</span>);
-    <span class="cm">// Note: we'll add uGridColour to the fragment shader — see below</span>
-
-    <span class="ck">while</span> (!<span class="cf">glfwWindowShouldClose</span>(window)) {
-        <span class="cf">processInput</span>(window);
-
-        <span class="cf">glClearColor</span>(<span class="cn">0.02f</span>, <span class="cn">0.03f</span>, <span class="cn">0.07f</span>, <span class="cn">1.0f</span>);
-        <span class="cf">glClear</span>(GL_COLOR_BUFFER_BIT);
-
-        <span class="cf">glUseProgram</span>(shaderProg);
-
-        <span class="cm">// ── DRAW 1: Contact markers (from Lab 3) ─────────────────────
-        // Shader uses vColour from vertex attribute — no uniform needed</span>
-        <span class="cf">glBindVertexArray</span>(VAO);
-        <span class="cf">glDrawArrays</span>(GL_TRIANGLES, <span class="cn">0</span>, <span class="cn">9</span>);
-
-        <span class="cm">// ── DRAW 2: Display boundary (rectangle outline) ─────────────
-        // 4 indices, GL_LINE_LOOP connects them as a closed polygon</span>
-        <span class="cf">glBindVertexArray</span>(gridVAO);
-        <span class="cf">glDrawElements</span>(GL_LINE_LOOP, <span class="cn">4</span>, GL_UNSIGNED_INT, <span class="cn">0</span>);
-
-        <span class="cm">// ── DRAW 3: Crosshair lines ──────────────────────────────────
-        // Vertices 4-5 = horizontal line, 6-7 = vertical line
-        // GL_LINES: every pair of vertices = one line segment</span>
-        <span class="cf">glDrawArrays</span>(GL_LINES, <span class="cn">4</span>, <span class="cn">4</span>); <span class="cm">// vertices 4,5,6,7 → two lines</span>
-
-        <span class="cf">glfwSwapBuffers</span>(window);
-        <span class="cf">glfwPollEvents</span>();
-    }</pre></div>
-      </div>
-
-      <div class="warn-box">
-        <div class="warn-label">⚠️ Shader Update Needed for Lab 4</div>
-        <p>The fragment shader from Lab 3 uses <code>vColour</code> from the vertex shader. For the grid/boundary, there's no colour attribute — we need a fallback. The simplest approach: add a check or use a second draw call with a different shader. For this lab, the easiest fix is to give gridVerts a colour channel too (dim grey: 0.25, 0.30, 0.35) and keep the same Lab 3 shader. This is a valid real-world approach — same shader, different data.</p>
-      </div>
-
-      <div class="deliverable">
-        <div class="del-label">✅ Lab 4 Deliverable</div>
-        <div class="del-title">Contact markers + display boundary + quadrant grid</div>
-        <ul class="del-checklist">
-          <li><span class="del-dot"></span>Dim rectangular boundary drawn as a line outline around the display area</li>
-          <li><span class="del-dot"></span>Horizontal and vertical crosshair lines dividing display into 4 quadrants</li>
-          <li><span class="del-dot"></span>All 3 colour-coded contact triangles still visible and correct</li>
-          <li><span class="del-dot"></span>Grid lines are noticeably dimmer than the contact markers</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════
-         LAB 5 — LIVE ANIMATION
-    ═══════════════════════════════════ -->
-    <div class="lab-section" id="lab5">
-      <div class="lab-header">
-        <div class="lab-num-row">
-          <span class="lab-num">Lab 5 of 5</span>
-          <span class="lab-difficulty">⬛⬛⬛⬛ Challenge · ~40 min</span>
-        </div>
-        <div class="lab-title">Live Threat Animation — Pulsing Hostile Indicator</div>
-        <div class="lab-desc">Make the display live. Use a time uniform to animate the hostile contact — it pulses brighter and dimmer in a warning pattern. Add a global time uniform that could drive sweep animations. This is your first real-time dynamic rendering, combining everything from Day 1 into a complete tactical display.</div>
-        <div class="lab-meta">
-          <span class="meta-pill">📋 Concepts: Uniforms · glfwGetTime · sin() animation · Real-time rendering</span>
-          <span class="meta-pill">⚡ Repeat first: Demo 7 (Uniforms + Animation)</span>
-        </div>
-      </div>
-
-      <div class="before-begin">
-        <div class="bb-title">📚 Before You Begin</div>
-        <ul class="bb-list">
-          <li><span class="bb-bullet">▸</span>Complete Demo 7 fully — understand glUniform1f, glGetUniformLocation, glfwGetTime</li>
-          <li><span class="bb-bullet">▸</span>The fragment shader will need a new uniform: <code>uTime</code></li>
-          <li><span class="bb-bullet">▸</span>Only the hostile contact pulses — friendly and unknown stay steady</li>
-          <li><span class="bb-bullet">▸</span>You decide the pulse logic: sin(time) maps neatly to brightness oscillation</li>
-        </ul>
-      </div>
-
-      <div class="objectives">
-        <div class="obj-title">Lab Objectives</div>
-        <ul class="obj-list">
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Add a uTime uniform to the fragment shader</div></li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Add a uIsHostile uniform (float: 1.0 = hostile, 0.0 = not) to the fragment shader</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Apply sin(uTime) pulsing logic only when uIsHostile == 1.0</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Draw contacts in separate draw calls (to set different uniform values)</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Pass current time from CPU each frame with glUniform1f</li>
-          <li><div class="obj-check" onclick="checkObj(this)"></div>Hostile contact visibly pulses red — friendly and unknown stay steady</li>
-        </ul>
-      </div>
-
-      <div class="info-box">
-        <div class="info-label">💡 Design Decision — Separate Draw Calls</div>
-        <p>To apply different uniform values to different contacts, we draw each contact separately. In the render loop: draw contact 1 (set uIsHostile=0.0) → draw contact 2 (set uIsHostile=1.0) → draw contact 3 (set uIsHostile=0.0). Each glDrawArrays(... , 0, 3) draws one triangle from offset 0, then 3, then 6 in the VAO.</p>
-      </div>
-
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Final fragment shader with pulse animation</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab5-shader')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab5-shader"><pre><span class="ck">const char</span>* <span class="cv">fragSrc</span> = <span class="cs">R"(
-    #version 330 core
-
-    in vec3 vColour;       // colour passed from vertex shader
-    out vec4 FragColor;
-
-    uniform float uTime;       // seconds since program start
-    uniform float uIsHostile;  // 1.0 = this contact is hostile, 0.0 = not
+    uniform float uTime;       // sent from C++ every frame via glUniform1f
+    uniform float uIsHostile;  // 1.0 = hostile contact, 0.0 = not hostile
 
     void main() {
-        vec3 col = vColour;
+        vec3 col = vColour;   // start with the colour from vertex shader
 
-        // Apply pulsing effect only to hostile contacts
-        // mix(a, b, t) = linear interpolation: a*(1-t) + b*t
-        // sin(uTime * 4.0) oscillates fast (4× speed) between -1 and +1
-        // (sin() + 1.0) / 2.0 maps to 0.0 - 1.0 for brightness control
-        if (uIsHostile > 0.5) {
+        if (uIsHostile &gt; 0.5) {
+            // pulse: sin oscillates -1 to +1 → map to 0.0–1.0 for brightness
+            // multiply by 4.0 for faster warning pulse rate
             float pulse = (sin(uTime * 4.0) + 1.0) / 2.0;
-            // At pulse=0.0: dark red (0.3, 0.05, 0.05)
-            // At pulse=1.0: bright red (1.0, 0.2, 0.2)
-            col = mix(vec3(0.3, 0.05, 0.05), vec3(1.0, 0.2, 0.2), pulse);
+            // mix(a, b, t) = a*(1-t) + b*t
+            // at pulse=0.0: dark red (0.30, 0.04, 0.04)
+            // at pulse=1.0: bright red (1.00, 0.18, 0.18)
+            col = mix(vec3(0.30, 0.04, 0.04), vec3(1.00, 0.18, 0.18), pulse);
         }
 
         FragColor = vec4(col, 1.0);
     }
-)"</span>;</pre></div>
-      </div>
+)GLSL&quot;;
 
-      <div class="code-wrap">
-        <div class="code-header">
-          <span class="code-fname">main.cpp — Final render loop with per-contact draw calls</span>
-          <div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab5-loop')">Copy</button></div>
-        </div>
-        <div class="code-block" id="lab5-loop"><pre>    <span class="cm">// Get uniform locations BEFORE the loop (expensive to call per-frame)</span>
-    <span class="ct">int</span> <span class="cv">uTimeLoc</span>      = <span class="cf">glGetUniformLocation</span>(shaderProg, <span class="cs">"uTime"</span>);
-    <span class="ct">int</span> <span class="cv">uHostileLoc</span>   = <span class="cf">glGetUniformLocation</span>(shaderProg, <span class="cs">"uIsHostile"</span>);
+unsigned int compileShader(unsigned int type, const char* source) {
+    unsigned int id = glCreateShader(type);
+    glShaderSource(id, 1, &amp;source, NULL);
+    glCompileShader(id);
+    int ok; char log[512];
+    glGetShaderiv(id, GL_COMPILE_STATUS, &amp;ok);
+    if (!ok) { glGetShaderInfoLog(id, 512, NULL, log); std::cerr &lt;&lt; &quot;Shader error:\n&quot; &lt;&lt; log; }
+    return id;
+}
+unsigned int createShaderProgram(const char* vSrc, const char* fSrc) {
+    unsigned int vs = compileShader(GL_VERTEX_SHADER, vSrc);
+    unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fSrc);
+    unsigned int prog = glCreateProgram();
+    glAttachShader(prog, vs); glAttachShader(prog, fs); glLinkProgram(prog);
+    glDeleteShader(vs); glDeleteShader(fs);
+    return prog;
+}
+void onResize(GLFWwindow* w, int W, int H) { glViewport(0, 0, W, H); }
+void processInput(GLFWwindow* w) {
+    if (glfwGetKey(w, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(w, true);
+}
 
-    <span class="ck">while</span> (!<span class="cf">glfwWindowShouldClose</span>(window)) {
-        <span class="cf">processInput</span>(window);
+int main() {
 
-        <span class="cf">glClearColor</span>(<span class="cn">0.02f</span>, <span class="cn">0.03f</span>, <span class="cn">0.07f</span>, <span class="cn">1.0f</span>);
-        <span class="cf">glClear</span>(GL_COLOR_BUFFER_BIT);
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window = glfwCreateWindow(1024, 768, &quot;Tactical Contact Display — Naval Ops&quot;, NULL, NULL);
+    if (!window) { glfwTerminate(); return -1; }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, onResize);
+    glewExperimental = GL_TRUE; glewInit();
+    std::cout &lt;&lt; &quot;GPU: &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n\n&quot;;
 
-        <span class="cf">glUseProgram</span>(shaderProg);
+    unsigned int shaderProg = createShaderProgram(vertSrc, fragSrc);
+    std::cout &lt;&lt; &quot;[1] Shader compiled. ID = &quot; &lt;&lt; shaderProg &lt;&lt; &quot;\n&quot;;
 
-        <span class="cm">// Send current time to shader every frame</span>
-        <span class="ct">float</span> <span class="cv">t</span> = (<span class="ct">float</span>)<span class="cf">glfwGetTime</span>();
-        <span class="cf">glUniform1f</span>(uTimeLoc, t);
+    // ── Contact markers (format: X Y Z R G B — same as Labs 3 and 4) ─────────
+    float contacts[] = {
+    //    X        Y       Z      R      G      B
+        // Contact 1 — FRIENDLY (BLUE)
+         0.00f,  0.66f,  0.0f,  0.20f, 0.50f, 1.00f,
+        -0.05f,  0.54f,  0.0f,  0.20f, 0.50f, 1.00f,
+         0.05f,  0.54f,  0.0f,  0.20f, 0.50f, 1.00f,
+        // Contact 2 — HOSTILE (RED — but fragment shader overrides with pulse)
+        -0.40f, -0.34f,  0.0f,  1.00f, 0.20f, 0.20f,
+        -0.45f, -0.46f,  0.0f,  1.00f, 0.20f, 0.20f,
+        -0.35f, -0.46f,  0.0f,  1.00f, 0.20f, 0.20f,
+        // Contact 3 — UNKNOWN (YELLOW)
+         0.50f,  0.36f,  0.0f,  1.00f, 0.85f, 0.10f,
+         0.45f,  0.24f,  0.0f,  1.00f, 0.85f, 0.10f,
+         0.55f,  0.24f,  0.0f,  1.00f, 0.85f, 0.10f,
+    };
 
-        <span class="cf">glBindVertexArray</span>(VAO);
+    unsigned int contactVAO, contactVBO;
+    glGenVertexArrays(1, &amp;contactVAO);
+    glBindVertexArray(contactVAO);
+    glGenBuffers(1, &amp;contactVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, contactVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(contacts), contacts, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    std::cout &lt;&lt; &quot;[2] Contact VAO+VBO ready\n&quot;;
 
-        <span class="cm">// ── Contact 1: FRIENDLY — not hostile, no pulse ───────────────</span>
-        <span class="cf">glUniform1f</span>(uHostileLoc, <span class="cn">0.0f</span>);
-        <span class="cf">glDrawArrays</span>(GL_TRIANGLES, <span class="cn">0</span>, <span class="cn">3</span>); <span class="cm">// vertices 0,1,2</span>
+    // ── Boundary + crosshair grid (same as Lab 4) ─────────────────────────────
+    float gridVerts[] = {
+    //    X        Y       Z       R      G      B
+        -0.90f,  0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 0: boundary top-left
+         0.90f,  0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 1: boundary top-right
+         0.90f, -0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 2: boundary bottom-right
+        -0.90f, -0.90f,  0.0f,  0.22f, 0.28f, 0.36f,   // 3: boundary bottom-left
+        -0.90f,  0.00f,  0.0f,  0.18f, 0.23f, 0.30f,   // 4: crosshair left-mid
+         0.90f,  0.00f,  0.0f,  0.18f, 0.23f, 0.30f,   // 5: crosshair right-mid
+         0.00f,  0.90f,  0.0f,  0.18f, 0.23f, 0.30f,   // 6: crosshair top-mid
+         0.00f, -0.90f,  0.0f,  0.18f, 0.23f, 0.30f,   // 7: crosshair bottom-mid
+    };
+    unsigned int boundaryIdx[] = { 0, 1, 2, 3 };
 
-        <span class="cm">// ── Contact 2: HOSTILE — pulse animation active ───────────────</span>
-        <span class="cf">glUniform1f</span>(uHostileLoc, <span class="cn">1.0f</span>);
-        <span class="cf">glDrawArrays</span>(GL_TRIANGLES, <span class="cn">3</span>, <span class="cn">3</span>); <span class="cm">// vertices 3,4,5</span>
+    unsigned int gridVAO, gridVBO, gridEBO;
+    glGenVertexArrays(1, &amp;gridVAO);
+    glBindVertexArray(gridVAO);
+    glGenBuffers(1, &amp;gridVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, gridVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(gridVerts), gridVerts, GL_STATIC_DRAW);
+    glGenBuffers(1, &amp;gridEBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gridEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boundaryIdx), boundaryIdx, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    std::cout &lt;&lt; &quot;[3] Grid VAO+VBO+EBO ready\n&quot;;
 
-        <span class="cm">// ── Contact 3: UNKNOWN — not hostile, steady colour ───────────</span>
-        <span class="cf">glUniform1f</span>(uHostileLoc, <span class="cn">0.0f</span>);
-        <span class="cf">glDrawArrays</span>(GL_TRIANGLES, <span class="cn">6</span>, <span class="cn">3</span>); <span class="cm">// vertices 6,7,8</span>
+    // ── Get uniform locations BEFORE the loop (call once, cache the ID) ───────
+    // glGetUniformLocation is slow — never call inside the render loop
+    int uTimeLoc     = glGetUniformLocation(shaderProg, &quot;uTime&quot;);
+    int uHostileLoc  = glGetUniformLocation(shaderProg, &quot;uIsHostile&quot;);
+    std::cout &lt;&lt; &quot;[4] uTime location = &quot; &lt;&lt; uTimeLoc
+              &lt;&lt; &quot; | uIsHostile location = &quot; &lt;&lt; uHostileLoc &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;[5] Render loop starting. ESC=quit | W=wireframe\n\n&quot;;
 
-        <span class="cm">// ── Boundary + Grid ───────────────────────────────────────────</span>
-        <span class="cf">glUniform1f</span>(uHostileLoc, <span class="cn">0.0f</span>);
-        <span class="cf">glBindVertexArray</span>(gridVAO);
-        <span class="cf">glDrawElements</span>(GL_LINE_LOOP, <span class="cn">4</span>, GL_UNSIGNED_INT, <span class="cn">0</span>);
-        <span class="cf">glDrawArrays</span>(GL_LINES, <span class="cn">4</span>, <span class="cn">4</span>);
+    // ── RENDER LOOP ───────────────────────────────────────────────────────────
+    bool wireframe = false;
+    bool wPrev = false;
+    int frameCount = 0;
 
-        <span class="cf">glfwSwapBuffers</span>(window);
-        <span class="cf">glfwPollEvents</span>();
-    }</pre></div>
-      </div>
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
 
-      <!-- FINAL SUMMARY SVG -->
-      <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:1.5rem;margin:1.5rem 0">
-        <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:1rem;text-align:center">DAY 1 COMPLETE — CONCEPTS USED IN THIS DISPLAY</div>
-        <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:0 auto">
-          <rect x="10" y="10" width="120" height="80" rx="8" fill="rgba(99,102,241,.1)" stroke="rgba(99,102,241,.35)" stroke-width="1"/>
-          <text x="70" y="35" text-anchor="middle" fill="#818cf8" font-family="Space Mono" font-size="8.5" font-weight="700">MODULE 1</text>
-          <text x="70" y="52" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">Pipeline</text>
-          <text x="70" y="64" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">GPU Architecture</text>
-          <text x="70" y="76" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">API Comparison</text>
+        // W key wireframe toggle
+        bool wNow = (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS);
+        if (wNow &amp;&amp; !wPrev) {
+            wireframe = !wireframe;
+            glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+            std::cout &lt;&lt; (wireframe ? &quot;Wireframe ON\n&quot; : &quot;Wireframe OFF\n&quot;);
+        }
+        wPrev = wNow;
 
-          <rect x="145" y="10" width="120" height="80" rx="8" fill="rgba(99,102,241,.1)" stroke="rgba(99,102,241,.35)" stroke-width="1"/>
-          <text x="205" y="35" text-anchor="middle" fill="#818cf8" font-family="Space Mono" font-size="8.5" font-weight="700">MODULE 2</text>
-          <text x="205" y="52" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">GLFW Window</text>
-          <text x="205" y="64" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">OpenGL Context</text>
-          <text x="205" y="76" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">Render Loop</text>
+        glClearColor(0.02f, 0.03f, 0.07f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-          <rect x="280" y="10" width="120" height="80" rx="8" fill="rgba(99,102,241,.1)" stroke="rgba(99,102,241,.35)" stroke-width="1"/>
-          <text x="340" y="35" text-anchor="middle" fill="#818cf8" font-family="Space Mono" font-size="8.5" font-weight="700">MODULE 3</text>
-          <text x="340" y="50" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">VBO · VAO · EBO</text>
-          <text x="340" y="62" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">GLSL Shaders</text>
-          <text x="340" y="74" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">Uniforms · Time</text>
+        glUseProgram(shaderProg);
 
-          <rect x="10" y="110" width="390" height="80" rx="8" fill="rgba(74,222,128,.06)" stroke="rgba(74,222,128,.25)" stroke-width="1"/>
-          <text x="205" y="135" text-anchor="middle" fill="#4ade80" font-family="Space Mono" font-size="9" font-weight="700">WHAT YOU BUILT — TACTICAL CONTACT DISPLAY</text>
-          <text x="205" y="152" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="8">Window · 3 Contacts (Blue/Red/Yellow) · Display Boundary (EBO) · Crosshair Grid · Live Pulse Animation</text>
-          <text x="205" y="168" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">All concepts from Day 1 Modules 1, 2, 3 applied in one real system</text>
+        // Send current time to shader every frame
+        float t = (float)glfwGetTime();
+        glUniform1f(uTimeLoc, t);
 
-          <rect x="415" y="10" width="275" height="80" rx="8" fill="rgba(34,211,238,.06)" stroke="rgba(34,211,238,.2)" stroke-width="1"/>
-          <text x="552" y="30" text-anchor="middle" fill="#22d3ee" font-family="Space Mono" font-size="8.5" font-weight="700">NEXT: DAY 2 LABS</text>
-          <text x="552" y="47" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">Add 3D transforms (MVP)</text>
-          <text x="552" y="59" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">Phong lighting on vessels</text>
-          <text x="552" y="71" text-anchor="middle" fill="#64748b" font-family="Sora" font-size="7.5">Hull textures + ocean skybox</text>
-        </svg>
-      </div>
+        // Print time to terminal every 60 frames — confirm uniform updates
+        frameCount++;
+        if (frameCount % 60 == 0) {
+            std::cout &lt;&lt; &quot;Frame &quot; &lt;&lt; frameCount &lt;&lt; &quot;: uTime = &quot; &lt;&lt; t &lt;&lt; &quot;s\n&quot;;
+        }
 
-      <div class="deliverable">
-        <div class="del-label">✅ Lab 5 Deliverable — Day 1 Complete</div>
-        <div class="del-title">A fully animated tactical contact display</div>
-        <div class="del-desc">This is your Day 1 capstone. Show the instructor your complete running system:</div>
-        <ul class="del-checklist">
-          <li><span class="del-dot"></span>Friendly contact (blue triangle) — steady, does not pulse</li>
-          <li><span class="del-dot"></span>Hostile contact (red triangle) — visibly pulsing brighter/darker in a warning pattern</li>
-          <li><span class="del-dot"></span>Unknown contact (yellow triangle) — steady</li>
-          <li><span class="del-dot"></span>Display boundary rectangle (dim, outlined with GL_LINE_LOOP)</li>
-          <li><span class="del-dot"></span>Crosshair grid lines dividing display into quadrants</li>
-          <li><span class="del-dot"></span>Animation runs smoothly — no flicker, no performance drop</li>
-          <li><span class="del-dot"></span>Be able to explain: what a VBO is, what a VAO records, what a uniform does</li>
-        </ul>
-      </div>
+        glBindVertexArray(contactVAO);
 
-      <div class="tip-box" style="margin-top:1.5rem">
-        <div class="tip-label">🚀 Bonus Challenge — If You Finish Early</div>
-        <p>Add a 4th contact (green = missile) that also pulses but faster than the hostile vessel. Add an on-screen "THREAT DETECTED" text simulation by adding more triangle geometry forming rudimentary shapes. Try animating a contact position using sin(time) to simulate it moving across the display.</p>
-      </div>
+        // ── Draw Contact 1: FRIENDLY — uIsHostile=0.0, no pulse ──────────────
+        glUniform1f(uHostileLoc, 0.0f);
+        glDrawArrays(GL_TRIANGLES, 0, 3);   // vertices 0,1,2
+
+        // ── Draw Contact 2: HOSTILE — uIsHostile=1.0, pulse ACTIVE ───────────
+        glUniform1f(uHostileLoc, 1.0f);
+        glDrawArrays(GL_TRIANGLES, 3, 3);   // vertices 3,4,5
+
+        // ── Draw Contact 3: UNKNOWN — uIsHostile=0.0, no pulse ───────────────
+        glUniform1f(uHostileLoc, 0.0f);
+        glDrawArrays(GL_TRIANGLES, 6, 3);   // vertices 6,7,8
+
+        // ── Draw boundary + crosshair (not hostile, no pulse) ─────────────────
+        glUniform1f(uHostileLoc, 0.0f);
+        glBindVertexArray(gridVAO);
+        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);   // boundary outline
+        glDrawArrays(GL_LINES, 4, 4);                           // crosshair lines
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    // ── CLEANUP ───────────────────────────────────────────────────────────────
+    glDeleteVertexArrays(1, &amp;contactVAO);
+    glDeleteVertexArrays(1, &amp;gridVAO);
+    glDeleteBuffers(1, &amp;contactVBO);
+    glDeleteBuffers(1, &amp;gridVBO);
+    glDeleteBuffers(1, &amp;gridEBO);
+    glDeleteProgram(shaderProg);
+    glfwTerminate();
+    std::cout &lt;&lt; &quot;\nTactical display shutdown. Day 1 complete.\n&quot;;
+    return 0;
+}
+</pre></div></div>
+
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="ts">[1] Shader compiled. ID = 1</span></div>
+      <div><span class="ts">[2] Contact VAO+VBO ready</span></div>
+      <div><span class="ts">[3] Grid VAO+VBO+EBO ready</span></div>
+      <div><span class="ts">[4] uTime location = 0 | uIsHostile location = 1</span></div>
+      <div><span class="ts">[5] Render loop starting. ESC=quit | W=wireframe</span></div>
+      <hr class="t-hr">
+      <div><span class="to">Frame 60:  uTime = 1.002s</span></div>
+      <div><span class="to">Frame 120: uTime = 2.003s</span></div>
+      <hr class="t-hr">
+      <div><span class="th">Screen: Friendly (steady blue) + HOSTILE (pulsing red) + Unknown (steady yellow)</span></div>
+      <div><span class="th">Dim boundary rectangle + crosshair grid visible</span></div>
     </div>
+  </div>
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Bonus Challenges &mdash; If You Finish Early</div>
+    <ul class="exp-list">
+      <li><strong>Add a 4th contact (missile):</strong> Add 3 more vertices to contacts[] (green colour, any position). Add a 4th draw call with uIsHostile=1.0 but faster pulse (change 4.0 to 8.0 in the shader). You&apos;ll need to pass uPulseSpeed as a second uniform or hardcode differently.</li>
+      <li><strong>Animate contact position:</strong> Add <code class="ic">uniform float uOffset</code> to vertex shader. Apply to X position: <code class="ic">gl_Position = vec4(aPos.x + uOffset, aPos.y, aPos.z, 1.0)</code>. Send <code class="ic">sin(t) * 0.3f</code> each frame &mdash; hostile contact drifts left and right.</li>
+      <li><strong>Make unknown flash:</strong> Set uIsHostile=0.5 for the unknown contact. In the fragment shader, check <code class="ic">uIsHostile &gt; 0.3 &amp;&amp; uIsHostile &lt; 0.7</code> and apply a slower yellow pulse.</li>
+    </ul>
+  </div>
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 5 Deliverable &mdash; Day 1 Capstone Complete</div>
+    <div class="del-title">Fully animated tactical contact display</div>
+    <div class="del-desc">Show your instructor the complete running system:</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>FRIENDLY contact (blue triangle) &mdash; steady, does not pulse</li>
+      <li><span class="del-dot"></span>HOSTILE contact (red triangle) &mdash; visibly pulsing dark-red to bright-red continuously</li>
+      <li><span class="del-dot"></span>UNKNOWN contact (yellow triangle) &mdash; steady, does not pulse</li>
+      <li><span class="del-dot"></span>Display boundary rectangle (dim grey, drawn as a line outline)</li>
+      <li><span class="del-dot"></span>Crosshair grid lines dividing display into quadrants</li>
+      <li><span class="del-dot"></span>Animation runs smoothly at 60fps &mdash; no flicker</li>
+      <li><span class="del-dot"></span>Terminal prints time value every 60 frames</li>
+      <li><span class="del-dot"></span>Can explain: what a VBO is, what a VAO records, what a uniform does</li>
+    </ul>
+  </div>
+</div>
 
-    <!-- LAB NAV -->
-    <div class="lab-nav">
-      <a class="lab-nav-btn" href="labs.html">← All Lab Challenges</a>
-      <div style="font-size:.8rem;color:var(--text3);text-align:center">
-        By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>Koenig Original AI-Courseware · Day 1 Complete
-      </div>
-      <div class="lab-nav-btn next" style="opacity:.5;cursor:default">Day 2 Labs — Coming Soon →</div>
-    </div>
 
-  </main>
+<div class="page-foot">
+  <a class="foot-btn" href="labs.html">&#8592; All Labs</a>
+  <div style="font-size:.8rem;color:var(--text3);text-align:center">
+    By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>
+    Koenig Original AI-Courseware &middot; Day 1 Complete
+  </div>
+  <div class="foot-btn" style="opacity:.5;cursor:default">Day 2 Labs &mdash; Coming Soon &#8594;</div>
+</div>
+
+</main>
 </div>
 
 <script>
-// Checkbox toggle
-function checkObj(el) {
-  el.classList.toggle('checked');
-  if(el.classList.contains('checked')) el.textContent = '✓';
-  else el.textContent = '';
-  updateProgress();
-}
-function updateProgress() {
-  const total = document.querySelectorAll('.obj-check').length;
-  const done = document.querySelectorAll('.obj-check.checked').length;
-  const pct = Math.round((done/total)*100);
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-count').textContent = Math.round(done/total*5*10)/10 + ' / 5';
+// Objective checkboxes
+let totalChk = 0;
+function chk(el) {
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '&#10003;' : '';
+  const all = document.querySelectorAll('.obj-chk').length;
+  const done = document.querySelectorAll('.obj-chk.done').length;
+  document.getElementById('prog-fill').style.width = Math.round((done/all)*100) + '%';
+  document.getElementById('prog-count').textContent = done + ' / ' + all;
 }
 
 // Copy code
 function cp(btn, id) {
   const el = document.getElementById(id);
   navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
-    btn.textContent = '✓ Copied'; btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2000);
+    const orig = btn.textContent;
+    btn.textContent = '&#10003; Copied!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 2200);
+  }).catch(() => {
+    const r = document.createRange();
+    r.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    btn.textContent = '&#10003; Copied!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy All'; btn.classList.remove('ok'); }, 2200);
   });
 }
 function cpCmd(btn, id) {
-  const el = document.getElementById(id);
-  navigator.clipboard.writeText(el.textContent).then(() => {
-    btn.textContent = '✓'; setTimeout(() => btn.textContent = 'Copy', 1500);
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
+    btn.textContent = '&#10003;';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
   });
 }
 
-// Sidebar active highlighting
-const sections = document.querySelectorAll('.lab-section');
-const sbLinks = document.querySelectorAll('.sb-link[href^="#"]');
-const obs = new IntersectionObserver((entries) => {
+// Sidebar active
+const secs = document.querySelectorAll('.lab-sec');
+const sbls = document.querySelectorAll('.sb-link[href^="#"]');
+new IntersectionObserver((entries) => {
   entries.forEach(e => {
-    if(e.isIntersecting) {
+    if (e.isIntersecting) {
       const id = '#' + e.target.id;
-      sbLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+      sbls.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
     }
   });
-}, { threshold: 0.25, rootMargin: '-80px 0px -55% 0px' });
-sections.forEach(s => obs.observe(s));
+}, { threshold: 0.2, rootMargin: '-70px 0px -55% 0px' }).observe
+? secs.forEach(s => new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = '#' + e.target.id;
+      sbls.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-70px 0px -55% 0px' }).observe(s)) : null;
 </script>
 </body>
 </html>

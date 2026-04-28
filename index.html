@@ -666,7 +666,7 @@ footer{
 
   <div class="hero-eyebrow">
     <span class="hero-eyebrow-dot"></span>
-    Raushan Ranjan · 5-Day Corporate Training · OpenGL & Vulkan
+    US Navy Dept · 5-Day Corporate Training · OpenGL & Vulkan
   </div>
 
   <h1 class="hero-title">
@@ -836,7 +836,7 @@ footer{
       </ul>
       <div class="module-actions">
         <div class="act-btn primary">📖 Read Notes</div>
-        <a href="day1-demos.html" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+        <a href="day2-demos.html#demo8" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
       </div>
     </div>
 
@@ -857,7 +857,7 @@ footer{
       </ul>
       <div class="module-actions">
         <div class="act-btn primary">📖 Read Notes</div>
-        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+        <a href="day2-demos.html#demo9" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
       </div>
     </div>
 
@@ -878,7 +878,7 @@ footer{
       </ul>
       <div class="module-actions">
         <div class="act-btn primary">📖 Read Notes</div>
-        <a href="#" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
+        <a href="day2-demos.html#demo10" class="act-btn" onclick="event.stopPropagation()">⚡ Demo</a>
       </div>
     </div>
 
@@ -1160,7 +1160,7 @@ footer{
 <!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="footer-brand">RR Graphics Lab</div>
-  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan</div>
+  <div class="footer-sub">OpenGL & Vulkan Training · US Navy Department</div>
   <div class="footer-links">
     <a class="footer-link" href="index.html">Module Notes</a>
     <a class="footer-link" href="demos.html">Code Demos</a>
@@ -1538,7 +1538,7 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     `
   },
 
-  4:{day:2,color:'#22d3ee',title:'Transformations and 3D Space',subtitle:'Module 4 · Day 2 · Model-View-Projection and the camera system',demoLink:'day1-demos.html',demoLabel:'Demo: 3D Rotating Cube',content:`
+  4:{day:2,color:'#22d3ee',title:'Transformations and 3D Space',subtitle:'Module 4 · Day 2 · Model-View-Projection and the camera system',demoLink:'day2-demos.html#demo8',demoLabel:'Demo: MVP + Fly Camera',content:`
 <div class="notes-section">
   <div class="notes-h2"><span class="notes-h2-icon"></span>Why Do We Need Transformations?</div>
   <p class="notes-p">When you draw a triangle using raw NDC coordinates, it's fixed on screen. In a real 3D world, objects need to move, rotate, scale, and the camera needs to look at them from different angles. Transformations are the mathematical system that makes this possible.</p>
@@ -1572,12 +1572,12 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   </ul>
   <div class="demo-link-box">
     <div class="demo-link-box-text">See full rotating cube with MVP matrix → <strong>Demo: 3D Transformation</strong></div>
-    <a class="demo-link-btn" href="day1-demos.html">Try Demo →</a>
+    <a class="demo-link-btn" href="day2-demos.html#demo8">Try Demo →</a>
   </div>
 </div>
   `},
 
-  5:{day:2,color:'#22d3ee',title:'Lighting and Materials',subtitle:'Module 5 · Day 2 · The physics of light approximated in shader code',demoLink:'day1-demos.html',demoLabel:'Demo: Phong Lighting',content:`
+  5:{day:2,color:'#22d3ee',title:'Lighting and Materials',subtitle:'Module 5 · Day 2 · The physics of light approximated in shader code',demoLink:'day2-demos.html#demo9',demoLabel:'Demo: Phong Lighting',content:`
 <div class="notes-section">
   <div class="notes-h2"><span class="notes-h2-icon"></span>Why Lighting Matters</div>
   <p class="notes-p">Without lighting, a 3D object looks completely flat — it appears as a solid silhouette shape with no depth perception. Lighting is what makes 3D objects look real. The Phong lighting model approximates real-world light interaction using three components.</p>
@@ -1611,7 +1611,7 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 </div>
   `},
 
-  6:{day:2,color:'#22d3ee',title:'Textures and Mapping',subtitle:'Module 6 · Day 2 · UV coordinates, mipmaps, cube maps and skyboxes',demoLink:'day1-demos.html',demoLabel:'Demo: Textured 3D Object',content:`
+  6:{day:2,color:'#22d3ee',title:'Textures and Mapping',subtitle:'Module 6 · Day 2 · UV coordinates, mipmaps, cube maps and skyboxes',demoLink:'day2-demos.html#demo10',demoLabel:'Demo: Textured 3D Object',content:`
 <div class="notes-section">
   <div class="notes-h2"><span class="notes-h2-icon"></span>What Is a Texture?</div>
   <p class="notes-p">A texture is an image uploaded to GPU VRAM that your fragment shader can sample (read colour values from). Instead of computing surface detail mathematically, you just paint it onto a flat image and let the GPU look it up per pixel. A brick wall, camouflage pattern, hull plating, ocean surface — all textures.</p>

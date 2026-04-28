@@ -396,74 +396,83 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
   <!-- ═══════════════════ DAY 2 ═══════════════════ -->
   <div class="day-section" id="day2">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);color:var(--cyan)">Day 2 — 3D World, Lighting & Textures</div>
+      <div class="day-badge" style="background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);color:var(--cyan)">Day 2 — 3D World, Lighting &amp; Textures</div>
       <div class="day-header-info">
-        <div class="day-title">Transformations, Phong Lighting, Textures, Skybox</div>
-        <div class="day-desc">6 demos · Modules 4, 5, 6 · From 2D NDC to a fully lit, textured 3D scene with camera movement</div>
+        <div class="day-title">Model Matrix, MVP Pipeline, Phong Lighting, Textures</div>
+        <div class="day-desc">4 demos · Modules 4, 5, 6 · From a spinning 2D triangle to a fully lit, textured 3D cube with fly camera</div>
       </div>
-      <div class="day-cta" style="border-color:rgba(34,211,238,.3);color:var(--cyan);background:rgba(34,211,238,.06);cursor:default">Coming in Day 2 →</div>
+      <a class="day-cta" href="day2-demos.html" style="border-color:rgba(34,211,238,.3);color:var(--cyan);background:rgba(34,211,238,.08)">Open Day 2 Demos →</a>
     </div>
     <div class="demos-grid">
-      <div class="demo-card" style="opacity:.5">
+
+      <!-- D7 — Model Matrix -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d2)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 7 · Module 4</div>
+          <div class="demo-title">The Model Matrix — First Moving Geometry</div>
+          <div class="demo-desc">Send a glm::mat4 to the vertex shader every frame. Translate, rotate, and scale the triangle in real time. T and S keys toggle each transform independently.</div>
+          <div class="demo-tags"><span class="demo-tag">GLM</span><span class="demo-tag">glm::rotate</span><span class="demo-tag">glUniformMatrix4fv</span></div>
+          <div class="demo-what" style="border-color:var(--d2)">🎯 Orange triangle spinning continuously. T=translate, S=scale toggles. Angle printed every 60 frames.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo7">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~25 min</span>
+        </div>
+      </div>
+
+      <!-- D8 — Full MVP + Camera -->
+      <div class="demo-card">
         <div class="demo-card-accent" style="background:var(--d2)"></div>
         <div class="demo-card-body">
           <div class="demo-concept">Demo 8 · Module 4</div>
-          <div class="demo-title">MVP Matrix — Model, View, Projection</div>
-          <div class="demo-desc">Build the three transformation matrices step by step with GLM. See how each one affects the scene independently.</div>
-          <div class="demo-tags"><span class="demo-tag">GLM</span><span class="demo-tag">glm::lookAt</span><span class="demo-tag">glm::perspective</span></div>
+          <div class="demo-title">Full MVP + Fly Camera — WASD + Mouse Look</div>
+          <div class="demo-desc">Complete Model × View × Projection pipeline. Depth testing enabled. Fly camera with WASD movement, mouse look (yaw/pitch), scroll to zoom. Delta time for frame-rate-independent speed.</div>
+          <div class="demo-tags"><span class="demo-tag">glm::lookAt</span><span class="demo-tag">glm::perspective</span><span class="demo-tag">GL_DEPTH_TEST</span><span class="demo-tag">Camera</span></div>
+          <div class="demo-what" style="border-color:var(--d2)">🎯 3D rotating coloured cube. Full fly camera. Scroll to change FOV. Break test: comment out depth test to see faces flicker.</div>
         </div>
-        <div class="demo-card-foot"><div class="btn-demo btn-demo-sec" style="opacity:.5">🔒 Day 2</div></div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo8">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~40 min</span>
+        </div>
       </div>
-      <div class="demo-card" style="opacity:.5">
+
+      <!-- D9 — Phong Lighting -->
+      <div class="demo-card">
         <div class="demo-card-accent" style="background:var(--d2)"></div>
         <div class="demo-card-body">
-          <div class="demo-concept">Demo 9 · Module 4</div>
-          <div class="demo-title">Rotating 3D Cube with Depth Testing</div>
-          <div class="demo-desc">A 3D cube rotating in real time with glEnable(GL_DEPTH_TEST) preventing back-face showing through front-face.</div>
-          <div class="demo-tags"><span class="demo-tag">3D Cube</span><span class="demo-tag">Depth Test</span><span class="demo-tag">Animation</span></div>
+          <div class="demo-concept">Demo 9 · Module 5</div>
+          <div class="demo-title">Phong Lighting — Ambient + Diffuse + Specular</div>
+          <div class="demo-desc">Normals as a third vertex attribute. Normal matrix in vertex shader. Per-fragment lighting calculation in fragment shader. Orbiting light source shown as a small white cube. 1/2/3 keys isolate each lighting component.</div>
+          <div class="demo-tags"><span class="demo-tag">Normals</span><span class="demo-tag">dot()</span><span class="demo-tag">reflect()</span><span class="demo-tag">Normal Matrix</span></div>
+          <div class="demo-what" style="border-color:var(--d2)">🎯 Grey lit cube + orbiting white light. 1=ambient only, 2=+diffuse, 3=full Phong. Arrow keys tune brightness and shininess.</div>
         </div>
-        <div class="demo-card-foot"><div class="btn-demo btn-demo-sec" style="opacity:.5">🔒 Day 2</div></div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo9">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~40 min</span>
+        </div>
       </div>
-      <div class="demo-card" style="opacity:.5">
+
+      <!-- D10 — Textures -->
+      <div class="demo-card">
         <div class="demo-card-accent" style="background:var(--d2)"></div>
         <div class="demo-card-body">
-          <div class="demo-concept">Demo 10 · Module 4</div>
-          <div class="demo-title">Free Camera with WASD + Mouse</div>
-          <div class="demo-desc">Implement a fly camera using keyboard input for movement and mouse for look direction using pitch/yaw angles.</div>
-          <div class="demo-tags"><span class="demo-tag">Camera</span><span class="demo-tag">Input</span><span class="demo-tag">Euler Angles</span></div>
+          <div class="demo-concept">Demo 10 · Module 6</div>
+          <div class="demo-title">Textures — UV Coords, stb_image, Textured Lit Cube</div>
+          <div class="demo-desc">UV coordinates as a fourth vertex attribute (8 floats/vertex). stb_image loads PNG from disk. glTexImage2D uploads to GPU. sampler2D in fragment shader. Phong lighting multiplied by texture colour. T and L keys toggle texture and lighting independently.</div>
+          <div class="demo-tags"><span class="demo-tag">stb_image</span><span class="demo-tag">UV Mapping</span><span class="demo-tag">sampler2D</span><span class="demo-tag">Mipmaps</span></div>
+          <div class="demo-what" style="border-color:var(--d2)">🎯 Textured lit cube (crate or checkerboard fallback). T=texture on/off, L=lighting on/off. Four combinations show each layer's contribution.</div>
         </div>
-        <div class="demo-card-foot"><div class="btn-demo btn-demo-sec" style="opacity:.5">🔒 Day 2</div></div>
-      </div>
-      <div class="demo-card" style="opacity:.5">
-        <div class="demo-card-accent" style="background:var(--d2)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 11 · Module 5</div>
-          <div class="demo-title">Phong Lighting — Ambient, Diffuse, Specular</div>
-          <div class="demo-desc">Implement each component independently then combine them. Toggle each on/off to see its contribution.</div>
-          <div class="demo-tags"><span class="demo-tag">Phong</span><span class="demo-tag">Fragment Shader</span><span class="demo-tag">Normals</span></div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo10">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~40 min</span>
         </div>
-        <div class="demo-card-foot"><div class="btn-demo btn-demo-sec" style="opacity:.5">🔒 Day 2</div></div>
       </div>
-      <div class="demo-card" style="opacity:.5">
-        <div class="demo-card-accent" style="background:var(--d2)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 12 · Module 6</div>
-          <div class="demo-title">Texture Loading with STB Image</div>
-          <div class="demo-desc">Load a PNG file, upload to GPU, apply to a quad. UV coordinates, filtering modes, mipmap generation.</div>
-          <div class="demo-tags"><span class="demo-tag">STB Image</span><span class="demo-tag">UV Mapping</span><span class="demo-tag">Mipmaps</span></div>
-        </div>
-        <div class="demo-card-foot"><div class="btn-demo btn-demo-sec" style="opacity:.5">🔒 Day 2</div></div>
-      </div>
-      <div class="demo-card" style="opacity:.5">
-        <div class="demo-card-accent" style="background:var(--d2)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 13 · Module 6</div>
-          <div class="demo-title">Skybox with Cube Map</div>
-          <div class="demo-desc">6-face cube map texture for a full 360° skybox. Special depth trick to always render it behind everything else.</div>
-          <div class="demo-tags"><span class="demo-tag">Cube Map</span><span class="demo-tag">Skybox</span><span class="demo-tag">Depth Trick</span></div>
-        </div>
-        <div class="demo-card-foot"><div class="btn-demo btn-demo-sec" style="opacity:.5">🔒 Day 2</div></div>
-      </div>
+
     </div>
   </div>
 

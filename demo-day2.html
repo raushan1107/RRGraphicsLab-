@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 2 Demos — RR Graphics Lab</title>
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222636;
+  --border:#2a2f40;--border2:#3a4055;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --accent:#06b6d4;--accent2:#0ea5e9;
+  --green:#4ade80;--orange:#fb923c;--purple:#a78bfa;--pink:#f472b6;
+  --day2:#06b6d4;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,15,20,.95);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 2rem;height:56px;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;
+  font-weight:800;font-size:1rem;color:var(--text);white-space:nowrap}
+.nav-badge{background:linear-gradient(135deg,#6c63ff,#38bdf8);color:#fff;
+  font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.4px;text-transform:uppercase}
+.nav-links{display:flex;gap:2px;flex:1;margin-left:1rem}
+.nav-link{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;
+  text-decoration:none;font-size:13px;font-weight:600;color:var(--text2);
+  border:1px solid transparent;transition:.18s}
+.nav-link:hover{background:var(--bg3);color:var(--text)}
+.nav-link.active{color:var(--accent);background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.2)}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nav-right{margin-left:auto;font-size:11px;color:var(--text3);font-weight:600}
+
+/* HERO */
+.hero{margin-top:56px;padding:3rem 2rem 2rem;text-align:center;
+  background:linear-gradient(180deg,rgba(6,182,212,.04) 0%,transparent 100%);
+  border-bottom:1px solid var(--border)}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.75rem}
+.hero h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);max-width:600px;margin:0 auto 1.5rem}
+.hero-stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:1.5rem;font-weight:800;color:var(--accent)}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+
+/* DAY NAV */
+.day-nav{display:flex;justify-content:center;gap:.5rem;padding:1.5rem 2rem;
+  border-bottom:1px solid var(--border);flex-wrap:wrap}
+.day-btn{padding:6px 18px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg2);color:var(--text2);font-size:13px;font-weight:600;
+  cursor:pointer;text-decoration:none;transition:.18s}
+.day-btn:hover{border-color:var(--border2);color:var(--text)}
+.day-btn.active{background:rgba(6,182,212,.12);border-color:var(--accent);color:var(--accent)}
+
+/* LAYOUT */
+.layout{display:flex;max-width:1400px;margin:0 auto}
+
+/* SIDEBAR */
+.sidebar{width:260px;flex-shrink:0;position:sticky;top:56px;height:calc(100vh - 56px);
+  overflow-y:auto;border-right:1px solid var(--border);padding:1.5rem 1rem}
+.sidebar-title{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:var(--text3);margin-bottom:.75rem;padding:0 .5rem}
+.sidebar-link{display:block;padding:6px 10px;border-radius:6px;text-decoration:none;
+  font-size:12px;color:var(--text2);transition:.15s;border-left:2px solid transparent;margin-bottom:2px}
+.sidebar-link:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border2)}
+.sidebar-link.active{background:rgba(6,182,212,.1);color:var(--accent);border-left-color:var(--accent)}
+.sidebar-group{margin-bottom:1.25rem}
+.sidebar-group-label{font-size:10px;font-weight:700;text-transform:uppercase;
+  color:var(--text3);padding:0 10px;margin-bottom:4px;letter-spacing:.8px}
+
+/* CONTENT */
+.content{flex:1;padding:2rem;min-width:0}
+
+/* DEMO SECTION */
+.demo-section{margin-bottom:4rem;scroll-margin-top:80px}
+.demo-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem;
+  padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.demo-num-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:6px;
+  white-space:nowrap;flex-shrink:0;margin-top:3px}
+.demo-title-block h2{font-size:1.25rem;font-weight:700;margin-bottom:.25rem}
+.demo-title-block p{color:var(--text2);font-size:.9rem}
+.demo-meta{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+.meta-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;
+  text-transform:uppercase;letter-spacing:.5px}
+.tag-module{background:rgba(167,139,250,.15);color:#a78bfa;border:1px solid rgba(167,139,250,.2)}
+.tag-concept{background:rgba(6,182,212,.12);color:var(--accent);border:1px solid rgba(6,182,212,.2)}
+.tag-prereq{background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.2)}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:.8rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem}
+
+/* ANALOGY BOX */
+.analogy{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(6,182,212,.04));
+  border:1px solid rgba(167,139,250,.2);border-radius:10px;padding:1rem 1.25rem;
+  margin-bottom:1rem}
+.analogy-label{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:#a78bfa;margin-bottom:.4rem}
+.analogy p{color:var(--text2);font-size:.9rem}
+
+/* DIAGRAM */
+.diagram{background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:1.25rem;margin-bottom:1rem;font-family:'Courier New',monospace;
+  font-size:12px;color:var(--text2);line-height:1.8;overflow-x:auto}
+.diagram .highlight{color:var(--accent);font-weight:700}
+.diagram .dim{color:var(--text3)}
+.diagram .green{color:var(--green)}
+.diagram .orange{color:var(--orange)}
+.diagram .purple{color:#a78bfa}
+
+/* CODE BLOCK */
+.code-wrap{position:relative;margin-bottom:1rem}
+.code-label{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--text3);padding:.5rem 1rem;
+  background:var(--bg3);border:1px solid var(--border);
+  border-bottom:none;border-radius:8px 8px 0 0;display:flex;
+  justify-content:space-between;align-items:center}
+.copy-btn{background:rgba(6,182,212,.15);color:var(--accent);border:1px solid rgba(6,182,212,.3);
+  padding:3px 10px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;transition:.15s}
+.copy-btn:hover{background:rgba(6,182,212,.25)}
+.copy-btn.copied{background:rgba(74,222,128,.15);color:var(--green);border-color:rgba(74,222,128,.3)}
+pre{background:var(--bg4);border:1px solid var(--border);border-radius:0 0 8px 8px;
+  padding:1.25rem;overflow-x:auto;font-family:'Courier New',monospace;
+  font-size:12.5px;line-height:1.7;color:var(--text)}
+.c-comment{color:#64748b;font-style:italic}
+.c-keyword{color:#38bdf8}
+.c-type{color:#a78bfa}
+.c-func{color:#4ade80}
+.c-num{color:#fb923c}
+.c-string{color:#fbbf24}
+.c-glsl{color:#f472b6}
+
+/* EXPECTED OUTPUT */
+.output-box{background:var(--bg3);border:1px solid var(--green);border-radius:8px;
+  padding:1rem 1.25rem;margin-bottom:1rem}
+.output-label{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--green);margin-bottom:.4rem}
+.output-box p{color:var(--text2);font-size:.875rem}
+
+/* EXPERIMENTS */
+.experiments{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:1.25rem;margin-bottom:1rem}
+.exp-label{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--orange);margin-bottom:.75rem}
+.exp-item{display:flex;gap:.75rem;margin-bottom:.6rem;align-items:flex-start}
+.exp-num{background:rgba(251,146,60,.15);color:var(--orange);font-size:10px;
+  font-weight:800;padding:2px 6px;border-radius:4px;flex-shrink:0;margin-top:1px}
+.exp-item p{color:var(--text2);font-size:.875rem}
+
+/* CONCEPT VISUAL */
+.visual-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin-bottom:1rem}
+.visual-cell{background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:1rem;text-align:center}
+.visual-cell .icon{font-size:1.5rem;margin-bottom:.4rem}
+.visual-cell h4{font-size:.8rem;font-weight:700;margin-bottom:.2rem;color:var(--text)}
+.visual-cell p{font-size:.75rem;color:var(--text2)}
+
+/* DIVIDER */
+.section-divider{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;
+  color:var(--text3);font-size:.8rem}
+footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .layout{display:block}
+  .content{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <span style="background:linear-gradient(135deg,#6c63ff,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.3rem">⬡</span>
+    RR Graphics Lab
+    <span class="nav-badge">MCT</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">
+      <span class="nav-dot" style="background:#a78bfa"></span>Module Notes
+    </a>
+    <a class="nav-link active" href="demos.html">
+      <span class="nav-dot" style="background:#38bdf8"></span>Code Demos
+    </a>
+    <a class="nav-link" href="labs.html">
+      <span class="nav-dot" style="background:#4ade80"></span>Lab Challenges
+    </a>
+  </div>
+  <div class="nav-right">Raushan Ranjan · MCT</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Code Demos · Day 2 · Modules 4–6</div>
+  <h1>Lighting, Textures &amp; <span>3D Environments</span></h1>
+  <p>10 concept demos — one per technique. Watch, understand, then write it yourself before tackling the lab.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">Demos</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Modules</div></div>
+    <div class="stat"><div class="stat-num">Day 2</div><div class="stat-label">Coverage</div></div>
+  </div>
+</div>
+
+<!-- DAY NAV -->
+<div class="day-nav">
+  <a class="day-btn" href="demo-day1.html">← Day 1</a>
+  <a class="day-btn active" href="demo-day2.html">Day 2 — 3D, Lighting & Textures</a>
+  <a class="day-btn" href="demo-day3.html">Day 3 →</a>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-title">Module 4 — Transforms</div>
+  <div class="sidebar-group">
+    <a class="sidebar-link" href="#d2-01">D2-01 Model Matrix</a>
+    <a class="sidebar-link" href="#d2-02">D2-02 View / Camera</a>
+    <a class="sidebar-link" href="#d2-03">D2-03 Projection</a>
+    <a class="sidebar-link" href="#d2-04">D2-04 Depth Testing</a>
+  </div>
+  <div class="sidebar-title">Module 5 — Lighting</div>
+  <div class="sidebar-group">
+    <a class="sidebar-link" href="#d2-05">D2-05 Ambient Light</a>
+    <a class="sidebar-link" href="#d2-06">D2-06 Diffuse Light</a>
+    <a class="sidebar-link" href="#d2-07">D2-07 Specular (Blinn-Phong)</a>
+  </div>
+  <div class="sidebar-title">Module 6 — Textures</div>
+  <div class="sidebar-group">
+    <a class="sidebar-link" href="#d2-08">D2-08 Load & Apply Texture</a>
+    <a class="sidebar-link" href="#d2-09">D2-09 Filtering & Mipmaps</a>
+    <a class="sidebar-link" href="#d2-10">D2-10 Multi-Texturing</a>
+  </div>
+</aside>
+
+<!-- CONTENT -->
+<main class="content">
+
+<!-- ============================================================ -->
+<!-- D2-01: MODEL MATRIX -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-01">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-01</span>
+    <div class="demo-title-block">
+      <h2>Model Matrix — Move, Rotate, Scale</h2>
+      <p>How a transform turns local object coordinates into world coordinates.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 4</span>
+        <span class="meta-tag tag-concept">glm::translate / rotate / scale</span>
+        <span class="meta-tag tag-prereq">Prereq: D1-03 Triangle</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">🧭 Analogy</div>
+    <p>Think of the model matrix like placing a piece on a chess board. The piece has its own shape (local coordinates — defined around the origin). The model matrix says: <em>"take this piece, rotate it 45°, then place it at position (3, 0, 2) on the board."</em> The piece itself didn't change — you just told OpenGL where it lives in the world.</p>
+  </div>
+
+  <div class="diagram">
+    <span class="highlight">LOCAL SPACE → MODEL MATRIX → WORLD SPACE</span><br><br>
+    Vertex data (triangle)         Model matrix transforms:<br>
+    <span class="green">(-0.5, -0.5, 0)</span>  ─────────►  glm::<span class="orange">translate</span>(0.3, 0.2, 0)  ─► new world position<br>
+    <span class="green">( 0.5, -0.5, 0)</span>  ─────────►  glm::<span class="orange">rotate</span>(45°, Z-axis)    ─► rotated<br>
+    <span class="green">( 0.0,  0.5, 0)</span>  ─────────►  glm::<span class="orange">scale</span>(0.5, 0.5, 1.0)   ─► half size<br><br>
+    <span class="dim">Order matters: Scale → Rotate → Translate  (applied right to left in code)</span>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>main.cpp — Model Matrix Demo (build from Day 1 triangle)</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// Add GLM headers at top of your Day 1 triangle program</span>
+<span class="c-keyword">#include</span> <span class="c-string">&lt;glm/glm.hpp&gt;</span>
+<span class="c-keyword">#include</span> <span class="c-string">&lt;glm/gtc/matrix_transform.hpp&gt;</span>   <span class="c-comment">// translate, rotate, scale, perspective</span>
+<span class="c-keyword">#include</span> <span class="c-string">&lt;glm/gtc/type_ptr.hpp&gt;</span>            <span class="c-comment">// glm::value_ptr — converts mat4 to float*</span>
+
+<span class="c-comment">// ─── VERTEX SHADER ─── (replace your existing vertex shader string)</span>
+<span class="c-keyword">const char</span>* vertSrc = <span class="c-string">R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+
+uniform mat4 uModel;        // THE MODEL MATRIX — sent from CPU each frame
+
+void main() {
+    // Multiply every vertex position by the model matrix
+    // This is how translation / rotation / scale happen
+    gl_Position = vec4(uModel * vec4(aPos, 1.0));
+}
+)"</span>;
+
+<span class="c-comment">// Inside your render loop, before glDrawArrays:</span>
+
+<span class="c-type">float</span> time = (<span class="c-type">float</span>)<span class="c-func">glfwGetTime</span>();  <span class="c-comment">// seconds since program start</span>
+
+<span class="c-comment">// Build the model matrix step by step</span>
+<span class="c-comment">// Start with identity (no transform — object stays where it is)</span>
+glm::<span class="c-type">mat4</span> model = glm::<span class="c-func">mat4</span>(<span class="c-num">1.0f</span>);
+
+<span class="c-comment">// Step 1 — TRANSLATE: move the triangle right by 0.3, up by 0.2</span>
+<span class="c-comment">// First argument: current matrix. Second: translation vector.</span>
+model = glm::<span class="c-func">translate</span>(model, glm::<span class="c-func">vec3</span>(<span class="c-num">0.3f</span>, <span class="c-num">0.2f</span>, <span class="c-num">0.0f</span>));
+
+<span class="c-comment">// Step 2 — ROTATE: spin around Z-axis over time</span>
+<span class="c-comment">// glm::radians converts degrees to radians (OpenGL uses radians)</span>
+<span class="c-comment">// time * 50.0f means it rotates 50 degrees per second</span>
+model = glm::<span class="c-func">rotate</span>(model, glm::<span class="c-func">radians</span>(time * <span class="c-num">50.0f</span>), glm::<span class="c-func">vec3</span>(<span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, <span class="c-num">1.0f</span>));
+
+<span class="c-comment">// Step 3 — SCALE: make it 60% of original size</span>
+model = glm::<span class="c-func">scale</span>(model, glm::<span class="c-func">vec3</span>(<span class="c-num">0.6f</span>, <span class="c-num">0.6f</span>, <span class="c-num">1.0f</span>));
+
+<span class="c-comment">// Send the matrix to the GPU via uniform</span>
+<span class="c-comment">// glGetUniformLocation finds where "uModel" lives in the compiled shader</span>
+<span class="c-type">int</span> modelLoc = <span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uModel"</span>);
+
+<span class="c-comment">// glUniformMatrix4fv: send a 4x4 float matrix</span>
+<span class="c-comment">// Args: location, count=1, transpose=GL_FALSE, pointer to data</span>
+<span class="c-comment">// glm::value_ptr converts glm::mat4 into a raw float* OpenGL expects</span>
+<span class="c-func">glUniformMatrix4fv</span>(modelLoc, <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(model));</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>Orange triangle rotates continuously around its own centre, positioned slightly right and up from screen centre. Press ESC to close.</p>
+  </div>
+
+  <div class="experiments">
+    <div class="exp-label">🔬 Experiments — Do These Now</div>
+    <div class="exp-item"><span class="exp-num">A</span><p>Comment out the rotate line. The triangle freezes — proving time-based rotation is entirely in that one line.</p></div>
+    <div class="exp-item"><span class="exp-num">B</span><p>Swap the order: scale first, then rotate, then translate. Notice how the pivot point changes — the triangle now orbits the screen centre rather than spinning in place.</p></div>
+    <div class="exp-item"><span class="exp-num">C</span><p>Change scale to <code>vec3(1.5f, 0.5f, 1.0f)</code> — the triangle becomes wide and flat. This demonstrates non-uniform scaling.</p></div>
+    <div class="exp-item"><span class="exp-num">D</span><p>Set translate to <code>vec3(0.8f, 0.0f, 0.0f)</code> and watch the triangle orbit near the right edge of the screen.</p></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-02: VIEW MATRIX -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-02">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-02</span>
+    <div class="demo-title-block">
+      <h2>View Matrix — The Camera</h2>
+      <p>glm::lookAt() defines where the camera sits, what it looks at, and which way is up.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 4</span>
+        <span class="meta-tag tag-concept">glm::lookAt</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-01</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">📷 Analogy</div>
+    <p>The view matrix is your camera. You pick: <em>where you stand</em> (eye position), <em>what you look at</em> (target), and <em>which direction is up</em>. OpenGL then transforms the entire world so that your camera is at the origin looking down -Z. The world moves; the camera is always conceptually still.</p>
+  </div>
+
+  <div class="diagram">
+    <span class="highlight">glm::lookAt(eye, center, up)</span><br><br>
+    eye    = <span class="green">vec3(0, 0, 3)</span>   <span class="dim">← camera is 3 units in front of scene (along +Z)</span><br>
+    center = <span class="orange">vec3(0, 0, 0)</span>   <span class="dim">← looking at world origin</span><br>
+    up     = <span class="purple">vec3(0, 1, 0)</span>   <span class="dim">← Y axis is "up" (standard)</span><br><br>
+    Result: View matrix that moves the world so the camera is at origin<br>
+    <span class="dim">Camera never actually moves — the world shifts around it</span>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>main.cpp — View Matrix (add to D2-01 program)</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// Update vertex shader to use both model and view matrices</span>
+<span class="c-keyword">const char</span>* vertSrc = <span class="c-string">R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+uniform mat4 uModel;
+uniform mat4 uView;         // NEW — the camera matrix
+
+void main() {
+    // View * Model: first put object in world, then apply camera transform
+    gl_Position = vec4(uView * uModel * vec4(aPos, 1.0));
+}
+)"</span>;
+
+<span class="c-comment">// In render loop — build the view matrix</span>
+<span class="c-comment">// Camera orbits the scene: moves in a circle on XZ plane</span>
+<span class="c-type">float</span> camX = <span class="c-func">sin</span>(time) * <span class="c-num">2.0f</span>;  <span class="c-comment">// circular path radius 2</span>
+<span class="c-type">float</span> camZ = <span class="c-func">cos</span>(time) * <span class="c-num">2.0f</span>;
+
+<span class="c-comment">// lookAt(where camera is, what it looks at, which direction is up)</span>
+glm::<span class="c-type">mat4</span> view = glm::<span class="c-func">lookAt</span>(
+    glm::<span class="c-func">vec3</span>(camX, <span class="c-num">1.0f</span>, camZ),  <span class="c-comment">// eye: camera position (orbiting)</span>
+    glm::<span class="c-func">vec3</span>(<span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>),  <span class="c-comment">// center: always looking at origin</span>
+    glm::<span class="c-func">vec3</span>(<span class="c-num">0.0f</span>, <span class="c-num">1.0f</span>, <span class="c-num">0.0f</span>)   <span class="c-comment">// up: Y axis is "up"</span>
+);
+
+<span class="c-type">int</span> viewLoc = <span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uView"</span>);
+<span class="c-func">glUniformMatrix4fv</span>(viewLoc, <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(view));</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>The triangle (world stays still) appears to rotate as the camera orbits around it. The triangle itself has zero rotation in the model matrix for this demo.</p>
+  </div>
+
+  <div class="experiments">
+    <div class="exp-label">🔬 Experiments</div>
+    <div class="exp-item"><span class="exp-num">A</span><p>Change eye Y from 1.0f to 3.0f — camera rises above the scene, now looking down at the triangle.</p></div>
+    <div class="exp-item"><span class="exp-num">B</span><p>Freeze the camera: replace camX/camZ with fixed values (e.g., 0, 2). Confirm the scene is static again.</p></div>
+    <div class="exp-item"><span class="exp-num">C</span><p>Change up vector to <code>vec3(0, -1, 0)</code> — the world flips upside down. This demonstrates that "up" is a choice, not a physical law.</p></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-03: PROJECTION MATRIX -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-03">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-03</span>
+    <div class="demo-title-block">
+      <h2>Projection Matrix — Perspective vs Ortho</h2>
+      <p>How a 3D world becomes a 2D image. The complete MVP pipeline.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 4</span>
+        <span class="meta-tag tag-concept">glm::perspective / glm::ortho</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-02</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">🎯 Analogy</div>
+    <p><strong>Perspective:</strong> Hold a finger close to your face — it looks huge. Move it away — it shrinks. Distant things look smaller. This is natural vision and what <code>glm::perspective</code> simulates. <strong>Orthographic:</strong> Architectural drawings — a 10m wall looks the same length whether you're 1m or 100m away. No depth distortion. Used in CAD, 2D games, HUD overlays.</p>
+  </div>
+
+  <div class="diagram">
+    <span class="highlight">MVP = Projection × View × Model</span><br><br>
+    gl_Position = <span class="orange">uProjection</span> * <span class="green">uView</span> * <span class="purple">uModel</span> * vec4(aPos, 1.0)<br><br>
+    <span class="purple">uModel</span>      → local → world space<br>
+    <span class="green">uView</span>       → world → camera space (eye at origin)<br>
+    <span class="orange">uProjection</span> → camera → clip space (-1 to +1 in all axes)<br><br>
+    glm::perspective(fov, aspect, near, far)<br>
+    <span class="dim">fov=45°, aspect=800/600, near=0.1, far=100.0</span><br><br>
+    glm::ortho(left, right, bottom, top, near, far)<br>
+    <span class="dim">left=-1, right=1, bottom=-1, top=1, near=0.1, far=100.0</span>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>main.cpp — Complete MVP Pipeline</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// VERTEX SHADER — complete MVP</span>
+<span class="c-keyword">const char</span>* vertSrc = <span class="c-string">R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aColor;
+out vec3 vColor;
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProj;     // projection matrix
+
+void main() {
+    // RIGHT TO LEFT: model first, then view, then projection
+    gl_Position = uProj * uView * uModel * vec4(aPos, 1.0);
+    vColor = aColor;
+}
+)"</span>;
+
+<span class="c-comment">// Before render loop — projection only needs to change on window resize</span>
+<span class="c-comment">// FOV = 45 degrees (field of view — how wide the camera "sees")</span>
+<span class="c-comment">// aspect = width/height of window (keeps shapes correct proportions)</span>
+<span class="c-comment">// near = 0.1 (anything closer than 0.1 units is clipped/invisible)</span>
+<span class="c-comment">// far  = 100.0 (anything farther than 100 units is clipped)</span>
+glm::<span class="c-type">mat4</span> projection = glm::<span class="c-func">perspective</span>(
+    glm::<span class="c-func">radians</span>(<span class="c-num">45.0f</span>),   <span class="c-comment">// fov: 45 degrees — typical game camera</span>
+    <span class="c-num">800.0f</span> / <span class="c-num">600.0f</span>,     <span class="c-comment">// aspect ratio — matches window size</span>
+    <span class="c-num">0.1f</span>,               <span class="c-comment">// near plane</span>
+    <span class="c-num">100.0f</span>              <span class="c-comment">// far plane</span>
+);
+
+<span class="c-comment">// Send projection to shader (only needs to happen once, before loop)</span>
+<span class="c-func">glUseProgram</span>(shaderProgram);  <span class="c-comment">// must be active before setting uniforms</span>
+<span class="c-type">int</span> projLoc = <span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uProj"</span>);
+<span class="c-func">glUniformMatrix4fv</span>(projLoc, <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(projection));
+
+<span class="c-comment">// In render loop — switch between perspective and ortho with SPACE key</span>
+<span class="c-keyword">if</span> (<span class="c-func">glfwGetKey</span>(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    <span class="c-comment">// Orthographic: no perspective — same size regardless of depth</span>
+    glm::<span class="c-type">mat4</span> ortho = glm::<span class="c-func">ortho</span>(-<span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>, -<span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>, <span class="c-num">0.1f</span>, <span class="c-num">100.0f</span>);
+    <span class="c-func">glUniformMatrix4fv</span>(projLoc, <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(ortho));
+} <span class="c-keyword">else</span> {
+    <span class="c-func">glUniformMatrix4fv</span>(projLoc, <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(projection));
+}</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>Hold SPACE: ortho projection (flat, no depth distortion). Release: perspective (realistic depth). Combine with D2-02 orbiting camera to see full MVP in action.</p>
+  </div>
+
+  <div class="experiments">
+    <div class="exp-label">🔬 Experiments</div>
+    <div class="exp-item"><span class="exp-num">A</span><p>Change FOV to 90.0f — wide angle, distorted like a fisheye. Change to 20.0f — telephoto/zoomed in.</p></div>
+    <div class="exp-item"><span class="exp-num">B</span><p>Change near to 2.0f — objects closer than 2 units vanish. Move the camera inside the near plane and watch geometry disappear.</p></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-04: DEPTH TESTING -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-04">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-04</span>
+    <div class="demo-title-block">
+      <h2>Depth Testing — Who's in Front?</h2>
+      <p>Without the depth buffer, the last-drawn object always wins. Enable it to fix that.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 4</span>
+        <span class="meta-tag tag-concept">glEnable(GL_DEPTH_TEST)</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-03 (need 2 objects)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">🏔️ Analogy</div>
+    <p>Imagine painting a mountain scene on canvas. Without depth awareness, whatever you paint last covers everything underneath — even if that final brushstroke was supposed to be a distant background cloud. The depth buffer gives each pixel a "distance card." Before drawing a new pixel, OpenGL checks: is this new pixel closer than what's already there? If not, discard it.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>main.cpp — Depth Test Enable (critical 3 lines)</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// LINE 1: After glewInit() — tell OpenGL to use the depth buffer</span>
+<span class="c-func">glEnable</span>(GL_DEPTH_TEST);
+<span class="c-comment">// GL_DEPTH_TEST: before writing a fragment, compare its depth to stored depth
+// If new fragment is farther → discard it. Closer → draw it, update depth buffer.</span>
+
+<span class="c-comment">// LINE 2: In render loop clear — MUST clear depth buffer every frame</span>
+<span class="c-comment">// Without this, depth values from last frame block new draws</span>
+<span class="c-func">glClear</span>(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+<span class="c-comment">// | means "do both" — clear both the color buffer AND the depth buffer</span>
+
+<span class="c-comment">// WINDOW HINT: must request a depth buffer when creating the window</span>
+<span class="c-func">glfwWindowHint</span>(GLFW_DEPTH_BITS, <span class="c-num">24</span>);
+<span class="c-comment">// 24-bit depth buffer: stores depth values 0.0–1.0 in 24 bits per pixel
+// (set this BEFORE glfwCreateWindow)</span>
+
+<span class="c-comment">// DEMONSTRATE THE PROBLEM: draw two overlapping cubes</span>
+<span class="c-comment">// Without depth test, draw order determines visibility (wrong)</span>
+<span class="c-comment">// With depth test, actual 3D position determines visibility (correct)</span>
+
+<span class="c-comment">// Cube 1 at z = -1.0 (farther from camera)</span>
+model = glm::<span class="c-func">translate</span>(glm::<span class="c-type">mat4</span>(<span class="c-num">1.0f</span>), glm::<span class="c-func">vec3</span>(<span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, -<span class="c-num">1.0f</span>));
+<span class="c-func">glUniformMatrix4fv</span>(modelLoc, <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(model));
+<span class="c-func">glDrawArrays</span>(GL_TRIANGLES, <span class="c-num">0</span>, <span class="c-num">36</span>);  <span class="c-comment">// 36 vertices = 12 triangles = 6 cube faces</span>
+
+<span class="c-comment">// Cube 2 at z = 0.0 (closer to camera) — should be IN FRONT</span>
+model = glm::<span class="c-func">translate</span>(glm::<span class="c-type">mat4</span>(<span class="c-num">1.0f</span>), glm::<span class="c-func">vec3</span>(<span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>,  <span class="c-num">0.0f</span>));
+<span class="c-func">glUniformMatrix4fv</span>(modelLoc, <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(model));
+<span class="c-func">glDrawArrays</span>(GL_TRIANGLES, <span class="c-num">0</span>, <span class="c-num">36</span>);</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>With depth test ON: front cube correctly covers the back cube. Comment out glEnable(GL_DEPTH_TEST) and rebuild — the back cube bleeds through the front one (draw-order artifact). This demonstrates exactly why depth testing exists.</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-05: AMBIENT LIGHT -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-05">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-05</span>
+    <div class="demo-title-block">
+      <h2>Ambient Light — The Base Glow</h2>
+      <p>Simulating indirect light: surfaces that face away from a light source are never completely black.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 5</span>
+        <span class="meta-tag tag-concept">Ambient component</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-04 (lit cube)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">💡 Analogy</div>
+    <p>Walk into a room and close all curtains. Even in a "dark" room there's still faint light bouncing off walls, floor, ceiling. That's ambient — it has no direction, affects all surfaces equally, and prevents the scene from being pure black. In a submarine: even a ship on the dark side of the ocean gets some ambient light from bioluminescence, scatter, and sensor glow.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>Fragment Shader — Ambient Light</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// FRAGMENT SHADER</span>
+<span class="c-keyword">const char</span>* fragSrc = <span class="c-string">R"(
+#version 330 core
+out vec4 FragColor;
+
+uniform vec3  uObjectColor;   // e.g., vec3(1.0, 0.5, 0.2) = orange
+uniform vec3  uLightColor;    // e.g., vec3(1.0, 1.0, 1.0) = white light
+uniform float uAmbientStr;    // 0.0 = pitch black, 1.0 = fully lit
+
+void main() {
+    // ambient = strength × light color × object color
+    // This affects ALL pixels equally — no direction needed
+    vec3 ambient = uAmbientStr * uLightColor * uObjectColor;
+
+    FragColor = vec4(ambient, 1.0);
+}
+)"</span>;
+
+<span class="c-comment">// In render loop — send lighting uniforms</span>
+<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uObjectColor"</span>),
+    <span class="c-num">1.0f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.2f</span>);   <span class="c-comment">// orange object</span>
+
+<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uLightColor"</span>),
+    <span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>);   <span class="c-comment">// white light</span>
+
+<span class="c-func">glUniform1f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uAmbientStr"</span>),
+    <span class="c-num">0.15f</span>);              <span class="c-comment">// 15% ambient — dark but not black</span></pre>
+  </div>
+
+  <div class="experiments">
+    <div class="exp-label">🔬 Experiments</div>
+    <div class="exp-item"><span class="exp-num">A</span><p>Set uAmbientStr to 0.0 — pure black. To 1.0 — object appears at full colour with no shading at all (no sense of 3D depth).</p></div>
+    <div class="exp-item"><span class="exp-num">B</span><p>Change uLightColor to <code>vec3(0.0, 0.5, 1.0)</code> — blue tinted ambient light (like moonlight or ocean ambient).</p></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-06: DIFFUSE LIGHT -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-06">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-06</span>
+    <div class="demo-title-block">
+      <h2>Diffuse Light — Surface Angle Matters</h2>
+      <p>The dot product of the surface normal and the light direction determines brightness.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 5</span>
+        <span class="meta-tag tag-concept">dot(normal, lightDir)</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-05</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">☀️ Analogy</div>
+    <p>Hold a solar panel directly at the sun — maximum power. Tilt it 45° — less power. Tilt it 90° (parallel to sun) — zero power. Diffuse light works identically. A surface facing the light is bright. A surface perpendicular to the light gets zero diffuse. The <code>dot()</code> function computes this automatically — it returns 1.0 for perfectly aligned, 0.0 for perpendicular, and we clamp negative values (surfaces facing away) to 0.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>Vertex + Fragment Shader — Diffuse Lighting (normals required)</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// VERTEX DATA: each vertex now has position AND normal</span>
+<span class="c-comment">// Format: x, y, z, nx, ny, nz (position + normal direction)</span>
+<span class="c-type">float</span> vertices[] = {
+    <span class="c-comment">// front face — normal points toward viewer (+Z)</span>
+    -<span class="c-num">0.5f</span>, -<span class="c-num">0.5f</span>,  <span class="c-num">0.5f</span>,  <span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, <span class="c-num">1.0f</span>,
+     <span class="c-num">0.5f</span>, -<span class="c-num">0.5f</span>,  <span class="c-num">0.5f</span>,  <span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, <span class="c-num">1.0f</span>,
+     <span class="c-num">0.0f</span>,  <span class="c-num">0.5f</span>,  <span class="c-num">0.5f</span>,  <span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, <span class="c-num">1.0f</span>,
+};
+<span class="c-comment">// Attribute 0: position (location 0) — stride=6 floats, offset=0</span>
+<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">0</span>, <span class="c-num">3</span>, GL_FLOAT, GL_FALSE, <span class="c-num">6</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)<span class="c-num">0</span>);
+<span class="c-comment">// Attribute 1: normal   (location 1) — stride=6 floats, offset=3 floats</span>
+<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">1</span>, <span class="c-num">3</span>, GL_FLOAT, GL_FALSE, <span class="c-num">6</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)(<span class="c-num">3</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>)));
+
+<span class="c-comment">// VERTEX SHADER — pass position and normal to fragment shader</span>
+<span class="c-keyword">const char</span>* vertSrc = <span class="c-string">R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+
+out vec3 FragPos;    // world-space position (for light calc)
+out vec3 Normal;     // world-space normal
+
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProj;
+
+void main() {
+    FragPos = vec3(uModel * vec4(aPos, 1.0));
+    // Normal matrix: removes translation/scale distortion from normals
+    // transpose(inverse(mat3(uModel))) — standard formula
+    Normal  = mat3(transpose(inverse(uModel))) * aNormal;
+    gl_Position = uProj * uView * vec4(FragPos, 1.0);
+}
+)"</span>;
+
+<span class="c-comment">// FRAGMENT SHADER — compute ambient + diffuse</span>
+<span class="c-keyword">const char</span>* fragSrc = <span class="c-string">R"(
+#version 330 core
+in vec3 FragPos;
+in vec3 Normal;
+out vec4 FragColor;
+
+uniform vec3  uLightPos;      // where the light source is in world space
+uniform vec3  uLightColor;
+uniform vec3  uObjectColor;
+uniform float uAmbientStr;
+
+void main() {
+    // AMBIENT — base light, no direction
+    vec3 ambient = uAmbientStr * uLightColor;
+
+    // DIFFUSE — directional brightness
+    vec3 norm     = normalize(Normal);              // make sure it's unit length
+    vec3 lightDir = normalize(uLightPos - FragPos); // direction FROM surface TO light
+    float diff    = max(dot(norm, lightDir), 0.0);  // 0 if facing away, 1 if facing directly
+    vec3 diffuse  = diff * uLightColor;             // scale light by angle factor
+
+    vec3 result = (ambient + diffuse) * uObjectColor;
+    FragColor = vec4(result, 1.0);
+}
+)"</span>;
+
+<span class="c-comment">// In render loop — animate the light position to show diffuse effect</span>
+<span class="c-type">float</span> lx = <span class="c-func">sin</span>(time * <span class="c-num">0.8f</span>) * <span class="c-num">2.0f</span>;
+<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uLightPos"</span>), lx, <span class="c-num">1.5f</span>, <span class="c-num">2.0f</span>);
+<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uObjectColor"</span>), <span class="c-num">0.8f</span>, <span class="c-num">0.4f</span>, <span class="c-num">0.1f</span>);
+<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uLightColor"</span>),  <span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>);
+<span class="c-func">glUniform1f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uAmbientStr"</span>), <span class="c-num">0.1f</span>);</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>As the light moves left and right, the lit face of the triangle brightens (facing light) and darkens (facing away). You can clearly see the diffuse gradient across faces. The back face is never fully black (ambient prevents that).</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-07: SPECULAR — BLINN-PHONG -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-07">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-07</span>
+    <div class="demo-title-block">
+      <h2>Specular Highlight — Blinn-Phong</h2>
+      <p>The shiny spot that moves as you change viewpoint. The half-vector optimisation.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 5</span>
+        <span class="meta-tag tag-concept">Half-vector, shininess uniform</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-06</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">✨ Analogy</div>
+    <p>Look at a wet deck plate on a ship. Move your head — the shiny glare spot moves with you. That's specular: it depends on where the viewer is, not just where the light is. Blinn-Phong's trick is to compute a "halfway vector" between the light direction and view direction — if the surface normal lines up with that halfway vector, you see a highlight.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>Fragment Shader — Full Phong (Ambient + Diffuse + Specular)</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-keyword">const char</span>* fragSrc = <span class="c-string">R"(
+#version 330 core
+in vec3 FragPos;
+in vec3 Normal;
+out vec4 FragColor;
+
+uniform vec3  uLightPos;
+uniform vec3  uViewPos;       // where the camera is (for specular)
+uniform vec3  uLightColor;
+uniform vec3  uObjectColor;
+uniform float uAmbientStr;
+uniform float uShininess;     // 8=rough, 32=average, 256=very shiny
+
+void main() {
+    // ── AMBIENT ──────────────────────────────
+    vec3 ambient = uAmbientStr * uLightColor;
+
+    // ── DIFFUSE ──────────────────────────────
+    vec3 norm     = normalize(Normal);
+    vec3 lightDir = normalize(uLightPos - FragPos);
+    float diff    = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse  = diff * uLightColor;
+
+    // ── SPECULAR (Blinn-Phong) ────────────────
+    vec3 viewDir  = normalize(uViewPos - FragPos);  // direction to camera
+    // Half vector: midpoint between light direction and view direction
+    // If surface normal aligns with halfDir → we see a highlight
+    vec3 halfDir  = normalize(lightDir + viewDir);
+    float spec    = pow(max(dot(norm, halfDir), 0.0), uShininess);
+    // pow: shininess controls how tight/sharp the highlight is
+    // High shininess (256) = tiny sharp spot (metal)
+    // Low shininess (8)   = wide soft glow (matte plastic)
+    vec3 specular = 0.5 * spec * uLightColor;  // 0.5 = specular strength
+
+    vec3 result = (ambient + diffuse + specular) * uObjectColor;
+    FragColor = vec4(result, 1.0);
+}
+)"</span>;
+
+<span class="c-comment">// Send camera position so specular can be view-dependent</span>
+glm::<span class="c-func">vec3</span> camPos(<span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, <span class="c-num">3.0f</span>);
+<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uViewPos"</span>),
+    camPos.x, camPos.y, camPos.z);
+<span class="c-func">glUniform1f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uShininess"</span>), <span class="c-num">64.0f</span>);</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>A bright white specular highlight appears on the surface. It moves as the light moves. Change uShininess to 8 (big soft glow) vs 256 (tiny sharp spot) to understand the shininess parameter viscerally.</p>
+  </div>
+
+  <div class="experiments">
+    <div class="exp-label">🔬 Experiments</div>
+    <div class="exp-item"><span class="exp-num">A</span><p>Set shininess to 2 — the whole object glows (like a matte rough surface). Set to 512 — one tiny pixel-sized specular dot (mirror-like metal).</p></div>
+    <div class="exp-item"><span class="exp-num">B</span><p>Change specular strength from 0.5 to 2.0 — the highlight becomes blindingly bright, washing out the diffuse and object colour underneath.</p></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-08: LOAD AND APPLY A TEXTURE -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-08">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-08</span>
+    <div class="demo-title-block">
+      <h2>Loading and Applying a Texture</h2>
+      <p>stb_image loads the file. OpenGL uploads it to the GPU. UV coordinates map it onto geometry.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 6</span>
+        <span class="meta-tag tag-concept">glTexImage2D, UV coordinates</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-04 (rectangle with EBO)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">🗺️ Analogy</div>
+    <p>A UV coordinate is like a GPS coordinate for a texture image. U goes left (0.0) to right (1.0). V goes bottom (0.0) to top (1.0). Each vertex gets a UV pair that says "this corner of the triangle maps to this location in the image." The GPU interpolates UV coordinates across the triangle and samples the correct texture colour for every pixel — this is called texture sampling.</p>
+  </div>
+
+  <div class="diagram">
+    <span class="highlight">UV Coordinate Space</span><br><br>
+    (0,1) ──────────── (1,1)<br>
+      │    texture image  │<br>
+      │    in UV space    │<br>
+    (0,0) ──────────── (1,0)<br><br>
+    Vertex at (-0.5, -0.5, 0)  →  UV (0.0, 0.0)  ← bottom-left of texture<br>
+    Vertex at ( 0.5, -0.5, 0)  →  UV (1.0, 0.0)  ← bottom-right of texture<br>
+    Vertex at ( 0.5,  0.5, 0)  →  UV (1.0, 1.0)  ← top-right of texture<br>
+    Vertex at (-0.5,  0.5, 0)  →  UV (0.0, 1.0)  ← top-left of texture
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>main.cpp — Full Texture Setup with stb_image</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// Add stb_image — single-header library, no separate compilation needed</span>
+<span class="c-comment">// Put stb_image.h in your project folder, then:</span>
+<span class="c-keyword">#define</span> STB_IMAGE_IMPLEMENTATION  <span class="c-comment">// tell stb to include implementation</span>
+<span class="c-keyword">#include</span> <span class="c-string">"stb_image.h"</span>
+
+<span class="c-comment">// VERTEX DATA: position (3) + UV (2) per vertex — total 5 floats</span>
+<span class="c-type">float</span> vertices[] = {
+    <span class="c-comment">// positions          // UV coords</span>
+    -<span class="c-num">0.5f</span>, -<span class="c-num">0.5f</span>, <span class="c-num">0.0f</span>,   <span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>,  <span class="c-comment">// bottom-left</span>
+     <span class="c-num">0.5f</span>, -<span class="c-num">0.5f</span>, <span class="c-num">0.0f</span>,   <span class="c-num">1.0f</span>, <span class="c-num">0.0f</span>,  <span class="c-comment">// bottom-right</span>
+     <span class="c-num">0.5f</span>,  <span class="c-num">0.5f</span>, <span class="c-num">0.0f</span>,   <span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>,  <span class="c-comment">// top-right</span>
+    -<span class="c-num">0.5f</span>,  <span class="c-num">0.5f</span>, <span class="c-num">0.0f</span>,   <span class="c-num">0.0f</span>, <span class="c-num">1.0f</span>,  <span class="c-comment">// top-left</span>
+};
+
+<span class="c-comment">// Position attribute: 3 floats, stride=5, offset=0</span>
+<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">0</span>, <span class="c-num">3</span>, GL_FLOAT, GL_FALSE, <span class="c-num">5</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)<span class="c-num">0</span>);
+<span class="c-func">glEnableVertexAttribArray</span>(<span class="c-num">0</span>);
+<span class="c-comment">// UV attribute: 2 floats, stride=5, offset=3 floats</span>
+<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">1</span>, <span class="c-num">2</span>, GL_FLOAT, GL_FALSE, <span class="c-num">5</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)(<span class="c-num">3</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>)));
+<span class="c-func">glEnableVertexAttribArray</span>(<span class="c-num">1</span>);
+
+<span class="c-comment">// ─── LOAD TEXTURE FROM FILE ───</span>
+<span class="c-type">unsigned int</span> texture;
+<span class="c-func">glGenTextures</span>(<span class="c-num">1</span>, &texture);     <span class="c-comment">// create one texture object on GPU</span>
+<span class="c-func">glBindTexture</span>(GL_TEXTURE_2D, texture);  <span class="c-comment">// make it active</span>
+
+<span class="c-comment">// Wrapping: what happens outside UV range 0-1</span>
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  <span class="c-comment">// U axis: repeat</span>
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  <span class="c-comment">// V axis: repeat</span>
+<span class="c-comment">// Filtering: how texels are sampled when texture is scaled</span>
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+<span class="c-comment">// stb_image: flip image vertically (OpenGL UV origin is bottom-left)</span>
+<span class="c-func">stbi_set_flip_vertically_on_load</span>(<span class="c-num">true</span>);
+<span class="c-type">int</span> w, h, channels;
+<span class="c-type">unsigned char</span>* data = <span class="c-func">stbi_load</span>(<span class="c-string">"texture.jpg"</span>, &w, &h, &channels, <span class="c-num">0</span>);
+<span class="c-comment">// w, h = image dimensions in pixels
+// channels = 3 (RGB) or 4 (RGBA)</span>
+
+<span class="c-keyword">if</span> (data) {
+    <span class="c-comment">// Upload pixel data to GPU texture object</span>
+    <span class="c-func">glTexImage2D</span>(
+        GL_TEXTURE_2D,  <span class="c-comment">// target: 2D texture</span>
+        <span class="c-num">0</span>,              <span class="c-comment">// mipmap level: 0 = base (full size)</span>
+        GL_RGB,         <span class="c-comment">// internal format: how GPU stores it</span>
+        w, h,           <span class="c-comment">// image dimensions</span>
+        <span class="c-num">0</span>,              <span class="c-comment">// border: always 0</span>
+        GL_RGB,         <span class="c-comment">// source format: what we're sending</span>
+        GL_UNSIGNED_BYTE,  <span class="c-comment">// data type: 0-255 per channel</span>
+        data            <span class="c-comment">// pixel data from stb_image</span>
+    );
+    <span class="c-func">glGenerateMipmap</span>(GL_TEXTURE_2D);  <span class="c-comment">// auto-generate smaller versions</span>
+}
+<span class="c-func">stbi_image_free</span>(data);  <span class="c-comment">// CPU copy no longer needed after GPU upload</span>
+
+<span class="c-comment">// FRAGMENT SHADER — sample the texture</span>
+<span class="c-keyword">const char</span>* fragSrc = <span class="c-string">R"(
+#version 330 core
+in vec2 vTexCoord;      // UV passed from vertex shader
+out vec4 FragColor;
+uniform sampler2D uTexture;  // slot 0 by default
+
+void main() {
+    // texture() samples the image at the UV coordinate
+    // It returns a vec4 (RGBA). For RGB textures, alpha = 1.0
+    FragColor = texture(uTexture, vTexCoord);
+}
+)"</span>;</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>A textured rectangle filling most of the screen. The image (texture.jpg — use any JPG) is mapped correctly across all four corners. Try any 512×512 or 1024×1024 JPG from your VM's resources folder.</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-09: TEXTURE FILTERING AND MIPMAPS -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-09">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-09</span>
+    <div class="demo-title-block">
+      <h2>Texture Filtering &amp; Mipmaps</h2>
+      <p>GL_NEAREST vs GL_LINEAR. Why mipmaps exist. What happens without them.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 6</span>
+        <span class="meta-tag tag-concept">glTexParameteri filtering modes</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-08</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">🔍 Analogy</div>
+    <p><strong>GL_NEAREST:</strong> "Give me the single closest texel to this UV." Fast. Sharp. Pixelated at close range (classic retro pixel art look).<br><strong>GL_LINEAR:</strong> "Blend the 4 nearest texels." Smoother, slightly blurry, more natural.<br><strong>Mipmaps:</strong> Pre-computed smaller versions of the texture (512→256→128→64...). When an object is far away, OpenGL uses the small version — avoids the shimmering/aliasing of sampling a 1024px texture at 2px on screen.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>glTexParameteri — Filtering Options Compared</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// ── MINIFICATION (texture is smaller than screen area) ──</span>
+<span class="c-comment">// When the textured object is far away and the texture shrinks</span>
+
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+<span class="c-comment">// → Pixelated. Fast. Good for pixel art games.</span>
+
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+<span class="c-comment">// → Smooth blur. Slightly slower. Natural for 3D scenes.</span>
+
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+<span class="c-comment">// → BEST: uses mipmaps + linear blending. No aliasing shimmer.
+// Requires glGenerateMipmap() to have been called.</span>
+
+<span class="c-comment">// ── MAGNIFICATION (texture is bigger than screen area) ──</span>
+<span class="c-comment">// When the object fills the screen and the texture is stretched</span>
+
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+<span class="c-comment">// → Individual texel squares visible — pixelated</span>
+
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+<span class="c-comment">// → Smooth interpolation between texels. Blurry at extreme zoom.</span>
+<span class="c-comment">// Note: GL_LINEAR_MIPMAP_* is INVALID for MAG_FILTER — mipmaps only apply when shrinking</span>
+
+<span class="c-comment">// ── MIPMAP LEVELS VISUALISED ──</span>
+<span class="c-comment">// Level 0: 1024×1024 (full size)
+// Level 1:  512×512
+// Level 2:  256×256
+// Level 3:  128×128
+// ...
+// Level 10:    1×1   (single pixel average of entire texture)
+// glGenerateMipmap creates all levels automatically</span>
+<span class="c-func">glGenerateMipmap</span>(GL_TEXTURE_2D);
+
+<span class="c-comment">// WRAPPING — what happens for UV coords outside 0-1 range</span>
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);        <span class="c-comment">// tile</span>
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); <span class="c-comment">// stretch edge pixel</span>
+<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);<span class="c-comment">// mirror tile</span></pre>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- D2-10: MULTI-TEXTURING -->
+<!-- ============================================================ -->
+<section class="demo-section" id="d2-10">
+  <div class="demo-header">
+    <span class="demo-num-badge">D2-10</span>
+    <div class="demo-title-block">
+      <h2>Multi-Texturing — Blend Two Textures</h2>
+      <p>Two texture units. Two sampler2D uniforms. mix() in GLSL combines them.</p>
+      <div class="demo-meta">
+        <span class="meta-tag tag-module">Module 6</span>
+        <span class="meta-tag tag-concept">GL_TEXTURE0/1, sampler2D, mix()</span>
+        <span class="meta-tag tag-prereq">Prereq: D2-08</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-label">
+      <span>main.cpp — Two Textures, One Rectangle</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="c-comment">// ── TEXTURE UNIT 0 ── (load first texture as before)</span>
+<span class="c-func">glActiveTexture</span>(GL_TEXTURE0);       <span class="c-comment">// activate slot 0</span>
+<span class="c-func">glBindTexture</span>(GL_TEXTURE_2D, tex1); <span class="c-comment">// bind first texture to slot 0</span>
+
+<span class="c-comment">// ── TEXTURE UNIT 1 ──</span>
+<span class="c-func">glActiveTexture</span>(GL_TEXTURE1);       <span class="c-comment">// activate slot 1</span>
+<span class="c-func">glBindTexture</span>(GL_TEXTURE_2D, tex2); <span class="c-comment">// bind second texture to slot 1</span>
+
+<span class="c-comment">// Tell shaders which texture unit each sampler reads from</span>
+<span class="c-func">glUniform1i</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uTex1"</span>), <span class="c-num">0</span>); <span class="c-comment">// sampler uTex1 → unit 0</span>
+<span class="c-func">glUniform1i</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uTex2"</span>), <span class="c-num">1</span>); <span class="c-comment">// sampler uTex2 → unit 1</span>
+
+<span class="c-comment">// FRAGMENT SHADER — blend the two textures</span>
+<span class="c-keyword">const char</span>* fragSrc = <span class="c-string">R"(
+#version 330 core
+in vec2 vTexCoord;
+out vec4 FragColor;
+uniform sampler2D uTex1;    // diffuse texture (e.g., metal plate)
+uniform sampler2D uTex2;    // detail texture (e.g., rust overlay)
+uniform float uMix;         // 0.0 = only tex1, 1.0 = only tex2
+
+void main() {
+    vec4 col1 = texture(uTex1, vTexCoord);
+    vec4 col2 = texture(uTex2, vTexCoord);
+    // mix(a, b, t): linearly interpolate — t=0 gives a, t=1 gives b
+    FragColor  = mix(col1, col2, uMix);
+}
+)"</span>;
+
+<span class="c-comment">// Animate the blend amount over time</span>
+<span class="c-type">float</span> mixVal = (<span class="c-func">sin</span>(time) + <span class="c-num">1.0f</span>) * <span class="c-num">0.5f</span>; <span class="c-comment">// oscillates 0.0–1.0</span>
+<span class="c-func">glUniform1f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uMix"</span>), mixVal);</pre>
+  </div>
+
+  <div class="output-box">
+    <div class="output-label">✓ Expected Output</div>
+    <p>Two textures fade in and out of each other smoothly. This is the foundation of specular mapping (Day 3), normal mapping, and PBR workflows — all use multiple textures blended in the shader.</p>
+  </div>
+
+  <div class="experiments">
+    <div class="exp-label">🔬 Experiments</div>
+    <div class="exp-item"><span class="exp-num">A</span><p>Replace mix() with <code>col1 * col2</code> — multiplicative blending. Darkens. Used for shadow overlays and AO maps.</p></div>
+    <div class="exp-item"><span class="exp-num">B</span><p>Replace with <code>col1 + col2</code> — additive blending. Brightens. Used for glow/emissive effects.</p></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>By <strong>Raushan Ranjan (MCT | Educator)</strong> · Koenig Solutions<br>
+  Koenig Original AI-Courseware · <a href="index.html">Module Notes</a> · <a href="labs.html">Lab Challenges</a></p>
+</footer>
+
+<script>
+// Copy button
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Sidebar active state on scroll
+const sections = document.querySelectorAll('.demo-section');
+const links = document.querySelectorAll('.sidebar-link');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const target = document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);
+      if (target) target.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

@@ -163,7 +163,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 
 <nav>
   <a class="nav-brand" href="index.html">
-    <div class="nav-brand-hex">⬡</div>
+    <div class="nav-brand-hex">⬡
+    <a class="nav-link" href="day1-script.html">Teaching Script</a>
+  </div>
     RR Graphics Lab <span class="nav-mct">MCT</span>
   </a>
   <div class="nav-links">
@@ -283,27 +285,42 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     </div>
   </div>
 
-  <!-- DAY 2 -->
+  <!-- DAY 2 — LIVE -->
   <div class="day-card" id="card-day2">
     <div class="day-card-header" onclick="toggleCard('day2')">
       <div class="day-card-accent" style="background:var(--d2)"></div>
       <div class="day-info">
         <div class="day-label">Day 2 · Modules 4, 5, 6</div>
-        <div class="day-card-title">3D Vessel Tracker — Lighting, Textures & Camera</div>
-        <div class="day-card-desc">Extend the 2D display into a 3D scene. A ship model with Phong lighting, textured hull, and a flyable camera.</div>
+        <div class="day-card-title">3D Vessel Tracker — Lighting, Textures &amp; Camera</div>
+        <div class="day-card-desc">Extend into a full 3D scene. A ship hull with MVP matrix, fly camera, Phong lighting, textured hull, and animated ocean surface.</div>
       </div>
-      <span class="day-status status-soon">🔒 Coming Soon</span>
-      <span style="color:var(--text3);font-size:1.1rem;margin-left:1rem" id="arrow-day2">▶</span>
+      <span class="day-status status-live">● Live</span>
+      <span style="color:var(--text3);font-size:1.1rem;margin-left:1rem" id="arrow-day2">▼</span>
     </div>
-    <div class="day-card-body hidden" id="body-day2">
-      <div class="labs-pills">
-        <div class="lab-pill"><span style="background:rgba(34,211,238,.15);color:var(--cyan)">L1</span>3D Object with MVP Matrix</div>
-        <div class="lab-pill"><span style="background:rgba(34,211,238,.15);color:var(--cyan)">L2</span>Flyable Camera System</div>
-        <div class="lab-pill"><span style="background:rgba(34,211,238,.15);color:var(--cyan)">L3</span>Phong Lighting on Vessel</div>
-        <div class="lab-pill"><span style="background:rgba(34,211,238,.15);color:var(--cyan)">L4</span>Hull Texture Application</div>
-        <div class="lab-pill"><span style="background:rgba(34,211,238,.15);color:var(--cyan)">L5</span>Ocean Skybox Environment</div>
+    <div class="day-card-body" id="body-day2">
+      <div class="scenario-banner">
+        <div class="scenario-icon">🚢</div>
+        <div class="scenario-text">
+          <h3>Scenario: 3D Naval Vessel Tracker</h3>
+          <p>You are building a 3D tracking system that renders a naval vessel in a real-time 3D environment. Each lab adds one layer — from a rotating hull to a fully lit, textured ship on an animated ocean. By Lab 5, all Day 2 concepts are active simultaneously.</p>
+          <span class="scenario-tag">MVP Matrix</span>
+          <span class="scenario-tag">Phong Lighting</span>
+          <span class="scenario-tag">Textures</span>
+          <span class="scenario-tag">Fly Camera</span>
+          <span class="scenario-tag">Two Light Sources</span>
+        </div>
       </div>
-      <div class="open-btn open-btn-ghost" style="opacity:.5;cursor:default">🔒 Available after Day 2</div>
+      <div class="labs-pills">
+        <div class="lab-pill"><span style="background:rgba(34,211,238,.25);color:var(--cyan)">L1</span>3D Vessel with Model Matrix</div>
+        <div class="lab-pill"><span style="background:rgba(34,211,238,.25);color:var(--cyan)">L2</span>Full MVP + Fly Camera</div>
+        <div class="lab-pill"><span style="background:rgba(34,211,238,.25);color:var(--cyan)">L3</span>Phong Lighting on Hull</div>
+        <div class="lab-pill"><span style="background:rgba(34,211,238,.25);color:var(--cyan)">L4</span>Textured Hull Surface</div>
+        <div class="lab-pill"><span style="background:rgba(34,211,238,.25);color:var(--cyan)">L5</span>Full Scene: Ocean + Two Lights</div>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <a class="open-btn open-btn-primary" href="lab-day2.html">🔬 Open Day 2 Labs</a>
+        <a class="open-btn open-btn-ghost" href="day2-demos.html">⚡ Day 2 Demos First</a>
+      </div>
     </div>
   </div>
 

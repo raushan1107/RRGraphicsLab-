@@ -331,20 +331,30 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <div class="day-info">
         <div class="day-label">Day 3 · Modules 7, 8, 9</div>
         <div class="day-card-title">Maritime Surveillance Scene — Advanced Rendering</div>
-        <div class="day-card-desc">2,000 instanced buoys, sonar-sweep post-processing effect, stencil-buffer vessel outlines, profiled with RenderDoc.</div>
+        <div class="day-card-desc">Procedural GLSL sonar display, 2,000 instanced buoy markers, FBO sonar post-processing, stencil selection outline, transparent radar sweep — all combined in one scene.</div>
       </div>
-      <span class="day-status status-soon">🔒 Coming Soon</span>
-      <span style="color:var(--text3);font-size:1.1rem;margin-left:1rem" id="arrow-day3">▶</span>
+      <span class="day-status status-live">● Live</span>
+      <span style="color:var(--d3);font-size:1.1rem;margin-left:1rem" id="arrow-day3">▼</span>
     </div>
-    <div class="day-card-body hidden" id="body-day3">
-      <div class="labs-pills">
-        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L1</span>Custom GLSL Shader Effects</div>
-        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L2</span>Instanced Contact Markers (2000+)</div>
-        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L3</span>FBO Sonar-Sweep Overlay</div>
-        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L4</span>Stencil Buffer Outlines</div>
-        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L5</span>RenderDoc Performance Session</div>
+    <div class="day-card-body" id="body-day3">
+      <div class="scenario-banner" style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:.85rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem">
+        <span style="font-size:1.4rem">🚢</span>
+        <div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--d3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px">Capstone Scenario</div>
+          <div style="font-size:.84rem;color:var(--text2)">One project folder (<code style="font-family:var(--font-mono);font-size:.78rem;color:var(--cyan)">C:\Labs\SurveillanceScene\</code>), one CMakeLists.txt, five <code style="font-family:var(--font-mono);font-size:.78rem;color:var(--cyan)">main.cpp</code> replacements — each lab builds on the last.</div>
+        </div>
       </div>
-      <div class="open-btn open-btn-ghost" style="opacity:.5;cursor:default">🔒 Available after Day 3</div>
+      <div class="labs-pills">
+        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L1</span>Procedural Sonar Display</div>
+        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L2</span>2,000 Instanced Buoys</div>
+        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L3</span>FBO Sonar Post-Processing</div>
+        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L4</span>Stencil Outline + Blend</div>
+        <div class="lab-pill"><span style="background:rgba(74,222,128,.15);color:var(--green)">L5</span>Full Scene Capstone</div>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <a class="open-btn" href="lab-day3.html">🔬 Open Lab Challenges</a>
+        <a class="open-btn open-btn-ghost" href="day3-demos.html">⚡ Day 3 Demos</a>
+      </div>
     </div>
   </div>
 

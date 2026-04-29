@@ -477,17 +477,86 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
   </div>
 
   <!-- ═══════════════════ DAYS 3-5 PREVIEW ═══════════════════ -->
+  <!-- ═══════════════════ DAY 3 ═══════════════════ -->
   <div class="day-section" id="day3">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);color:var(--green)">Day 3 — Advanced OpenGL</div>
+      <div class="day-badge" style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:var(--green)">Day 3 — Advanced OpenGL</div>
       <div class="day-header-info">
-        <div class="day-title">GLSL, Framebuffers, Instancing, Post-Processing, RenderDoc</div>
-        <div class="day-desc">6 demos · Modules 7, 8, 9 — Coming soon</div>
+        <div class="day-title">GLSL Deep Dive, Instancing, FBO Post-Processing, Stencil + Blending</div>
+        <div class="day-desc">4 demos · Modules 7, 8, 9 · From procedural shaders to rendering scenes into textures</div>
       </div>
-      <div class="day-cta" style="border-color:rgba(74,222,128,.25);color:var(--green);background:rgba(74,222,128,.05);cursor:default">🔒 Upcoming</div>
+      <a class="day-cta" href="day3-demos.html" style="border-color:rgba(74,222,128,.3);color:var(--green);background:rgba(74,222,128,.08)">Open Day 3 Demos →</a>
     </div>
-    <div style="background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--radius);padding:2rem;text-align:center;color:var(--text3);font-size:.88rem">
-      Demos 14–19: GLSL Deep Dive · Instancing 10k Objects · FBO Post-Processing · Transparency & Blending · MSAA Anti-Aliasing · RenderDoc Profiling Session
+    <div class="demos-grid">
+
+      <!-- D11 — Procedural Shader -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d3)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 11 · Module 7</div>
+          <div class="demo-title">Procedural Radar Shader — GLSL Deep Dive</div>
+          <div class="demo-desc">Entire radar display computed in the fragment shader: rings via fract(), sweep via atan()+mod(), soft edges via smoothstep(), blips via length(). Zero texture files. One uniform: uTime.</div>
+          <div class="demo-tags"><span class="demo-tag">fract()</span><span class="demo-tag">smoothstep()</span><span class="demo-tag">atan()</span><span class="demo-tag">Fullscreen Quad</span></div>
+          <div class="demo-what" style="border-color:var(--d3)">🎯 Green radar display. +/- = ring count. S = sweep. H = hard vs soft edges (aliasing demo).</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo11">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~30 min</span>
+        </div>
+      </div>
+
+      <!-- D12 — Instancing -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d3)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 12 · Module 7</div>
+          <div class="demo-title">Instancing — 1,000 Contacts, One Draw Call</div>
+          <div class="demo-desc">Per-instance VBO holds 1,000 unique positions. glVertexAttribDivisor(1,1) makes attribute 1 advance once per instance. glDrawArraysInstanced draws all 1,000 in a single GPU command. Terminal shows frame time comparison: instanced vs non-instanced.</div>
+          <div class="demo-tags"><span class="demo-tag">glDrawArraysInstanced</span><span class="demo-tag">glVertexAttribDivisor</span><span class="demo-tag">gl_InstanceID</span></div>
+          <div class="demo-what" style="border-color:var(--d3)">🎯 1,000 coloured contacts. I=toggle instanced/non-instanced. +/-=count. Watch frame time change.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo12">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~30 min</span>
+        </div>
+      </div>
+
+      <!-- D13 — FBO -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d3)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 13 · Module 8</div>
+          <div class="demo-title">FBO Post-Processing — Render Scene to Texture</div>
+          <div class="demo-desc">Two-pass rendering: Pass 1 renders the 3D vessel into a custom framebuffer (to texture). Pass 2 draws a fullscreen quad sampling that texture and applying an effect. Five switchable effects via F1–F5.</div>
+          <div class="demo-tags"><span class="demo-tag">FBO</span><span class="demo-tag">Render-to-Texture</span><span class="demo-tag">Post-Processing</span><span class="demo-tag">Fullscreen Quad</span></div>
+          <div class="demo-what" style="border-color:var(--d3)">🎯 F1=normal F2=greyscale F3=night vision F4=edge detect F5=vignette. Camera still works in all modes.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo13">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~40 min</span>
+        </div>
+      </div>
+
+      <!-- D14 — Stencil + Blend -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d3)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 14 · Module 8</div>
+          <div class="demo-title">Stencil Outline + Transparent Radar Sweep</div>
+          <div class="demo-desc">All three fragment tests active simultaneously: depth (surface ordering), stencil (selection outline), blending (transparent sweep). Two-pass stencil outline: write mask on vessel, draw scaled hull only where mask absent. Sweep composites at alpha=0.35.</div>
+          <div class="demo-tags"><span class="demo-tag">Stencil Buffer</span><span class="demo-tag">GL_NOTEQUAL</span><span class="demo-tag">glBlendFunc</span><span class="demo-tag">glDepthMask</span></div>
+          <div class="demo-what" style="border-color:var(--d3)">🎯 Gold outline + green transparent sweep. F1=sweep toggle. F2=outline toggle. Break tests in comments.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo14">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~40 min</span>
+        </div>
+      </div>
+
     </div>
   </div>
 

@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 3 Demos &mdash; RR Graphics Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;--border:#1e2535;--border2:#2a3148;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--accent:#6366f1;--accent2:#818cf8;--cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--pink:#f472b6;--yellow:#fbbf24;--d3:#4ade80;--nav-h:62px;--radius:12px;--font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+::selection{background:rgba(74,222,128,.25);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--d3)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);background:rgba(8,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:15px;font-weight:700;white-space:nowrap}
+.nav-hex{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--d3));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0}
+.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--d3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;border:1px solid rgba(99,102,241,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1;margin-left:1.5rem}
+.nav-link{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.nav-link.active{color:var(--d3);background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2)}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-badge{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);color:var(--d3)}
+.page{display:flex;padding-top:var(--nav-h)}
+.sidebar{width:265px;flex-shrink:0;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0}
+.main{flex:1;min-width:0;padding:3rem 2.5rem;max-width:1060px}
+.sb-grp{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);padding:0 1.25rem;margin-bottom:.5rem;margin-top:1.2rem}
+.sb-link{display:flex;align-items:center;gap:10px;padding:.55rem 1.25rem;font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;border-left:2px solid transparent;cursor:pointer;text-decoration:none}
+.sb-link:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border2)}
+.sb-link.active{background:rgba(74,222,128,.06);color:var(--d3);border-left-color:var(--d3)}
+.sb-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
+.sb-link.active .sb-num{background:rgba(74,222,128,.15);border-color:rgba(74,222,128,.35);color:var(--d3)}
+.sb-sep{height:1px;background:var(--border);margin:.6rem 1.25rem}
+.demo-sec{padding:3rem 0;border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--nav-h) + 1rem)}
+.demo-sec:first-child{padding-top:0}
+.demo-sec:last-child{border-bottom:none}
+.demo-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.d-badge{font-family:var(--font-display);font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3);color:var(--d3)}
+.d-type{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.demo-title{font-family:var(--font-display);font-size:clamp(1.15rem,2.5vw,1.6rem);font-weight:700;color:var(--text);margin-bottom:.6rem;line-height:1.25}
+.demo-desc{font-size:.9rem;color:var(--text2);line-height:1.85;max-width:720px;margin-bottom:1.25rem}
+.demo-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.meta-chip{font-size:11px;color:var(--text3);font-weight:600;background:var(--bg3);border:1px solid var(--border);padding:3px 12px;border-radius:20px}
+.builds-on{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--text3)}
+.bo-chip{padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;background:var(--bg4);border:1px solid var(--border2);color:var(--text2)}
+.bo-ok{color:var(--d3)!important;border-color:rgba(74,222,128,.4)!important;background:rgba(74,222,128,.08)!important}
+.out-preview{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.2);border-left:3px solid var(--d3);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.op-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d3);margin-bottom:.5rem}
+.op-item{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--text2);line-height:1.6;margin-top:.3rem}
+.op-dot{width:7px;height:7px;border-radius:50%;background:var(--d3);flex-shrink:0;margin-top:5px}
+.concept{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(74,222,128,.03));border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.concept-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
+.concept p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.warn{background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.2);border-left:3px solid var(--orange);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:.4rem}
+.warn p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.tip{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.2);border-left:3px solid var(--d3);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.tip-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d3);margin-bottom:.4rem}
+.tip p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--pink);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.exp-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--pink);margin-bottom:.5rem}
+.exp-list{list-style:none;margin:.3rem 0}
+.exp-list li{font-size:.86rem;color:var(--text2);padding:3px 0 3px 18px;position:relative;line-height:1.7}
+.exp-list li::before{content:"\25B8";position:absolute;left:0;color:var(--pink);font-size:.75rem;top:5px}
+.sh{font-size:.92rem;font-weight:700;color:var(--text);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:8px}
+.sh-dot{width:6px;height:6px;border-radius:50%;background:var(--d3);box-shadow:0 0 8px var(--d3)}
+p.note{font-size:.88rem;color:var(--text2);line-height:1.8;margin:.4rem 0}
+code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+.diag{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin:1.25rem 0;overflow-x:auto}
+.diag-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;text-align:center}
+.diag pre{font-family:var(--font-mono);font-size:.78rem;color:var(--text2);line-height:1.65}
+.ftree{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.ftree-title{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
+.ftree pre{font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8}
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:.55rem 1rem}
+.code-fname{font-family:var(--font-mono);font-size:11px;color:var(--text2);font-weight:600}
+.code-row{display:flex;align-items:center;gap:.75rem}
+.code-lang{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.cp-btn{padding:4px 14px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.cp-btn:hover{border-color:var(--d3);color:var(--d3)}
+.cp-btn.ok{color:var(--green);border-color:var(--green)}
+.code-block{background:#03050a;border:1px solid var(--border2);border-radius:0 0 var(--radius) var(--radius);overflow:auto;max-height:700px}
+.code-block pre{font-family:var(--font-mono);font-size:.78rem;line-height:1.9;padding:1.25rem 1.5rem;white-space:pre;color:#cdd6f4;min-width:max-content}
+.cmd{background:#030508;border:1px solid rgba(74,222,128,.18);border-left:3px solid var(--d3);border-radius:var(--radius);padding:1rem 1.25rem;margin:.75rem 0;position:relative}
+.cmd-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--d3);margin-bottom:.4rem}
+.cmd pre{font-family:var(--font-mono);font-size:.8rem;color:var(--d3);line-height:1.7}
+.cmd-cp{position:absolute;top:.7rem;right:.75rem;padding:3px 10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);font-size:10px;cursor:pointer;transition:all .2s}
+.cmd-cp:hover{color:var(--d3);border-color:var(--d3)}
+.terminal{background:#020408;border:1px solid rgba(74,222,128,.25);border-radius:var(--radius);overflow:hidden;margin:1rem 0}
+.term-bar{background:#0a0e17;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(74,222,128,.1)}
+.t-dot{width:10px;height:10px;border-radius:50%}
+.term-title{font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem}
+.term-body{padding:1rem 1.25rem;font-family:var(--font-mono);font-size:.8rem;line-height:1.85}
+.ts{color:var(--d3)}.th{color:var(--cyan)}.to{color:#94a3b8}.tw{color:var(--yellow)}.t-hr{border:none;border-top:1px solid #1a2233;margin:.4rem 0}
+.page-foot{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:1px solid var(--border);margin-top:3rem}
+.foot-btn{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.foot-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--d3)}
+.foot-btn.primary{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:var(--d3)}
+@media(max-width:900px){.sidebar{display:none}.nav-links{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-hex">&#x2736;</div>
+    RR Graphics Lab <span class="nav-mct">MCT</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html"><span class="nav-dot" style="background:var(--accent)"></span>Module Notes</a>
+    <a class="nav-link active" href="demos.html"><span class="nav-dot" style="background:var(--d3)"></span>Code Demos</a>
+    <a class="nav-link" href="labs.html"><span class="nav-dot" style="background:var(--green)"></span>Lab Challenges</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">Day 3 &mdash; Advanced OpenGL</span>
+    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan &middot; MCT</span>
+  </div>
+</nav>
+<div class="page">
+<aside class="sidebar">
+  <div class="sb-grp">Day 3 &mdash; 4 Demos</div>
+  <a class="sb-link active" href="#demo11"><span class="sb-num">D11</span>Procedural Shader</a>
+  <a class="sb-link" href="#demo12"><span class="sb-num">D12</span>Instancing</a>
+  <a class="sb-link" href="#demo13"><span class="sb-num">D13</span>FBO Post-Processing</a>
+  <a class="sb-link" href="#demo14"><span class="sb-num">D14</span>Stencil + Blending</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Navigation</div>
+  <a class="sb-link" href="day2-demos.html"><span class="sb-num" style="font-size:9px">&#8592;</span>Day 2 Demos</a>
+  <a class="sb-link" href="day3-script.html"><span class="sb-num" style="font-size:9px">&#128218;</span>Day 3 Script</a>
+  <a class="sb-link" href="labs.html"><span class="sb-num" style="font-size:9px">&#128300;</span>Day 3 Labs</a>
+</aside>
+<main class="main">
+
+
+<div class="demo-sec" id="demo11">
+  <div class="demo-eyebrow"><span class="d-badge">Demo 11 &middot; Module 7</span><span class="d-type">GLSL Deep Dive &mdash; Procedural Visual</span></div>
+  <div class="demo-title">Procedural Radar Display &mdash; GLSL as a Full Language</div>
+  <div class="demo-desc">The entire radar display &mdash; rings, sweep arc, contact blips, boundary, vignette &mdash; is computed inside the fragment shader from one uniform: <code class="ic">uTime</code>. No texture files. No image data. No per-vertex colour. Just mathematics applied to the UV coordinate of each pixel. This demo teaches you to read a shader and predict its visual output before running it.</div>
+  <div class="demo-meta">
+    <span class="meta-chip">&#128187; Project: M11_ProceduralShader</span>
+    <span class="meta-chip">&#9201; ~30 min</span>
+    <span class="meta-chip">New: fract &middot; atan &middot; smoothstep &middot; mod &middot; mix &middot; fullscreen quad</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Demo 6 (uniforms + animation)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">fullscreen quad pattern</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">GLSL built-in functions</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Complete radar display, zero image files &#10003;</span>
+  </div>
+  <div class="out-preview">
+    <div class="op-label">&#127919; What You Will See</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Screen:</strong> Phosphor-green circular radar display with rotating sweep arc, range rings, and three pulsing contact blips</div>
+    <div class="op-item"><span class="op-dot"></span><strong>+ / &minus; keys:</strong> Change ring count (1 to 20) &mdash; see fract() tiling density change live</div>
+    <div class="op-item"><span class="op-dot"></span><strong>S key:</strong> Toggle sweep arc on/off &mdash; isolate the atan()/mod() animation</div>
+    <div class="op-item"><span class="op-dot"></span><strong>H key:</strong> Toggle hard edges (step) vs soft edges (smoothstep) &mdash; see aliasing appear</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-lbl">&#128161; Why a Fullscreen Quad Has No MVP Matrix</div>
+    <p class="note">The fullscreen quad vertices are hardcoded in NDC: (-1,-1) to (1,1). They already cover the entire screen. The vertex shader has no <code class="ic">uModel</code>, <code class="ic">uView</code>, or <code class="ic">uProjection</code> &mdash; it passes position through unchanged. The entire visual computation happens in the <strong>fragment shader</strong>, which receives the UV coordinate of each pixel and computes its colour from scratch using <code class="ic">uTime</code>. Think of it as: the geometry is just a carrier. The fragment shader IS the content.</p>
+  </div>
+
+  <div class="diag">
+    <div class="diag-title">Five GLSL Functions Used in This Demo &mdash; What Each One Produces</div>
+    <pre>
+  fract(dist * ringCount)
+  → takes fractional part → tiles 0.0–1.0 pattern "ringCount" times
+  → used for range rings: each time fract resets to 0, a new ring appears
+
+  atan(uv.y, uv.x)
+  → polar angle in radians from the UV centre (-π to +π)
+  → used for sweep arc: compare pixel angle to rotating sweep angle
+
+  mod(uTime * speed, 6.2832)
+  → wraps the sweep angle back to [0, 2π] each full revolution
+  → 6.2832 = 2π = one full circle in radians
+
+  smoothstep(lo, hi, x)
+  → 0.0 when x ≤ lo, 1.0 when x ≥ hi, smooth curve between them
+  → used for every soft edge: rings, boundary, blips, sweep trail
+
+  mix(colA, colB, t)
+  → linear blend: colA*(1-t) + colB*t
+  → used for sweep trail fade and contact blip colour mixing</pre>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake11&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake11">cmake_minimum_required(VERSION 3.20)
+project(M11_ProceduralShader)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(OpenGL REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLEW_DIR $ENV{GLEW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLEW_DIR}/include
+    ${GLM_DIR}
+)
+add_executable(M11_ProceduralShader src/main.cpp)
+target_link_libraries(M11_ProceduralShader
+    OpenGL::GL
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+    ${GLEW_DIR}/lib/Release/x64/glew32s.lib
+)</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp &mdash; Complete Program</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main11&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main11">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 3 · DEMO 11
+//  Procedural Radar Display — GLSL Deep Dive
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: M11_ProceduralShader
+//  FOLDER:       C:\Labs\M11_ProceduralShader\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - GLSL as a full language: functions, math, loops in a shader
+//  - fract(): tiling patterns from UV coordinates
+//  - atan(): polar coordinate angle from UV centre
+//  - smoothstep(): anti-aliased soft edges (vs step() hard edge)
+//  - mod(): oscillating and repeating values
+//  - mix(): linear interpolation between any two values
+//  - Procedural textures: colour from math, no image files at all
+//  - The fullscreen quad pattern: 2 triangles covering NDC space
+//
+//  WHAT YOU WILL SEE:
+//  - A radar-green circular tactical display
+//  - Outer boundary ring with soft edge (smoothstep)
+//  - Range rings tiled with fract()
+//  - Rotating sweep arc driven by uTime via atan() + mod()
+//  - Three contact blips at fixed positions
+//  - Zero texture files, zero image data — all computed per pixel
+//
+//  KEYS:
+//  + / -    : increase / decrease ring count
+//  S        : toggle sweep on/off
+//  H        : toggle hard edges (step) vs soft (smoothstep) — see aliasing
+//  ESC      : quit
+//
+//  BUILDS ON: Demo 6 (uniforms) — extends to GLSL functions + fullscreen quad
+//  KEY INSIGHT: The &quot;scene&quot; IS the fragment shader. Geometry is just a carrier.
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VERTEX SHADER — fullscreen quad pass-through
+// No MVP matrix needed: vertices are already in NDC (-1 to +1)
+// Just pass UV coordinates to the fragment shader
+// ─────────────────────────────────────────────────────────────────────────────
+const char* vertSrc = R&quot;GLSL(
+    #version 330 core
+    layout(location = 0) in vec2 aPos;       // NDC position: (-1,-1) to (1,1)
+    layout(location = 1) in vec2 aTexCoord;  // UV: (0,0) to (1,1)
+    out vec2 vUV;
+    void main() {
+        gl_Position = vec4(aPos, 0.0, 1.0);
+        vUV = aTexCoord;
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FRAGMENT SHADER — the entire radar display computed procedurally
+//
+// This shader demonstrates every major GLSL math function in context.
+// Read it top to bottom — each function builds on the previous one.
+//
+// The &quot;texture&quot; (colour at each pixel) is entirely computed from:
+//   - vUV: this pixel&#x27;s UV coordinate (0,0 bottom-left to 1,1 top-right)
+//   - uTime: seconds since start (for animation)
+//   - uRingCount: user-adjustable ring density
+//   - uUseSoft: 1 = smoothstep (anti-aliased), 0 = step (aliased)
+// ─────────────────────────────────────────────────────────────────────────────
+const char* fragSrc = R&quot;GLSL(
+    #version 330 core
+    in vec2 vUV;
+    out vec4 FragColor;
+
+    uniform float uTime;
+    uniform float uRingCount;   // how many range rings (default 5.0)
+    uniform int   uUseSoft;     // 1 = smoothstep edges, 0 = step edges
+    uniform int   uShowSweep;   // 1 = sweep visible, 0 = off
+
+    // ── HELPER FUNCTIONS ─────────────────────────────────────────────────────
+
+    // Soft or hard edge based on mode (demonstrates smoothstep vs step)
+    float edge(float lo, float hi, float x) {
+        if (uUseSoft == 1)
+            return smoothstep(lo, hi, x);
+        else
+            return step((lo + hi) * 0.5, x);  // hard cutoff at midpoint
+    }
+
+    // Draw a ring at radius r with thickness t
+    // Returns 0.0 (outside) to 1.0 (on ring)
+    float ring(float dist, float r, float t) {
+        float inner = edge(r - t, r - t * 0.5, dist);
+        float outer = 1.0 - edge(r, r + t * 0.5, dist);
+        return inner * outer;
+    }
+
+    // Circular blip at position pos with radius blipR
+    float blip(vec2 uv, vec2 pos, float blipR) {
+        float d = length(uv - pos);
+        return 1.0 - edge(blipR - 0.005, blipR, d);
+    }
+
+    void main() {
+        // ── COORDINATE SETUP ─────────────────────────────────────────────────
+        // Centre the UV at (0,0) instead of (0.5, 0.5)
+        // Now (0,0) = display centre, corners at (±0.5, ±0.5)
+        vec2 uv = vUV - 0.5;
+
+        // Distance from centre: 0 = centre, 0.5 = edge
+        // length() = sqrt(x² + y²) — the GPU computes this in hardware
+        float dist = length(uv);
+
+        // Polar angle: atan(y, x) returns angle in radians (-π to +π)
+        // We use this for the sweep arc
+        float angle = atan(uv.y, uv.x);
+
+        // ── DISPLAY BOUNDARY ─────────────────────────────────────────────────
+        // Discard everything outside the circular display
+        // edge(0.47, 0.50, dist): soft transition from display to darkness
+        float inDisplay = 1.0 - edge(0.47, 0.50, dist);
+        if (inDisplay &lt; 0.01) {
+            FragColor = vec4(0.0, 0.02, 0.0, 1.0);  // near-black outside
+            return;
+        }
+
+        // ── BASE DISPLAY COLOUR ───────────────────────────────────────────────
+        // Dim phosphor green: the &quot;off&quot; state of a radar tube
+        vec3 colour = vec3(0.02, 0.08, 0.04);
+
+        // ── OUTER BOUNDARY RING ───────────────────────────────────────────────
+        // ring(dist, radius, thickness)
+        float outerRing = ring(dist, 0.46, 0.008);
+        colour += outerRing * vec3(0.1, 0.9, 0.2);   // bright green ring
+
+        // ── RANGE RINGS ───────────────────────────────────────────────────────
+        // fract(dist * uRingCount): takes the FRACTIONAL part of the scaled distance
+        // This creates a pattern that repeats uRingCount times from 0 to 0.46
+        // The pattern goes 0→1→0→1... creating concentric circles
+        float rings = fract(dist * uRingCount);
+        // Thin bright lines where fract(dist*N) is near 0.0 (ring centres)
+        float ringGlow = (1.0 - edge(0.02, 0.06, rings))    // inner edge of ring
+                       * (1.0 - edge(0.94, 0.98, rings));   // outer edge
+        colour += ringGlow * 0.12 * vec3(0.1, 0.9, 0.2) * inDisplay;
+
+        // ── CROSSHAIR LINES ───────────────────────────────────────────────────
+        // Horizontal: abs(uv.y) &lt; threshold → thin horizontal bar
+        // abs() gives the absolute value — same on both sides of centre
+        float crossH = (1.0 - edge(0.002, 0.006, abs(uv.y))) * inDisplay;
+        float crossV = (1.0 - edge(0.002, 0.006, abs(uv.x))) * inDisplay;
+        colour += (crossH + crossV) * 0.08 * vec3(0.1, 0.9, 0.2);
+
+        // ── ROTATING SWEEP ARC ───────────────────────────────────────────────
+        // mod(uTime * sweepSpeed, 2π): wraps the angle back to [0, 2π] each revolution
+        // atan(uv.y, uv.x): pixel&#x27;s polar angle
+        // The arc exists where the pixel angle is &quot;just behind&quot; the sweep angle
+        if (uShowSweep == 1) {
+            float sweepSpeed = 0.8;  // radians per second
+            float sweepAngle = mod(uTime * sweepSpeed, 6.2832);  // 0 to 2π
+
+            // Angular distance behind the sweep head (how far the trail extends)
+            // mod(..., 2π) handles wrap-around at ±π boundary
+            float angleDiff  = mod(sweepAngle - angle + 6.2832, 6.2832);
+
+            // Trail length: 1.0 radian of green glow behind the bright head
+            // smoothstep: fades from bright at head to zero at 1 radian behind
+            float trailLen   = 1.0;
+            float sweep      = (1.0 - smoothstep(0.0, trailLen, angleDiff))
+                             * inDisplay
+                             * (1.0 - smoothstep(0.0, 0.45, dist));  // fades at edge
+
+            // Bright head: very thin arc right at sweepAngle
+            float head       = (1.0 - smoothstep(0.0, 0.06, angleDiff))
+                             * inDisplay;
+
+            colour += sweep * vec3(0.05, 0.6, 0.1);   // green trail
+            colour += head  * vec3(0.2,  1.0, 0.3);   // bright head
+        }
+
+        // ── CONTACT BLIPS ─────────────────────────────────────────────────────
+        // Three contacts at fixed positions on the display
+        // blip(uv, centre, radius): circle with soft edge
+        // Blip pulse: sin(uTime) brightens each blip independently
+        float b1 = blip(uv, vec2( 0.18,  0.12), 0.015);  // contact 1: right-centre
+        float b2 = blip(uv, vec2(-0.22, -0.15), 0.015);  // contact 2: lower-left
+        float b3 = blip(uv, vec2( 0.08,  0.28), 0.015);  // contact 3: upper-right
+
+        // Contacts pulse slightly with time — simulates radar return signal
+        float pulse1 = 0.8 + 0.2 * sin(uTime * 3.0);
+        float pulse2 = 0.8 + 0.2 * sin(uTime * 3.0 + 2.1);
+        float pulse3 = 0.8 + 0.2 * sin(uTime * 3.0 + 4.2);
+
+        colour += b1 * pulse1 * vec3(0.2, 1.0, 0.4);   // friendly — bright green
+        colour += b2 * pulse2 * vec3(1.0, 0.2, 0.2);   // hostile  — red (different tint)
+        colour += b3 * pulse3 * vec3(1.0, 0.9, 0.2);   // unknown  — yellow
+
+        // ── CENTRE DOT ───────────────────────────────────────────────────────
+        float centreDot = 1.0 - edge(0.005, 0.012, dist);
+        colour += centreDot * vec3(0.4, 1.0, 0.5);
+
+        // ── VIGNETTE ─────────────────────────────────────────────────────────
+        // Darkens towards edge — matches CRT display glow falloff
+        float vig = 1.0 - smoothstep(0.3, 0.5, dist);
+        colour *= mix(0.7, 1.0, vig);
+
+        FragColor = vec4(colour, 1.0);
+    }
+)GLSL&quot;;
+
+unsigned int compileShader(unsigned int type, const char* src) {
+    unsigned int id = glCreateShader(type);
+    glShaderSource(id, 1, &amp;src, NULL); glCompileShader(id);
+    int ok; char log[512];
+    glGetShaderiv(id, GL_COMPILE_STATUS, &amp;ok);
+    if (!ok) { glGetShaderInfoLog(id, 512, NULL, log); std::cerr &lt;&lt; &quot;Shader error:\n&quot; &lt;&lt; log; }
+    return id;
+}
+unsigned int createShaderProgram(const char* vs, const char* fs) {
+    unsigned int v=compileShader(GL_VERTEX_SHADER,vs), f=compileShader(GL_FRAGMENT_SHADER,fs);
+    unsigned int p=glCreateProgram();
+    glAttachShader(p,v); glAttachShader(p,f); glLinkProgram(p);
+    glDeleteShader(v); glDeleteShader(f); return p;
+}
+void onResize(GLFWwindow* w, int W, int H) { glViewport(0,0,W,H); }
+void processInput(GLFWwindow* w) {
+    if (glfwGetKey(w,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(w,true);
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n=== RR Graphics Lab - Demo 11: Procedural Radar Shader ===\n\n&quot;;
+    std::cout &lt;&lt; &quot;Controls: +/- = ring count | S = sweep | H = soft/hard edges | ESC = quit\n\n&quot;;
+
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window=glfwCreateWindow(768,768,&quot;Demo 11 - Procedural Radar Shader&quot;,NULL,NULL);
+    if(!window){glfwTerminate();return -1;}
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window,onResize);
+    glewExperimental=GL_TRUE; glewInit();
+    std::cout &lt;&lt; &quot;GPU: &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n\n&quot;;
+
+    unsigned int shader = createShaderProgram(vertSrc, fragSrc);
+    std::cout &lt;&lt; &quot;[1] Procedural radar shader compiled. ID = &quot; &lt;&lt; shader &lt;&lt; &quot;\n&quot;;
+
+    // ── FULLSCREEN QUAD ───────────────────────────────────────────────────────
+    // Two triangles that cover the entire NDC space from (-1,-1) to (1,1)
+    // UV coordinates from (0,0) to (1,1) map pixel positions to shader inputs
+    // This is the universal pattern for all fullscreen effects (FBO pass 2, post-processing)
+    float quad[] = {
+    //   X      Y      U     V
+        -1.0f, -1.0f,  0.0f, 0.0f,   // bottom-left
+         1.0f, -1.0f,  1.0f, 0.0f,   // bottom-right
+         1.0f,  1.0f,  1.0f, 1.0f,   // top-right
+         1.0f,  1.0f,  1.0f, 1.0f,   // top-right
+        -1.0f,  1.0f,  0.0f, 1.0f,   // top-left
+        -1.0f, -1.0f,  0.0f, 0.0f    // bottom-left
+    };
+    // 6 vertices (2 triangles) = fullscreen rectangle
+    // Stride = 4 floats × 4 bytes = 16 bytes
+
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1,&amp;VAO); glBindVertexArray(VAO);
+    glGenBuffers(1,&amp;VBO); glBindBuffer(GL_ARRAY_BUFFER,VBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(quad),quad,GL_STATIC_DRAW);
+    // Attribute 0: 2D position (x,y) — stride=16, offset=0
+    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);
+    // Attribute 1: UV coordinate — stride=16, offset=8 (after 2 position floats)
+    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)(2*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    std::cout &lt;&lt; &quot;[2] Fullscreen quad VAO+VBO ready\n&quot;;
+
+    // Cache uniform locations
+    int uTimeLoc      = glGetUniformLocation(shader,&quot;uTime&quot;);
+    int uRingCountLoc = glGetUniformLocation(shader,&quot;uRingCount&quot;);
+    int uUseSoftLoc   = glGetUniformLocation(shader,&quot;uUseSoft&quot;);
+    int uShowSweepLoc = glGetUniformLocation(shader,&quot;uShowSweep&quot;);
+    std::cout &lt;&lt; &quot;[3] Uniforms: time=&quot; &lt;&lt; uTimeLoc &lt;&lt; &quot; rings=&quot; &lt;&lt; uRingCountLoc
+              &lt;&lt; &quot; soft=&quot; &lt;&lt; uUseSoftLoc &lt;&lt; &quot; sweep=&quot; &lt;&lt; uShowSweepLoc &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;[4] Render loop starting.\n\n&quot;;
+
+    float ringCount = 5.0f;
+    int useSoft = 1, showSweep = 1;
+    bool plusPrev=false, minusPrev=false, sPrev=false, hPrev=false;
+
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+
+        // + / - : change ring count
+        bool plusNow  = (glfwGetKey(window,GLFW_KEY_EQUAL)==GLFW_PRESS);
+        bool minusNow = (glfwGetKey(window,GLFW_KEY_MINUS)==GLFW_PRESS);
+        if (plusNow &amp;&amp; !plusPrev)  { ringCount=std::min(ringCount+1.0f,20.0f); std::cout&lt;&lt;&quot;Rings: &quot;&lt;&lt;(int)ringCount&lt;&lt;&quot;\n&quot;; }
+        if (minusNow &amp;&amp; !minusPrev){ ringCount=std::max(ringCount-1.0f, 1.0f); std::cout&lt;&lt;&quot;Rings: &quot;&lt;&lt;(int)ringCount&lt;&lt;&quot;\n&quot;; }
+        plusPrev=plusNow; minusPrev=minusNow;
+
+        // S : toggle sweep
+        bool sNow = (glfwGetKey(window,GLFW_KEY_S)==GLFW_PRESS);
+        if (sNow &amp;&amp; !sPrev) { showSweep=1-showSweep; std::cout&lt;&lt;(showSweep?&quot;Sweep ON\n&quot;:&quot;Sweep OFF\n&quot;); }
+        sPrev=sNow;
+
+        // H : toggle hard/soft edges
+        bool hNow = (glfwGetKey(window,GLFW_KEY_H)==GLFW_PRESS);
+        if (hNow &amp;&amp; !hPrev) { useSoft=1-useSoft; std::cout&lt;&lt;(useSoft?&quot;Soft edges (smoothstep)\n&quot;:&quot;Hard edges (step)\n&quot;); }
+        hPrev=hNow;
+
+        glClearColor(0.0f,0.0f,0.0f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUseProgram(shader);
+
+        // Send uniforms every frame
+        glUniform1f(uTimeLoc,      (float)glfwGetTime());
+        glUniform1f(uRingCountLoc, ringCount);
+        glUniform1i(uUseSoftLoc,   useSoft);
+        glUniform1i(uShowSweepLoc, showSweep);
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);  // 6 vertices = 2 triangles = fullscreen quad
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glDeleteVertexArrays(1,&amp;VAO);
+    glDeleteBuffers(1,&amp;VBO);
+    glDeleteProgram(shader);
+    glfwTerminate();
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run &mdash; Developer Command Prompt for VS 2022</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd11&apos;)">Copy</button><pre id="cmd11">cd C:\Labs\M11_ProceduralShader
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+build\Release\M11_ProceduralShader.exe</pre></div>
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="ts">[1] Procedural radar shader compiled. ID = 1</span></div>
+      <div><span class="ts">[2] Fullscreen quad VAO+VBO ready</span></div>
+      <div><span class="ts">[3] Uniforms: time=0 rings=1 soft=2 sweep=3</span></div>
+      <div><span class="ts">[4] Render loop starting.</span></div>
+      <hr class="t-hr">
+      <div><span class="to">Rings: 6</span></div>
+      <div><span class="to">Soft edges (smoothstep)</span></div>
+      <div><span class="to">Hard edges (step)      ← H key: aliasing appears</span></div>
+      <div><span class="th">Screen: Green radar with rings, sweep, 3 coloured contact blips</span></div>
+    </div>
+  </div>
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>Press H to toggle hard edges:</strong> The ring edges and boundary become jagged/aliased. Press H again for smooth. This is the single best demonstration of why smoothstep exists.</li>
+      <li><strong>Change sweep speed in shader:</strong> In the fragment shader, change <code class="ic">sweepSpeed = 0.8</code> to <code class="ic">2.5</code> for fast sweep, <code class="ic">0.1</code> for slow. Recompile. Shows how uTime multiplier controls animation rate.</li>
+      <li><strong>Change trail length:</strong> Change <code class="ic">trailLen = 1.0</code> to <code class="ic">3.14</code> for a half-circle trail, <code class="ic">0.2</code> for a short bright arc. Shows how the angleDiff comparison controls trail width.</li>
+      <li><strong>Move a contact blip:</strong> Change the vec2 position of blip 1 from <code class="ic">vec2(0.18, 0.12)</code> to <code class="ic">vec2(-0.3, 0.25)</code>. Rebuild &mdash; the contact moves to the new position on the display.</li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="demo-sec" id="demo12">
+  <div class="demo-eyebrow"><span class="d-badge">Demo 12 &middot; Module 7</span><span class="d-type">Performance &mdash; Draw Call Reduction</span></div>
+  <div class="demo-title">Instancing &mdash; 1,000 Contact Markers in One Draw Call</div>
+  <div class="demo-desc">Draw 1,000 tactical contact markers with a single <code class="ic">glDrawArraysInstanced()</code> call instead of 1,000 individual draw calls. The geometry (one triangle) is uploaded once. A per-instance VBO holds 1,000 unique positions. <code class="ic">glVertexAttribDivisor(1, 1)</code> makes attribute 1 advance once per instance instead of once per vertex. Terminal prints frame time for both methods so you can measure the difference directly.</div>
+  <div class="demo-meta">
+    <span class="meta-chip">&#128187; Project: M12_Instancing</span>
+    <span class="meta-chip">&#9201; ~30 min</span>
+    <span class="meta-chip">New: glDrawArraysInstanced &middot; per-instance VBO &middot; glVertexAttribDivisor &middot; gl_InstanceID</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Demo 3 triangle (VBO+VAO)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">second per-instance VBO</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">glVertexAttribDivisor(1,1)</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">1000 contacts, 1 draw call &#10003;</span>
+  </div>
+  <div class="out-preview">
+    <div class="op-label">&#127919; What You Will See</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Screen:</strong> 1,000 small triangle contacts (blue/red/yellow cycling) scattered across the dark tactical display</div>
+    <div class="op-item"><span class="op-dot"></span><strong>I key:</strong> Toggle instanced vs non-instanced draw mode &mdash; same visual, different frame time</div>
+    <div class="op-item"><span class="op-dot"></span><strong>+ / &minus; keys:</strong> Increase/decrease count 100&rarr;10,000 &mdash; see where non-instanced breaks down</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Average frame time in ms + draw call count printed every 60 frames</div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-title">Per-Vertex vs Per-Instance Data &mdash; How the Two VBOs Work Together</div>
+    <pre>
+  Geometry VBO (per-vertex, divisor=0):     Instance VBO (per-instance, divisor=1):
+  ┌─────────────────────────────────────┐   ┌─────────────────────────────────────┐
+  │ vertex[0]: (0.0,  0.025) — tip     │   │ instance[0]:  (-0.42,  0.31)        │
+  │ vertex[1]: (-0.018,-0.015) — bl    │   │ instance[1]:  ( 0.18, -0.54)        │
+  │ vertex[2]: ( 0.018,-0.015) — br    │   │ instance[2]:  (-0.07,  0.62)        │
+  └─────────────────────────────────────┘   │ ...                                 │
+                                            │ instance[999]: (0.29, -0.18)        │
+                                            └─────────────────────────────────────┘
+
+  glVertexAttribDivisor(1, 1)
+  ↓
+  Instance 0: reads vertex[0,1,2] for shape + instance[0] offset → contact at (-0.42, 0.31)
+  Instance 1: reads vertex[0,1,2] for shape + instance[1] offset → contact at ( 0.18,-0.54)
+  ...
+  Instance 999: vertex[0,1,2] + instance[999] → all 1000 in parallel on GPU
+
+  In vertex shader:
+  gl_Position = vec4(aPos + aInstanceOffset, 0.0, 1.0);
+  int type = gl_InstanceID % 3;  // 0=blue, 1=red, 2=yellow</pre>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake12&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake12">cmake_minimum_required(VERSION 3.20)
+project(M12_Instancing)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(OpenGL REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLEW_DIR $ENV{GLEW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLEW_DIR}/include
+    ${GLM_DIR}
+)
+add_executable(M12_Instancing src/main.cpp)
+target_link_libraries(M12_Instancing
+    OpenGL::GL
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+    ${GLEW_DIR}/lib/Release/x64/glew32s.lib
+)</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp &mdash; Complete Program</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main12&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main12">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 3 · DEMO 12
+//  Instancing — 1,000 Contact Markers in One Draw Call
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: M12_Instancing
+//  FOLDER:       C:\Labs\M12_Instancing\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - glDrawArraysInstanced(): one call, N copies of the same geometry
+//  - Per-instance VBO: a second VBO where each value applies to one instance
+//  - glVertexAttribDivisor(index, 1): makes attribute advance per instance, not per vertex
+//  - gl_InstanceID: built-in integer in vertex shader (which instance is this?)
+//  - CPU frame time comparison: instanced vs non-instanced draw loop
+//  - Why instancing is the correct approach for large contact counts
+//
+//  WHAT YOU WILL SEE:
+//  - 1,000 small triangle contact markers scattered across the display
+//  - Each contact has a unique colour (friendly/hostile/unknown cycle)
+//  - Terminal: frame time in microseconds, instance count, draw call count
+//  - I key: toggle instanced vs non-instanced (same visual, different performance)
+//  - + / -: increase / decrease instance count (100 to 10,000)
+//  - Performance difference becomes dramatic at 5,000+
+//
+//  BUILDS ON: Demo 3 (triangle VBO/VAO) + Day 1 tactical contacts
+//  NEW CONCEPTS: per-instance VBO + glVertexAttribDivisor + glDrawArraysInstanced
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;glm/gtc/type_ptr.hpp&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+#include &lt;chrono&gt;
+#include &lt;random&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INSTANCED VERTEX SHADER
+//
+// Two attribute sources:
+//   location 0: aPos  (per-VERTEX) — the triangle geometry, shared by all instances
+//   location 1: aInstanceOffset (per-INSTANCE) — unique position for each instance
+//
+// gl_InstanceID: the built-in integer telling this vertex which instance it belongs to
+// We use it to compute a per-instance colour without needing a colour VBO
+// ─────────────────────────────────────────────────────────────────────────────
+const char* vertSrc = R&quot;GLSL(
+    #version 330 core
+    layout(location = 0) in vec2 aPos;            // per-vertex: triangle shape
+    layout(location = 1) in vec2 aInstanceOffset; // per-instance: unique position
+
+    out vec3 vColour;
+
+    void main() {
+        // Move the triangle to its instance-specific position
+        // aPos = local triangle vertices (small, around origin)
+        // aInstanceOffset = where this particular contact sits on the display
+        vec2 worldPos = aPos + aInstanceOffset;
+        gl_Position = vec4(worldPos, 0.0, 1.0);
+
+        // Per-instance colour from gl_InstanceID
+        // Cycle through 3 contact types: friendly (blue), hostile (red), unknown (yellow)
+        int contactType = gl_InstanceID % 3;
+        if      (contactType == 0) vColour = vec3(0.20, 0.50, 1.00); // friendly — blue
+        else if (contactType == 1) vColour = vec3(1.00, 0.20, 0.20); // hostile  — red
+        else                       vColour = vec3(1.00, 0.85, 0.10); // unknown  — yellow
+    }
+)GLSL&quot;;
+
+const char* fragSrc = R&quot;GLSL(
+    #version 330 core
+    in vec3 vColour;
+    out vec4 FragColor;
+    void main() { FragColor = vec4(vColour, 1.0); }
+)GLSL&quot;;
+
+unsigned int compileShader(unsigned int type, const char* src) {
+    unsigned int id = glCreateShader(type);
+    glShaderSource(id,1,&amp;src,NULL); glCompileShader(id);
+    int ok; char log[512];
+    glGetShaderiv(id,GL_COMPILE_STATUS,&amp;ok);
+    if(!ok){glGetShaderInfoLog(id,512,NULL,log);std::cerr&lt;&lt;log;}
+    return id;
+}
+unsigned int createShaderProgram(const char* vs, const char* fs) {
+    unsigned int v=compileShader(GL_VERTEX_SHADER,vs);
+    unsigned int f=compileShader(GL_FRAGMENT_SHADER,fs);
+    unsigned int p=glCreateProgram();
+    glAttachShader(p,v);glAttachShader(p,f);glLinkProgram(p);
+    glDeleteShader(v);glDeleteShader(f);return p;
+}
+void onResize(GLFWwindow* w, int W, int H) { glViewport(0,0,W,H); }
+void processInput(GLFWwindow* w) {
+    if(glfwGetKey(w,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(w,true);
+}
+
+// Generate random contact positions in NDC space (-0.9 to +0.9)
+std::vector&lt;glm::vec2&gt; generatePositions(int count) {
+    std::mt19937 rng(42);  // fixed seed for reproducibility
+    std::uniform_real_distribution&lt;float&gt; dist(-0.88f, 0.88f);
+    std::vector&lt;glm::vec2&gt; positions(count);
+    for (auto&amp; p : positions) p = glm::vec2(dist(rng), dist(rng));
+    return positions;
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n=== RR Graphics Lab - Demo 12: Instancing — 1000 Contacts ===\n\n&quot;;
+    std::cout &lt;&lt; &quot;Controls: I=toggle instanced/non-instanced | +/-=count | ESC=quit\n\n&quot;;
+
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window=glfwCreateWindow(900,700,&quot;Demo 12 - Instancing&quot;,NULL,NULL);
+    if(!window){glfwTerminate();return -1;}
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window,onResize);
+    glewExperimental=GL_TRUE; glewInit();
+    std::cout &lt;&lt; &quot;GPU: &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n\n&quot;;
+
+    unsigned int shader = createShaderProgram(vertSrc, fragSrc);
+    std::cout &lt;&lt; &quot;[1] Shader compiled. ID = &quot; &lt;&lt; shader &lt;&lt; &quot;\n&quot;;
+
+    // ── CONTACT MARKER GEOMETRY ───────────────────────────────────────────────
+    // A tiny upward-pointing triangle centred at (0,0)
+    // Each instance offsets this shape to its own position
+    // Size: ±0.018 NDC units — about 16 pixels on a 900px display
+    float markerVerts[] = {
+        // X        Y
+         0.000f,  0.025f,   // tip (top)
+        -0.018f, -0.015f,   // bottom-left
+         0.018f, -0.015f    // bottom-right
+    };
+    // This single triangle is the template for all 1,000 instances
+
+    // ── GEOMETRY VBO (per-vertex, attribute 0) ────────────────────────────────
+    unsigned int geoVBO;
+    glGenBuffers(1,&amp;geoVBO);
+    glBindBuffer(GL_ARRAY_BUFFER,geoVBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(markerVerts),markerVerts,GL_STATIC_DRAW);
+    std::cout &lt;&lt; &quot;[2] Geometry VBO: &quot; &lt;&lt; sizeof(markerVerts) &lt;&lt; &quot; bytes (3 vertices)\n&quot;;
+
+    // ── INSTANCE POSITIONS (per-instance, attribute 1) ────────────────────────
+    const int MAX_INSTANCES = 10000;
+    auto positions = generatePositions(MAX_INSTANCES);
+
+    unsigned int instVBO;
+    glGenBuffers(1,&amp;instVBO);
+    glBindBuffer(GL_ARRAY_BUFFER,instVBO);
+    glBufferData(GL_ARRAY_BUFFER,
+                 MAX_INSTANCES * sizeof(glm::vec2),
+                 positions.data(),
+                 GL_STATIC_DRAW);
+    std::cout &lt;&lt; &quot;[3] Instance VBO: &quot; &lt;&lt; MAX_INSTANCES &lt;&lt; &quot; positions (&quot;
+              &lt;&lt; MAX_INSTANCES * sizeof(glm::vec2) &lt;&lt; &quot; bytes)\n&quot;;
+
+    // ── VAO SETUP ─────────────────────────────────────────────────────────────
+    // The VAO records two different VBOs and their attribute configurations:
+    //   Attribute 0 from geoVBO   → advances per vertex (divisor 0, default)
+    //   Attribute 1 from instVBO  → advances per instance (divisor 1, new)
+    unsigned int VAO;
+    glGenVertexArrays(1,&amp;VAO);
+    glBindVertexArray(VAO);
+
+    // Attribute 0: triangle geometry (2 floats, from geoVBO)
+    glBindBuffer(GL_ARRAY_BUFFER,geoVBO);
+    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,2*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);
+    // glVertexAttribDivisor(0, 0) = default — advance per vertex (not needed to call)
+
+    // Attribute 1: instance offsets (2 floats, from instVBO)
+    glBindBuffer(GL_ARRAY_BUFFER,instVBO);
+    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,2*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(1);
+    // ══ THE KEY CALL: ════════════════════════════════════════════════════════
+    // glVertexAttribDivisor(attribIndex, divisor)
+    //   divisor = 0: advance per vertex (normal — this is the default)
+    //   divisor = 1: advance ONCE PER INSTANCE (new — each instance reads next element)
+    //   divisor = 2: advance every 2 instances
+    // Without this: all instances would share position[0] from instVBO
+    glVertexAttribDivisor(1, 1);  // attribute 1 advances once per instance
+    // ═════════════════════════════════════════════════════════════════════════
+
+    glBindVertexArray(0);
+    std::cout &lt;&lt; &quot;[4] VAO configured:\n&quot;;
+    std::cout &lt;&lt; &quot;    Attr 0 (pos, geoVBO):   divisor=0 (per vertex, shared geometry)\n&quot;;
+    std::cout &lt;&lt; &quot;    Attr 1 (inst, instVBO): divisor=1 (per instance, unique position)\n&quot;;
+    std::cout &lt;&lt; &quot;[5] Render loop starting.\n\n&quot;;
+
+    int instanceCount = 1000;
+    bool useInstancing = true;
+    bool iPrev=false, plusPrev=false, minusPrev=false;
+
+    // Frame timing
+    auto frameStart = std::chrono::high_resolution_clock::now();
+    int frameSinceReport = 0;
+    double totalFrameTime = 0;
+
+    while (!glfwWindowShouldClose(window)) {
+        auto fStart = std::chrono::high_resolution_clock::now();
+        processInput(window);
+
+        // I key: toggle instancing
+        bool iNow=(glfwGetKey(window,GLFW_KEY_I)==GLFW_PRESS);
+        if(iNow&amp;&amp;!iPrev){
+            useInstancing=!useInstancing;
+            std::cout&lt;&lt;(useInstancing?&quot;INSTANCED: 1 draw call\n&quot;:&quot;NON-INSTANCED: 1 draw call per contact\n&quot;);
+        }
+        iPrev=iNow;
+
+        // +/- : change count
+        bool plusNow=(glfwGetKey(window,GLFW_KEY_EQUAL)==GLFW_PRESS);
+        bool minusNow=(glfwGetKey(window,GLFW_KEY_MINUS)==GLFW_PRESS);
+        if(plusNow&amp;&amp;!plusPrev){
+            instanceCount=std::min(instanceCount+500,MAX_INSTANCES);
+            std::cout&lt;&lt;&quot;Instances: &quot;&lt;&lt;instanceCount&lt;&lt;&quot;\n&quot;;
+        }
+        if(minusNow&amp;&amp;!minusPrev){
+            instanceCount=std::max(instanceCount-500,100);
+            std::cout&lt;&lt;&quot;Instances: &quot;&lt;&lt;instanceCount&lt;&lt;&quot;\n&quot;;
+        }
+        plusPrev=plusNow; minusPrev=minusNow;
+
+        glClearColor(0.02f,0.03f,0.07f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUseProgram(shader);
+        glBindVertexArray(VAO);
+
+        if (useInstancing) {
+            // ══ INSTANCED: ONE CALL, N COPIES ═══════════════════════════════
+            // glDrawArraysInstanced(mode, first, count, instanceCount)
+            //   mode          = GL_TRIANGLES (same as glDrawArrays)
+            //   first         = 0 (start from vertex 0 in geoVBO)
+            //   count         = 3 (3 vertices per triangle — the marker shape)
+            //   instanceCount = how many instances to draw
+            // The GPU runs the vertex shader instanceCount*3 times in parallel.
+            // Each group of 3 vertices shares the same gl_InstanceID.
+            glDrawArraysInstanced(GL_TRIANGLES, 0, 3, instanceCount);
+        } else {
+            // NON-INSTANCED: loop + 1 draw call per contact (for comparison)
+            // Set attribute 1 manually from the positions array for each contact
+            // This is the naive approach — expensive at large counts
+            for (int i = 0; i &lt; instanceCount; i++) {
+                // Send position as a uniform (simplification for comparison demo)
+                // In real non-instanced code you&#x27;d update the VBO or use uniforms
+                glVertexAttrib2f(1, positions[i].x, positions[i].y);
+                glDrawArrays(GL_TRIANGLES, 0, 3);
+            }
+        }
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
+        // Frame timing
+        auto fEnd = std::chrono::high_resolution_clock::now();
+        double ms = std::chrono::duration&lt;double,std::milli&gt;(fEnd-fStart).count();
+        totalFrameTime += ms;
+        frameSinceReport++;
+        if (frameSinceReport &gt;= 60) {
+            double avg = totalFrameTime / frameSinceReport;
+            std::cout &lt;&lt; &quot;Instances: &quot; &lt;&lt; instanceCount
+                      &lt;&lt; &quot; | Mode: &quot; &lt;&lt; (useInstancing ? &quot;INSTANCED (1 call)&quot; : &quot;NON-INSTANCED (N calls)&quot;)
+                      &lt;&lt; &quot; | Avg frame: &quot; &lt;&lt; avg &lt;&lt; &quot; ms&quot;
+                      &lt;&lt; &quot; | Draw calls: &quot; &lt;&lt; (useInstancing ? 1 : instanceCount) &lt;&lt; &quot;\n&quot;;
+            totalFrameTime = 0; frameSinceReport = 0;
+        }
+    }
+
+    glDeleteVertexArrays(1,&amp;VAO);
+    glDeleteBuffers(1,&amp;geoVBO);
+    glDeleteBuffers(1,&amp;instVBO);
+    glDeleteProgram(shader);
+    glfwTerminate();
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run &mdash; Developer Command Prompt for VS 2022</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd12&apos;)">Copy</button><pre id="cmd12">cd C:\Labs\M12_Instancing
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+build\Release\M12_Instancing.exe</pre></div>
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="ts">[2] Geometry VBO: 24 bytes (3 vertices)</span></div>
+      <div><span class="ts">[3] Instance VBO: 10000 positions (80000 bytes)</span></div>
+      <div><span class="ts">[4] Attr 0 (pos, geoVBO):   divisor=0 (per vertex)</span></div>
+      <div><span class="ts">[4] Attr 1 (inst, instVBO): divisor=1 (per instance)</span></div>
+      <hr class="t-hr">
+      <div><span class="to">INSTANCED: 1 draw call</span></div>
+      <div><span class="to">Instances: 1000 | INSTANCED (1 call) | Avg frame: 0.41 ms | Draw calls: 1</span></div>
+      <div><span class="to">NON-INSTANCED: 1 draw call per contact</span></div>
+      <div><span class="tw">Instances: 1000 | NON-INSTANCED (N calls) | Avg frame: 4.8 ms | Draw calls: 1000</span></div>
+    </div>
+  </div>
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>Press + repeatedly to reach 10,000 instances, then press I:</strong> Instanced stays smooth. Non-instanced frame time spikes dramatically. This is the live demonstration of why instancing exists.</li>
+      <li><strong>Comment out glVertexAttribDivisor(1, 1):</strong> All 1,000 contacts stack on top of each other at instance[0]'s position &mdash; they all look like one contact. Re-add the line to restore.</li>
+      <li><strong>Change gl_InstanceID % 3 to gl_InstanceID % 2:</strong> Only two colours cycle (blue/red) &mdash; the yellow contacts disappear. Shows how gl_InstanceID drives per-instance variation without any extra data.</li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="demo-sec" id="demo13">
+  <div class="demo-eyebrow"><span class="d-badge">Demo 13 &middot; Module 8</span><span class="d-type">Framebuffers &mdash; Render-to-Texture + Screen Effects</span></div>
+  <div class="demo-title">FBO Post-Processing &mdash; Render Scene to Texture, Apply Screen-Wide Effects</div>
+  <div class="demo-desc">The complete two-pass FBO pattern: Pass 1 renders the 3D vessel scene into a custom framebuffer (to a texture in GPU VRAM). Pass 2 draws a fullscreen quad using that texture as input and applies an effect to every pixel simultaneously. Five switchable effects demonstrate how one architectural pattern &mdash; render-to-texture then process &mdash; underlies every post-processing system in production renderers.</div>
+  <div class="demo-meta">
+    <span class="meta-chip">&#128187; Project: M13_FBO</span>
+    <span class="meta-chip">&#9201; ~40 min</span>
+    <span class="meta-chip">New: glGenFramebuffers &middot; colour attachment &middot; depth renderbuffer &middot; two-pass render</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Demo 9 Phong vessel</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">Demo 11 fullscreen quad</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">FBO colour texture + depth RBO</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">5 live post-processing effects &#10003;</span>
+  </div>
+  <div class="out-preview">
+    <div class="op-label">&#127919; What You Will See + Controls</div>
+    <div class="op-item"><span class="op-dot"></span><strong>F1:</strong> Normal &mdash; no effect (proves the two-pass pipeline with no visual change)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>F2:</strong> Greyscale &mdash; luminance-weighted desaturation (military camera simulation)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>F3:</strong> Night vision &mdash; green tint + overexposure (NVG simulation for training displays)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>F4:</strong> Edge detection &mdash; bright outlines on black (finite difference gradient)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>F5:</strong> Vignette &mdash; dark edges, bright centre (CRT/tactical display aesthetic)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>WASD + mouse:</strong> Fly camera still fully functional in all modes</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-lbl">&#128161; The Key Insight &mdash; What Changes Between Effects</div>
+    <p class="note">The 3D scene (vessel geometry, Phong lighting, camera movement) is completely unchanged across all five modes. Only the <strong>second-pass fragment shader</strong> changes. This proves the architectural separation: the scene renderer does not know or care how its output will be post-processed. Swapping the effect is as cheap as changing one integer uniform (<code class="ic">uEffect</code>). In production engines, effects are hot-swappable at runtime via a material system &mdash; this is exactly how that works.</p>
+  </div>
+
+  <div class="diag">
+    <div class="diag-title">FBO Setup Sequence &mdash; Five Objects, Exact Order</div>
+    <pre>
+  1. glGenFramebuffers(1, &fbo)         ← create the FBO container
+  2. glBindFramebuffer(fbo)             ← make it the active render target
+  3. glGenTextures + glTexImage2D(NULL) ← allocate colour texture, no data yet
+  4. glFramebufferTexture2D(fbo, COLOR) ← attach texture as colour output
+  5. glGenRenderbuffers + glRenderbufferStorage(DEPTH24_STENCIL8)
+  6. glFramebufferRenderbuffer(fbo, DEPTH_STENCIL) ← attach depth buffer
+  7. glCheckFramebufferStatus() == GL_FRAMEBUFFER_COMPLETE ← ALWAYS verify
+
+  Render Loop:
+  ┌─────────────────────────────────────────────────────────────────┐
+  │ PASS 1: glBindFramebuffer(fbo)                                  │
+  │   glClear + draw 3D scene                                       │
+  │   → colour written into colourTex (not screen)                  │
+  │   → depth buffer works normally inside the FBO                  │
+  └─────────────────────────────────────────────────────────────────┘
+  ┌─────────────────────────────────────────────────────────────────┐
+  │ PASS 2: glBindFramebuffer(0)   ← back to default (screen)       │
+  │   glDisable(GL_DEPTH_TEST)     ← quad needs no depth test       │
+  │   bind colourTex to unit 0     ← entire scene as input texture  │
+  │   glUseProgram(quadShader)     ← second-pass effect shader      │
+  │   glDrawArrays(fullscreenQuad) ← 6 vertices, 2 triangles        │
+  │   → effect applied per-pixel → written to default FB → screen   │
+  └─────────────────────────────────────────────────────────────────┘</pre>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake13&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake13">cmake_minimum_required(VERSION 3.20)
+project(M13_FBO)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(OpenGL REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLEW_DIR $ENV{GLEW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLEW_DIR}/include
+    ${GLM_DIR}
+)
+add_executable(M13_FBO src/main.cpp)
+target_link_libraries(M13_FBO
+    OpenGL::GL
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+    ${GLEW_DIR}/lib/Release/x64/glew32s.lib
+)</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp &mdash; Complete Program</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main13&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main13">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 3 · DEMO 13
+//  FBO Post-Processing — Render Scene to Texture, Apply Screen-Wide Effects
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: M13_FBO
+//  FOLDER:       C:\Labs\M13_FBO\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - Framebuffer Objects (FBOs): render the scene into a texture, not the screen
+//  - glGenFramebuffers / glBindFramebuffer: creating and switching framebuffers
+//  - Colour attachment: a texture that receives the rendered colour output
+//  - Depth-stencil renderbuffer: depth testing still works inside the FBO
+//  - glCheckFramebufferStatus: always verify FBO completeness before rendering
+//  - Two-pass rendering: Pass 1 = scene to FBO, Pass 2 = fullscreen quad with effect
+//  - Five interchangeable post-processing effects in the second-pass fragment shader
+//  - Why the second-pass vertex shader has NO MVP matrix
+//
+//  WHAT YOU WILL SEE:
+//  - The Day 2 vessel scene (rotating lit vessel)
+//  - F1: Normal (no effect)
+//  - F2: Greyscale — military camera / thermal
+//  - F3: Night vision — green tint, simulates NVG
+//  - F4: Edge detection — glowing outlines on black (Sobel-like)
+//  - F5: Vignette — dark edges, tactical display aesthetic
+//  - WASD + mouse: fly camera
+//
+//  BUILDS ON: Demo 9 (Phong lit vessel), Day 3 Demo 11 (fullscreen quad pattern)
+//  NEW CONCEPTS: FBO creation, render-to-texture, post-processing pass
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;glm/gtc/matrix_transform.hpp&gt;
+#include &lt;glm/gtc/type_ptr.hpp&gt;
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+
+const int WIN_W = 900, WIN_H = 600;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PASS 1 — SCENE SHADERS (same Phong shaders as Demo 9)
+// ─────────────────────────────────────────────────────────────────────────────
+const char* sceneVert = R&quot;GLSL(
+    #version 330 core
+    layout(location=0) in vec3 aPos;
+    layout(location=1) in vec3 aNormal;
+    out vec3 vFragPos;
+    out vec3 vNormal;
+    uniform mat4 uModel,uView,uProjection;
+    void main(){
+        vFragPos = vec3(uModel*vec4(aPos,1.0));
+        vNormal  = mat3(transpose(inverse(uModel)))*aNormal;
+        gl_Position = uProjection*uView*uModel*vec4(aPos,1.0);
+    }
+)GLSL&quot;;
+
+const char* sceneFrag = R&quot;GLSL(
+    #version 330 core
+    in vec3 vFragPos; in vec3 vNormal;
+    out vec4 FragColor;
+    uniform vec3 uLightPos,uViewPos;
+    uniform vec3 uObjectColour;
+    void main(){
+        vec3 norm=normalize(vNormal);
+        vec3 ld=normalize(uLightPos-vFragPos);
+        vec3 vd=normalize(uViewPos-vFragPos);
+        vec3 ambient=0.15*vec3(1.0,0.95,0.85);
+        float diff=max(dot(norm,ld),0.0);
+        vec3 diffuse=diff*vec3(1.0,0.95,0.85);
+        float spec=pow(max(dot(vd,reflect(-ld,norm)),0.0),32.0);
+        vec3 specular=0.5*spec*vec3(1.0,0.95,0.85);
+        FragColor=vec4((ambient+diffuse+specular)*uObjectColour,1.0);
+    }
+)GLSL&quot;;
+
+// Light indicator
+const char* lightVert = R&quot;GLSL(
+    #version 330 core
+    layout(location=0) in vec3 aPos;
+    uniform mat4 uModel,uView,uProjection;
+    void main(){gl_Position=uProjection*uView*uModel*vec4(aPos,1.0);}
+)GLSL&quot;;
+const char* lightFrag = R&quot;GLSL(
+    #version 330 core
+    out vec4 FragColor;
+    void main(){FragColor=vec4(1.0);}
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PASS 2 — FULLSCREEN QUAD VERTEX SHADER
+// No transformation needed — vertices already in NDC
+// Pass UV to fragment shader for texture sampling
+// ─────────────────────────────────────────────────────────────────────────────
+const char* quadVert = R&quot;GLSL(
+    #version 330 core
+    layout(location=0) in vec2 aPos;
+    layout(location=1) in vec2 aTexCoord;
+    out vec2 vTexCoord;
+    void main(){
+        // Vertices are already in NDC: (-1,-1) to (1,1)
+        // No MVP — this quad IS the screen
+        gl_Position = vec4(aPos, 0.0, 1.0);
+        vTexCoord = aTexCoord;
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PASS 2 — POST-PROCESSING FRAGMENT SHADER
+// Samples the FBO colour texture and applies the selected effect
+// uEffect: 0=normal, 1=greyscale, 2=night vision, 3=edge detect, 4=vignette
+// ─────────────────────────────────────────────────────────────────────────────
+const char* quadFrag = R&quot;GLSL(
+    #version 330 core
+    in vec2 vTexCoord;
+    out vec4 FragColor;
+
+    uniform sampler2D uScreenTexture;  // the FBO colour texture = the entire rendered scene
+    uniform int uEffect;               // which post-processing effect to apply
+    uniform vec2 uResolution;          // window size in pixels (for edge detection)
+
+    void main(){
+        // Sample the scene colour at this UV position
+        vec3 col = texture(uScreenTexture, vTexCoord).rgb;
+
+        if (uEffect == 0) {
+            // ── NORMAL: no effect ─────────────────────────────────────────
+            FragColor = vec4(col, 1.0);
+
+        } else if (uEffect == 1) {
+            // ── GREYSCALE: luminance-weighted average ─────────────────────
+            // These weights (0.299, 0.587, 0.114) match human eye sensitivity:
+            // we are more sensitive to green than red, more to red than blue.
+            // dot() multiplies component-wise then sums: R*0.299 + G*0.587 + B*0.114
+            float grey = dot(col, vec3(0.299, 0.587, 0.114));
+            FragColor = vec4(vec3(grey), 1.0);
+
+        } else if (uEffect == 2) {
+            // ── NIGHT VISION: green tint + slight overexposure ────────────
+            // Simulates NVG (night vision goggles) display
+            float lum = dot(col, vec3(0.299, 0.587, 0.114));
+            // Boost brightness and map to green channel only
+            vec3 nvg = vec3(0.05, lum * 1.35 + 0.05, 0.05);
+            FragColor = vec4(clamp(nvg, 0.0, 1.0), 1.0);
+
+        } else if (uEffect == 3) {
+            // ── EDGE DETECTION: finite difference gradient ────────────────
+            // Sample the luminance of 4 neighbouring pixels
+            // The gradient magnitude tells us if there is a colour boundary here
+            // uResolution converts from UV space to pixel-sized steps
+            vec2 px = 1.0 / uResolution;  // size of one pixel in UV space
+
+            // Convert each neighbour to luminance first (greyscale edge detection)
+            float L = dot(texture(uScreenTexture, vTexCoord - vec2(px.x,0)).rgb, vec3(0.299,0.587,0.114));
+            float R = dot(texture(uScreenTexture, vTexCoord + vec2(px.x,0)).rgb, vec3(0.299,0.587,0.114));
+            float U = dot(texture(uScreenTexture, vTexCoord + vec2(0,px.y)).rgb, vec3(0.299,0.587,0.114));
+            float D = dot(texture(uScreenTexture, vTexCoord - vec2(0,px.y)).rgb, vec3(0.299,0.587,0.114));
+
+            // Gradient magnitude: how much the luminance changes horizontally vs vertically
+            float gx = R - L;
+            float gy = U - D;
+            float edge = sqrt(gx*gx + gy*gy) * 6.0;  // ×6 to amplify
+
+            // Bright edges on black — white lines showing geometry boundaries
+            FragColor = vec4(vec3(clamp(edge, 0.0, 1.0)), 1.0);
+
+        } else if (uEffect == 4) {
+            // ── VIGNETTE: darken screen edges ─────────────────────────────
+            // Move UV origin to screen centre (0,0)
+            vec2 uv = vTexCoord - 0.5;
+            // dot(uv, uv) = squared distance from centre = uv.x² + uv.y²
+            // Multiply by 2.5 to control vignette strength
+            float vig = 1.0 - dot(uv, uv) * 2.5;
+            // Clamp to avoid negative (black) at far corners
+            FragColor = vec4(col * max(vig, 0.0), 1.0);
+        }
+    }
+)GLSL&quot;;
+
+unsigned int compileShader(unsigned int t,const char* s){
+    unsigned int id=glCreateShader(t);glShaderSource(id,1,&amp;s,NULL);glCompileShader(id);
+    int ok;char log[512];glGetShaderiv(id,GL_COMPILE_STATUS,&amp;ok);
+    if(!ok){glGetShaderInfoLog(id,512,NULL,log);std::cerr&lt;&lt;log;}return id;
+}
+unsigned int mkProg(const char* vs,const char* fs){
+    unsigned int v=compileShader(GL_VERTEX_SHADER,vs),f=compileShader(GL_FRAGMENT_SHADER,fs);
+    unsigned int p=glCreateProgram();glAttachShader(p,v);glAttachShader(p,f);glLinkProgram(p);
+    glDeleteShader(v);glDeleteShader(f);return p;
+}
+
+glm::vec3 camPos(0,1.5f,5.0f),camFront(0,-0.15f,-1),camUp(0,1,0);
+float yaw=-90,pitch=-8,lastX=450,lastY=300,fov=45;
+bool firstMouse=true;
+
+void mouseCallback(GLFWwindow*w,double x,double y){
+    if(firstMouse){lastX=(float)x;lastY=(float)y;firstMouse=false;}
+    float dx=((float)x-lastX)*0.1f,dy=(lastY-(float)y)*0.1f;
+    lastX=(float)x;lastY=(float)y;yaw+=dx;pitch+=dy;
+    if(pitch&gt;89)pitch=89;if(pitch&lt;-89)pitch=-89;
+    glm::vec3 f;
+    f.x=cos(glm::radians(yaw))*cos(glm::radians(pitch));
+    f.y=sin(glm::radians(pitch));
+    f.z=sin(glm::radians(yaw))*cos(glm::radians(pitch));
+    camFront=glm::normalize(f);
+}
+void scrollCallback(GLFWwindow*w,double xo,double yo){fov-=(float)yo;if(fov&lt;5)fov=5;if(fov&gt;90)fov=90;}
+void onResize(GLFWwindow*w,int W,int H){glViewport(0,0,W,H);}
+
+int activeEffect = 0;
+bool f1p=false,f2p=false,f3p=false,f4p=false,f5p=false;
+const char* effectNames[] = {&quot;Normal&quot;,&quot;Greyscale&quot;,&quot;Night Vision&quot;,&quot;Edge Detection&quot;,&quot;Vignette&quot;};
+
+void processInput(GLFWwindow*w,float dt){
+    if(glfwGetKey(w,GLFW_KEY_ESCAPE)==GLFW_PRESS)glfwSetWindowShouldClose(w,true);
+    float s=3.0f*dt;
+    if(glfwGetKey(w,GLFW_KEY_W)==GLFW_PRESS)camPos+=s*camFront;
+    if(glfwGetKey(w,GLFW_KEY_S)==GLFW_PRESS)camPos-=s*camFront;
+    if(glfwGetKey(w,GLFW_KEY_A)==GLFW_PRESS)camPos-=glm::normalize(glm::cross(camFront,camUp))*s;
+    if(glfwGetKey(w,GLFW_KEY_D)==GLFW_PRESS)camPos+=glm::normalize(glm::cross(camFront,camUp))*s;
+    bool k1=(glfwGetKey(w,GLFW_KEY_F1)==GLFW_PRESS);
+    bool k2=(glfwGetKey(w,GLFW_KEY_F2)==GLFW_PRESS);
+    bool k3=(glfwGetKey(w,GLFW_KEY_F3)==GLFW_PRESS);
+    bool k4=(glfwGetKey(w,GLFW_KEY_F4)==GLFW_PRESS);
+    bool k5=(glfwGetKey(w,GLFW_KEY_F5)==GLFW_PRESS);
+    if(k1&amp;&amp;!f1p){activeEffect=0;std::cout&lt;&lt;&quot;Effect: &quot;&lt;&lt;effectNames[0]&lt;&lt;&quot;\n&quot;;}
+    if(k2&amp;&amp;!f2p){activeEffect=1;std::cout&lt;&lt;&quot;Effect: &quot;&lt;&lt;effectNames[1]&lt;&lt;&quot;\n&quot;;}
+    if(k3&amp;&amp;!f3p){activeEffect=2;std::cout&lt;&lt;&quot;Effect: &quot;&lt;&lt;effectNames[2]&lt;&lt;&quot;\n&quot;;}
+    if(k4&amp;&amp;!f4p){activeEffect=3;std::cout&lt;&lt;&quot;Effect: &quot;&lt;&lt;effectNames[3]&lt;&lt;&quot;\n&quot;;}
+    if(k5&amp;&amp;!f5p){activeEffect=4;std::cout&lt;&lt;&quot;Effect: &quot;&lt;&lt;effectNames[4]&lt;&lt;&quot;\n&quot;;}
+    f1p=k1;f2p=k2;f3p=k3;f4p=k4;f5p=k5;
+}
+
+int main(){
+    std::cout&lt;&lt;&quot;\n=== RR Graphics Lab - Demo 13: FBO Post-Processing ===\n\n&quot;;
+    std::cout&lt;&lt;&quot;F1=Normal | F2=Greyscale | F3=Night Vision | F4=Edge Detect | F5=Vignette\n&quot;;
+    std::cout&lt;&lt;&quot;WASD=fly | Mouse=look | ESC=quit\n\n&quot;;
+
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window=glfwCreateWindow(WIN_W,WIN_H,&quot;Demo 13 - FBO Post-Processing&quot;,NULL,NULL);
+    if(!window){glfwTerminate();return -1;}
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window,onResize);
+    glfwSetCursorPosCallback(window,mouseCallback);
+    glfwSetScrollCallback(window,scrollCallback);
+    glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+    glewExperimental=GL_TRUE;glewInit();
+    std::cout&lt;&lt;&quot;GPU: &quot;&lt;&lt;glGetString(GL_RENDERER)&lt;&lt;&quot;\n\n&quot;;
+
+    unsigned int sceneShader=mkProg(sceneVert,sceneFrag);
+    unsigned int lightShader=mkProg(lightVert,lightFrag);
+    unsigned int quadShader =mkProg(quadVert, quadFrag);
+    std::cout&lt;&lt;&quot;[1] Scene shader=&quot;&lt;&lt;sceneShader&lt;&lt;&quot; | Light shader=&quot;&lt;&lt;lightShader
+             &lt;&lt;&quot; | Quad shader=&quot;&lt;&lt;quadShader&lt;&lt;&quot;\n&quot;;
+
+    // ── FBO SETUP ─────────────────────────────────────────────────────────────
+    // Five objects in order: fbo → colourTex → depthStencilRBO → attach both → check
+    unsigned int fbo;
+    glGenFramebuffers(1,&amp;fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER,fbo);
+    // (1) Colour texture attachment — this is what Pass 1 renders into
+    //     glTexImage2D with NULL data = allocate memory but don&#x27;t fill it
+    //     The render pass will fill it with the scene colour output
+    unsigned int colourTex;
+    glGenTextures(1,&amp;colourTex);
+    glBindTexture(GL_TEXTURE_2D,colourTex);
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,WIN_W,WIN_H,0,GL_RGB,GL_UNSIGNED_BYTE,NULL);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    // Attach texture as the colour output destination of the FBO
+    glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,colourTex,0);
+    // (2) Depth+stencil renderbuffer — needed for depth test to work during Pass 1
+    //     A renderbuffer is like a texture but GPU-write-only (cannot be sampled)
+    //     The depth test unit reads it; your shaders do not — so renderbuffer is correct here
+    unsigned int depthRBO;
+    glGenRenderbuffers(1,&amp;depthRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER,depthRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH24_STENCIL8,WIN_W,WIN_H);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_STENCIL_ATTACHMENT,GL_RENDERBUFFER,depthRBO);
+    // (3) Verify FBO is complete — always do this, never skip
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER)!=GL_FRAMEBUFFER_COMPLETE)
+        std::cerr&lt;&lt;&quot;ERROR: FBO not complete!\n&quot;;
+    else
+        std::cout&lt;&lt;&quot;[2] FBO complete: colourTex=&quot;&lt;&lt;colourTex&lt;&lt;&quot; depthRBO=&quot;&lt;&lt;depthRBO&lt;&lt;&quot;\n&quot;;
+    // Switch back to default framebuffer (the window)
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
+
+    // ── 3D SCENE GEOMETRY (Phong vessel from Demo 9) ──────────────────────────
+    float hull[] = {
+        -1.2f,0.2f,-0.3f,  0,1,0,   1.2f,0.2f,-0.3f,  0,1,0,   1.2f,0.2f,0.3f,  0,1,0,
+         1.2f,0.2f,0.3f,   0,1,0,  -1.2f,0.2f, 0.3f,  0,1,0,  -1.2f,0.2f,-0.3f, 0,1,0,
+        -1.2f,-0.2f,-0.3f, 0,-1,0,  1.2f,-0.2f,-0.3f, 0,-1,0,  1.2f,-0.2f,0.3f, 0,-1,0,
+         1.2f,-0.2f,0.3f,  0,-1,0, -1.2f,-0.2f,0.3f,  0,-1,0, -1.2f,-0.2f,-0.3f,0,-1,0,
+        -1.2f,-0.2f,0.3f,  0,0,1,   1.2f,-0.2f,0.3f,  0,0,1,   1.2f,0.2f,0.3f,  0,0,1,
+         1.2f,0.2f,0.3f,   0,0,1,  -1.2f,0.2f,0.3f,   0,0,1,  -1.2f,-0.2f,0.3f, 0,0,1,
+        -1.2f,-0.2f,-0.3f, 0,0,-1,  1.2f,-0.2f,-0.3f, 0,0,-1,  1.2f,0.2f,-0.3f, 0,0,-1,
+         1.2f,0.2f,-0.3f,  0,0,-1, -1.2f,0.2f,-0.3f,  0,0,-1, -1.2f,-0.2f,-0.3f,0,0,-1,
+         1.2f,-0.2f,-0.3f, 1,0,0,   1.2f,-0.2f,0.3f,  1,0,0,   1.2f,0.2f,0.3f,  1,0,0,
+         1.2f,0.2f,0.3f,   1,0,0,   1.2f,0.2f,-0.3f,  1,0,0,   1.2f,-0.2f,-0.3f,1,0,0,
+        -1.2f,-0.2f,-0.3f,-1,0,0,  -1.2f,-0.2f,0.3f, -1,0,0,  -1.2f,0.2f,0.3f, -1,0,0,
+        -1.2f,0.2f,0.3f,  -1,0,0,  -1.2f,0.2f,-0.3f, -1,0,0,  -1.2f,-0.2f,-0.3f,-1,0,0,
+    };
+
+    unsigned int sceneVAO,sceneVBO;
+    glGenVertexArrays(1,&amp;sceneVAO);glBindVertexArray(sceneVAO);
+    glGenBuffers(1,&amp;sceneVBO);glBindBuffer(GL_ARRAY_BUFFER,sceneVBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(hull),hull,GL_STATIC_DRAW);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
+    unsigned int lightVAO;
+    glGenVertexArrays(1,&amp;lightVAO);glBindVertexArray(lightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER,sceneVBO);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
+    std::cout&lt;&lt;&quot;[3] Scene VAO+VBO ready\n&quot;;
+
+    // ── FULLSCREEN QUAD (for Pass 2) ─────────────────────────────────────────
+    float quad[] = {
+        -1.0f,-1.0f, 0.0f,0.0f,
+         1.0f,-1.0f, 1.0f,0.0f,
+         1.0f, 1.0f, 1.0f,1.0f,
+         1.0f, 1.0f, 1.0f,1.0f,
+        -1.0f, 1.0f, 0.0f,1.0f,
+        -1.0f,-1.0f, 0.0f,0.0f
+    };
+    unsigned int quadVAO,quadVBO;
+    glGenVertexArrays(1,&amp;quadVAO);glBindVertexArray(quadVAO);
+    glGenBuffers(1,&amp;quadVBO);glBindBuffer(GL_ARRAY_BUFFER,quadVBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(quad),quad,GL_STATIC_DRAW);
+    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)(2*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    std::cout&lt;&lt;&quot;[4] Fullscreen quad VAO ready\n&quot;;
+
+    glUseProgram(quadShader);
+    glUniform1i(glGetUniformLocation(quadShader,&quot;uScreenTexture&quot;),0);
+    glUniform2f(glGetUniformLocation(quadShader,&quot;uResolution&quot;),(float)WIN_W,(float)WIN_H);
+
+    std::cout&lt;&lt;&quot;[5] Render loop starting.\n\n&quot;;
+    float lastFrame=0;
+
+    while(!glfwWindowShouldClose(window)){
+        float now=(float)glfwGetTime();
+        float dt=now-lastFrame;lastFrame=now;
+        processInput(window,dt);
+
+        glm::vec3 lp(cos(now*0.6f)*3.0f,2.0f,sin(now*0.6f)*3.0f);
+        glm::mat4 view=glm::lookAt(camPos,camPos+camFront,camUp);
+        glm::mat4 proj=glm::perspective(glm::radians(fov),(float)WIN_W/WIN_H,0.1f,100.0f);
+
+        // ══ PASS 1: Render scene into FBO ════════════════════════════════════
+        // Bind custom FBO — all draw calls now go to colourTex, not the screen
+        glBindFramebuffer(GL_FRAMEBUFFER,fbo);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0.06f,0.08f,0.12f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+        glUseProgram(sceneShader);
+        glm::mat4 model=glm::mat4(1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(sceneShader,&quot;uModel&quot;),     1,GL_FALSE,glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(sceneShader,&quot;uView&quot;),      1,GL_FALSE,glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(sceneShader,&quot;uProjection&quot;),1,GL_FALSE,glm::value_ptr(proj));
+        glUniform3fv(glGetUniformLocation(sceneShader,&quot;uLightPos&quot;), 1,glm::value_ptr(lp));
+        glUniform3fv(glGetUniformLocation(sceneShader,&quot;uViewPos&quot;),  1,glm::value_ptr(camPos));
+        glUniform3f(glGetUniformLocation(sceneShader,&quot;uObjectColour&quot;),0.5f,0.54f,0.58f);
+        glBindVertexArray(sceneVAO);
+        glDrawArrays(GL_TRIANGLES,0,36);
+
+        glUseProgram(lightShader);
+        glm::mat4 lm=glm::scale(glm::translate(glm::mat4(1.0f),lp),glm::vec3(0.12f));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader,&quot;uModel&quot;),     1,GL_FALSE,glm::value_ptr(lm));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader,&quot;uView&quot;),      1,GL_FALSE,glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(lightShader,&quot;uProjection&quot;),1,GL_FALSE,glm::value_ptr(proj));
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES,0,36);
+
+        // ══ PASS 2: Draw fullscreen quad with post-processing effect ══════════
+        // Switch back to default framebuffer (the window surface)
+        glBindFramebuffer(GL_FRAMEBUFFER,0);
+        glDisable(GL_DEPTH_TEST);   // quad is fullscreen, no depth needed
+        glClearColor(0.0f,0.0f,0.0f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(quadShader);
+        // Bind the FBO colour texture to texture unit 0
+        // This texture now contains the entire rendered scene from Pass 1
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,colourTex);
+        glUniform1i(glGetUniformLocation(quadShader,&quot;uEffect&quot;),activeEffect);
+        glBindVertexArray(quadVAO);
+        glDrawArrays(GL_TRIANGLES,0,6);   // draw the fullscreen quad
+        // The fragment shader samples colourTex and applies the effect
+        // The result appears on screen through the default framebuffer
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glDeleteVertexArrays(1,&amp;sceneVAO);
+    glDeleteVertexArrays(1,&amp;lightVAO);
+    glDeleteVertexArrays(1,&amp;quadVAO);
+    glDeleteBuffers(1,&amp;sceneVBO);
+    glDeleteBuffers(1,&amp;quadVBO);
+    glDeleteTextures(1,&amp;colourTex);
+    glDeleteRenderbuffers(1,&amp;depthRBO);
+    glDeleteFramebuffers(1,&amp;fbo);
+    glDeleteProgram(sceneShader);
+    glDeleteProgram(lightShader);
+    glDeleteProgram(quadShader);
+    glfwTerminate();
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run &mdash; Developer Command Prompt for VS 2022</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd13&apos;)">Copy</button><pre id="cmd13">cd C:\Labs\M13_FBO
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+build\Release\M13_FBO.exe</pre></div>
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="ts">[1] Scene shader=1 | Light shader=2 | Quad shader=3</span></div>
+      <div><span class="ts">[2] FBO complete: colourTex=1 depthRBO=1</span></div>
+      <div><span class="ts">[3] Scene VAO+VBO ready</span></div>
+      <div><span class="ts">[4] Fullscreen quad VAO ready</span></div>
+      <div><span class="ts">[5] Render loop starting.</span></div>
+      <hr class="t-hr">
+      <div><span class="to">Effect: Greyscale</span></div>
+      <div><span class="to">Effect: Night Vision</span></div>
+      <div><span class="to">Effect: Edge Detection</span></div>
+      <div><span class="th">Screen: Vessel scene transformed by selected effect. Camera still works.</span></div>
+    </div>
+  </div>
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>After Press F1 (Normal), change glBindFramebuffer(fbo) to glBindFramebuffer(0):</strong> Pass 1 now renders directly to screen &mdash; the FBO is skipped. Pass 2 draws over it. The scene appears without any effect but is overdrawn by the blank-textured quad. Proves the FBO is the correct render target for Pass 1.</li>
+      <li><strong>Comment out glDisable(GL_DEPTH_TEST) before Pass 2:</strong> The fullscreen quad may be occluded by the depth values from Pass 1 and the screen goes black. Shows why depth must be disabled (or cleared) for the second pass.</li>
+      <li><strong>Fly the camera while in Edge Detection mode (F4):</strong> Edges update every frame from the live scene. The FBO re-captures the scene each frame with the new camera position &mdash; the effect is always applied to the current view.</li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="demo-sec" id="demo14">
+  <div class="demo-eyebrow"><span class="d-badge">Demo 14 &middot; Module 8</span><span class="d-type">Fragment Tests &mdash; Stencil + Transparency</span></div>
+  <div class="demo-title">Stencil Outline + Transparent Radar Sweep &mdash; Three Tests Active Simultaneously</div>
+  <div class="demo-desc">All three fragment tests running at once: depth (correct surface ordering), stencil (selection outline mask), and blending (transparent radar sweep overlay). The stencil outline uses the two-pass technique: draw vessel writing stencil=1, then draw expanded vessel only where stencil&ne;1 to produce a selection rim. The radar sweep is a transparent fullscreen quad drawn last, compositing over the scene with alpha=0.35.</div>
+  <div class="demo-meta">
+    <span class="meta-chip">&#128187; Project: M14_StencilBlend</span>
+    <span class="meta-chip">&#9201; ~40 min</span>
+    <span class="meta-chip">New: glStencilOp &middot; glStencilFunc &middot; GL_NOTEQUAL &middot; glBlendFunc &middot; glDepthMask</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Demo 9 Phong vessel</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">Demo 11 sweep shader (atan/mod)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">stencil two-pass technique</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">glBlendFunc</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Selection outline + transparent sweep &#10003;</span>
+  </div>
+  <div class="out-preview">
+    <div class="op-label">&#127919; What You Will See</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Screen:</strong> Phong-lit vessel with a gold selection outline rim and a rotating green radar sweep arc</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Sweep transparency:</strong> The vessel hull is visible THROUGH the green sweep &mdash; blending compositing in action</div>
+    <div class="op-item"><span class="op-dot"></span><strong>F1 key:</strong> Toggle sweep on/off &mdash; blending contribution removed, scene returns to fully opaque</div>
+    <div class="op-item"><span class="op-dot"></span><strong>F2 key:</strong> Toggle stencil outline on/off &mdash; gold rim appears/disappears</div>
+    <div class="op-item"><span class="op-dot"></span><strong>WASD + mouse:</strong> Fly camera</div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-title">Stencil Two-Pass Outline &mdash; What Happens at Each Pixel</div>
+    <pre>
+  After PASS 1 (draw vessel, write stencil=1):
+  ┌──────────────────────────────────────┐
+  │  Stencil buffer:                     │
+  │  . . . . . . . . . . . . . . . . .  │
+  │  . . . 1 1 1 1 1 1 1 1 1 . . . .   │  ← stencil=1 wherever vessel pixels landed
+  │  . . 1 1 1 1 1 1 1 1 1 1 1 . . .   │
+  │  . . 1 1 1 1 1 1 1 1 1 1 1 . . .   │
+  │  . . . 1 1 1 1 1 1 1 1 1 . . . .   │
+  │  . . . . . . . . . . . . . . . . .  │
+  └──────────────────────────────────────┘
+
+  PASS 2: draw vessel scaled 1.045× (expanded), stencilFunc = GL_NOTEQUAL 1
+  ┌──────────────────────────────────────┐
+  │  Expanded hull pixel coverage:       │
+  │  . . X X X X X X X X X X X . . .    │  ← X = expanded hull pixel
+  │  . X X [1 1 1 1 1 1 1 1 1] X X .   │  ← [1] = blocked by stencil
+  │  . X X [1 1 1 1 1 1 1 1 1] X X .   │  ← X outside stencil = DRAWN (outline)
+  │  . . X X X X X X X X X X X . . .    │
+  │  . . . . . . . . . . . . . . . . .  │
+  └──────────────────────────────────────┘
+  Result: only the rim (X) is drawn → gold outline
+
+  PASS 3: sweep quad drawn last (BLEND active, alpha=0.35)
+  Each sweep pixel: output = green*0.35 + sceneColour*0.65 → transparency</pre>
+  </div>
+
+  <div class="concept">
+    <div class="concept-lbl">&#128161; Why Draw Order Matters for Blending</div>
+    <p class="note">The sweep is drawn last. If it were drawn before the vessel, the vessel would overwrite it completely (the vessel is opaque and writes to the depth buffer). Drawing transparent objects last is mandatory &mdash; they composite over whatever is already in the framebuffer. The depth buffer also needs special handling: <code class="ic">glDepthMask(GL_FALSE)</code> prevents the transparent sweep from writing depth values, so the 3D scene behind it is not occluded.</p>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake14&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake14">cmake_minimum_required(VERSION 3.20)
+project(M14_StencilBlend)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(OpenGL REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLEW_DIR $ENV{GLEW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLEW_DIR}/include
+    ${GLM_DIR}
+)
+add_executable(M14_StencilBlend src/main.cpp)
+target_link_libraries(M14_StencilBlend
+    OpenGL::GL
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+    ${GLEW_DIR}/lib/Release/x64/glew32s.lib
+)</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp &mdash; Complete Program</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main14&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main14">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 3 · DEMO 14
+//  Stencil Buffer Outline + Blending — Vessel Selection + Radar Sweep
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: M14_StencilBlend
+//  FOLDER:       C:\Labs\M14_StencilBlend\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - Stencil buffer: 8-bit integer per pixel, acts as a GPU-side mask
+//  - Two-pass stencil outline technique:
+//      Pass 1: draw object, write 1 into stencil for every covered pixel
+//      Pass 2: draw scaled-up object, only render where stencil != 1 (the rim)
+//  - Blending: glEnable(GL_BLEND) + glBlendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
+//      finalColour = srcColour*srcAlpha + destColour*(1-srcAlpha)
+//  - Draw order requirement: opaque first, transparent last (back-to-front)
+//  - Disabling depth write for transparent objects (glDepthMask(GL_FALSE))
+//  - All three fragment tests active simultaneously: depth + stencil + blend
+//
+//  WHAT YOU WILL SEE:
+//  - Lit vessel hull on dark background with fly camera
+//  - S key: toggle semi-transparent rotating radar sweep arc (alpha=0.35)
+//    The vessel shows THROUGH the sweep — that is blending working
+//  - O key: toggle yellow selection outline around the vessel
+//    The outline is the stencil technique: rim of colour around hull perimeter
+//  - WASD + mouse: fly camera
+//  - Break tests built into the comments: try disabling each effect to see failure
+//
+//  DRAW ORDER EACH FRAME (critical — changing this breaks the result):
+//  1. Clear colour + depth + stencil
+//  2. Draw vessel (opaque, depth ON, stencil write)
+//  3. Draw vessel outline (stencil read, depth OFF)
+//  4. Draw sweep arc (blending ON, drawn last)
+//
+//  BUILDS ON: Demo 9 (Phong vessel) — adds stencil and blend to that scene
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLEW_STATIC
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;glm/gtc/matrix_transform.hpp&gt;
+#include &lt;glm/gtc/type_ptr.hpp&gt;
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SCENE VERTEX SHADER — standard Phong, passes world pos + normal
+// ─────────────────────────────────────────────────────────────────────────────
+const char* sceneVert = R&quot;GLSL(
+    #version 330 core
+    layout(location=0) in vec3 aPos;
+    layout(location=1) in vec3 aNormal;
+    out vec3 vFragPos, vNormal;
+    uniform mat4 uModel, uView, uProjection;
+    void main() {
+        vFragPos = vec3(uModel * vec4(aPos, 1.0));
+        vNormal  = mat3(transpose(inverse(uModel))) * aNormal;
+        gl_Position = uProjection * uView * uModel * vec4(aPos, 1.0);
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SCENE FRAGMENT SHADER — Phong lighting (same as Demo 9/13)
+// ─────────────────────────────────────────────────────────────────────────────
+const char* sceneFrag = R&quot;GLSL(
+    #version 330 core
+    in vec3 vFragPos, vNormal;
+    out vec4 FragColor;
+    uniform vec3 uLightPos, uViewPos, uObjectColour;
+    void main() {
+        vec3 n  = normalize(vNormal);
+        vec3 ld = normalize(uLightPos - vFragPos);
+        vec3 vd = normalize(uViewPos  - vFragPos);
+        vec3 amb  = 0.15 * vec3(1.0);
+        vec3 diff = max(dot(n, ld), 0.0) * vec3(1.0);
+        vec3 spec = pow(max(dot(vd, reflect(-ld, n)), 0.0), 32.0) * 0.5 * vec3(1.0);
+        FragColor = vec4((amb + diff + spec) * uObjectColour, 1.0);
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OUTLINE VERTEX SHADER
+// Scales the vessel geometry outward by a small factor to create the rim.
+// Displacement is along the normal direction: each vertex moves outward.
+// ─────────────────────────────────────────────────────────────────────────────
+const char* outlineVert = R&quot;GLSL(
+    #version 330 core
+    layout(location=0) in vec3 aPos;
+    layout(location=1) in vec3 aNormal;
+    uniform mat4 uModel, uView, uProjection;
+    uniform float uOutlineThickness;  // how far to push vertices outward
+    void main() {
+        // Move each vertex outward along its normal by uOutlineThickness
+        // This expands the hull uniformly — only the expanded rim will be visible
+        // because the stencil mask blocks the interior
+        vec3 expanded = aPos + aNormal * uOutlineThickness;
+        gl_Position = uProjection * uView * uModel * vec4(expanded, 1.0);
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OUTLINE FRAGMENT SHADER — flat selection colour
+// ─────────────────────────────────────────────────────────────────────────────
+const char* outlineFrag = R&quot;GLSL(
+    #version 330 core
+    out vec4 FragColor;
+    uniform vec3 uOutlineColour;
+    void main() { FragColor = vec4(uOutlineColour, 1.0); }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SWEEP VERTEX SHADER — flat fullscreen-positioned quad (no 3D transform)
+// The sweep is a 2D screen overlay quad drawn in view space
+// ─────────────────────────────────────────────────────────────────────────────
+const char* sweepVert = R&quot;GLSL(
+    #version 330 core
+    layout(location=0) in vec2 aPos;
+    layout(location=1) in vec2 aUV;
+    out vec2 vUV;
+    void main() {
+        gl_Position = vec4(aPos, 0.0, 1.0);
+        vUV = aUV;
+    }
+)GLSL&quot;;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SWEEP FRAGMENT SHADER — procedural rotating arc with alpha &lt; 1
+// The alpha value (0.35) is what makes blending produce transparency
+// Without glEnable(GL_BLEND), this alpha would be ignored — vessel hidden
+// ─────────────────────────────────────────────────────────────────────────────
+const char* sweepFrag = R&quot;GLSL(
+    #version 330 core
+    in vec2 vUV;
+    out vec4 FragColor;
+    uniform float uTime;
+    void main() {
+        vec2 uv   = vUV - 0.5;
+        float dist  = length(uv);
+        float angle = atan(uv.y, uv.x);
+
+        // Circular boundary — discard outside the sweep circle
+        if (dist &gt; 0.48) discard;
+
+        // Rotating sweep angle (same logic as Demo 11)
+        float sweepAngle = mod(uTime * 0.9, 6.2832);
+        float angleDiff  = mod(sweepAngle - angle + 6.2832, 6.2832);
+
+        // Green sweep trail with 0.8 radian width, fades toward tail
+        float trail = 1.0 - smoothstep(0.0, 0.8, angleDiff);
+        trail *= 1.0 - smoothstep(0.0, 0.45, dist);  // fades at edge
+
+        if (trail &lt; 0.01) discard;  // don&#x27;t draw near-invisible pixels
+
+        // KEY: alpha = 0.35 means 35% of this sweep colour + 65% of what&#x27;s behind
+        // This is the blend equation: outColour = sweepColour*0.35 + sceneColour*0.65
+        // Without glEnable(GL_BLEND): this alpha is ignored, sweep is fully opaque
+        FragColor = vec4(0.1, 0.9, 0.2, trail * 0.35);
+    }
+)GLSL&quot;;
+
+unsigned int compileShader(unsigned int t, const char* s) {
+    unsigned int id = glCreateShader(t);
+    glShaderSource(id,1,&amp;s,NULL); glCompileShader(id);
+    int ok; char log[512];
+    glGetShaderiv(id,GL_COMPILE_STATUS,&amp;ok);
+    if(!ok){glGetShaderInfoLog(id,512,NULL,log);std::cerr&lt;&lt;log;}
+    return id;
+}
+unsigned int mkProg(const char* vs, const char* fs) {
+    unsigned int v=compileShader(GL_VERTEX_SHADER,vs), f=compileShader(GL_FRAGMENT_SHADER,fs);
+    unsigned int p=glCreateProgram();
+    glAttachShader(p,v); glAttachShader(p,f); glLinkProgram(p);
+    glDeleteShader(v); glDeleteShader(f); return p;
+}
+
+glm::vec3 camPos(0,1.5f,5.0f), camFront(0,-0.15f,-1), camUp(0,1,0);
+float yaw=-90, pitch=-8, lastX=450, lastY=300, fov=45;
+bool firstMouse=true;
+bool showSweep=true, showOutline=true;
+bool sPrev=false, oPrev=false;
+
+void mouseCallback(GLFWwindow* w, double x, double y) {
+    if(firstMouse){lastX=(float)x;lastY=(float)y;firstMouse=false;}
+    float dx=((float)x-lastX)*0.1f, dy=(lastY-(float)y)*0.1f;
+    lastX=(float)x; lastY=(float)y; yaw+=dx; pitch+=dy;
+    if(pitch&gt;89)pitch=89; if(pitch&lt;-89)pitch=-89;
+    glm::vec3 f;
+    f.x=cos(glm::radians(yaw))*cos(glm::radians(pitch));
+    f.y=sin(glm::radians(pitch));
+    f.z=sin(glm::radians(yaw))*cos(glm::radians(pitch));
+    camFront=glm::normalize(f);
+}
+void scrollCallback(GLFWwindow* w,double xo,double yo){fov-=(float)yo;if(fov&lt;5)fov=5;if(fov&gt;90)fov=90;}
+void onResize(GLFWwindow* w,int W,int H){glViewport(0,0,W,H);}
+
+void processInput(GLFWwindow* w, float dt) {
+    if(glfwGetKey(w,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(w,true);
+    float s=3.0f*dt;
+    if(glfwGetKey(w,GLFW_KEY_W)==GLFW_PRESS) camPos+=s*camFront;
+    if(glfwGetKey(w,GLFW_KEY_S)==GLFW_PRESS) camPos-=s*camFront;
+    if(glfwGetKey(w,GLFW_KEY_A)==GLFW_PRESS) camPos-=glm::normalize(glm::cross(camFront,camUp))*s;
+    if(glfwGetKey(w,GLFW_KEY_D)==GLFW_PRESS) camPos+=glm::normalize(glm::cross(camFront,camUp))*s;
+    bool sNow=(glfwGetKey(w,GLFW_KEY_S)==GLFW_PRESS &amp;&amp; glfwGetKey(w,GLFW_KEY_LEFT_SHIFT)==GLFW_PRESS);
+    // Use Shift+S for sweep toggle so S alone is still fly-back
+    bool oNow=(glfwGetKey(w,GLFW_KEY_O)==GLFW_PRESS);
+    // Actually use dedicated keys: F1=sweep, F2=outline
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n=== RR Graphics Lab - Demo 14: Stencil Outline + Blending ===\n\n&quot;;
+    std::cout &lt;&lt; &quot;F1=toggle sweep | F2=toggle outline | WASD=fly | Mouse=look | ESC=quit\n\n&quot;;
+
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window=glfwCreateWindow(900,600,
+        &quot;Demo 14 - Stencil Outline + Radar Sweep Blend&quot;,NULL,NULL);
+    if(!window){glfwTerminate();return -1;}
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window,onResize);
+    glfwSetCursorPosCallback(window,mouseCallback);
+    glfwSetScrollCallback(window,scrollCallback);
+    glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+    glewExperimental=GL_TRUE; glewInit();
+    glEnable(GL_DEPTH_TEST);
+    std::cout &lt;&lt; &quot;GPU: &quot; &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; &quot;\n\n&quot;;
+
+    unsigned int sceneShader   = mkProg(sceneVert,   sceneFrag);
+    unsigned int outlineShader = mkProg(outlineVert,  outlineFrag);
+    unsigned int sweepShader   = mkProg(sweepVert,    sweepFrag);
+    std::cout &lt;&lt; &quot;[1] Shaders: scene=&quot; &lt;&lt; sceneShader
+              &lt;&lt; &quot; outline=&quot; &lt;&lt; outlineShader
+              &lt;&lt; &quot; sweep=&quot; &lt;&lt; sweepShader &lt;&lt; &quot;\n&quot;;
+
+    // ── VESSEL HULL (pos + normal, 6 floats per vertex) ───────────────────────
+    float hull[] = {
+        -1.2f, 0.2f,-0.3f,  0, 1,0,   1.2f, 0.2f,-0.3f,  0, 1,0,   1.2f, 0.2f, 0.3f,  0, 1,0,
+         1.2f, 0.2f, 0.3f,  0, 1,0,  -1.2f, 0.2f, 0.3f,  0, 1,0,  -1.2f, 0.2f,-0.3f,  0, 1,0,
+        -1.2f,-0.2f,-0.3f,  0,-1,0,   1.2f,-0.2f,-0.3f,  0,-1,0,   1.2f,-0.2f, 0.3f,  0,-1,0,
+         1.2f,-0.2f, 0.3f,  0,-1,0,  -1.2f,-0.2f, 0.3f,  0,-1,0,  -1.2f,-0.2f,-0.3f,  0,-1,0,
+        -1.2f,-0.2f, 0.3f,  0, 0,1,   1.2f,-0.2f, 0.3f,  0, 0,1,   1.2f, 0.2f, 0.3f,  0, 0,1,
+         1.2f, 0.2f, 0.3f,  0, 0,1,  -1.2f, 0.2f, 0.3f,  0, 0,1,  -1.2f,-0.2f, 0.3f,  0, 0,1,
+        -1.2f,-0.2f,-0.3f,  0, 0,-1,  1.2f,-0.2f,-0.3f,  0, 0,-1,  1.2f, 0.2f,-0.3f,  0, 0,-1,
+         1.2f, 0.2f,-0.3f,  0, 0,-1, -1.2f, 0.2f,-0.3f,  0, 0,-1, -1.2f,-0.2f,-0.3f,  0, 0,-1,
+         1.2f,-0.2f,-0.3f,  1, 0,0,   1.2f,-0.2f, 0.3f,  1, 0,0,   1.2f, 0.2f, 0.3f,  1, 0,0,
+         1.2f, 0.2f, 0.3f,  1, 0,0,   1.2f, 0.2f,-0.3f,  1, 0,0,   1.2f,-0.2f,-0.3f,  1, 0,0,
+        -1.2f,-0.2f,-0.3f, -1, 0,0,  -1.2f,-0.2f, 0.3f, -1, 0,0,  -1.2f, 0.2f, 0.3f, -1, 0,0,
+        -1.2f, 0.2f, 0.3f, -1, 0,0,  -1.2f, 0.2f,-0.3f, -1, 0,0,  -1.2f,-0.2f,-0.3f, -1, 0,0,
+    };
+
+    unsigned int hullVAO, hullVBO;
+    glGenVertexArrays(1,&amp;hullVAO); glBindVertexArray(hullVAO);
+    glGenBuffers(1,&amp;hullVBO); glBindBuffer(GL_ARRAY_BUFFER,hullVBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(hull),hull,GL_STATIC_DRAW);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    std::cout &lt;&lt; &quot;[2] Hull VAO+VBO ready\n&quot;;
+
+    // ── SWEEP OVERLAY QUAD (fullscreen, NDC coords) ───────────────────────────
+    float sweepQuad[] = {
+        -1.0f,-1.0f, 0.0f,0.0f,
+         1.0f,-1.0f, 1.0f,0.0f,
+         1.0f, 1.0f, 1.0f,1.0f,
+         1.0f, 1.0f, 1.0f,1.0f,
+        -1.0f, 1.0f, 0.0f,1.0f,
+        -1.0f,-1.0f, 0.0f,0.0f,
+    };
+    unsigned int sweepVAO, sweepVBO;
+    glGenVertexArrays(1,&amp;sweepVAO); glBindVertexArray(sweepVAO);
+    glGenBuffers(1,&amp;sweepVBO); glBindBuffer(GL_ARRAY_BUFFER,sweepVBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(sweepQuad),sweepQuad,GL_STATIC_DRAW);
+    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,4*sizeof(float),(void*)(2*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    std::cout &lt;&lt; &quot;[3] Sweep VAO+VBO ready\n&quot;;
+    std::cout &lt;&lt; &quot;[4] Render loop starting.\n&quot;;
+    std::cout &lt;&lt; &quot;    F1=sweep toggle | F2=outline toggle | WASD=fly | ESC=quit\n\n&quot;;
+
+    float lastFrame=0;
+    bool f1Prev=false, f2Prev=false;
+
+    while (!glfwWindowShouldClose(window)) {
+        float now=(float)glfwGetTime();
+        float dt=now-lastFrame; lastFrame=now;
+
+        // Input — WASD fly
+        if(glfwGetKey(window,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(window,true);
+        float spd=3.0f*dt;
+        if(glfwGetKey(window,GLFW_KEY_W)==GLFW_PRESS) camPos+=spd*camFront;
+        if(glfwGetKey(window,GLFW_KEY_S)==GLFW_PRESS) camPos-=spd*camFront;
+        if(glfwGetKey(window,GLFW_KEY_A)==GLFW_PRESS) camPos-=glm::normalize(glm::cross(camFront,camUp))*spd;
+        if(glfwGetKey(window,GLFW_KEY_D)==GLFW_PRESS) camPos+=glm::normalize(glm::cross(camFront,camUp))*spd;
+
+        bool f1Now=(glfwGetKey(window,GLFW_KEY_F1)==GLFW_PRESS);
+        bool f2Now=(glfwGetKey(window,GLFW_KEY_F2)==GLFW_PRESS);
+        if(f1Now&amp;&amp;!f1Prev){showSweep=!showSweep; std::cout&lt;&lt;(showSweep?&quot;Sweep ON\n&quot;:&quot;Sweep OFF\n&quot;);}
+        if(f2Now&amp;&amp;!f2Prev){showOutline=!showOutline; std::cout&lt;&lt;(showOutline?&quot;Outline ON\n&quot;:&quot;Outline OFF\n&quot;);}
+        f1Prev=f1Now; f2Prev=f2Now;
+
+        // ── CLEAR — must include stencil buffer ───────────────────────────────
+        // GL_STENCIL_BUFFER_BIT resets all stencil values to 0 every frame
+        // Without this: stencil mask from previous frame would still be present
+        glClearColor(0.02f,0.03f,0.07f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        glm::vec3 lp(cos(now*0.6f)*3.0f, 2.0f, sin(now*0.6f)*3.0f);
+        glm::mat4 view = glm::lookAt(camPos, camPos+camFront, camUp);
+        glm::mat4 proj = glm::perspective(glm::radians(fov), 900.0f/600.0f, 0.1f, 100.0f);
+        glm::mat4 model = glm::mat4(1.0f);
+
+        // ═══════════════════════════════════════════════════════════════════
+        // DRAW 1: VESSEL HULL (opaque, writes stencil=1 for its pixels)
+        // ═══════════════════════════════════════════════════════════════════
+        if (showOutline) {
+            // Enable stencil test for pass 1
+            glEnable(GL_STENCIL_TEST);
+            // Stencil operation: on depth pass → REPLACE stencil value with ref (1)
+            // GL_KEEP = do nothing on stencil fail or depth fail
+            // GL_REPLACE = write refValue when both stencil and depth pass
+            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+            // Stencil function: GL_ALWAYS = always pass the stencil test (write to all vessel pixels)
+            // ref=1: the value we REPLACE with
+            // mask=0xFF: all 8 stencil bits are writable
+            glStencilFunc(GL_ALWAYS, 1, 0xFF);
+            glStencilMask(0xFF);  // allow writing to stencil buffer
+        }
+
+        glEnable(GL_DEPTH_TEST);
+        glUseProgram(sceneShader);
+        glUniformMatrix4fv(glGetUniformLocation(sceneShader,&quot;uModel&quot;),     1,GL_FALSE,glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(sceneShader,&quot;uView&quot;),      1,GL_FALSE,glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(sceneShader,&quot;uProjection&quot;),1,GL_FALSE,glm::value_ptr(proj));
+        glUniform3fv(glGetUniformLocation(sceneShader,&quot;uLightPos&quot;), 1,glm::value_ptr(lp));
+        glUniform3fv(glGetUniformLocation(sceneShader,&quot;uViewPos&quot;),  1,glm::value_ptr(camPos));
+        glUniform3f(glGetUniformLocation(sceneShader,&quot;uObjectColour&quot;), 0.50f,0.54f,0.58f);
+        glBindVertexArray(hullVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // After this draw: every pixel the vessel covered has stencil=1
+
+        // ═══════════════════════════════════════════════════════════════════
+        // DRAW 2: VESSEL OUTLINE (stencil read — only pixels where stencil != 1)
+        // This draws the expanded hull but the stencil mask cuts out the interior
+        // Only the rim (expanded but not original) survives → selection outline
+        // ═══════════════════════════════════════════════════════════════════
+        if (showOutline) {
+            // Stencil function: GL_NOTEQUAL = only pass where stencil value != 1
+            // This means: skip all pixels where the original vessel was drawn
+            // Only draw where the EXPANDED hull extends beyond the original
+            glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+            glStencilMask(0x00);       // don&#x27;t write to stencil in this pass
+            glDisable(GL_DEPTH_TEST);  // outline draws over anything (no depth occlusion)
+
+            glUseProgram(outlineShader);
+            glUniformMatrix4fv(glGetUniformLocation(outlineShader,&quot;uModel&quot;),     1,GL_FALSE,glm::value_ptr(model));
+            glUniformMatrix4fv(glGetUniformLocation(outlineShader,&quot;uView&quot;),      1,GL_FALSE,glm::value_ptr(view));
+            glUniformMatrix4fv(glGetUniformLocation(outlineShader,&quot;uProjection&quot;),1,GL_FALSE,glm::value_ptr(proj));
+            glUniform1f(glGetUniformLocation(outlineShader,&quot;uOutlineThickness&quot;), 0.045f);
+            glUniform3f(glGetUniformLocation(outlineShader,&quot;uOutlineColour&quot;), 1.0f,0.85f,0.0f); // gold
+            glBindVertexArray(hullVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+
+            // Restore stencil and depth state for remaining draws
+            glStencilMask(0xFF);
+            glDisable(GL_STENCIL_TEST);
+            glEnable(GL_DEPTH_TEST);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // DRAW 3: RADAR SWEEP (transparent overlay, drawn LAST)
+        // Blending active: sweep composites over everything already drawn
+        // IMPORTANT: must be drawn last — if drawn before vessel, vessel occludes it
+        // ═══════════════════════════════════════════════════════════════════
+        if (showSweep) {
+            // Enable blending with standard alpha compositing equation:
+            // output = src.rgb * src.a + dst.rgb * (1 - src.a)
+            // src = sweep fragment colour (0.1, 0.9, 0.2, 0.35)
+            // dst = whatever colour is in the framebuffer at this pixel
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // Don&#x27;t write to depth buffer for transparent objects
+            // The sweep is a 2D overlay — it shouldn&#x27;t occlude 3D objects
+            glDepthMask(GL_FALSE);
+            glDisable(GL_STENCIL_TEST);
+
+            glUseProgram(sweepShader);
+            glUniform1f(glGetUniformLocation(sweepShader,&quot;uTime&quot;), now);
+            glBindVertexArray(sweepVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            // Restore blend and depth write state
+            glDepthMask(GL_TRUE);
+            glDisable(GL_BLEND);
+        }
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glDeleteVertexArrays(1,&amp;hullVAO);
+    glDeleteVertexArrays(1,&amp;sweepVAO);
+    glDeleteBuffers(1,&amp;hullVBO);
+    glDeleteBuffers(1,&amp;sweepVBO);
+    glDeleteProgram(sceneShader);
+    glDeleteProgram(outlineShader);
+    glDeleteProgram(sweepShader);
+    glfwTerminate();
+    std::cout &lt;&lt; &quot;\nDay 3 demos complete.\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run &mdash; Developer Command Prompt for VS 2022</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd14&apos;)">Copy</button><pre id="cmd14">cd C:\Labs\M14_StencilBlend
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+build\Release\M14_StencilBlend.exe</pre></div>
+  <div class="terminal">
+    <div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div>
+    <div class="term-body">
+      <div><span class="ts">[1] Shaders: scene=1 outline=2 sweep=3</span></div>
+      <div><span class="ts">[2] Hull VAO+VBO ready</span></div>
+      <div><span class="ts">[3] Sweep VAO+VBO ready</span></div>
+      <div><span class="ts">[4] Render loop starting. F1=sweep | F2=outline | WASD | ESC</span></div>
+      <hr class="t-hr">
+      <div><span class="to">Sweep OFF</span></div>
+      <div><span class="to">Sweep ON</span></div>
+      <div><span class="to">Outline OFF</span></div>
+      <div><span class="to">Outline ON</span></div>
+      <div><span class="th">Screen: Gold-outlined vessel with green transparent sweep rotating over it</span></div>
+    </div>
+  </div>
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>Move sweep draw call before vessel draw call:</strong> Vessel overdraws sweep completely &mdash; sweep disappears. Restoring the correct order (vessel then sweep) fixes it. Proves transparent objects must be last.</li>
+      <li><strong>Comment out glDepthMask(GL_FALSE):</strong> Sweep writes depth values. When you fly around, parts of the vessel vanish behind the sweep's depth values even where the sweep is near-invisible. Shows why depth writing must be disabled for transparent geometry.</li>
+      <li><strong>Change outline scale from 0.045 to 0.15:</strong> The outline rim becomes very thick &mdash; a dramatic glow effect. Change to 0.01 for a hairline outline. This controls how far each vertex is pushed outward along its normal.</li>
+      <li><strong>Change blend equation:</strong> Replace <code class="ic">GL_ONE_MINUS_SRC_ALPHA</code> with <code class="ic">GL_ONE</code> &mdash; additive blending. The sweep adds its colour to the scene rather than mixing. Bright areas glow more intensely. Useful for laser/glow effects.</li>
+    </ul>
+  </div>
+
+  <div class="page-foot">
+    <a class="foot-btn" href="day2-demos.html">&#8592; Day 2 Demos</a>
+    <div style="font-size:.8rem;color:var(--text3);text-align:center">
+      By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>
+      Koenig Original AI-Courseware &middot; Day 3 Complete
+    </div>
+    <a class="foot-btn primary" href="labs.html">Day 3 Labs &#8594;</a>
+  </div>
+</div>
+
+</main>
+</div>
+<script>
+function copyCode(btn,id){
+  const el=document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{
+    const o=btn.textContent;btn.textContent='✓ Copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2200);
+  }).catch(()=>{
+    const r=document.createRange();r.selectNode(el);
+    window.getSelection().removeAllRanges();window.getSelection().addRange(r);
+    document.execCommand('copy');window.getSelection().removeAllRanges();
+    btn.textContent='✓ Copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='Copy All';btn.classList.remove('ok');},2200);
+  });
+}
+const secs=document.querySelectorAll('.demo-sec');
+const sbls=document.querySelectorAll('.sb-link[href^="#"]');
+secs.forEach(s=>new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id='#'+e.target.id;
+      sbls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')===id));
+    }
+  });
+},{threshold:0.2,rootMargin:'-70px 0px -55% 0px'}).observe(s));
+</script>
+</body>
+</html>

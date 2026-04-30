@@ -565,39 +565,83 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <div class="day-badge" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Day 4 — Introduction to Vulkan</div>
       <div class="day-header-info">
         <div class="day-title">Vulkan Instance, Devices, Swapchain, Pipeline, First Triangle</div>
-        <div class="day-desc">4 demos · Modules 10, 11, 12</div>
+        <div class="day-desc">4 demos · Modules 10, 11, 12 · From environment probe to drawing a triangle with full frame synchronisation</div>
       </div>
-      <a class="day-cta" href="day4-demos.html" style="border-color:rgba(251,146,60,.35);color:var(--orange);background:rgba(251,146,60,.08)">View All &rarr;</a>
+      <a class="day-cta" href="day4-demos.html" style="border-color:rgba(251,146,60,.4);color:var(--orange);background:rgba(251,146,60,.08)">
+        ⚡ Open Day 4 Demos →
+      </a>
     </div>
-    <div class="demo-grid">
-      <a class="demo-card" href="day4-demos.html#demo15">
-        <div class="demo-card-bar" style="background:var(--orange)"></div>
-        <div class="demo-num" style="color:var(--orange)">D15</div>
-        <div class="demo-name">VkInstance + Device</div>
-        <div class="demo-summary">Create VkInstance with validation layers, enumerate and score all GPUs, create logical device and graphics queue. Terminal only.</div>
-        <div class="demo-tags"><span class="tag">VkInstance</span><span class="tag">VkPhysicalDevice</span><span class="tag">Validation</span></div>
-      </a>
-      <a class="demo-card" href="day4-demos.html#demo16">
-        <div class="demo-card-bar" style="background:var(--orange)"></div>
-        <div class="demo-num" style="color:var(--orange)">D16</div>
-        <div class="demo-name">Surface + Swapchain</div>
-        <div class="demo-summary">GLFW window, VkSurfaceKHR, VkSwapchainKHR. Query formats and present modes. Acquire–clear–present loop. Orange window.</div>
-        <div class="demo-tags"><span class="tag">VkSwapchainKHR</span><span class="tag">Present modes</span><span class="tag">Image views</span></div>
-      </a>
-      <a class="demo-card" href="day4-demos.html#demo17">
-        <div class="demo-card-bar" style="background:var(--orange)"></div>
-        <div class="demo-num" style="color:var(--orange)">D17</div>
-        <div class="demo-name">Graphics Pipeline Object</div>
-        <div class="demo-summary">SPIR-V shaders, VkRenderPass, full VkGraphicsPipelineCreateInfo with all state baked in. Pipeline bound, navy window.</div>
-        <div class="demo-tags"><span class="tag">VkPipeline</span><span class="tag">SPIR-V</span><span class="tag">Render pass</span></div>
-      </a>
-      <a class="demo-card" href="day4-demos.html#demo18">
-        <div class="demo-card-bar" style="background:var(--orange)"></div>
-        <div class="demo-num" style="color:var(--orange)">D18</div>
-        <div class="demo-name">First Triangle + Sync</div>
-        <div class="demo-summary">Vertex buffer, host-visible memory, vkCmdDraw. Full frame sync: imageAvailable semaphore, renderFinished semaphore, inFlight fence.</div>
-        <div class="demo-tags"><span class="tag">VkBuffer</span><span class="tag">Semaphores</span><span class="tag">Fence</span></div>
-      </a>
+
+    <div class="demos-grid">
+
+      <!-- D15 -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d4)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 15 · Module 10</div>
+          <div class="demo-title">Vulkan Environment — Instance, Layers, Physical Devices</div>
+          <div class="demo-desc">Creates a VkInstance with validation layers, lists all installed layers, enumerates every GPU with type, driver version, queue families, and VRAM heap sizes. Creates a VkSurfaceKHR to prove surface extension support. Opens a window.</div>
+          <div class="demo-tags"><span class="demo-tag">VkInstance</span><span class="demo-tag">VkPhysicalDevice</span><span class="demo-tag">Validation layers</span><span class="demo-tag">VkSurfaceKHR</span></div>
+          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: All GPUs listed in terminal with full property dump. Window opens to confirm surface extension works. No logical device yet.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo15">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~35 min</span>
+        </div>
+      </div>
+
+      <!-- D16 -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d4)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 16 · Module 11</div>
+          <div class="demo-title">Logical Device, Queues, Command Pool, Command Buffer</div>
+          <div class="demo-desc">Selects the best GPU (scoring discrete over integrated), finds graphics and present queue family indices, creates VkDevice with VK_KHR_swapchain extension, retrieves both queues. Allocates a VkCommandPool and one VkCommandBuffer — records an empty begin/end to prove the API works.</div>
+          <div class="demo-tags"><span class="demo-tag">VkDevice</span><span class="demo-tag">VkQueue</span><span class="demo-tag">VkCommandPool</span><span class="demo-tag">VkCommandBuffer</span></div>
+          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: GPU selected, both queue indices printed, device created, command buffer recorded without crash. Window stays open — no swapchain yet.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo16">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~35 min</span>
+        </div>
+      </div>
+
+      <!-- D17 -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d4)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 17 · Module 11</div>
+          <div class="demo-title">Swapchain, Render Pass, Framebuffers — First Pixels</div>
+          <div class="demo-desc">Queries surface capabilities, selects B8G8R8A8_SRGB format and MAILBOX present mode, creates VkSwapchainKHR and VkImageViews. Defines a VkRenderPass with clear/store ops, one VkFramebuffer per image. Full acquire → clear → present frame loop with semaphores and fence.</div>
+          <div class="demo-tags"><span class="demo-tag">VkSwapchainKHR</span><span class="demo-tag">VkRenderPass</span><span class="demo-tag">VkFramebuffer</span><span class="demo-tag">Present modes</span></div>
+          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: Navy window clearing at vsync. Terminal shows chosen format and present mode. No pipeline or geometry yet.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo17">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~35 min</span>
+        </div>
+      </div>
+
+      <!-- D18 -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d4)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 18 · Module 12</div>
+          <div class="demo-title">Full Pipeline + vkCmdDraw — First Triangle</div>
+          <div class="demo-desc">Loads SPIR-V from vert.spv and frag.spv (compiled with glslc). Builds the full VkGraphicsPipelineCreateInfo: vertex input (empty — positions hardcoded via gl_VertexIndex), input assembly, viewport, rasterizer, multisample, blend. Calls vkCmdDraw(3,1,0,0). White triangle on navy background.</div>
+          <div class="demo-tags"><span class="demo-tag">VkPipeline</span><span class="demo-tag">VkShaderModule</span><span class="demo-tag">vkCmdDraw</span><span class="demo-tag">glslc</span></div>
+          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: White triangle on navy background. Requires glslc to compile shader.vert and shader.frag to .spv first.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo18">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~45 min</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -619,12 +663,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 
 <footer>
   <div class="footer-brand">RR Graphics Lab — Code Demos</div>
-  <div class="footer-sub">OpenGL & Vulkan Training · US Navy Department · 30+ Concept Demos</div>
+  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan · 30+ Concept Demos</div>
   <div class="footer-links">
     <a class="footer-link" href="index.html">Module Notes</a>
     <a class="footer-link" href="demos.html">Code Demos</a>
     <a class="footer-link" href="labs.html">Lab Challenges</a>
-    <a class="footer-link" href="day1-demos.html">Day 1 Demos</a>
   </div>
   <div class="footer-copy">
     By <strong>Raushan Ranjan</strong> (MCT | Educator) · Koenig Solutions · Koenig Original AI-Courseware<br>

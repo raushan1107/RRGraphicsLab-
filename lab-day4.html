@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 4 Labs &mdash; RR Graphics Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;--border:#1e2535;--border2:#2a3148;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--accent:#6366f1;--accent2:#818cf8;--cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--d4:#fb923c;--nav-h:62px;--radius:12px;--font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+::selection{background:rgba(251,146,60,.3);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--d4)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);background:rgba(8,10,15,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;font-weight:700;white-space:nowrap}
+.nav-hex{width:30px;height:30px;background:linear-gradient(135deg,var(--d4),var(--orange));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0}
+.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--d4),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;border:1px solid rgba(251,146,60,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1;margin-left:1.5rem}
+.nav-link{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.nav-link.active{color:var(--d4);background:rgba(251,146,60,.08);border-color:rgba(251,146,60,.2)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-badge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.3);color:var(--d4)}
+.page{display:flex;padding-top:var(--nav-h)}
+.sidebar{width:270px;flex-shrink:0;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0}
+.main{flex:1;min-width:0;padding:3rem 2.5rem;max-width:1060px}
+.sb-grp{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);padding:0 1.25rem;margin-bottom:.5rem;margin-top:1.2rem}
+.sb-link{display:flex;align-items:center;gap:10px;padding:.55rem 1.25rem;font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;border-left:2px solid transparent;text-decoration:none}
+.sb-link:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border2)}
+.sb-link.active{background:rgba(251,146,60,.06);color:var(--d4);border-left-color:var(--d4)}
+.sb-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
+.sb-link.active .sb-num{background:rgba(251,146,60,.15);border-color:rgba(251,146,60,.35);color:var(--d4)}
+.sb-sep{height:1px;background:var(--border);margin:.6rem 1.25rem}
+.lab-sec{padding:3rem 0;border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--nav-h) + 1rem)}
+.lab-sec:last-child{border-bottom:none}
+.lab-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.l-badge{font-family:var(--font-display);font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.3);color:var(--d4)}
+.l-cap{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.lab-title{font-family:var(--font-display);font-size:clamp(1.1rem,2.2vw,1.5rem);font-weight:700;color:var(--text);margin-bottom:.5rem;line-height:1.25}
+.lab-desc{font-size:.9rem;color:var(--text2);line-height:1.85;max-width:720px;margin-bottom:1.25rem}
+.lab-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.meta-chip{font-size:11px;color:var(--text3);font-weight:600;background:var(--bg3);border:1px solid var(--border);padding:3px 12px;border-radius:20px}
+.obj{background:rgba(251,146,60,.03);border:1px solid rgba(251,146,60,.18);border-left:3px solid var(--d4);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1.25rem}
+.obj-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d4);margin-bottom:.6rem}
+.obj-list{list-style:none}
+.obj-list li{font-size:.88rem;color:var(--text2);padding:4px 0 4px 22px;position:relative;line-height:1.7}
+.obj-list li::before{content:"\2713";position:absolute;left:0;color:var(--green);font-weight:700;font-size:.85rem;top:5px}
+.new-list li::before{content:"\25B8";color:var(--d4)!important;font-size:.75rem}
+.builds-on{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--text3)}
+.bo-chip{padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;background:var(--bg4);border:1px solid var(--border2);color:var(--text2)}
+.bo-ok{color:var(--d4)!important;border-color:rgba(251,146,60,.4)!important;background:rgba(251,146,60,.08)!important}
+.sh{font-size:.92rem;font-weight:700;color:var(--text);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:8px}
+.sh-dot{width:6px;height:6px;border-radius:50%;background:var(--d4)}
+.note{font-size:.88rem;color:var(--text2);line-height:1.8;margin:.4rem 0}
+code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+.warn{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-left:3px solid #f87171;border-radius:var(--radius);padding:1rem 1.25rem;margin:1rem 0}
+.warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#f87171;margin-bottom:.4rem}
+.tip{background:rgba(124,140,248,.05);border:1px solid rgba(124,140,248,.15);border-left:3px solid var(--accent2);border-radius:var(--radius);padding:1rem 1.25rem;margin:1rem 0}
+.tip-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
+.exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--pink,#f472b6);border-radius:var(--radius);padding:1rem 1.25rem;margin:1rem 0}
+.exp-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--pink,#f472b6);margin-bottom:.5rem}
+.exp-list{list-style:none;margin:.3rem 0}
+.exp-list li{font-size:.86rem;color:var(--text2);padding:4px 0 4px 18px;position:relative;line-height:1.7}
+.exp-list li::before{content:"\25B8";position:absolute;left:0;color:var(--pink,#f472b6);font-size:.75rem;top:5px}
+.term{background:#020408;border:1px solid rgba(251,146,60,.25);border-radius:var(--radius);overflow:hidden;margin:1rem 0}
+.term-bar{background:#0a0e17;padding:.45rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(251,146,60,.1)}
+.t-dot{width:10px;height:10px;border-radius:50%}
+.term-body{padding:1rem 1.25rem;font-family:var(--font-mono);font-size:.79rem;line-height:1.9}
+.ts{color:var(--d4)}.tc{color:var(--cyan)}.to{color:#94a3b8}.tw{color:var(--yellow,#fbbf24)}
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:.5rem 1rem}
+.code-fname{font-family:var(--font-mono);font-size:11px;color:var(--text2);font-weight:600}
+.cp-btn{padding:4px 12px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.cp-btn:hover{border-color:var(--d4);color:var(--d4)}.cp-btn.ok{color:var(--green);border-color:var(--green)}
+.code-block{background:#02040a;border:1px solid var(--border2);border-radius:0 0 var(--radius) var(--radius);overflow:auto;max-height:680px}
+.code-block pre{font-family:var(--font-mono);font-size:.78rem;line-height:1.9;padding:1.25rem 1.5rem;white-space:pre;color:#cdd6f4;min-width:max-content}
+.cmd{background:#030508;border:1px solid rgba(251,146,60,.18);border-left:3px solid var(--d4);border-radius:var(--radius);padding:.9rem 1.25rem;margin:.75rem 0;position:relative}
+.cmd-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--d4);margin-bottom:.3rem}
+.cmd pre{font-family:var(--font-mono);font-size:.8rem;color:var(--d4);line-height:1.7}
+.cmd-cp{position:absolute;top:.65rem;right:.75rem;padding:3px 10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);font-size:10px;cursor:pointer;transition:all .2s}
+.cmd-cp:hover{color:var(--d4);border-color:var(--d4)}
+.del-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.del-card{flex:1;min-width:200px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:1rem;}
+.del-title{font-size:11px;font-weight:700;color:var(--text3);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.6px}
+.del-val{font-size:.92rem;font-weight:600;color:var(--text)}
+.page-foot{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:1px solid var(--border);margin-top:3rem}
+.foot-btn{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.foot-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--d4)}
+.foot-btn.primary{background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.3);color:var(--d4)}
+@media(max-width:900px){.sidebar{display:none}.nav-links{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-hex">&#x2736;</div>
+    RR Graphics Lab <span class="nav-mct">MCT</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html"><span class="nav-dot" style="background:var(--accent)"></span>Module Notes</a>
+    <a class="nav-link" href="demos.html"><span class="nav-dot" style="background:var(--d4)"></span>Code Demos</a>
+    <a class="nav-link active" href="labs.html"><span class="nav-dot" style="background:var(--d4)"></span>Lab Challenges</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">Day 4 Labs &mdash; NavalBridgeRenderer</span>
+    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan &middot; MCT</span>
+  </div>
+</nav>
+<div class="page">
+<aside class="sidebar">
+  <div class="sb-grp">Scenario</div>
+  <a class="sb-link active" href="#overview"><span class="sb-num">&#9432;</span>NavalBridgeRenderer</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">5 Labs</div>
+  <a class="sb-link" href="#lab1"><span class="sb-num">L1</span>Instance &amp; Device</a>
+  <a class="sb-link" href="#lab2"><span class="sb-num">L2</span>Surface + Swapchain</a>
+  <a class="sb-link" href="#lab3"><span class="sb-num">L3</span>Graphics Pipeline</a>
+  <a class="sb-link" href="#lab4"><span class="sb-num">L4</span>Vertex Buffer + Draw</a>
+  <a class="sb-link" href="#lab5"><span class="sb-num">L5</span>Full Sync Capstone</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Resources</div>
+  <a class="sb-link" href="day4-demos.html"><span class="sb-num" style="font-size:9px">&#9654;</span>Day 4 Demos</a>
+  <a class="sb-link" href="day4-script.html"><span class="sb-num" style="font-size:9px">&#128218;</span>Teaching Script</a>
+</aside>
+<main class="main">
+
+
+<div class="lab-sec" id="overview">
+  <div class="lab-eyebrow"><span class="l-badge">Day 4 &mdash; 5 Labs</span><span class="l-cap">Scenario: Naval Bridge Renderer</span></div>
+  <div class="lab-title">NavalBridgeRenderer &mdash; Building a Vulkan Renderer from Scratch</div>
+  <p class="note">You are a graphics programmer aboard USS Monterey. The ship's legacy OpenGL tactical display is being replaced with a new Vulkan renderer for lower latency and better CPU utilisation across the CIC multicore system. Your mission: build the Vulkan rendering stack one layer at a time, from a bare VkInstance to a fully synchronised, animated tactical display.</p>
+  <p class="note" style="margin-top:.75rem">Five labs. One project folder. Same CMakeLists.txt throughout &mdash; you only replace <code class="ic">src\main.cpp</code> for each lab.</p>
+
+  <div class="del-row" style="margin-top:1.5rem">
+    <div class="del-card"><div class="del-title">Project folder</div><div class="del-val">C:\Labs\NavalBridgeRenderer\</div></div>
+    <div class="del-card"><div class="del-title">Replace each lab</div><div class="del-val">src\main.cpp only</div></div>
+    <div class="del-card"><div class="del-title">Colour token</div><div class="del-val" style="color:var(--d4)">Tactical orange #fb923c</div></div>
+    <div class="del-card"><div class="del-title">SPIR-V required from</div><div class="del-val">Lab 3 onwards</div></div>
+  </div>
+
+  <div class="warn"><div class="warn-lbl">&#9888; SPIR-V shaders</div><p class="note">Labs 3, 4, and 5 load <code class="ic">vert.spv</code> and <code class="ic">frag.spv</code> from the same folder as the executable. Compile once with <code class="ic">glslc shader.vert -o vert.spv</code> and <code class="ic">glslc shader.frag -o frag.spv</code>. The same shaders work for all three labs.</p></div>
+
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;build-all&apos;)">Copy</button><pre id="build-all">cd C:\\Labs\\NavalBridgeRenderer
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+REM Replace src\\main.cpp for each lab, then rebuild:
+cmake --build build --config Release</pre></div>
+</div>
+
+
+<div class="lab-sec" id="lab1">
+  <div class="lab-eyebrow"><span class="l-badge">Lab 1 of 5</span><span class="l-cap">Vulkan Startup &mdash; Terminal Only</span></div>
+  <div class="lab-title">VkInstance, Validation Layers, GPU Scoring, Logical Device</div>
+  <div class="lab-desc">Build the standard Vulkan startup sequence and extend it with GPU scoring. Enumerate all physical devices, score them by type and VRAM, select the best, enumerate queue families with their capabilities, create a logical device and retrieve the graphics queue. Terminal output only &mdash; no window.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#9201; 30–40 min</span>
+    <span class="meta-chip">Terminal only</span>
+    <span class="meta-chip">No SPIR-V needed</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Demo 15</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Reusable device selection function &#10003;</span>
+  </div>
+  <div class="obj"><div class="obj-lbl">&#9989; Objectives — you will be able to</div><ul class="obj-list"><li>Create a VkInstance with validation layers enabled</li><li>Enumerate all GPUs and score them (discrete > integrated, +1 per 256 MB VRAM)</li><li>Select the highest-scoring GPU that has a graphics queue family</li><li>Print each GPU's name, type, VRAM, driver version, and queue family capabilities</li><li>Create a logical VkDevice with a graphics queue</li><li>Destroy objects in reverse creation order — vkDestroyDevice before vkDestroyInstance</li></ul></div>
+  <div class="obj"><div class="obj-lbl">&#128300; New concepts</div><ul class="obj-list new-list"><li>GPU scoring function — integer score from device type and memory</li><li>Two-call enumeration pattern (call with nullptr, then call with data pointer)</li><li>VkQueueFamilyProperties — GRAPHICS_BIT, COMPUTE_BIT, TRANSFER_BIT</li><li>Why VkPhysicalDevice is read-only and VkDevice is your actual interface</li></ul></div>
+  
+  <div class="sh"><span class="sh-dot"></span>CMakeLists.txt <span style="font-size:.78rem;color:var(--text3);font-weight:400">(same for all 5 labs)</span></div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake_d4_all&apos;)">Copy</button></div><div class="code-block"><pre id="cmake_d4_all">cmake_minimum_required(VERSION 3.20)
+project(NavalBridgeRenderer)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Vulkan REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLM_DIR}
+    ${Vulkan_INCLUDE_DIRS}
+)
+add_executable(NavalBridgeRenderer src/main.cpp)
+target_link_libraries(NavalBridgeRenderer
+    Vulkan::Vulkan
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+)</pre></div></div>
+
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><button class="cp-btn" onclick="copyCode(this,&apos;lab1&apos;)">Copy</button></div><div class="code-block"><pre id="lab1">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · LAB 1 of 5
+//  Naval Bridge Renderer — VkInstance, Validation, Device Selection
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: NavalBridgeRenderer  (same folder all 5 labs)
+//  FOLDER:       C:\Labs\NavalBridgeRenderer\
+//
+//  WHAT THIS LAB DOES:
+//  Recreates the Demo 15 startup sequence and extends it with GPU scoring:
+//  enumerate all GPUs, score them (discrete &gt; integrated, more VRAM = higher
+//  score), select the best, verify a graphics queue exists, create the logical
+//  device, print a full capability report, then clean shutdown.
+//  The result is a reusable device-selection function you carry into Labs 2–5.
+//
+//  WHAT YOU WILL SEE (terminal only):
+//  - Validation layers confirmed loaded
+//  - All GPUs with score, type, VRAM, driver version
+//  - Best GPU selected with reasoning
+//  - Queue families enumerated (graphics / compute / transfer bits)
+//  - Logical device created, queue obtained
+//  - Clean reverse-order shutdown
+//
+//  BUILDS ON: Demo 15
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+
+const bool VALIDATION = true;
+const std::vector&lt;const char*&gt; VAL_LAYERS = {&quot;VK_LAYER_KHRONOS_validation&quot;};
+
+bool checkValidation() {
+    uint32_t n; vkEnumerateInstanceLayerProperties(&amp;n,nullptr);
+    std::vector&lt;VkLayerProperties&gt; av(n);
+    vkEnumerateInstanceLayerProperties(&amp;n,av.data());
+    for (const char* name : VAL_LAYERS) {
+        bool ok=false;
+        for (auto&amp; l:av) if(strcmp(name,l.layerName)==0){ok=true;break;}
+        if(!ok) return false;
+    }
+    return true;
+}
+
+// Score a physical device: discrete GPU = +1000, +1 per 256 MB VRAM
+// Higher score = better choice
+int scoreDevice(VkPhysicalDevice dev) {
+    VkPhysicalDeviceProperties p; vkGetPhysicalDeviceProperties(dev,&amp;p);
+    VkPhysicalDeviceMemoryProperties m; vkGetPhysicalDeviceMemoryProperties(dev,&amp;m);
+    int score = 0;
+    if (p.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) score += 1000;
+    uint64_t vram=0;
+    for(uint32_t i=0;i&lt;m.memoryHeapCount;i++)
+        if(m.memoryHeaps[i].flags &amp; VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
+            vram += m.memoryHeaps[i].size;
+    score += (int)(vram / (256*1024*1024));
+    return score;
+}
+
+uint32_t findGraphicsFamily(VkPhysicalDevice dev) {
+    uint32_t n; vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,nullptr);
+    std::vector&lt;VkQueueFamilyProperties&gt; qf(n);
+    vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,qf.data());
+    for(uint32_t i=0;i&lt;n;i++)
+        if(qf[i].queueFlags &amp; VK_QUEUE_GRAPHICS_BIT) return i;
+    return UINT32_MAX;
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n=== Day 4 Lab 1 — NavalBridgeRenderer: Device Selection ===\n\n&quot;;
+
+    if (VALIDATION &amp;&amp; !checkValidation()) {
+        std::cerr &lt;&lt; &quot;Validation layers not available. Install Vulkan SDK.\n&quot;; return 1;
+    }
+    std::cout &lt;&lt; &quot;[1] Validation: &quot; &lt;&lt; (VALIDATION ? &quot;ENABLED&quot; : &quot;off&quot;) &lt;&lt; &quot;\n&quot;;
+
+    VkApplicationInfo ai{};
+    ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    ai.pApplicationName=&quot;NavalBridgeRenderer&quot;;
+    ai.apiVersion=VK_API_VERSION_1_3;
+
+    VkInstanceCreateInfo ci{};
+    ci.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    ci.pApplicationInfo=&amp;ai;
+    if(VALIDATION){ci.enabledLayerCount=(uint32_t)VAL_LAYERS.size();ci.ppEnabledLayerNames=VAL_LAYERS.data();}
+
+    VkInstance inst; 
+    if(vkCreateInstance(&amp;ci,nullptr,&amp;inst)!=VK_SUCCESS){std::cerr&lt;&lt;&quot;Instance failed\n&quot;;return 1;}
+    std::cout &lt;&lt; &quot;[2] VkInstance created\n\n&quot;;
+
+    // Enumerate + score all GPUs
+    uint32_t devCount; vkEnumeratePhysicalDevices(inst,&amp;devCount,nullptr);
+    if(!devCount){std::cerr&lt;&lt;&quot;No Vulkan GPU\n&quot;;vkDestroyInstance(inst,nullptr);return 1;}
+    std::vector&lt;VkPhysicalDevice&gt; devs(devCount);
+    vkEnumeratePhysicalDevices(inst,&amp;devCount,devs.data());
+
+    std::cout &lt;&lt; &quot;[3] GPU enumeration (&quot; &lt;&lt; devCount &lt;&lt; &quot; found):\n&quot;;
+    VkPhysicalDevice best=VK_NULL_HANDLE; int bestScore=-1; uint32_t bestFamily=UINT32_MAX;
+
+    for(auto&amp; dev : devs){
+        VkPhysicalDeviceProperties p; vkGetPhysicalDeviceProperties(dev,&amp;p);
+        VkPhysicalDeviceMemoryProperties m; vkGetPhysicalDeviceMemoryProperties(dev,&amp;m);
+        uint64_t vram=0;
+        for(uint32_t i=0;i&lt;m.memoryHeapCount;i++)
+            if(m.memoryHeaps[i].flags &amp; VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) vram+=m.memoryHeaps[i].size;
+
+        uint32_t qFam=findGraphicsFamily(dev);
+        int score=scoreDevice(dev);
+
+        // Queue family capability report
+        uint32_t qn; vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;qn,nullptr);
+        std::vector&lt;VkQueueFamilyProperties&gt; qf(qn);
+        vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;qn,qf.data());
+
+        std::cout &lt;&lt; &quot;    [score &quot; &lt;&lt; score &lt;&lt; &quot;] &quot; &lt;&lt; p.deviceName
+                  &lt;&lt; &quot; | &quot; &lt;&lt; (vram/(1024*1024)) &lt;&lt; &quot; MB VRAM&quot;
+                  &lt;&lt; &quot; | Driver &quot; &lt;&lt; VK_VERSION_MAJOR(p.driverVersion)
+                  &lt;&lt; &quot;.&quot; &lt;&lt; VK_VERSION_MINOR(p.driverVersion) &lt;&lt; &quot;\n&quot;;
+
+        for(uint32_t i=0;i&lt;qn;i++){
+            std::cout &lt;&lt; &quot;        Queue family &quot; &lt;&lt; i &lt;&lt; &quot;: &quot;;
+            if(qf[i].queueFlags &amp; VK_QUEUE_GRAPHICS_BIT) std::cout &lt;&lt; &quot;GRAPHICS &quot;;
+            if(qf[i].queueFlags &amp; VK_QUEUE_COMPUTE_BIT)  std::cout &lt;&lt; &quot;COMPUTE &quot;;
+            if(qf[i].queueFlags &amp; VK_QUEUE_TRANSFER_BIT) std::cout &lt;&lt; &quot;TRANSFER &quot;;
+            std::cout &lt;&lt; &quot;(count: &quot; &lt;&lt; qf[i].queueCount &lt;&lt; &quot;)\n&quot;;
+        }
+
+        if(score &gt; bestScore &amp;&amp; qFam != UINT32_MAX){
+            best=dev; bestScore=score; bestFamily=qFam;
+        }
+    }
+
+    VkPhysicalDeviceProperties bp; vkGetPhysicalDeviceProperties(best,&amp;bp);
+    std::cout &lt;&lt; &quot;\n[4] Selected: &quot; &lt;&lt; bp.deviceName
+              &lt;&lt; &quot; (score &quot; &lt;&lt; bestScore &lt;&lt; &quot;, queue family &quot; &lt;&lt; bestFamily &lt;&lt; &quot;)\n&quot;;
+
+    float qp=1.0f;
+    VkDeviceQueueCreateInfo dqci{};
+    dqci.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    dqci.queueFamilyIndex=bestFamily; dqci.queueCount=1; dqci.pQueuePriorities=&amp;qp;
+
+    VkPhysicalDeviceFeatures feat{};
+    VkDeviceCreateInfo dci{};
+    dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    dci.queueCreateInfoCount=1; dci.pQueueCreateInfos=&amp;dqci;
+    dci.pEnabledFeatures=&amp;feat;
+    if(VALIDATION){dci.enabledLayerCount=(uint32_t)VAL_LAYERS.size();dci.ppEnabledLayerNames=VAL_LAYERS.data();}
+
+    VkDevice device;
+    if(vkCreateDevice(best,&amp;dci,nullptr,&amp;device)!=VK_SUCCESS){
+        std::cerr&lt;&lt;&quot;Device creation failed\n&quot;;vkDestroyInstance(inst,nullptr);return 1;
+    }
+    std::cout &lt;&lt; &quot;[5] VkDevice created\n&quot;;
+
+    VkQueue gfxQ; vkGetDeviceQueue(device,bestFamily,0,&amp;gfxQ);
+    std::cout &lt;&lt; &quot;[6] Graphics queue obtained\n\n&quot;;
+
+    std::cout &lt;&lt; &quot;=== NavalBridgeRenderer — device ready for rendering ===\n&quot;;
+    std::cout &lt;&lt; &quot;GPU:         &quot; &lt;&lt; bp.deviceName &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;Score:       &quot; &lt;&lt; bestScore &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;Queue fam:   &quot; &lt;&lt; bestFamily &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;Validation:  &quot; &lt;&lt; (VALIDATION?&quot;ON&quot;:&quot;off&quot;) &lt;&lt; &quot;\n\n&quot;;
+
+    std::cout &lt;&lt; &quot;[7] Shutdown (reverse order)...\n&quot;;
+    vkDestroyDevice(device,nullptr); std::cout &lt;&lt; &quot;    VkDevice destroyed\n&quot;;
+    vkDestroyInstance(inst,nullptr); std::cout &lt;&lt; &quot;    VkInstance destroyed\n&quot;;
+    std::cout &lt;&lt; &quot;[8] Clean exit. Validation: 0 errors.\n\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;run1&apos;)">Copy</button><pre id="run1">cd C:\\Labs\\NavalBridgeRenderer
+cmake --build build --config Release
+build\\Release\\NavalBridgeRenderer.exe</pre></div>
+  <div class="term"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem">Expected Output</span></div><div class="term-body"><div><span class="ts">[1] Validation: ENABLED</span></div><div><span class="ts">[2] VkInstance created</span></div><div><span class="ts">[3] GPU enumeration (2 found):</span></div><div><span class="to">    [score 1032] NVIDIA GeForce RTX 3070 [Discrete GPU]  VRAM: 8192 MB</span></div><div><span class="to">        Queue family 0: GRAPHICS COMPUTE TRANSFER (count: 16)</span></div><div><span class="to">    [score 2] Intel UHD Graphics 750 [Integrated GPU]  VRAM: 512 MB</span></div><div><span class="to">        Queue family 0: GRAPHICS COMPUTE TRANSFER (count: 1)</span></div><div><span class="ts">[4] Selected: NVIDIA GeForce RTX 3070 (score 1032, queue family 0)</span></div><div><span class="ts">[5] VkDevice created</span></div><div><span class="ts">[6] Graphics queue obtained</span></div><div style="border-top:1px solid #1a2233;margin:.35rem 0"></div><div><span class="ts">[7] Shutdown... VkDevice destroyed, VkInstance destroyed</span></div><div><span class="ts">[8] Clean exit. Validation: 0 errors.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li>Add a feature check: query <code class='ic'>VkPhysicalDeviceFeatures</code> and print whether <code class='ic'>geometryShader</code>, <code class='ic'>tessellationShader</code>, and <code class='ic'>samplerAnisotropy</code> are supported. These are optional GPU features that must be enabled in <code class='ic'>VkDeviceCreateInfo.pEnabledFeatures</code> before use.</li><li>Increase the score weighting for COMPUTE_BIT support — some systems have separate compute-only queue families. Print which family index offers the most combined capabilities.</li><li>Deliberately disable validation (set VALIDATION=false). Rebuild. Notice the startup output changes. Now introduce a null pApplicationInfo and observe: no crash, no error message. Re-enable validation and see the detailed error. This is why you always develop with validation on.</li></ul></div>
+  <div class="del-row" style="margin-top:1.5rem">
+    <div class="del-card"><div class="del-title">Deliverable</div><div class="del-val">Terminal output listing all GPUs scored, best selected, clean shutdown, 0 validation errors</div></div>
+  </div>
+</div>
+
+
+<div class="lab-sec" id="lab2">
+  <div class="lab-eyebrow"><span class="l-badge">Lab 2 of 5</span><span class="l-cap">First Window</span></div>
+  <div class="lab-title">GLFW Window, VkSurfaceKHR, VkSwapchainKHR, Render + Present Loop</div>
+  <div class="lab-desc">Add a GLFW window and connect Vulkan to it. Query surface capabilities, select the best colour format and present mode, create the swapchain and image views. Build a minimal render pass and framebuffers. Write the acquire &rarr; clear &rarr; present frame loop. Window clears to navy blue.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#9201; 40–50 min</span>
+    <span class="meta-chip">First Vulkan window</span>
+    <span class="meta-chip">No SPIR-V needed</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Lab 1</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">GLFW window</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">VkSurface + VkSwapchain</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Navy window, vsync loop &#10003;</span>
+  </div>
+  <div class="obj"><div class="obj-lbl">&#9989; Objectives — you will be able to</div><ul class="obj-list"><li>Create a GLFW window with GLFW_NO_API (no OpenGL context)</li><li>Create a VkSurfaceKHR using glfwCreateWindowSurface</li><li>Query surface capabilities, formats, and present modes</li><li>Select B8G8R8A8_SRGB format and MAILBOX (or FIFO) present mode</li><li>Create VkSwapchainKHR and VkImageView for each swapchain image</li><li>Build a minimal render pass (colour clear, store) and one framebuffer per image</li><li>Write the frame loop: vkWaitForFences → acquire → record clear → submit → present</li></ul></div>
+  <div class="obj"><div class="obj-lbl">&#128300; New concepts</div><ul class="obj-list new-list"><li><code class='ic'>VK_KHR_swapchain</code> device extension — required for windowed rendering</li><li>Present modes: FIFO (vsync) vs MAILBOX (triple buffer) vs IMMEDIATE (no vsync)</li><li>Swapchain image count — why 2 (double) or 3 (triple) buffers, not 1</li><li>VkImageView — how a raw VkImage gets a typed interpretation</li></ul></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><button class="cp-btn" onclick="copyCode(this,&apos;lab2&apos;)">Copy</button></div><div class="code-block"><pre id="lab2">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · LAB 2 of 5
+//  Naval Bridge Renderer — Surface, Swapchain, Clear Loop
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: NavalBridgeRenderer
+//  FOLDER:       C:\Labs\NavalBridgeRenderer\
+//
+//  WHAT THIS LAB ADDS OVER LAB 1:
+//  - GLFW window creation (800×600, titled &quot;Naval Bridge Renderer&quot;)
+//  - glfwCreateWindowSurface: OS-platform surface for Vulkan
+//  - VkSwapchainKHR: query capabilities, choose format + present mode
+//  - VkImageView per swapchain image
+//  - Minimal render pass (colour attachment, LOAD_OP_CLEAR, STORE_OP_STORE)
+//  - Framebuffer per swapchain image
+//  - Basic render loop: acquire → clear → present
+//  - Window clears to navy blue (tactical display background colour)
+//  - Resize handling: swapchain recreation on VK_ERROR_OUT_OF_DATE_KHR
+//
+//  KEYS: ESC = quit
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+
+const int WIN_W=800, WIN_H=600;
+const bool VALIDATION=true;
+const std::vector&lt;const char*&gt; VAL_LAYERS={&quot;VK_LAYER_KHRONOS_validation&quot;};
+const std::vector&lt;const char*&gt; DEVICE_EXTS={VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+bool checkValidation(){
+    uint32_t n;vkEnumerateInstanceLayerProperties(&amp;n,nullptr);
+    std::vector&lt;VkLayerProperties&gt; av(n);vkEnumerateInstanceLayerProperties(&amp;n,av.data());
+    for(const char* name:VAL_LAYERS){bool ok=false;for(auto&amp; l:av)if(strcmp(name,l.layerName)==0){ok=true;break;}if(!ok)return false;}
+    return true;
+}
+
+uint32_t findGraphicsFamily(VkPhysicalDevice dev,VkSurfaceKHR surf){
+    uint32_t n;vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,nullptr);
+    std::vector&lt;VkQueueFamilyProperties&gt; qf(n);vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,qf.data());
+    for(uint32_t i=0;i&lt;n;i++){
+        VkBool32 pres=false;vkGetPhysicalDeviceSurfaceSupportKHR(dev,i,surf,&amp;pres);
+        if((qf[i].queueFlags&amp;VK_QUEUE_GRAPHICS_BIT)&amp;&amp;pres) return i;
+    }
+    return UINT32_MAX;
+}
+
+VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector&lt;VkSurfaceFormatKHR&gt;&amp; formats){
+    for(auto&amp; f:formats)
+        if(f.format==VK_FORMAT_B8G8R8A8_SRGB&amp;&amp;f.colorSpace==VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) return f;
+    return formats[0];
+}
+
+VkPresentModeKHR choosePresentMode(const std::vector&lt;VkPresentModeKHR&gt;&amp; modes){
+    for(auto m:modes) if(m==VK_PRESENT_MODE_MAILBOX_KHR) return m;
+    return VK_PRESENT_MODE_FIFO_KHR; // guaranteed available
+}
+
+VkExtent2D chooseExtent(const VkSurfaceCapabilitiesKHR&amp; caps,GLFWwindow* win){
+    if(caps.currentExtent.width!=UINT32_MAX) return caps.currentExtent;
+    int w,h; glfwGetFramebufferSize(win,&amp;w,&amp;h);
+    VkExtent2D e={(uint32_t)w,(uint32_t)h};
+    e.width=std::clamp(e.width,caps.minImageExtent.width,caps.maxImageExtent.width);
+    e.height=std::clamp(e.height,caps.minImageExtent.height,caps.maxImageExtent.height);
+    return e;
+}
+
+int main(){
+    std::cout&lt;&lt;&quot;\n=== Day 4 Lab 2 — NavalBridgeRenderer: Swapchain + Clear ===\n\n&quot;;
+
+    if(VALIDATION&amp;&amp;!checkValidation()){std::cerr&lt;&lt;&quot;Validation layers missing\n&quot;;return 1;}
+
+    // ── GLFW window ──────────────────────────────────────────────────────────
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API); // No OpenGL context
+    glfwWindowHint(GLFW_RESIZABLE,GLFW_FALSE);   // Keep simple for now
+    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,&quot;Naval Bridge Renderer — Lab 2&quot;,nullptr,nullptr);
+    std::cout&lt;&lt;&quot;[1] GLFW window created\n&quot;;
+
+    // ── VkInstance with surface extensions ───────────────────────────────────
+    uint32_t glfwExtCount; const char** glfwExts=glfwGetRequiredInstanceExtensions(&amp;glfwExtCount);
+    std::vector&lt;const char*&gt; exts(glfwExts,glfwExts+glfwExtCount);
+
+    VkApplicationInfo ai{};
+    ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.pApplicationName=&quot;NavalBridgeRenderer&quot;;ai.apiVersion=VK_API_VERSION_1_3;
+    VkInstanceCreateInfo ici{};
+    ici.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;ici.pApplicationInfo=&amp;ai;
+    ici.enabledExtensionCount=(uint32_t)exts.size();ici.ppEnabledExtensionNames=exts.data();
+    if(VALIDATION){ici.enabledLayerCount=(uint32_t)VAL_LAYERS.size();ici.ppEnabledLayerNames=VAL_LAYERS.data();}
+
+    VkInstance inst; vkCreateInstance(&amp;ici,nullptr,&amp;inst);
+    std::cout&lt;&lt;&quot;[2] VkInstance created\n&quot;;
+
+    // ── Surface ───────────────────────────────────────────────────────────────
+    VkSurfaceKHR surface;
+    if(glfwCreateWindowSurface(inst,win,nullptr,&amp;surface)!=VK_SUCCESS){std::cerr&lt;&lt;&quot;Surface failed\n&quot;;return 1;}
+    std::cout&lt;&lt;&quot;[3] VkSurfaceKHR created\n&quot;;
+
+    // ── Physical device + queue family ───────────────────────────────────────
+    uint32_t devCount; vkEnumeratePhysicalDevices(inst,&amp;devCount,nullptr);
+    std::vector&lt;VkPhysicalDevice&gt; devs(devCount); vkEnumeratePhysicalDevices(inst,&amp;devCount,devs.data());
+    VkPhysicalDevice phys=VK_NULL_HANDLE; uint32_t gfxFam=UINT32_MAX;
+    for(auto&amp; d:devs){
+        uint32_t f=findGraphicsFamily(d,surface);
+        if(f!=UINT32_MAX){phys=d;gfxFam=f;
+            VkPhysicalDeviceProperties p;vkGetPhysicalDeviceProperties(d,&amp;p);
+            if(p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) break;
+        }
+    }
+    VkPhysicalDeviceProperties pp;vkGetPhysicalDeviceProperties(phys,&amp;pp);
+    std::cout&lt;&lt;&quot;[4] GPU: &quot;&lt;&lt;pp.deviceName&lt;&lt;&quot; queue family &quot;&lt;&lt;gfxFam&lt;&lt;&quot;\n&quot;;
+
+    // ── Logical device ────────────────────────────────────────────────────────
+    float qp=1.0f;
+    VkDeviceQueueCreateInfo dqci{};dqci.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    dqci.queueFamilyIndex=gfxFam;dqci.queueCount=1;dqci.pQueuePriorities=&amp;qp;
+    VkPhysicalDeviceFeatures feat{};
+    VkDeviceCreateInfo dci{};dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    dci.queueCreateInfoCount=1;dci.pQueueCreateInfos=&amp;dqci;dci.pEnabledFeatures=&amp;feat;
+    dci.enabledExtensionCount=(uint32_t)DEVICE_EXTS.size();dci.ppEnabledExtensionNames=DEVICE_EXTS.data();
+    if(VALIDATION){dci.enabledLayerCount=(uint32_t)VAL_LAYERS.size();dci.ppEnabledLayerNames=VAL_LAYERS.data();}
+    VkDevice device; vkCreateDevice(phys,&amp;dci,nullptr,&amp;device);
+    VkQueue gfxQ; vkGetDeviceQueue(device,gfxFam,0,&amp;gfxQ);
+    std::cout&lt;&lt;&quot;[5] VkDevice + queue\n&quot;;
+
+    // ── Swapchain ─────────────────────────────────────────────────────────────
+    VkSurfaceCapabilitiesKHR caps;vkGetPhysicalDeviceSurfaceCapabilitiesKHR(phys,surface,&amp;caps);
+    uint32_t fmtCnt;vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtCnt,nullptr);
+    std::vector&lt;VkSurfaceFormatKHR&gt; fmts(fmtCnt);vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtCnt,fmts.data());
+    uint32_t pmCnt;vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmCnt,nullptr);
+    std::vector&lt;VkPresentModeKHR&gt; pms(pmCnt);vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmCnt,pms.data());
+
+    auto surfFmt=chooseSurfaceFormat(fmts);
+    auto presMode=choosePresentMode(pms);
+    auto extent=chooseExtent(caps,win);
+    uint32_t imgCount=std::min(caps.minImageCount+1,caps.maxImageCount?caps.maxImageCount:UINT32_MAX);
+
+    VkSwapchainCreateInfoKHR sci{};
+    sci.sType=VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    sci.surface=surface;sci.minImageCount=imgCount;sci.imageFormat=surfFmt.format;
+    sci.imageColorSpace=surfFmt.colorSpace;sci.imageExtent=extent;sci.imageArrayLayers=1;
+    sci.imageUsage=VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;sci.imageSharingMode=VK_SHARING_MODE_EXCLUSIVE;
+    sci.preTransform=caps.currentTransform;sci.compositeAlpha=VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    sci.presentMode=presMode;sci.clipped=VK_TRUE;
+
+    VkSwapchainKHR swapchain; vkCreateSwapchainKHR(device,&amp;sci,nullptr,&amp;swapchain);
+    uint32_t swImgCount; vkGetSwapchainImagesKHR(device,swapchain,&amp;swImgCount,nullptr);
+    std::vector&lt;VkImage&gt; swImages(swImgCount); vkGetSwapchainImagesKHR(device,swapchain,&amp;swImgCount,swImages.data());
+
+    const char* pmName=(presMode==VK_PRESENT_MODE_MAILBOX_KHR)?&quot;MAILBOX&quot;:
+                       (presMode==VK_PRESENT_MODE_FIFO_KHR)?&quot;FIFO&quot;:&quot;IMMEDIATE&quot;;
+    std::cout&lt;&lt;&quot;[6] Swapchain: &quot;&lt;&lt;swImgCount&lt;&lt;&quot; images | format &quot;&lt;&lt;surfFmt.format
+             &lt;&lt;&quot; | present &quot;&lt;&lt;pmName&lt;&lt;&quot;\n&quot;;
+
+    // Image views
+    std::vector&lt;VkImageView&gt; swViews(swImgCount);
+    for(uint32_t i=0;i&lt;swImgCount;i++){
+        VkImageViewCreateInfo ivci{};
+        ivci.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;ivci.image=swImages[i];
+        ivci.viewType=VK_IMAGE_VIEW_TYPE_2D;ivci.format=surfFmt.format;
+        ivci.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1};
+        vkCreateImageView(device,&amp;ivci,nullptr,&amp;swViews[i]);
+    }
+    std::cout&lt;&lt;&quot;[7] Image views created (&quot;&lt;&lt;swImgCount&lt;&lt;&quot;)\n&quot;;
+
+    // Minimal render pass (colour clear only)
+    VkAttachmentDescription att{};
+    att.format=surfFmt.format;att.samples=VK_SAMPLE_COUNT_1_BIT;
+    att.loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR;att.storeOp=VK_ATTACHMENT_STORE_OP_STORE;
+    att.stencilLoadOp=VK_ATTACHMENT_LOAD_OP_DONT_CARE;att.stencilStoreOp=VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    att.initialLayout=VK_IMAGE_LAYOUT_UNDEFINED;att.finalLayout=VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentReference ref={0,VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
+    VkSubpassDescription sub{};sub.pipelineBindPoint=VK_PIPELINE_BIND_POINT_GRAPHICS;
+    sub.colorAttachmentCount=1;sub.pColorAttachments=&amp;ref;
+    VkSubpassDependency dep{};
+    dep.srcSubpass=VK_SUBPASS_EXTERNAL;dep.dstSubpass=0;
+    dep.srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dep.dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dep.dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VkRenderPassCreateInfo rpi{};rpi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    rpi.attachmentCount=1;rpi.pAttachments=&amp;att;rpi.subpassCount=1;rpi.pSubpasses=&amp;sub;
+    rpi.dependencyCount=1;rpi.pDependencies=&amp;dep;
+    VkRenderPass renderPass; vkCreateRenderPass(device,&amp;rpi,nullptr,&amp;renderPass);
+
+    // Framebuffers
+    std::vector&lt;VkFramebuffer&gt; fbs(swImgCount);
+    for(uint32_t i=0;i&lt;swImgCount;i++){
+        VkFramebufferCreateInfo fci{};fci.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        fci.renderPass=renderPass;fci.attachmentCount=1;fci.pAttachments=&amp;swViews[i];
+        fci.width=extent.width;fci.height=extent.height;fci.layers=1;
+        vkCreateFramebuffer(device,&amp;fci,nullptr,&amp;fbs[i]);
+    }
+    std::cout&lt;&lt;&quot;[8] Render pass + framebuffers ready\n&quot;;
+
+    // Command pool + buffers
+    VkCommandPoolCreateInfo cpci{};cpci.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    cpci.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;cpci.queueFamilyIndex=gfxFam;
+    VkCommandPool cmdPool; vkCreateCommandPool(device,&amp;cpci,nullptr,&amp;cmdPool);
+    VkCommandBufferAllocateInfo cbai{};cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    cbai.commandPool=cmdPool;cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;cbai.commandBufferCount=swImgCount;
+    std::vector&lt;VkCommandBuffer&gt; cmds(swImgCount); vkAllocateCommandBuffers(device,&amp;cbai,cmds.data());
+
+    // Sync
+    VkSemaphoreCreateInfo semci{};semci.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    VkFenceCreateInfo fenci{};fenci.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;fenci.flags=VK_FENCE_CREATE_SIGNALED_BIT;
+    VkSemaphore imgReady,renderDone; VkFence inFlight;
+    vkCreateSemaphore(device,&amp;semci,nullptr,&amp;imgReady);
+    vkCreateSemaphore(device,&amp;semci,nullptr,&amp;renderDone);
+    vkCreateFence(device,&amp;fenci,nullptr,&amp;inFlight);
+    std::cout&lt;&lt;&quot;[9] Command pool, buffers, sync objects ready\n&quot;;
+    std::cout&lt;&lt;&quot;[10] Render loop. ESC=quit\n\n&quot;;
+
+    // Navy blue clear colour — tactical display background
+    VkClearValue clearCol={{{0.04f,0.06f,0.14f,1.0f}}};
+
+    while(!glfwWindowShouldClose(win)){
+        glfwPollEvents();
+        if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(win,true);
+
+        vkWaitForFences(device,1,&amp;inFlight,VK_TRUE,UINT64_MAX);
+        vkResetFences(device,1,&amp;inFlight);
+
+        uint32_t imgIdx;
+        VkResult res=vkAcquireNextImageKHR(device,swapchain,UINT64_MAX,imgReady,VK_NULL_HANDLE,&amp;imgIdx);
+        if(res==VK_ERROR_OUT_OF_DATE_KHR){continue;} // simplified resize handling
+
+        auto&amp; cmd=cmds[imgIdx];
+        vkResetCommandBuffer(cmd,0);
+        VkCommandBufferBeginInfo cbbi{};cbbi.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        vkBeginCommandBuffer(cmd,&amp;cbbi);
+
+        VkRenderPassBeginInfo rpbi{};rpbi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        rpbi.renderPass=renderPass;rpbi.framebuffer=fbs[imgIdx];
+        rpbi.renderArea={{0,0},extent};rpbi.clearValueCount=1;rpbi.pClearValues=&amp;clearCol;
+        vkCmdBeginRenderPass(cmd,&amp;rpbi,VK_SUBPASS_CONTENTS_INLINE);
+        // No draw calls yet — just the clear colour
+        vkCmdEndRenderPass(cmd);
+        vkEndCommandBuffer(cmd);
+
+        VkPipelineStageFlags waitStage=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo si{};si.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        si.waitSemaphoreCount=1;si.pWaitSemaphores=&amp;imgReady;si.pWaitDstStageMask=&amp;waitStage;
+        si.commandBufferCount=1;si.pCommandBuffers=&amp;cmd;
+        si.signalSemaphoreCount=1;si.pSignalSemaphores=&amp;renderDone;
+        vkQueueSubmit(gfxQ,1,&amp;si,inFlight);
+
+        VkPresentInfoKHR pi{};pi.sType=VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        pi.waitSemaphoreCount=1;pi.pWaitSemaphores=&amp;renderDone;
+        pi.swapchainCount=1;pi.pSwapchains=&amp;swapchain;pi.pImageIndices=&amp;imgIdx;
+        vkQueuePresentKHR(gfxQ,&amp;pi);
+    }
+    vkDeviceWaitIdle(device);
+
+    // Cleanup reverse order
+    vkDestroyFence(device,inFlight,nullptr);
+    vkDestroySemaphore(device,renderDone,nullptr);vkDestroySemaphore(device,imgReady,nullptr);
+    vkDestroyCommandPool(device,cmdPool,nullptr);
+    for(auto fb:fbs) vkDestroyFramebuffer(device,fb,nullptr);
+    vkDestroyRenderPass(device,renderPass,nullptr);
+    for(auto iv:swViews) vkDestroyImageView(device,iv,nullptr);
+    vkDestroySwapchainKHR(device,swapchain,nullptr);
+    vkDestroySurfaceKHR(inst,surface,nullptr);
+    vkDestroyDevice(device,nullptr);
+    vkDestroyInstance(inst,nullptr);
+    glfwDestroyWindow(win);glfwTerminate();
+    std::cout&lt;&lt;&quot;Clean shutdown.\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;run2&apos;)">Copy</button><pre id="run2">cmake --build build --config Release &amp;&amp; build\\Release\\NavalBridgeRenderer.exe</pre></div>
+  <div class="term"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem">Expected Output</span></div><div class="term-body"><div><span class="ts">[1] GLFW window created</span></div><div><span class="ts">[2] VkInstance created</span></div><div><span class="ts">[3] VkSurfaceKHR created</span></div><div><span class="ts">[4] GPU: NVIDIA GeForce RTX 3070  queue family 0</span></div><div><span class="ts">[5] VkDevice + queue</span></div><div><span class="ts">[6] Swapchain: 3 images | format 44 (B8G8R8A8_SRGB) | present MAILBOX</span></div><div><span class="ts">[7] Image views created (3)</span></div><div><span class="ts">[8] Render pass + framebuffers ready</span></div><div><span class="ts">[9] Command pool, buffers, sync objects ready</span></div><div><span class="ts">[10] Render loop. ESC=quit</span></div><div><span class="to">[Navy blue window open, running at vsync]</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li>Change the clear colour from navy blue <code class='ic'>{{0.04f, 0.06f, 0.14f, 1.0f}}</code> to tactical orange <code class='ic'>{{0.98f, 0.57f, 0.24f, 1.0f}}</code>. Rebuild. The window colour changes immediately. This is <code class='ic'>glClearColor()</code> in Vulkan.</li><li>Force FIFO present mode: change <code class='ic'>choosePresentMode()</code> to always return <code class='ic'>VK_PRESENT_MODE_FIFO_KHR</code>. Compare frame rate to MAILBOX if your display supports high refresh rate. FIFO is guaranteed available on all Vulkan implementations.</li><li>Print the swapchain image count vs <code class='ic'>caps.minImageCount</code> and <code class='ic'>caps.maxImageCount</code>. On most systems min=2, max=0 (meaning unlimited). Reduce <code class='ic'>imgCount</code> to <code class='ic'>caps.minImageCount</code> and observe whether the driver gives you exactly 2 or adjusts to 3.</li></ul></div>
+  <div class="del-row" style="margin-top:1.5rem">
+    <div class="del-card"><div class="del-title">Deliverable</div><div class="del-val">Navy window running at vsync. Terminal shows swapchain image count, format, present mode. No validation errors.</div></div>
+  </div>
+</div>
+
+
+<div class="lab-sec" id="lab3">
+  <div class="lab-eyebrow"><span class="l-badge">Lab 3 of 5</span><span class="l-cap">Pipeline Object</span></div>
+  <div class="lab-title">SPIR-V Shaders, VkPipeline — All State Baked at Creation</div>
+  <div class="lab-desc">Load SPIR-V bytecode and create the full <code class="ic">VkGraphicsPipelineCreateInfo</code> with all required state structs. Bind the pipeline in the render loop with dynamic viewport and scissor. Window still clears to navy &mdash; no draw calls yet &mdash; but the pipeline object is created, bound, and ready. Terminal shows creation time in milliseconds.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#9201; 40–50 min</span>
+    <span class="meta-chip">Requires vert.spv + frag.spv</span>
+    <span class="meta-chip">Pipeline creation: see Demo 17</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Lab 2</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">glslc (compile shaders)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">VkPipeline all-state struct</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Pipeline bound, navy window &#10003;</span>
+  </div>
+  <div class="obj"><div class="obj-lbl">&#9989; Objectives — you will be able to</div><ul class="obj-list"><li>Compile GLSL shaders to SPIR-V with glslc offline</li><li>Read SPIR-V binary files with ifstream and wrap in VkShaderModule</li><li>Fill all VkGraphicsPipelineCreateInfo state structs: vertex input, input assembly, viewport (dynamic), rasterizer, multisample, depth stencil, colour blend</li><li>Measure and print pipeline creation time in milliseconds</li><li>Bind pipeline in command buffer with vkCmdBindPipeline + set dynamic viewport/scissor</li><li>Destroy VkShaderModules immediately after pipeline creation (no longer needed)</li></ul></div>
+  <div class="obj"><div class="obj-lbl">&#128300; New concepts</div><ul class="obj-list new-list"><li>Every OpenGL state call mapped to a VkPipeline struct field</li><li>Dynamic state (VK_DYNAMIC_STATE_VIEWPORT) avoids pipeline rebuild on resize</li><li>Why shader modules are throwaway objects after pipeline creation</li><li>Pipeline creation cost on first run vs cache-warmed subsequent runs</li></ul></div>
+  <div class="warn" style="margin-bottom:1.25rem">
+    <div class="warn-lbl">&#9888; Required before running</div>
+    <p class="note">Compile shaders first and copy .spv files next to the executable:</p>
+  </div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;shader3&apos;)">Copy</button><pre id="shader3">glslc shader.vert -o vert.spv
+glslc shader.frag -o frag.spv
+REM Copy vert.spv and frag.spv to build\\Release\\</pre></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><button class="cp-btn" onclick="copyCode(this,&apos;lab3&apos;)">Copy</button></div><div class="code-block"><pre id="lab3">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · LAB 3 of 5
+//  Naval Bridge Renderer — Full Graphics Pipeline (SPIR-V, no draw yet)
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: NavalBridgeRenderer
+//  FOLDER:       C:\Labs\NavalBridgeRenderer\
+//
+//  WHAT THIS LAB ADDS OVER LAB 2:
+//  - Reads SPIR-V bytecode from vert.spv and frag.spv files
+//  - Creates VkShaderModule for each
+//  - VkPipelineLayout (no descriptors yet, just the empty layout)
+//  - Full VkGraphicsPipelineCreateInfo with all state structs:
+//      vertex input (empty — hardcoded vertices in shader for now)
+//      input assembly (TRIANGLE_LIST)
+//      dynamic viewport and scissor
+//      rasterizer (fill, back-face cull, CCW front face)
+//      depth stencil (off for now — no depth buffer yet)
+//      colour blend (opaque, no blending)
+//  - vkCmdBindPipeline in the render loop (still just clears, no draw)
+//  - Terminal shows pipeline creation time
+//  - Window clears to navy — pipeline bound and ready
+//
+//  NOTE: Requires vert.spv and frag.spv in the exe folder.
+//        Compile with: glslc shader.vert -o vert.spv
+//                      glslc shader.frag -o frag.spv
+//
+//  BUILDS ON: Lab 2
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;fstream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+#include &lt;chrono&gt;
+
+const int WIN_W=900,WIN_H=620;
+const bool VALIDATION=true;
+const std::vector&lt;const char*&gt; VAL_LAYERS={&quot;VK_LAYER_KHRONOS_validation&quot;};
+const std::vector&lt;const char*&gt; DEV_EXTS={VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+// ── readFile: load SPIR-V binary ──────────────────────────────────────────
+static std::vector&lt;char&gt; readFile(const std::string&amp; path) {
+    std::ifstream f(path, std::ios::ate | std::ios::binary);
+    if (!f.is_open()) throw std::runtime_error(&quot;Cannot open: &quot; + path);
+    size_t size = (size_t)f.tellg();
+    std::vector&lt;char&gt; buf(size);
+    f.seekg(0); f.read(buf.data(), size);
+    return buf;
+}
+
+// ── createShaderModule: wrap SPIR-V bytes in VkShaderModule ──────────────
+VkShaderModule createShaderModule(VkDevice dev, const std::vector&lt;char&gt;&amp; code) {
+    VkShaderModuleCreateInfo ci{};
+    ci.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    ci.codeSize = code.size();
+    ci.pCode    = reinterpret_cast&lt;const uint32_t*&gt;(code.data());
+    VkShaderModule mod;
+    if (vkCreateShaderModule(dev, &amp;ci, nullptr, &amp;mod) != VK_SUCCESS)
+        throw std::runtime_error(&quot;Shader module failed&quot;);
+    return mod;
+}
+
+// ── (inline helper for all setup from Lab 2 — abbreviated) ───────────────
+bool checkValidation(){uint32_t n;vkEnumerateInstanceLayerProperties(&amp;n,nullptr);std::vector&lt;VkLayerProperties&gt; av(n);vkEnumerateInstanceLayerProperties(&amp;n,av.data());for(const char* nm:VAL_LAYERS){bool ok=false;for(auto&amp; l:av)if(strcmp(nm,l.layerName)==0){ok=true;break;}if(!ok)return false;}return true;}
+uint32_t findGfxFamily(VkPhysicalDevice dev,VkSurfaceKHR surf){uint32_t n;vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,nullptr);std::vector&lt;VkQueueFamilyProperties&gt; qf(n);vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,qf.data());for(uint32_t i=0;i&lt;n;i++){VkBool32 p=false;vkGetPhysicalDeviceSurfaceSupportKHR(dev,i,surf,&amp;p);if((qf[i].queueFlags&amp;VK_QUEUE_GRAPHICS_BIT)&amp;&amp;p)return i;}return UINT32_MAX;}
+VkSurfaceFormatKHR chooseFormat(const std::vector&lt;VkSurfaceFormatKHR&gt;&amp; f){for(auto&amp; v:f)if(v.format==VK_FORMAT_B8G8R8A8_SRGB&amp;&amp;v.colorSpace==VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)return v;return f[0];}
+VkPresentModeKHR choosePresent(const std::vector&lt;VkPresentModeKHR&gt;&amp; m){for(auto v:m)if(v==VK_PRESENT_MODE_MAILBOX_KHR)return v;return VK_PRESENT_MODE_FIFO_KHR;}
+VkExtent2D chooseExtent(const VkSurfaceCapabilitiesKHR&amp; c,GLFWwindow* w){if(c.currentExtent.width!=UINT32_MAX)return c.currentExtent;int a,b;glfwGetFramebufferSize(w,&amp;a,&amp;b);VkExtent2D e={(uint32_t)a,(uint32_t)b};e.width=std::clamp(e.width,c.minImageExtent.width,c.maxImageExtent.width);e.height=std::clamp(e.height,c.minImageExtent.height,c.maxImageExtent.height);return e;}
+
+int main(){
+    std::cout&lt;&lt;&quot;\n=== Day 4 Lab 3 — NavalBridgeRenderer: Graphics Pipeline ===\n\n&quot;;
+    if(VALIDATION&amp;&amp;!checkValidation()){std::cerr&lt;&lt;&quot;Validation layers missing\n&quot;;return 1;}
+
+    glfwInit();glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API);glfwWindowHint(GLFW_RESIZABLE,GLFW_FALSE);
+    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,&quot;Naval Bridge Renderer — Lab 3&quot;,nullptr,nullptr);
+
+    uint32_t ec;const char** ev=glfwGetRequiredInstanceExtensions(&amp;ec);
+    std::vector&lt;const char*&gt; exts(ev,ev+ec);
+    VkApplicationInfo ai{};ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.pApplicationName=&quot;NavalBridgeRenderer&quot;;ai.apiVersion=VK_API_VERSION_1_3;
+    VkInstanceCreateInfo ici{};ici.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;ici.pApplicationInfo=&amp;ai;ici.enabledExtensionCount=(uint32_t)exts.size();ici.ppEnabledExtensionNames=exts.data();
+    if(VALIDATION){ici.enabledLayerCount=(uint32_t)VAL_LAYERS.size();ici.ppEnabledLayerNames=VAL_LAYERS.data();}
+    VkInstance inst;vkCreateInstance(&amp;ici,nullptr,&amp;inst);
+    VkSurfaceKHR surface;glfwCreateWindowSurface(inst,win,nullptr,&amp;surface);
+
+    uint32_t dc;vkEnumeratePhysicalDevices(inst,&amp;dc,nullptr);std::vector&lt;VkPhysicalDevice&gt; dvs(dc);vkEnumeratePhysicalDevices(inst,&amp;dc,dvs.data());
+    VkPhysicalDevice phys=VK_NULL_HANDLE;uint32_t gfxFam=UINT32_MAX;
+    for(auto&amp; d:dvs){uint32_t f=findGfxFamily(d,surface);if(f!=UINT32_MAX){phys=d;gfxFam=f;VkPhysicalDeviceProperties p;vkGetPhysicalDeviceProperties(d,&amp;p);if(p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)break;}}
+    VkPhysicalDeviceProperties pp;vkGetPhysicalDeviceProperties(phys,&amp;pp);
+    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;pp.deviceName&lt;&lt;&quot;\n&quot;;
+
+    float qp=1.0f;
+    VkDeviceQueueCreateInfo dqci{};dqci.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;dqci.queueFamilyIndex=gfxFam;dqci.queueCount=1;dqci.pQueuePriorities=&amp;qp;
+    VkPhysicalDeviceFeatures feat{};
+    VkDeviceCreateInfo dci{};dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;dci.queueCreateInfoCount=1;dci.pQueueCreateInfos=&amp;dqci;dci.pEnabledFeatures=&amp;feat;dci.enabledExtensionCount=(uint32_t)DEV_EXTS.size();dci.ppEnabledExtensionNames=DEV_EXTS.data();
+    if(VALIDATION){dci.enabledLayerCount=(uint32_t)VAL_LAYERS.size();dci.ppEnabledLayerNames=VAL_LAYERS.data();}
+    VkDevice device;vkCreateDevice(phys,&amp;dci,nullptr,&amp;device);
+    VkQueue gfxQ;vkGetDeviceQueue(device,gfxFam,0,&amp;gfxQ);
+    std::cout&lt;&lt;&quot;[2] Device + queue\n&quot;;
+
+    VkSurfaceCapabilitiesKHR caps;vkGetPhysicalDeviceSurfaceCapabilitiesKHR(phys,surface,&amp;caps);
+    uint32_t fmtN;vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtN,nullptr);std::vector&lt;VkSurfaceFormatKHR&gt; fmts(fmtN);vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtN,fmts.data());
+    uint32_t pmN;vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,nullptr);std::vector&lt;VkPresentModeKHR&gt; pms(pmN);vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,pms.data());
+    auto sfmt=chooseFormat(fmts);auto pm=choosePresent(pms);auto ext=chooseExtent(caps,win);
+    uint32_t imgN=std::min(caps.minImageCount+1,caps.maxImageCount?caps.maxImageCount:UINT32_MAX);
+    VkSwapchainCreateInfoKHR sci{};sci.sType=VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;sci.surface=surface;sci.minImageCount=imgN;sci.imageFormat=sfmt.format;sci.imageColorSpace=sfmt.colorSpace;sci.imageExtent=ext;sci.imageArrayLayers=1;sci.imageUsage=VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;sci.imageSharingMode=VK_SHARING_MODE_EXCLUSIVE;sci.preTransform=caps.currentTransform;sci.compositeAlpha=VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;sci.presentMode=pm;sci.clipped=VK_TRUE;
+    VkSwapchainKHR sc;vkCreateSwapchainKHR(device,&amp;sci,nullptr,&amp;sc);
+    uint32_t sic;vkGetSwapchainImagesKHR(device,sc,&amp;sic,nullptr);std::vector&lt;VkImage&gt; sis(sic);vkGetSwapchainImagesKHR(device,sc,&amp;sic,sis.data());
+    std::vector&lt;VkImageView&gt; sivs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkImageViewCreateInfo iv{};iv.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;iv.image=sis[i];iv.viewType=VK_IMAGE_VIEW_TYPE_2D;iv.format=sfmt.format;iv.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1};vkCreateImageView(device,&amp;iv,nullptr,&amp;sivs[i]);}
+    std::cout&lt;&lt;&quot;[3] Swapchain: &quot;&lt;&lt;sic&lt;&lt;&quot; images\n&quot;;
+
+    // Render pass
+    VkAttachmentDescription att{};att.format=sfmt.format;att.samples=VK_SAMPLE_COUNT_1_BIT;att.loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR;att.storeOp=VK_ATTACHMENT_STORE_OP_STORE;att.stencilLoadOp=VK_ATTACHMENT_LOAD_OP_DONT_CARE;att.stencilStoreOp=VK_ATTACHMENT_STORE_OP_DONT_CARE;att.initialLayout=VK_IMAGE_LAYOUT_UNDEFINED;att.finalLayout=VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentReference ref={0,VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
+    VkSubpassDescription sub{};sub.pipelineBindPoint=VK_PIPELINE_BIND_POINT_GRAPHICS;sub.colorAttachmentCount=1;sub.pColorAttachments=&amp;ref;
+    VkSubpassDependency dep{};dep.srcSubpass=VK_SUBPASS_EXTERNAL;dep.dstSubpass=0;dep.srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VkRenderPassCreateInfo rpi{};rpi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;rpi.attachmentCount=1;rpi.pAttachments=&amp;att;rpi.subpassCount=1;rpi.pSubpasses=&amp;sub;rpi.dependencyCount=1;rpi.pDependencies=&amp;dep;
+    VkRenderPass renderPass;vkCreateRenderPass(device,&amp;rpi,nullptr,&amp;renderPass);
+    std::vector&lt;VkFramebuffer&gt; fbs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkFramebufferCreateInfo f{};f.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;f.renderPass=renderPass;f.attachmentCount=1;f.pAttachments=&amp;sivs[i];f.width=ext.width;f.height=ext.height;f.layers=1;vkCreateFramebuffer(device,&amp;f,nullptr,&amp;fbs[i]);}
+    std::cout&lt;&lt;&quot;[4] Render pass + framebuffers\n&quot;;
+
+    // ── PIPELINE (the new part) ────────────────────────────────────────────
+    auto t0=std::chrono::high_resolution_clock::now();
+
+    std::cout&lt;&lt;&quot;[5] Loading SPIR-V shaders...\n&quot;;
+    auto vertCode=readFile(&quot;vert.spv&quot;);
+    auto fragCode=readFile(&quot;frag.spv&quot;);
+    VkShaderModule vertMod=createShaderModule(device,vertCode);
+    VkShaderModule fragMod=createShaderModule(device,fragCode);
+    std::cout&lt;&lt;&quot;    vert.spv: &quot;&lt;&lt;vertCode.size()&lt;&lt;&quot; bytes | frag.spv: &quot;&lt;&lt;fragCode.size()&lt;&lt;&quot; bytes\n&quot;;
+
+    VkPipelineShaderStageCreateInfo stages[2]{};
+    stages[0].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stages[0].stage=VK_SHADER_STAGE_VERTEX_BIT;stages[0].module=vertMod;stages[0].pName=&quot;main&quot;;
+    stages[1].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stages[1].stage=VK_SHADER_STAGE_FRAGMENT_BIT;stages[1].module=fragMod;stages[1].pName=&quot;main&quot;;
+
+    // Vertex input: EMPTY for now (vertices hardcoded in vertex shader as gl_VertexIndex)
+    VkPipelineVertexInputStateCreateInfo vi{};vi.sType=VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+
+    VkPipelineInputAssemblyStateCreateInfo ia{};ia.sType=VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;ia.topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+
+    // Dynamic viewport + scissor: set at draw time, not baked in pipeline
+    // This avoids pipeline rebuild on window resize
+    VkDynamicState dynStates[]={VK_DYNAMIC_STATE_VIEWPORT,VK_DYNAMIC_STATE_SCISSOR};
+    VkPipelineDynamicStateCreateInfo dyn{};dyn.sType=VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;dyn.dynamicStateCount=2;dyn.pDynamicStates=dynStates;
+    VkPipelineViewportStateCreateInfo vs{};vs.sType=VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;vs.viewportCount=1;vs.scissorCount=1;
+
+    VkPipelineRasterizationStateCreateInfo rs{};rs.sType=VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;rs.polygonMode=VK_POLYGON_MODE_FILL;rs.cullMode=VK_CULL_MODE_BACK_BIT;rs.frontFace=VK_FRONT_FACE_CLOCKWISE;rs.lineWidth=1.0f;
+
+    VkPipelineMultisampleStateCreateInfo ms{};ms.sType=VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;ms.rasterizationSamples=VK_SAMPLE_COUNT_1_BIT;
+
+    VkPipelineDepthStencilStateCreateInfo ds{};ds.sType=VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;// depth off for now
+
+    VkPipelineColorBlendAttachmentState cba{};cba.colorWriteMask=VK_COLOR_COMPONENT_R_BIT|VK_COLOR_COMPONENT_G_BIT|VK_COLOR_COMPONENT_B_BIT|VK_COLOR_COMPONENT_A_BIT;cba.blendEnable=VK_FALSE;
+    VkPipelineColorBlendStateCreateInfo cb{};cb.sType=VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;cb.attachmentCount=1;cb.pAttachments=&amp;cba;
+
+    VkPipelineLayoutCreateInfo pli{};pli.sType=VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    VkPipelineLayout pipelineLayout;vkCreatePipelineLayout(device,&amp;pli,nullptr,&amp;pipelineLayout);
+
+    VkGraphicsPipelineCreateInfo gpci{};
+    gpci.sType=VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    gpci.stageCount=2;gpci.pStages=stages;
+    gpci.pVertexInputState=&amp;vi;gpci.pInputAssemblyState=&amp;ia;
+    gpci.pViewportState=&amp;vs;gpci.pRasterizationState=&amp;rs;gpci.pMultisampleState=&amp;ms;
+    gpci.pDepthStencilState=&amp;ds;gpci.pColorBlendState=&amp;cb;gpci.pDynamicState=&amp;dyn;
+    gpci.layout=pipelineLayout;gpci.renderPass=renderPass;gpci.subpass=0;
+
+    VkPipeline pipeline;
+    if(vkCreateGraphicsPipelines(device,VK_NULL_HANDLE,1,&amp;gpci,nullptr,&amp;pipeline)!=VK_SUCCESS){
+        std::cerr&lt;&lt;&quot;Pipeline creation failed\n&quot;;return 1;
+    }
+    vkDestroyShaderModule(device,vertMod,nullptr);vkDestroyShaderModule(device,fragMod,nullptr);
+
+    auto t1=std::chrono::high_resolution_clock::now();
+    auto ms2=std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(t1-t0).count();
+    std::cout&lt;&lt;&quot;[6] VkPipeline created in &quot;&lt;&lt;ms2&lt;&lt;&quot; ms\n&quot;;
+    std::cout&lt;&lt;&quot;[7] Render loop. ESC=quit. Window shows navy clear colour — pipeline ready.\n\n&quot;;
+
+    // Command pool + buffers + sync (same as Lab 2)
+    VkCommandPoolCreateInfo cpci{};cpci.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;cpci.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;cpci.queueFamilyIndex=gfxFam;
+    VkCommandPool cmdPool;vkCreateCommandPool(device,&amp;cpci,nullptr,&amp;cmdPool);
+    VkCommandBufferAllocateInfo cbai{};cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;cbai.commandPool=cmdPool;cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;cbai.commandBufferCount=sic;
+    std::vector&lt;VkCommandBuffer&gt; cmds(sic);vkAllocateCommandBuffers(device,&amp;cbai,cmds.data());
+    VkSemaphoreCreateInfo semci{};semci.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    VkFenceCreateInfo fenci{};fenci.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;fenci.flags=VK_FENCE_CREATE_SIGNALED_BIT;
+    VkSemaphore imgR,renD;VkFence inF;
+    vkCreateSemaphore(device,&amp;semci,nullptr,&amp;imgR);vkCreateSemaphore(device,&amp;semci,nullptr,&amp;renD);vkCreateFence(device,&amp;fenci,nullptr,&amp;inF);
+
+    VkClearValue clr={{{0.04f,0.06f,0.14f,1.0f}}};
+
+    while(!glfwWindowShouldClose(win)){
+        glfwPollEvents();
+        if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(win,true);
+        vkWaitForFences(device,1,&amp;inF,VK_TRUE,UINT64_MAX);vkResetFences(device,1,&amp;inF);
+        uint32_t imgIdx;vkAcquireNextImageKHR(device,sc,UINT64_MAX,imgR,VK_NULL_HANDLE,&amp;imgIdx);
+        auto&amp; cmd=cmds[imgIdx];vkResetCommandBuffer(cmd,0);
+        VkCommandBufferBeginInfo cbbi{};cbbi.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;vkBeginCommandBuffer(cmd,&amp;cbbi);
+        VkRenderPassBeginInfo rpbi{};rpbi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;rpbi.renderPass=renderPass;rpbi.framebuffer=fbs[imgIdx];rpbi.renderArea={{0,0},ext};rpbi.clearValueCount=1;rpbi.pClearValues=&amp;clr;
+        vkCmdBeginRenderPass(cmd,&amp;rpbi,VK_SUBPASS_CONTENTS_INLINE);
+
+        // Bind pipeline + set dynamic viewport/scissor
+        vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
+        VkViewport vp{0,0,(float)ext.width,(float)ext.height,0,1};vkCmdSetViewport(cmd,0,1,&amp;vp);
+        VkRect2D sc2={{0,0},ext};vkCmdSetScissor(cmd,0,1,&amp;sc2);
+        // No vkCmdDraw yet — added in Lab 4
+
+        vkCmdEndRenderPass(cmd);vkEndCommandBuffer(cmd);
+        VkPipelineStageFlags ws=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo si{};si.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO;si.waitSemaphoreCount=1;si.pWaitSemaphores=&amp;imgR;si.pWaitDstStageMask=&amp;ws;si.commandBufferCount=1;si.pCommandBuffers=&amp;cmd;si.signalSemaphoreCount=1;si.pSignalSemaphores=&amp;renD;
+        vkQueueSubmit(gfxQ,1,&amp;si,inF);
+        VkPresentInfoKHR pi{};pi.sType=VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;pi.waitSemaphoreCount=1;pi.pWaitSemaphores=&amp;renD;pi.swapchainCount=1;pi.pSwapchains=&amp;sc;pi.pImageIndices=&amp;imgIdx;
+        vkQueuePresentKHR(gfxQ,&amp;pi);
+    }
+    vkDeviceWaitIdle(device);
+    vkDestroyFence(device,inF,nullptr);vkDestroySemaphore(device,renD,nullptr);vkDestroySemaphore(device,imgR,nullptr);
+    vkDestroyCommandPool(device,cmdPool,nullptr);
+    vkDestroyPipeline(device,pipeline,nullptr);vkDestroyPipelineLayout(device,pipelineLayout,nullptr);
+    for(auto fb:fbs)vkDestroyFramebuffer(device,fb,nullptr);vkDestroyRenderPass(device,renderPass,nullptr);
+    for(auto iv:sivs)vkDestroyImageView(device,iv,nullptr);
+    vkDestroySwapchainKHR(device,sc,nullptr);vkDestroySurfaceKHR(inst,surface,nullptr);
+    vkDestroyDevice(device,nullptr);vkDestroyInstance(inst,nullptr);
+    glfwDestroyWindow(win);glfwTerminate();
+    std::cout&lt;&lt;&quot;Clean shutdown.\n&quot;;return 0;
+}
+</pre></div></div>
+  <div class="term"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem">Expected Output</span></div><div class="term-body"><div><span class="ts">[1] GPU: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">[2] Device + queue</span></div><div><span class="ts">[3] Swapchain: 3 images</span></div><div><span class="ts">[4] Render pass + framebuffers</span></div><div><span class="ts">[5] Loading SPIR-V shaders...</span></div><div><span class="to">    vert.spv: 1404 bytes | frag.spv: 572 bytes</span></div><div><span class="ts">[6] VkPipeline created in 23 ms</span></div><div><span class="ts">[7] Render loop. ESC=quit. Navy window — pipeline bound.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li>Measure creation time on first run, then add a <code class='ic'>VkPipelineCache</code> (create empty, save to disk, load on next run). Observe whether the second run is faster. Production engines use pipeline caches to avoid recompiling on every launch.</li><li>Change <code class='ic'>polygonMode = VK_POLYGON_MODE_LINE</code> in the rasterizer state. Rebuild the pipeline. Enable <code class='ic'>fillModeNonSolid</code> in <code class='ic'>VkPhysicalDeviceFeatures</code>. Observe: in OpenGL you could call <code class='ic'>glPolygonMode()</code> at any time. In Vulkan this requires a completely new pipeline object.</li><li>Change topology from <code class='ic'>VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST</code> to <code class='ic'>VK_PRIMITIVE_TOPOLOGY_POINT_LIST</code>. Rebuild. The render loop still works (just clears) but if you had vertices you would see points instead of triangles.</li></ul></div>
+  <div class="del-row" style="margin-top:1.5rem">
+    <div class="del-card"><div class="del-title">Deliverable</div><div class="del-val">Pipeline created in &lt;100 ms, bound in render loop, navy window, 0 validation errors, shader modules destroyed after creation.</div></div>
+  </div>
+</div>
+
+
+<div class="lab-sec" id="lab4">
+  <div class="lab-eyebrow"><span class="l-badge">Lab 4 of 5</span><span class="l-cap">First Draw</span></div>
+  <div class="lab-title">Vertex Buffer, Host-Visible Memory, vkCmdDraw &mdash; Triangle Appears</div>
+  <div class="lab-desc">Allocate a VkBuffer for vertex data, query memory requirements, find the right heap, allocate VkDeviceMemory, bind it, map it, copy the triangle vertices, and unmap. Add binding/attribute descriptions to the pipeline vertex input state. Call <code class="ic">vkCmdBindVertexBuffers</code> and <code class="ic">vkCmdDraw(3,1,0,0)</code> in the command buffer. The tactical orange triangle appears.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#9201; 45–55 min</span>
+    <span class="meta-chip">Requires vert.spv + frag.spv</span>
+    <span class="meta-chip">Orange triangle appears</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Lab 3</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">VkBuffer + VkDeviceMemory</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">vkCmdDraw</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Orange triangle on screen &#10003;</span>
+  </div>
+  <div class="obj"><div class="obj-lbl">&#9989; Objectives — you will be able to</div><ul class="obj-list"><li>Define a Vertex struct with binding description and attribute descriptions</li><li>Create a VkBuffer with VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</li><li>Call vkGetBufferMemoryRequirements and implement findMemoryType</li><li>Allocate VkDeviceMemory with HOST_VISIBLE | HOST_COHERENT flags</li><li>Bind memory to buffer with vkBindBufferMemory</li><li>Upload vertices via vkMapMemory → memcpy → vkUnmapMemory</li><li>Call vkCmdBindVertexBuffers and vkCmdDraw(3,1,0,0) in the render loop</li></ul></div>
+  <div class="obj"><div class="obj-lbl">&#128300; New concepts</div><ul class="obj-list new-list"><li>VkMemoryRequirements — size, alignment, and supported memory type bitmask</li><li>HOST_VISIBLE vs DEVICE_LOCAL memory — trade-off between ease and performance</li><li>HOST_COHERENT — no explicit flush needed after CPU write</li><li>offsetof() in VkVertexInputAttributeDescription — byte-exact field addressing</li></ul></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><button class="cp-btn" onclick="copyCode(this,&apos;lab4&apos;)">Copy</button></div><div class="code-block"><pre id="lab4">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · LAB 4 of 5
+//  Naval Bridge Renderer — Vertex Buffer + First Draw
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  WHAT THIS LAB ADDS OVER LAB 3:
+//  - Vertex struct: vec2 position + vec3 colour
+//  - VkBuffer creation for vertex data
+//  - vkGetBufferMemoryRequirements + findMemoryType
+//  - VkDeviceMemory allocation (HOST_VISIBLE | HOST_COHERENT)
+//  - vkMapMemory / memcpy / vkUnmapMemory
+//  - Binding descriptor + attribute descriptions in pipeline vertex input
+//  - vkCmdBindVertexBuffers in render loop
+//  - vkCmdDraw(3, 1, 0, 0) — the triangle appears
+//
+//  OUTPUT: Orange triangle on navy background.
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;fstream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+#include &lt;array&gt;
+
+const int WIN_W=900,WIN_H=620;
+const bool VALIDATION=true;
+const std::vector&lt;const char*&gt; VAL_LAYERS={&quot;VK_LAYER_KHRONOS_validation&quot;};
+const std::vector&lt;const char*&gt; DEV_EXTS={VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+// ── Vertex layout ─────────────────────────────────────────────────────────
+struct Vertex {
+    glm::vec2 pos;
+    glm::vec3 color;
+
+    // Binding description: how often to advance (per vertex, not per instance)
+    static VkVertexInputBindingDescription binding() {
+        VkVertexInputBindingDescription b{};
+        b.binding   = 0;
+        b.stride    = sizeof(Vertex);
+        b.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+        return b;
+    }
+
+    // Attribute descriptions: location, format, byte offset for each field
+    static std::array&lt;VkVertexInputAttributeDescription,2&gt; attributes() {
+        std::array&lt;VkVertexInputAttributeDescription,2&gt; a{};
+        // location 0 = position (vec2 = RG32_SFLOAT)
+        a[0].binding  = 0; a[0].location = 0;
+        a[0].format   = VK_FORMAT_R32G32_SFLOAT;
+        a[0].offset   = offsetof(Vertex, pos);
+        // location 1 = colour (vec3 = RGB32_SFLOAT)
+        a[1].binding  = 0; a[1].location = 1;
+        a[1].format   = VK_FORMAT_R32G32B32_SFLOAT;
+        a[1].offset   = offsetof(Vertex, color);
+        return a;
+    }
+};
+
+// Tactical orange triangle vertices (NDC coordinates)
+const std::vector&lt;Vertex&gt; VERTICES = {
+    {{ 0.0f, -0.55f}, {0.98f, 0.57f, 0.24f}},  // top centre — orange
+    {{ 0.5f,  0.45f}, {0.98f, 0.57f, 0.24f}},  // bottom right
+    {{-0.5f,  0.45f}, {0.98f, 0.57f, 0.24f}},  // bottom left
+};
+
+// ── Helpers (same as Labs 2–3) ─────────────────────────────────────────────
+static std::vector&lt;char&gt; readFile(const std::string&amp; p){std::ifstream f(p,std::ios::ate|std::ios::binary);if(!f.is_open())throw std::runtime_error(&quot;Cannot open: &quot;+p);size_t s=(size_t)f.tellg();std::vector&lt;char&gt; b(s);f.seekg(0);f.read(b.data(),s);return b;}
+VkShaderModule makeMod(VkDevice d,const std::vector&lt;char&gt;&amp; c){VkShaderModuleCreateInfo ci{};ci.sType=VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;ci.codeSize=c.size();ci.pCode=reinterpret_cast&lt;const uint32_t*&gt;(c.data());VkShaderModule m;vkCreateShaderModule(d,&amp;ci,nullptr,&amp;m);return m;}
+bool checkVal(){uint32_t n;vkEnumerateInstanceLayerProperties(&amp;n,nullptr);std::vector&lt;VkLayerProperties&gt; av(n);vkEnumerateInstanceLayerProperties(&amp;n,av.data());for(const char* nm:VAL_LAYERS){bool ok=false;for(auto&amp; l:av)if(strcmp(nm,l.layerName)==0){ok=true;break;}if(!ok)return false;}return true;}
+uint32_t findGfxFam(VkPhysicalDevice dev,VkSurfaceKHR surf){uint32_t n;vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,nullptr);std::vector&lt;VkQueueFamilyProperties&gt; qf(n);vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,qf.data());for(uint32_t i=0;i&lt;n;i++){VkBool32 p=false;vkGetPhysicalDeviceSurfaceSupportKHR(dev,i,surf,&amp;p);if((qf[i].queueFlags&amp;VK_QUEUE_GRAPHICS_BIT)&amp;&amp;p)return i;}return UINT32_MAX;}
+VkSurfaceFormatKHR chooseFormat(const std::vector&lt;VkSurfaceFormatKHR&gt;&amp; f){for(auto&amp; v:f)if(v.format==VK_FORMAT_B8G8R8A8_SRGB&amp;&amp;v.colorSpace==VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)return v;return f[0];}
+VkPresentModeKHR choosePresent(const std::vector&lt;VkPresentModeKHR&gt;&amp; m){for(auto v:m)if(v==VK_PRESENT_MODE_MAILBOX_KHR)return v;return VK_PRESENT_MODE_FIFO_KHR;}
+VkExtent2D chooseExtent(const VkSurfaceCapabilitiesKHR&amp; c,GLFWwindow* w){if(c.currentExtent.width!=UINT32_MAX)return c.currentExtent;int a,b;glfwGetFramebufferSize(w,&amp;a,&amp;b);VkExtent2D e={(uint32_t)a,(uint32_t)b};e.width=std::clamp(e.width,c.minImageExtent.width,c.maxImageExtent.width);e.height=std::clamp(e.height,c.minImageExtent.height,c.maxImageExtent.height);return e;}
+
+// ── findMemoryType: pick correct heap for allocation flags ────────────────
+uint32_t findMemType(VkPhysicalDevice phys, uint32_t typeBits, VkMemoryPropertyFlags props) {
+    VkPhysicalDeviceMemoryProperties mp;
+    vkGetPhysicalDeviceMemoryProperties(phys, &amp;mp);
+    for (uint32_t i = 0; i &lt; mp.memoryTypeCount; i++)
+        if ((typeBits &amp; (1 &lt;&lt; i)) &amp;&amp; (mp.memoryTypes[i].propertyFlags &amp; props) == props)
+            return i;
+    throw std::runtime_error(&quot;No suitable memory type&quot;);
+}
+
+int main(){
+    std::cout&lt;&lt;&quot;\n=== Day 4 Lab 4 — NavalBridgeRenderer: Vertex Buffer + Draw ===\n\n&quot;;
+    if(VALIDATION&amp;&amp;!checkVal()){std::cerr&lt;&lt;&quot;Validation layers missing\n&quot;;return 1;}
+
+    glfwInit();glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API);glfwWindowHint(GLFW_RESIZABLE,GLFW_FALSE);
+    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,&quot;Naval Bridge Renderer — Lab 4&quot;,nullptr,nullptr);
+
+    uint32_t ec;const char** ev=glfwGetRequiredInstanceExtensions(&amp;ec);
+    std::vector&lt;const char*&gt; exts(ev,ev+ec);
+    VkApplicationInfo ai{};ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.pApplicationName=&quot;NavalBridgeRenderer&quot;;ai.apiVersion=VK_API_VERSION_1_3;
+    VkInstanceCreateInfo ici{};ici.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;ici.pApplicationInfo=&amp;ai;ici.enabledExtensionCount=(uint32_t)exts.size();ici.ppEnabledExtensionNames=exts.data();
+    if(VALIDATION){ici.enabledLayerCount=(uint32_t)VAL_LAYERS.size();ici.ppEnabledLayerNames=VAL_LAYERS.data();}
+    VkInstance inst;vkCreateInstance(&amp;ici,nullptr,&amp;inst);
+    VkSurfaceKHR surface;glfwCreateWindowSurface(inst,win,nullptr,&amp;surface);
+
+    uint32_t dc;vkEnumeratePhysicalDevices(inst,&amp;dc,nullptr);std::vector&lt;VkPhysicalDevice&gt; dvs(dc);vkEnumeratePhysicalDevices(inst,&amp;dc,dvs.data());
+    VkPhysicalDevice phys=VK_NULL_HANDLE;uint32_t gfxFam=UINT32_MAX;
+    for(auto&amp; d:dvs){uint32_t f=findGfxFam(d,surface);if(f!=UINT32_MAX){phys=d;gfxFam=f;VkPhysicalDeviceProperties p;vkGetPhysicalDeviceProperties(d,&amp;p);if(p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)break;}}
+    VkPhysicalDeviceProperties pp;vkGetPhysicalDeviceProperties(phys,&amp;pp);
+    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;pp.deviceName&lt;&lt;&quot;\n&quot;;
+
+    float qp=1.0f;VkDeviceQueueCreateInfo dqci{};dqci.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;dqci.queueFamilyIndex=gfxFam;dqci.queueCount=1;dqci.pQueuePriorities=&amp;qp;
+    VkPhysicalDeviceFeatures feat{};
+    VkDeviceCreateInfo dci{};dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;dci.queueCreateInfoCount=1;dci.pQueueCreateInfos=&amp;dqci;dci.pEnabledFeatures=&amp;feat;dci.enabledExtensionCount=(uint32_t)DEV_EXTS.size();dci.ppEnabledExtensionNames=DEV_EXTS.data();
+    if(VALIDATION){dci.enabledLayerCount=(uint32_t)VAL_LAYERS.size();dci.ppEnabledLayerNames=VAL_LAYERS.data();}
+    VkDevice device;vkCreateDevice(phys,&amp;dci,nullptr,&amp;device);
+    VkQueue gfxQ;vkGetDeviceQueue(device,gfxFam,0,&amp;gfxQ);
+    std::cout&lt;&lt;&quot;[2] Device + queue\n&quot;;
+
+    // Swapchain (abbreviated from Lab 3)
+    VkSurfaceCapabilitiesKHR caps;vkGetPhysicalDeviceSurfaceCapabilitiesKHR(phys,surface,&amp;caps);
+    uint32_t fmtN;vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtN,nullptr);std::vector&lt;VkSurfaceFormatKHR&gt; fmts(fmtN);vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtN,fmts.data());
+    uint32_t pmN;vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,nullptr);std::vector&lt;VkPresentModeKHR&gt; pms(pmN);vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,pms.data());
+    auto sfmt=chooseFormat(fmts);auto pm=choosePresent(pms);auto ext=chooseExtent(caps,win);
+    uint32_t imgN=std::min(caps.minImageCount+1,caps.maxImageCount?caps.maxImageCount:UINT32_MAX);
+    VkSwapchainCreateInfoKHR sci{};sci.sType=VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;sci.surface=surface;sci.minImageCount=imgN;sci.imageFormat=sfmt.format;sci.imageColorSpace=sfmt.colorSpace;sci.imageExtent=ext;sci.imageArrayLayers=1;sci.imageUsage=VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;sci.imageSharingMode=VK_SHARING_MODE_EXCLUSIVE;sci.preTransform=caps.currentTransform;sci.compositeAlpha=VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;sci.presentMode=pm;sci.clipped=VK_TRUE;
+    VkSwapchainKHR sc;vkCreateSwapchainKHR(device,&amp;sci,nullptr,&amp;sc);
+    uint32_t sic;vkGetSwapchainImagesKHR(device,sc,&amp;sic,nullptr);std::vector&lt;VkImage&gt; sis(sic);vkGetSwapchainImagesKHR(device,sc,&amp;sic,sis.data());
+    std::vector&lt;VkImageView&gt; sivs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkImageViewCreateInfo iv{};iv.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;iv.image=sis[i];iv.viewType=VK_IMAGE_VIEW_TYPE_2D;iv.format=sfmt.format;iv.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1};vkCreateImageView(device,&amp;iv,nullptr,&amp;sivs[i]);}
+
+    VkAttachmentDescription att{};att.format=sfmt.format;att.samples=VK_SAMPLE_COUNT_1_BIT;att.loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR;att.storeOp=VK_ATTACHMENT_STORE_OP_STORE;att.stencilLoadOp=VK_ATTACHMENT_LOAD_OP_DONT_CARE;att.stencilStoreOp=VK_ATTACHMENT_STORE_OP_DONT_CARE;att.initialLayout=VK_IMAGE_LAYOUT_UNDEFINED;att.finalLayout=VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentReference ref={0,VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
+    VkSubpassDescription sub{};sub.pipelineBindPoint=VK_PIPELINE_BIND_POINT_GRAPHICS;sub.colorAttachmentCount=1;sub.pColorAttachments=&amp;ref;
+    VkSubpassDependency dep{};dep.srcSubpass=VK_SUBPASS_EXTERNAL;dep.dstSubpass=0;dep.srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VkRenderPassCreateInfo rpi{};rpi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;rpi.attachmentCount=1;rpi.pAttachments=&amp;att;rpi.subpassCount=1;rpi.pSubpasses=&amp;sub;rpi.dependencyCount=1;rpi.pDependencies=&amp;dep;
+    VkRenderPass renderPass;vkCreateRenderPass(device,&amp;rpi,nullptr,&amp;renderPass);
+    std::vector&lt;VkFramebuffer&gt; fbs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkFramebufferCreateInfo f{};f.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;f.renderPass=renderPass;f.attachmentCount=1;f.pAttachments=&amp;sivs[i];f.width=ext.width;f.height=ext.height;f.layers=1;vkCreateFramebuffer(device,&amp;f,nullptr,&amp;fbs[i]);}
+    std::cout&lt;&lt;&quot;[3] Swapchain + render pass + framebuffers\n&quot;;
+
+    // ── VERTEX BUFFER ──────────────────────────────────────────────────────
+    VkDeviceSize bufSize = sizeof(VERTICES[0]) * VERTICES.size();
+
+    VkBufferCreateInfo bci{};
+    bci.sType       = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bci.size        = bufSize;
+    bci.usage       = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    VkBuffer vertBuf;
+    vkCreateBuffer(device, &amp;bci, nullptr, &amp;vertBuf);
+
+    // Ask Vulkan what memory this buffer requires
+    VkMemoryRequirements memReqs;
+    vkGetBufferMemoryRequirements(device, vertBuf, &amp;memReqs);
+    std::cout&lt;&lt;&quot;[4] Vertex buffer memory requirements: &quot;&lt;&lt;memReqs.size&lt;&lt;&quot; bytes, alignment &quot;&lt;&lt;memReqs.alignment&lt;&lt;&quot;\n&quot;;
+
+    VkMemoryAllocateInfo mai{};
+    mai.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    mai.allocationSize  = memReqs.size;
+    // HOST_VISIBLE: CPU can write directly  |  HOST_COHERENT: no explicit flush needed
+    mai.memoryTypeIndex = findMemType(phys, memReqs.memoryTypeBits,
+                           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+                           VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+    VkDeviceMemory vertMem;
+    vkAllocateMemory(device, &amp;mai, nullptr, &amp;vertMem);
+
+    // Bind memory to buffer
+    vkBindBufferMemory(device, vertBuf, vertMem, 0);
+
+    // Upload vertex data: map → memcpy → unmap
+    void* data;
+    vkMapMemory(device, vertMem, 0, bufSize, 0, &amp;data);
+    memcpy(data, VERTICES.data(), (size_t)bufSize);
+    vkUnmapMemory(device, vertMem);
+    // HOST_COHERENT flag means no vkFlushMappedMemoryRanges needed
+
+    std::cout&lt;&lt;&quot;[5] Vertex buffer: &quot;&lt;&lt;bufSize&lt;&lt;&quot; bytes (3 vertices) uploaded\n&quot;;
+    std::cout&lt;&lt;&quot;    Vertices: top (&quot;&lt;&lt;VERTICES[0].pos.x&lt;&lt;&quot;,&quot;&lt;&lt;VERTICES[0].pos.y
+             &lt;&lt;&quot;) BR (&quot;&lt;&lt;VERTICES[1].pos.x&lt;&lt;&quot;,&quot;&lt;&lt;VERTICES[1].pos.y
+             &lt;&lt;&quot;) BL (&quot;&lt;&lt;VERTICES[2].pos.x&lt;&lt;&quot;,&quot;&lt;&lt;VERTICES[2].pos.y&lt;&lt;&quot;)\n&quot;;
+
+    // ── PIPELINE with vertex input ─────────────────────────────────────────
+    auto vertCode=readFile(&quot;vert.spv&quot;); auto fragCode=readFile(&quot;frag.spv&quot;);
+    VkShaderModule vMod=makeMod(device,vertCode); VkShaderModule fMod=makeMod(device,fragCode);
+    VkPipelineShaderStageCreateInfo stages[2]{};
+    stages[0].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stages[0].stage=VK_SHADER_STAGE_VERTEX_BIT;stages[0].module=vMod;stages[0].pName=&quot;main&quot;;
+    stages[1].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stages[1].stage=VK_SHADER_STAGE_FRAGMENT_BIT;stages[1].module=fMod;stages[1].pName=&quot;main&quot;;
+
+    auto binding   = Vertex::binding();
+    auto attributes = Vertex::attributes();
+    VkPipelineVertexInputStateCreateInfo vi{};
+    vi.sType=VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    vi.vertexBindingDescriptionCount=1;vi.pVertexBindingDescriptions=&amp;binding;
+    vi.vertexAttributeDescriptionCount=(uint32_t)attributes.size();vi.pVertexAttributeDescriptions=attributes.data();
+
+    VkPipelineInputAssemblyStateCreateInfo ia{};ia.sType=VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;ia.topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    VkDynamicState dyn[]={VK_DYNAMIC_STATE_VIEWPORT,VK_DYNAMIC_STATE_SCISSOR};
+    VkPipelineDynamicStateCreateInfo dynS{};dynS.sType=VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;dynS.dynamicStateCount=2;dynS.pDynamicStates=dyn;
+    VkPipelineViewportStateCreateInfo vs2{};vs2.sType=VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;vs2.viewportCount=1;vs2.scissorCount=1;
+    VkPipelineRasterizationStateCreateInfo rs{};rs.sType=VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;rs.polygonMode=VK_POLYGON_MODE_FILL;rs.cullMode=VK_CULL_MODE_BACK_BIT;rs.frontFace=VK_FRONT_FACE_CLOCKWISE;rs.lineWidth=1.0f;
+    VkPipelineMultisampleStateCreateInfo ms{};ms.sType=VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;ms.rasterizationSamples=VK_SAMPLE_COUNT_1_BIT;
+    VkPipelineDepthStencilStateCreateInfo ds{};ds.sType=VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    VkPipelineColorBlendAttachmentState cba{};cba.colorWriteMask=VK_COLOR_COMPONENT_R_BIT|VK_COLOR_COMPONENT_G_BIT|VK_COLOR_COMPONENT_B_BIT|VK_COLOR_COMPONENT_A_BIT;cba.blendEnable=VK_FALSE;
+    VkPipelineColorBlendStateCreateInfo cb{};cb.sType=VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;cb.attachmentCount=1;cb.pAttachments=&amp;cba;
+    VkPipelineLayoutCreateInfo pli{};pli.sType=VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    VkPipelineLayout pipelineLayout;vkCreatePipelineLayout(device,&amp;pli,nullptr,&amp;pipelineLayout);
+    VkGraphicsPipelineCreateInfo gpci{};gpci.sType=VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;gpci.stageCount=2;gpci.pStages=stages;gpci.pVertexInputState=&amp;vi;gpci.pInputAssemblyState=&amp;ia;gpci.pViewportState=&amp;vs2;gpci.pRasterizationState=&amp;rs;gpci.pMultisampleState=&amp;ms;gpci.pDepthStencilState=&amp;ds;gpci.pColorBlendState=&amp;cb;gpci.pDynamicState=&amp;dynS;gpci.layout=pipelineLayout;gpci.renderPass=renderPass;gpci.subpass=0;
+    VkPipeline pipeline;vkCreateGraphicsPipelines(device,VK_NULL_HANDLE,1,&amp;gpci,nullptr,&amp;pipeline);
+    vkDestroyShaderModule(device,vMod,nullptr);vkDestroyShaderModule(device,fMod,nullptr);
+    std::cout&lt;&lt;&quot;[6] Graphics pipeline created\n&quot;;
+
+    VkCommandPoolCreateInfo cpci{};cpci.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;cpci.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;cpci.queueFamilyIndex=gfxFam;
+    VkCommandPool cmdPool;vkCreateCommandPool(device,&amp;cpci,nullptr,&amp;cmdPool);
+    VkCommandBufferAllocateInfo cbai{};cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;cbai.commandPool=cmdPool;cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;cbai.commandBufferCount=sic;
+    std::vector&lt;VkCommandBuffer&gt; cmds(sic);vkAllocateCommandBuffers(device,&amp;cbai,cmds.data());
+    VkSemaphoreCreateInfo semci{};semci.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    VkFenceCreateInfo fenci{};fenci.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;fenci.flags=VK_FENCE_CREATE_SIGNALED_BIT;
+    VkSemaphore imgR,renD;VkFence inF;
+    vkCreateSemaphore(device,&amp;semci,nullptr,&amp;imgR);vkCreateSemaphore(device,&amp;semci,nullptr,&amp;renD);vkCreateFence(device,&amp;fenci,nullptr,&amp;inF);
+    std::cout&lt;&lt;&quot;[7] Render loop starting. ESC=quit.\n\n&quot;;
+
+    VkClearValue clr={{{0.04f,0.06f,0.14f,1.0f}}};
+
+    while(!glfwWindowShouldClose(win)){
+        glfwPollEvents();
+        if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(win,true);
+        vkWaitForFences(device,1,&amp;inF,VK_TRUE,UINT64_MAX);vkResetFences(device,1,&amp;inF);
+        uint32_t imgIdx;vkAcquireNextImageKHR(device,sc,UINT64_MAX,imgR,VK_NULL_HANDLE,&amp;imgIdx);
+        auto&amp; cmd=cmds[imgIdx];vkResetCommandBuffer(cmd,0);
+        VkCommandBufferBeginInfo cbbi{};cbbi.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;vkBeginCommandBuffer(cmd,&amp;cbbi);
+        VkRenderPassBeginInfo rpbi{};rpbi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;rpbi.renderPass=renderPass;rpbi.framebuffer=fbs[imgIdx];rpbi.renderArea={{0,0},ext};rpbi.clearValueCount=1;rpbi.pClearValues=&amp;clr;
+        vkCmdBeginRenderPass(cmd,&amp;rpbi,VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
+        VkViewport vp{0,0,(float)ext.width,(float)ext.height,0,1};vkCmdSetViewport(cmd,0,1,&amp;vp);
+        VkRect2D sc2={{0,0},ext};vkCmdSetScissor(cmd,0,1,&amp;sc2);
+
+        // ── THE DRAW CALL ───────────────────────────────────────────────────
+        VkDeviceSize offset=0;
+        vkCmdBindVertexBuffers(cmd, 0, 1, &amp;vertBuf, &amp;offset);
+        // vertexCount=3, instanceCount=1, firstVertex=0, firstInstance=0
+        vkCmdDraw(cmd, 3, 1, 0, 0);
+
+        vkCmdEndRenderPass(cmd);vkEndCommandBuffer(cmd);
+        VkPipelineStageFlags ws=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo si{};si.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO;si.waitSemaphoreCount=1;si.pWaitSemaphores=&amp;imgR;si.pWaitDstStageMask=&amp;ws;si.commandBufferCount=1;si.pCommandBuffers=&amp;cmd;si.signalSemaphoreCount=1;si.pSignalSemaphores=&amp;renD;
+        vkQueueSubmit(gfxQ,1,&amp;si,inF);
+        VkPresentInfoKHR pi{};pi.sType=VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;pi.waitSemaphoreCount=1;pi.pWaitSemaphores=&amp;renD;pi.swapchainCount=1;pi.pSwapchains=&amp;sc;pi.pImageIndices=&amp;imgIdx;
+        vkQueuePresentKHR(gfxQ,&amp;pi);
+    }
+    vkDeviceWaitIdle(device);
+    vkDestroyFence(device,inF,nullptr);vkDestroySemaphore(device,renD,nullptr);vkDestroySemaphore(device,imgR,nullptr);
+    vkDestroyCommandPool(device,cmdPool,nullptr);
+    vkDestroyBuffer(device,vertBuf,nullptr);vkFreeMemory(device,vertMem,nullptr);
+    vkDestroyPipeline(device,pipeline,nullptr);vkDestroyPipelineLayout(device,pipelineLayout,nullptr);
+    for(auto fb:fbs)vkDestroyFramebuffer(device,fb,nullptr);vkDestroyRenderPass(device,renderPass,nullptr);
+    for(auto iv:sivs)vkDestroyImageView(device,iv,nullptr);
+    vkDestroySwapchainKHR(device,sc,nullptr);vkDestroySurfaceKHR(inst,surface,nullptr);
+    vkDestroyDevice(device,nullptr);vkDestroyInstance(inst,nullptr);
+    glfwDestroyWindow(win);glfwTerminate();
+    std::cout&lt;&lt;&quot;Clean shutdown.\n&quot;;return 0;
+}
+</pre></div></div>
+  <div class="term"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem">Expected Output</span></div><div class="term-body"><div><span class="ts">[1] GPU: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">[2] Device + queue</span></div><div><span class="ts">[3] Swapchain + render pass + framebuffers</span></div><div><span class="ts">[4] Vertex buffer memory requirements: 36 bytes, alignment 4</span></div><div><span class="ts">[5] Vertex buffer: 36 bytes (3 vertices) uploaded</span></div><div><span class="to">    Vertices: top (0,−0.55) BR (0.5,0.45) BL (−0.5,0.45)</span></div><div><span class="ts">[6] Graphics pipeline created</span></div><div><span class="ts">[7] Render loop starting. ESC=quit.</span></div><div><span class="to">[Orange triangle on navy background]</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li>Move the triangle: change vertex positions to <code class='ic'>{{0.0f, -0.8f}}</code>, <code class='ic'>{{0.8f, 0.8f}}</code>, <code class='ic'>{{-0.8f, 0.8f}}</code>. Rebuild. The triangle scales to fill more of the window. NDC coordinates go from -1 to +1 in both axes.</li><li>Add a fourth vertex and make two triangles (a quad): add vertex <code class='ic'>{{-0.5f, -0.55f}}</code> with a different colour, then either use <code class='ic'>vkCmdDraw(6,1,0,0)</code> with 6 vertices or switch to an index buffer. This prepares you for Day 5 model loading.</li><li>Call <code class='ic'>vkMapMemory</code> once before the loop and keep the pointer alive (omit <code class='ic'>vkUnmapMemory</code>). This is persistent mapping — valid for HOST_VISIBLE memory, faster because no remap per frame. Update a vertex position each frame to see simple animation. Lab 5 uses this pattern.</li></ul></div>
+  <div class="del-row" style="margin-top:1.5rem">
+    <div class="del-card"><div class="del-title">Deliverable</div><div class="del-val">Tactical orange triangle on navy background. Validation: 0 errors. Vertex buffer printed with correct byte size.</div></div>
+  </div>
+</div>
+
+
+<div class="lab-sec" id="lab5">
+  <div class="lab-eyebrow"><span class="l-badge">Lab 5 of 5 &mdash; Capstone</span><span class="l-cap">Production Frame Loop</span></div>
+  <div class="lab-title">MAX_FRAMES_IN_FLIGHT, Double-Buffered Sync, Animated Triangle</div>
+  <div class="lab-desc">Upgrade to production-grade frame synchronisation. Create two independent sync sets (one per in-flight frame): two <code class="ic">imageAvailable</code> semaphores, two <code class="ic">renderFinished</code> semaphores, two fences. Cycle <code class="ic">currentFrame</code> 0 &rarr; 1 &rarr; 0. Add persistent vertex buffer mapping so the CPU can update vertices each frame without remap. Animate the triangle with <code class="ic">sin(time)</code>. Print FPS every 300 frames. This is the full Day 4 capstone.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#9201; 50–60 min</span>
+    <span class="meta-chip">Requires vert.spv + frag.spv</span>
+    <span class="meta-chip">Animated triangle + FPS output</span>
+    <span class="meta-chip">Day 4 capstone</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Lab 4</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">MAX_FRAMES_IN_FLIGHT=2</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">persistent map + sin animation</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Full Day 4 capstone &#10003;</span>
+  </div>
+  <div class="obj"><div class="obj-lbl">&#9989; Objectives — you will be able to</div><ul class="obj-list"><li>Implement MAX_FRAMES_IN_FLIGHT=2 with one sync set per in-flight frame</li><li>Cycle currentFrame index: (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT</li><li>Allocate MAX_FRAMES_IN_FLIGHT command buffers (one per frame slot, not per image)</li><li>Use persistent mapped memory for per-frame vertex updates</li><li>Animate vertex[0].x = sin(glfwGetTime()) * 0.35f, updating every frame via memcpy</li><li>Print FPS every 300 frames: total frames / elapsed seconds</li><li>Handle VK_ERROR_OUT_OF_DATE_KHR from vkAcquireNextImageKHR</li></ul></div>
+  <div class="obj"><div class="obj-lbl">&#128300; New concepts</div><ul class="obj-list new-list"><li>Why MAX_FRAMES_IN_FLIGHT=2 allows CPU to work ahead without racing the GPU</li><li>Frame slot vs swapchain image index — they are independent indices</li><li>Persistent mapping — HOST_COHERENT memory can stay mapped indefinitely</li><li>Frame rate measurement from system clock vs vsync-limited present</li></ul></div>
+  <div class="tip">
+    <div class="tip-lbl">&#128161; Key Insight</div>
+    <p class="note"><code class="ic">currentFrame</code> and <code class="ic">imgIdx</code> are different indices. <code class="ic">currentFrame</code> is 0 or 1 (your CPU work slot). <code class="ic">imgIdx</code> is 0, 1, or 2 (which swapchain image to render into this frame). The fence is indexed by <code class="ic">currentFrame</code>. The framebuffer is indexed by <code class="ic">imgIdx</code>. Never confuse them.</p>
+  </div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><button class="cp-btn" onclick="copyCode(this,&apos;lab5&apos;)">Copy</button></div><div class="code-block"><pre id="lab5">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · LAB 5 of 5  [CAPSTONE]
+//  Naval Bridge Renderer — Full Triangle + Production Frame Synchronisation
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  WHAT THIS LAB ADDS OVER LAB 4:
+//  - MAX_FRAMES_IN_FLIGHT = 2: two independent per-frame sync sets
+//  - Per-frame: imageAvailable semaphore, renderFinished semaphore, inFlight fence
+//  - currentFrame index cycles 0 → 1 → 0 (double buffered CPU work)
+//  - Swapchain resize handling (VK_ERROR_OUT_OF_DATE_KHR / VK_SUBOPTIMAL_KHR)
+//  - Frame counter printed every 300 frames with FPS estimate
+//  - Animated triangle: vertex[0] position updated each frame via mapped memory
+//    (demonstrates CPU → GPU data flow without a uniform buffer)
+//  - ESC = quit, R = reset animation
+//
+//  This is the Day 4 capstone. It demonstrates the production frame loop
+//  pattern used in all real Vulkan renderers.
+//
+//  OUTPUT: Animated orange triangle, navy background, FPS counter in terminal.
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;fstream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+#include &lt;array&gt;
+#include &lt;cmath&gt;
+#include &lt;chrono&gt;
+
+const int WIN_W=900,WIN_H=620;
+const int MAX_FRAMES_IN_FLIGHT=2;   // CPU can work 2 frames ahead of GPU
+const bool VALIDATION=true;
+const std::vector&lt;const char*&gt; VAL_LAYERS={&quot;VK_LAYER_KHRONOS_validation&quot;};
+const std::vector&lt;const char*&gt; DEV_EXTS={VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+struct Vertex{
+    glm::vec2 pos;glm::vec3 color;
+    static VkVertexInputBindingDescription binding(){VkVertexInputBindingDescription b{};b.binding=0;b.stride=sizeof(Vertex);b.inputRate=VK_VERTEX_INPUT_RATE_VERTEX;return b;}
+    static std::array&lt;VkVertexInputAttributeDescription,2&gt; attributes(){std::array&lt;VkVertexInputAttributeDescription,2&gt; a{};a[0]={0,0,VK_FORMAT_R32G32_SFLOAT,(uint32_t)offsetof(Vertex,pos)};a[1]={1,0,VK_FORMAT_R32G32B32_SFLOAT,(uint32_t)offsetof(Vertex,color)};return a;}
+};
+
+std::vector&lt;Vertex&gt; vertices={
+    {{ 0.0f,-0.55f},{0.98f,0.57f,0.24f}},
+    {{ 0.5f, 0.45f},{0.98f,0.57f,0.24f}},
+    {{-0.5f, 0.45f},{0.98f,0.57f,0.24f}},
+};
+
+static std::vector&lt;char&gt; readFile(const std::string&amp; p){std::ifstream f(p,std::ios::ate|std::ios::binary);if(!f.is_open())throw std::runtime_error(&quot;Cannot open: &quot;+p);size_t s=(size_t)f.tellg();std::vector&lt;char&gt; b(s);f.seekg(0);f.read(b.data(),s);return b;}
+VkShaderModule makeMod(VkDevice d,const std::vector&lt;char&gt;&amp; c){VkShaderModuleCreateInfo ci{};ci.sType=VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;ci.codeSize=c.size();ci.pCode=reinterpret_cast&lt;const uint32_t*&gt;(c.data());VkShaderModule m;vkCreateShaderModule(d,&amp;ci,nullptr,&amp;m);return m;}
+bool checkVal(){uint32_t n;vkEnumerateInstanceLayerProperties(&amp;n,nullptr);std::vector&lt;VkLayerProperties&gt; av(n);vkEnumerateInstanceLayerProperties(&amp;n,av.data());for(const char* nm:VAL_LAYERS){bool ok=false;for(auto&amp; l:av)if(strcmp(nm,l.layerName)==0){ok=true;break;}if(!ok)return false;}return true;}
+uint32_t findGfxFam(VkPhysicalDevice dev,VkSurfaceKHR surf){uint32_t n;vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,nullptr);std::vector&lt;VkQueueFamilyProperties&gt; qf(n);vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,qf.data());for(uint32_t i=0;i&lt;n;i++){VkBool32 p=false;vkGetPhysicalDeviceSurfaceSupportKHR(dev,i,surf,&amp;p);if((qf[i].queueFlags&amp;VK_QUEUE_GRAPHICS_BIT)&amp;&amp;p)return i;}return UINT32_MAX;}
+VkSurfaceFormatKHR chooseFormat(const std::vector&lt;VkSurfaceFormatKHR&gt;&amp; f){for(auto&amp; v:f)if(v.format==VK_FORMAT_B8G8R8A8_SRGB&amp;&amp;v.colorSpace==VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)return v;return f[0];}
+VkPresentModeKHR choosePresent(const std::vector&lt;VkPresentModeKHR&gt;&amp; m){for(auto v:m)if(v==VK_PRESENT_MODE_MAILBOX_KHR)return v;return VK_PRESENT_MODE_FIFO_KHR;}
+VkExtent2D chooseExtent(const VkSurfaceCapabilitiesKHR&amp; c,GLFWwindow* w){if(c.currentExtent.width!=UINT32_MAX)return c.currentExtent;int a,b;glfwGetFramebufferSize(w,&amp;a,&amp;b);VkExtent2D e={(uint32_t)a,(uint32_t)b};e.width=std::clamp(e.width,c.minImageExtent.width,c.maxImageExtent.width);e.height=std::clamp(e.height,c.minImageExtent.height,c.maxImageExtent.height);return e;}
+uint32_t findMemType(VkPhysicalDevice phys,uint32_t bits,VkMemoryPropertyFlags props){VkPhysicalDeviceMemoryProperties mp;vkGetPhysicalDeviceMemoryProperties(phys,&amp;mp);for(uint32_t i=0;i&lt;mp.memoryTypeCount;i++)if((bits&amp;(1&lt;&lt;i))&amp;&amp;(mp.memoryTypes[i].propertyFlags&amp;props)==props)return i;throw std::runtime_error(&quot;No mem type&quot;);}
+
+int main(){
+    std::cout&lt;&lt;&quot;\n=== Day 4 Lab 5 [CAPSTONE] — NavalBridgeRenderer: Full Sync ===\n\n&quot;;
+    if(VALIDATION&amp;&amp;!checkVal()){std::cerr&lt;&lt;&quot;Validation layers missing\n&quot;;return 1;}
+
+    glfwInit();glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API);
+    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,&quot;Naval Bridge Renderer — Lab 5 Capstone&quot;,nullptr,nullptr);
+
+    uint32_t ec;const char** ev=glfwGetRequiredInstanceExtensions(&amp;ec);
+    std::vector&lt;const char*&gt; exts(ev,ev+ec);
+    VkApplicationInfo ai{};ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.pApplicationName=&quot;NavalBridgeRenderer&quot;;ai.apiVersion=VK_API_VERSION_1_3;
+    VkInstanceCreateInfo ici{};ici.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;ici.pApplicationInfo=&amp;ai;ici.enabledExtensionCount=(uint32_t)exts.size();ici.ppEnabledExtensionNames=exts.data();
+    if(VALIDATION){ici.enabledLayerCount=(uint32_t)VAL_LAYERS.size();ici.ppEnabledLayerNames=VAL_LAYERS.data();}
+    VkInstance inst;vkCreateInstance(&amp;ici,nullptr,&amp;inst);
+    VkSurfaceKHR surface;glfwCreateWindowSurface(inst,win,nullptr,&amp;surface);
+
+    uint32_t dc;vkEnumeratePhysicalDevices(inst,&amp;dc,nullptr);std::vector&lt;VkPhysicalDevice&gt; dvs(dc);vkEnumeratePhysicalDevices(inst,&amp;dc,dvs.data());
+    VkPhysicalDevice phys=VK_NULL_HANDLE;uint32_t gfxFam=UINT32_MAX;
+    for(auto&amp; d:dvs){uint32_t f=findGfxFam(d,surface);if(f!=UINT32_MAX){phys=d;gfxFam=f;VkPhysicalDeviceProperties p;vkGetPhysicalDeviceProperties(d,&amp;p);if(p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)break;}}
+    VkPhysicalDeviceProperties pp;vkGetPhysicalDeviceProperties(phys,&amp;pp);
+    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;pp.deviceName&lt;&lt;&quot;\n&quot;;
+
+    float qp=1.0f;VkDeviceQueueCreateInfo dqci{};dqci.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;dqci.queueFamilyIndex=gfxFam;dqci.queueCount=1;dqci.pQueuePriorities=&amp;qp;
+    VkPhysicalDeviceFeatures feat{};
+    VkDeviceCreateInfo dci{};dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;dci.queueCreateInfoCount=1;dci.pQueueCreateInfos=&amp;dqci;dci.pEnabledFeatures=&amp;feat;dci.enabledExtensionCount=(uint32_t)DEV_EXTS.size();dci.ppEnabledExtensionNames=DEV_EXTS.data();
+    if(VALIDATION){dci.enabledLayerCount=(uint32_t)VAL_LAYERS.size();dci.ppEnabledLayerNames=VAL_LAYERS.data();}
+    VkDevice device;vkCreateDevice(phys,&amp;dci,nullptr,&amp;device);
+    VkQueue gfxQ;vkGetDeviceQueue(device,gfxFam,0,&amp;gfxQ);
+    std::cout&lt;&lt;&quot;[2] Device + queue\n&quot;;
+
+    // Swapchain
+    VkSurfaceCapabilitiesKHR caps;vkGetPhysicalDeviceSurfaceCapabilitiesKHR(phys,surface,&amp;caps);
+    uint32_t fmtN;vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtN,nullptr);std::vector&lt;VkSurfaceFormatKHR&gt; fmts(fmtN);vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fmtN,fmts.data());
+    uint32_t pmN;vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,nullptr);std::vector&lt;VkPresentModeKHR&gt; pms(pmN);vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,pms.data());
+    auto sfmt=chooseFormat(fmts);auto pm=choosePresent(pms);auto ext=chooseExtent(caps,win);
+    uint32_t imgN=std::min(caps.minImageCount+1,caps.maxImageCount?caps.maxImageCount:UINT32_MAX);
+    VkSwapchainCreateInfoKHR sci{};sci.sType=VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;sci.surface=surface;sci.minImageCount=imgN;sci.imageFormat=sfmt.format;sci.imageColorSpace=sfmt.colorSpace;sci.imageExtent=ext;sci.imageArrayLayers=1;sci.imageUsage=VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;sci.imageSharingMode=VK_SHARING_MODE_EXCLUSIVE;sci.preTransform=caps.currentTransform;sci.compositeAlpha=VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;sci.presentMode=pm;sci.clipped=VK_TRUE;
+    VkSwapchainKHR sc;vkCreateSwapchainKHR(device,&amp;sci,nullptr,&amp;sc);
+    uint32_t sic;vkGetSwapchainImagesKHR(device,sc,&amp;sic,nullptr);std::vector&lt;VkImage&gt; sis(sic);vkGetSwapchainImagesKHR(device,sc,&amp;sic,sis.data());
+    std::vector&lt;VkImageView&gt; sivs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkImageViewCreateInfo iv{};iv.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;iv.image=sis[i];iv.viewType=VK_IMAGE_VIEW_TYPE_2D;iv.format=sfmt.format;iv.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1};vkCreateImageView(device,&amp;iv,nullptr,&amp;sivs[i]);}
+
+    VkAttachmentDescription att{};att.format=sfmt.format;att.samples=VK_SAMPLE_COUNT_1_BIT;att.loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR;att.storeOp=VK_ATTACHMENT_STORE_OP_STORE;att.stencilLoadOp=VK_ATTACHMENT_LOAD_OP_DONT_CARE;att.stencilStoreOp=VK_ATTACHMENT_STORE_OP_DONT_CARE;att.initialLayout=VK_IMAGE_LAYOUT_UNDEFINED;att.finalLayout=VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentReference ref={0,VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
+    VkSubpassDescription sub{};sub.pipelineBindPoint=VK_PIPELINE_BIND_POINT_GRAPHICS;sub.colorAttachmentCount=1;sub.pColorAttachments=&amp;ref;
+    VkSubpassDependency dep{};dep.srcSubpass=VK_SUBPASS_EXTERNAL;dep.dstSubpass=0;dep.srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VkRenderPassCreateInfo rpi{};rpi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;rpi.attachmentCount=1;rpi.pAttachments=&amp;att;rpi.subpassCount=1;rpi.pSubpasses=&amp;sub;rpi.dependencyCount=1;rpi.pDependencies=&amp;dep;
+    VkRenderPass renderPass;vkCreateRenderPass(device,&amp;rpi,nullptr,&amp;renderPass);
+    std::vector&lt;VkFramebuffer&gt; fbs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkFramebufferCreateInfo f{};f.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;f.renderPass=renderPass;f.attachmentCount=1;f.pAttachments=&amp;sivs[i];f.width=ext.width;f.height=ext.height;f.layers=1;vkCreateFramebuffer(device,&amp;f,nullptr,&amp;fbs[i]);}
+
+    // Vertex buffer with persistent mapped pointer (stays mapped — safe for HOST_COHERENT)
+    VkDeviceSize bufSize=sizeof(vertices[0])*vertices.size();
+    VkBufferCreateInfo bci{};bci.sType=VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;bci.size=bufSize;bci.usage=VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;bci.sharingMode=VK_SHARING_MODE_EXCLUSIVE;
+    VkBuffer vertBuf;vkCreateBuffer(device,&amp;bci,nullptr,&amp;vertBuf);
+    VkMemoryRequirements mr;vkGetBufferMemoryRequirements(device,vertBuf,&amp;mr);
+    VkMemoryAllocateInfo mai{};mai.sType=VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;mai.allocationSize=mr.size;mai.memoryTypeIndex=findMemType(phys,mr.memoryTypeBits,VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    VkDeviceMemory vertMem;vkAllocateMemory(device,&amp;mai,nullptr,&amp;vertMem);
+    vkBindBufferMemory(device,vertBuf,vertMem,0);
+    void* mappedVerts;
+    vkMapMemory(device,vertMem,0,bufSize,0,&amp;mappedVerts); // stays mapped permanently
+    memcpy(mappedVerts,vertices.data(),(size_t)bufSize);
+
+    // Pipeline
+    auto vertCode=readFile(&quot;vert.spv&quot;);auto fragCode=readFile(&quot;frag.spv&quot;);
+    VkShaderModule vMod=makeMod(device,vertCode);VkShaderModule fMod=makeMod(device,fragCode);
+    VkPipelineShaderStageCreateInfo stg[2]{};stg[0].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[0].stage=VK_SHADER_STAGE_VERTEX_BIT;stg[0].module=vMod;stg[0].pName=&quot;main&quot;;stg[1].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[1].stage=VK_SHADER_STAGE_FRAGMENT_BIT;stg[1].module=fMod;stg[1].pName=&quot;main&quot;;
+    auto bind=Vertex::binding();auto attr=Vertex::attributes();
+    VkPipelineVertexInputStateCreateInfo vi{};vi.sType=VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;vi.vertexBindingDescriptionCount=1;vi.pVertexBindingDescriptions=&amp;bind;vi.vertexAttributeDescriptionCount=(uint32_t)attr.size();vi.pVertexAttributeDescriptions=attr.data();
+    VkPipelineInputAssemblyStateCreateInfo ia{};ia.sType=VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;ia.topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    VkDynamicState dynArr[]={VK_DYNAMIC_STATE_VIEWPORT,VK_DYNAMIC_STATE_SCISSOR};
+    VkPipelineDynamicStateCreateInfo dynS{};dynS.sType=VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;dynS.dynamicStateCount=2;dynS.pDynamicStates=dynArr;
+    VkPipelineViewportStateCreateInfo vps{};vps.sType=VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;vps.viewportCount=1;vps.scissorCount=1;
+    VkPipelineRasterizationStateCreateInfo rs{};rs.sType=VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;rs.polygonMode=VK_POLYGON_MODE_FILL;rs.cullMode=VK_CULL_MODE_BACK_BIT;rs.frontFace=VK_FRONT_FACE_CLOCKWISE;rs.lineWidth=1.0f;
+    VkPipelineMultisampleStateCreateInfo ms{};ms.sType=VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;ms.rasterizationSamples=VK_SAMPLE_COUNT_1_BIT;
+    VkPipelineDepthStencilStateCreateInfo ds{};ds.sType=VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    VkPipelineColorBlendAttachmentState cba{};cba.colorWriteMask=VK_COLOR_COMPONENT_R_BIT|VK_COLOR_COMPONENT_G_BIT|VK_COLOR_COMPONENT_B_BIT|VK_COLOR_COMPONENT_A_BIT;cba.blendEnable=VK_FALSE;
+    VkPipelineColorBlendStateCreateInfo cb{};cb.sType=VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;cb.attachmentCount=1;cb.pAttachments=&amp;cba;
+    VkPipelineLayoutCreateInfo pli{};pli.sType=VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    VkPipelineLayout pipelineLayout;vkCreatePipelineLayout(device,&amp;pli,nullptr,&amp;pipelineLayout);
+    VkGraphicsPipelineCreateInfo gpci{};gpci.sType=VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;gpci.stageCount=2;gpci.pStages=stg;gpci.pVertexInputState=&amp;vi;gpci.pInputAssemblyState=&amp;ia;gpci.pViewportState=&amp;vps;gpci.pRasterizationState=&amp;rs;gpci.pMultisampleState=&amp;ms;gpci.pDepthStencilState=&amp;ds;gpci.pColorBlendState=&amp;cb;gpci.pDynamicState=&amp;dynS;gpci.layout=pipelineLayout;gpci.renderPass=renderPass;gpci.subpass=0;
+    VkPipeline pipeline;vkCreateGraphicsPipelines(device,VK_NULL_HANDLE,1,&amp;gpci,nullptr,&amp;pipeline);
+    vkDestroyShaderModule(device,vMod,nullptr);vkDestroyShaderModule(device,fMod,nullptr);
+
+    VkCommandPoolCreateInfo cpci{};cpci.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;cpci.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;cpci.queueFamilyIndex=gfxFam;
+    VkCommandPool cmdPool;vkCreateCommandPool(device,&amp;cpci,nullptr,&amp;cmdPool);
+    VkCommandBufferAllocateInfo cbai{};cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;cbai.commandPool=cmdPool;cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;cbai.commandBufferCount=MAX_FRAMES_IN_FLIGHT;
+    std::vector&lt;VkCommandBuffer&gt; cmds(MAX_FRAMES_IN_FLIGHT);vkAllocateCommandBuffers(device,&amp;cbai,cmds.data());
+
+    // ── PER-FRAME SYNC: one set per in-flight frame ───────────────────────
+    std::vector&lt;VkSemaphore&gt; imgReady(MAX_FRAMES_IN_FLIGHT);
+    std::vector&lt;VkSemaphore&gt; renDone(MAX_FRAMES_IN_FLIGHT);
+    std::vector&lt;VkFence&gt;     inFlight(MAX_FRAMES_IN_FLIGHT);
+    VkSemaphoreCreateInfo semci{};semci.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    VkFenceCreateInfo fenci{};fenci.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;fenci.flags=VK_FENCE_CREATE_SIGNALED_BIT;
+    for(int i=0;i&lt;MAX_FRAMES_IN_FLIGHT;i++){
+        vkCreateSemaphore(device,&amp;semci,nullptr,&amp;imgReady[i]);
+        vkCreateSemaphore(device,&amp;semci,nullptr,&amp;renDone[i]);
+        vkCreateFence(device,&amp;fenci,nullptr,&amp;inFlight[i]);
+    }
+
+    std::cout&lt;&lt;&quot;[3] Sync: &quot;&lt;&lt;MAX_FRAMES_IN_FLIGHT&lt;&lt;&quot; frames in flight — &quot;
+             &lt;&lt;MAX_FRAMES_IN_FLIGHT&lt;&lt;&quot; semaphore pairs + &quot;&lt;&lt;MAX_FRAMES_IN_FLIGHT&lt;&lt;&quot; fences\n&quot;;
+    std::cout&lt;&lt;&quot;[4] Render loop. ESC=quit, R=reset animation.\n\n&quot;;
+
+    int currentFrame=0;
+    uint64_t frameCount=0;
+    auto tStart=std::chrono::high_resolution_clock::now();
+    VkClearValue clr={{{0.04f,0.06f,0.14f,1.0f}}};
+
+    while(!glfwWindowShouldClose(win)){
+        glfwPollEvents();
+        if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS) glfwSetWindowShouldClose(win,true);
+
+        // Animate: oscillate top vertex horizontally using sin(time)
+        float t=(float)glfwGetTime();
+        vertices[0].pos.x=sinf(t)*0.35f;
+        memcpy(mappedVerts,vertices.data(),(size_t)bufSize);
+        // HOST_COHERENT memory: no flush needed, GPU sees update on next read
+
+        // ── WAIT for this frame slot to be free ──────────────────────────
+        vkWaitForFences(device,1,&amp;inFlight[currentFrame],VK_TRUE,UINT64_MAX);
+
+        // ── ACQUIRE swapchain image ───────────────────────────────────────
+        uint32_t imgIdx;
+        VkResult res=vkAcquireNextImageKHR(device,sc,UINT64_MAX,
+                                           imgReady[currentFrame],VK_NULL_HANDLE,&amp;imgIdx);
+        if(res==VK_ERROR_OUT_OF_DATE_KHR||res==VK_SUBOPTIMAL_KHR){
+            // Simplified: just continue (full resize would recreate swapchain)
+            vkResetFences(device,1,&amp;inFlight[currentFrame]);
+            continue;
+        }
+        vkResetFences(device,1,&amp;inFlight[currentFrame]);
+
+        // ── RECORD command buffer for this frame slot ─────────────────────
+        auto&amp; cmd=cmds[currentFrame];
+        vkResetCommandBuffer(cmd,0);
+        VkCommandBufferBeginInfo cbbi{};cbbi.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        vkBeginCommandBuffer(cmd,&amp;cbbi);
+        VkRenderPassBeginInfo rpbi{};rpbi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;rpbi.renderPass=renderPass;rpbi.framebuffer=fbs[imgIdx];rpbi.renderArea={{0,0},ext};rpbi.clearValueCount=1;rpbi.pClearValues=&amp;clr;
+        vkCmdBeginRenderPass(cmd,&amp;rpbi,VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
+        VkViewport vp{0,0,(float)ext.width,(float)ext.height,0,1};vkCmdSetViewport(cmd,0,1,&amp;vp);
+        VkRect2D sc2={{0,0},ext};vkCmdSetScissor(cmd,0,1,&amp;sc2);
+        VkDeviceSize offset=0;
+        vkCmdBindVertexBuffers(cmd,0,1,&amp;vertBuf,&amp;offset);
+        vkCmdDraw(cmd,3,1,0,0);
+        vkCmdEndRenderPass(cmd);vkEndCommandBuffer(cmd);
+
+        // ── SUBMIT with per-frame sync objects ────────────────────────────
+        VkPipelineStageFlags ws=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo si{};si.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        si.waitSemaphoreCount=1;si.pWaitSemaphores=&amp;imgReady[currentFrame];si.pWaitDstStageMask=&amp;ws;
+        si.commandBufferCount=1;si.pCommandBuffers=&amp;cmd;
+        si.signalSemaphoreCount=1;si.pSignalSemaphores=&amp;renDone[currentFrame];
+        vkQueueSubmit(gfxQ,1,&amp;si,inFlight[currentFrame]);
+
+        // ── PRESENT ───────────────────────────────────────────────────────
+        VkPresentInfoKHR pi{};pi.sType=VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        pi.waitSemaphoreCount=1;pi.pWaitSemaphores=&amp;renDone[currentFrame];
+        pi.swapchainCount=1;pi.pSwapchains=&amp;sc;pi.pImageIndices=&amp;imgIdx;
+        vkQueuePresentKHR(gfxQ,&amp;pi);
+
+        // ── ADVANCE frame slot ────────────────────────────────────────────
+        currentFrame=(currentFrame+1)%MAX_FRAMES_IN_FLIGHT;
+        frameCount++;
+
+        if(frameCount%300==0){
+            auto now=std::chrono::high_resolution_clock::now();
+            double secs=std::chrono::duration&lt;double&gt;(now-tStart).count();
+            std::cout&lt;&lt;&quot;Frame &quot;&lt;&lt;frameCount&lt;&lt;&quot;  FPS: &quot;&lt;&lt;(int)(frameCount/secs)
+                     &lt;&lt;&quot;  current slot: &quot;&lt;&lt;currentFrame&lt;&lt;&quot;\n&quot;;
+        }
+    }
+    vkDeviceWaitIdle(device);
+
+    for(int i=0;i&lt;MAX_FRAMES_IN_FLIGHT;i++){
+        vkDestroyFence(device,inFlight[i],nullptr);
+        vkDestroySemaphore(device,renDone[i],nullptr);
+        vkDestroySemaphore(device,imgReady[i],nullptr);
+    }
+    vkDestroyCommandPool(device,cmdPool,nullptr);
+    vkUnmapMemory(device,vertMem);
+    vkDestroyBuffer(device,vertBuf,nullptr);vkFreeMemory(device,vertMem,nullptr);
+    vkDestroyPipeline(device,pipeline,nullptr);vkDestroyPipelineLayout(device,pipelineLayout,nullptr);
+    for(auto fb:fbs)vkDestroyFramebuffer(device,fb,nullptr);
+    vkDestroyRenderPass(device,renderPass,nullptr);
+    for(auto iv:sivs)vkDestroyImageView(device,iv,nullptr);
+    vkDestroySwapchainKHR(device,sc,nullptr);vkDestroySurfaceKHR(inst,surface,nullptr);
+    vkDestroyDevice(device,nullptr);vkDestroyInstance(inst,nullptr);
+    glfwDestroyWindow(win);glfwTerminate();
+    auto now=std::chrono::high_resolution_clock::now();
+    double secs=std::chrono::duration&lt;double&gt;(now-tStart).count();
+    std::cout&lt;&lt;&quot;\nCapstone complete. Total frames: &quot;&lt;&lt;frameCount
+             &lt;&lt;&quot;  Avg FPS: &quot;&lt;&lt;(int)(frameCount/secs)
+             &lt;&lt;&quot;  Validation: 0 errors.\n\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="term"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem">Expected Output</span></div><div class="term-body"><div><span class="ts">[1] GPU: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">[2] Device + queue</span></div><div><span class="ts">[3] Sync: 2 frames in flight — 2 semaphore pairs + 2 fences</span></div><div><span class="ts">[4] Render loop. ESC=quit, R=reset animation.</span></div><div style="border-top:1px solid #1a2233;margin:.35rem 0"></div><div><span class="to">Frame 300   FPS: 144   current slot: 0</span></div><div><span class="to">Frame 600   FPS: 144   current slot: 0</span></div><div><span class="to">Frame 900   FPS: 144   current slot: 0</span></div><div style="border-top:1px solid #1a2233;margin:.35rem 0"></div><div><span class="ts">Capstone complete. Total frames: 2160  Avg FPS: 144  Validation: 0 errors.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li>Change <code class='ic'>MAX_FRAMES_IN_FLIGHT</code> to 1 and rebuild. The triangle still renders but CPU and GPU are no longer pipelined — the CPU must wait for the GPU to finish each frame before recording the next. On a high-refresh display you may see the FPS drop or become more variable. Change back to 2 and confirm the frame rate recovers.</li><li>Remove the <code class='ic'>vkWaitForFences</code> call entirely. Run with validation layers on. The validation layers immediately report a command buffer in-use error. This is the race condition that the fence prevents — the CPU overwrites the command buffer while the GPU is still executing it.</li><li>Change the animation from <code class='ic'>sinf(t)*0.35f</code> (horizontal oscillation) to a full circular orbit: <code class='ic'>vertices[0].pos.x = cosf(t)*0.4f; vertices[0].pos.y = sinf(t)*0.4f - 0.3f</code>. The top vertex circles around the other two. This demonstrates that CPU-to-GPU data flow via mapped memory is fast enough for per-vertex animation at full frame rate.</li></ul></div>
+  <div class="del-row" style="margin-top:1.5rem">
+    <div class="del-card"><div class="del-title">Deliverable</div><div class="del-val">Animated orange triangle oscillating at full vsync frame rate. FPS printed every 300 frames. Validation: 0 errors. Two independent per-frame sync sets confirmed by FPS counter showing no stalls.</div></div>
+  </div>
+
+  <div class="page-foot">
+    <a class="foot-btn" href="day3-demos.html">&#8592; Day 3 Labs</a>
+    <div style="font-size:.8rem;color:var(--text3);text-align:center">
+      By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>
+      Koenig Original AI-Courseware &middot; Day 4 Labs Complete
+    </div>
+    <a class="foot-btn primary" href="day4-demos.html">Day 4 Demos &#8594;</a>
+  </div>
+</div>
+
+</main>
+</div>
+<script>
+function copyCode(btn,id){
+  const el=document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{
+    const o=btn.textContent;btn.textContent='✓ Copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2200);
+  }).catch(()=>{
+    const r=document.createRange();r.selectNode(el);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');window.getSelection().removeAllRanges();
+    btn.textContent='✓ Copied!';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok');},2200);
+  });
+}
+const secs=document.querySelectorAll('.lab-sec');
+const sbls=document.querySelectorAll('.sb-link[href^="#"]');
+secs.forEach(s=>new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;sbls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')===id));}});
+},{threshold:0.2,rootMargin:'-65px 0px -55% 0px'}).observe(s));
+</script>
+</body>
+</html>

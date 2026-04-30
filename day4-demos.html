@@ -54,7 +54,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);backgrou
 .concept{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(251,146,60,.03));border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
 .concept-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
 .concept p{font-size:.86rem;color:var(--text2);line-height:1.8}
-.warn{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-left:3px solid #f87171;border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.warn{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-left:3px solid var(--red,#f87171);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
 .warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#f87171;margin-bottom:.4rem}
 .warn p{font-size:.86rem;color:var(--text2);line-height:1.8}
 .exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--pink);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
@@ -114,23 +114,22 @@ code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);borde
     <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan &middot; MCT</span>
   </div>
 </nav>
-
 <div class="page">
 <aside class="sidebar">
   <div class="sb-grp">Day 4 &mdash; 4 Demos</div>
   <a class="sb-link active" href="#demo15"><span class="sb-num">D15</span>VkInstance + Device</a>
-  <a class="sb-link" href="#demo16"><span class="sb-num">D16</span>Device + Queues + CmdPool</a>
-  <a class="sb-link" href="#demo17"><span class="sb-num">D17</span>Swapchain + RenderPass</a>
+  <a class="sb-link" href="#demo16"><span class="sb-num">D16</span>Swapchain</a>
+  <a class="sb-link" href="#demo17"><span class="sb-num">D17</span>Graphics Pipeline</a>
   <a class="sb-link" href="#demo18"><span class="sb-num">D18</span>First Triangle + Sync</a>
   <div class="sb-sep"></div>
   <div class="sb-grp">Navigation</div>
   <a class="sb-link" href="day3-demos.html"><span class="sb-num" style="font-size:9px">&#8592;</span>Day 3 Demos</a>
+  <a class="sb-link" href="day4-script.html"><span class="sb-num" style="font-size:9px">&#128218;</span>Day 4 Script</a>
   <a class="sb-link" href="labs.html"><span class="sb-num" style="font-size:9px">&#128300;</span>Day 4 Labs</a>
 </aside>
-
 <main class="main">
 
-<!-- ═══════════════════════════════ DEMO 15 ═══════════════════════════════ -->
+
 <div class="demo-sec" id="demo15">
   <div class="demo-eyebrow"><span class="d-badge">Demo 15 &middot; Module 10</span><span class="d-type">Vulkan Startup Sequence &mdash; Terminal Only</span></div>
   <div class="demo-title">VkInstance, Physical Device, Logical Device &mdash; The Root of Every Vulkan Programme</div>
@@ -150,24 +149,24 @@ code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);borde
     <div class="op-label">&#127919; What You Will See</div>
     <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> All GPUs listed with name, type, VRAM in MB, and graphics queue family index</div>
     <div class="op-item"><span class="op-dot"></span><strong>Selected GPU:</strong> Discrete GPU preferred, fallback to integrated if no discrete present</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Validation:</strong> VK_LAYER_KHRONOS_validation ENABLED &mdash; catches all API mistakes in development</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> A plain GLFW window opens (proves surface extension works), close it to exit</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Shutdown:</strong> VkDevice destroyed, then VkInstance &mdash; reverse creation order demonstrated</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Validation:</strong> "VK_LAYER_KHRONOS_validation ENABLED" — catches all API mistakes in development</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Shutdown:</strong> VkDevice destroyed, then VkInstance — reverse creation order demonstrated</div>
   </div>
-  <div class="concept"><div class="concept-lbl">&#128161; Why This Demo Has No Rendering</div><p class="note">The startup sequence is completely independent of rendering. You create the instance and device once at application startup, and they persist until shutdown. Understanding them in isolation &mdash; without the complexity of swapchains and pipelines &mdash; is the correct way to learn them. Demo 16 adds queues and command pool on top. Demo 17 adds the swapchain.</p></div>
-  <div class="diag"><div class="diag-title">Vulkan Object Hierarchy &mdash; All Four Demos Build This Tree</div><pre>VkInstance (Demo 15) &larr; root, connects app to Vulkan runtime
-  &bull; VkPhysicalDevice (Demo 15) &larr; READ ONLY, represents actual GPU hardware
-       &bull; VkDevice (Demo 15) &larr; logical connection, used to create all other objects
-            &bull; VkQueue (Demo 16) &larr; submit command buffers here
-            &bull; VkCommandPool + VkCommandBuffer (Demo 16) &larr; record GPU commands
-            &bull; VkSurface + VkSwapchain (Demo 17) &larr; window + image pool
-            &bull;    VkImageView (Demo 17) &larr; wraps each swapchain image
-            &bull;    VkRenderPass + VkFramebuffer (Demo 17) &larr; render target description
-            &bull; VkShaderModule (Demo 18) &larr; SPIR-V bytecode
-            &bull; VkPipeline (Demo 18) &larr; ALL state baked in at creation
-            &bull; VkSemaphore + VkFence (Demo 18) &larr; frame synchronisation</pre></div>
+  <div class="concept"><div class="concept-lbl">&#128161; Why This Demo Has No Window</div><p class="note">The startup sequence is completely independent of rendering. You create the instance and device once at application startup, and they persist until shutdown. Understanding them in isolation — without the complexity of swapchains and pipelines — is the correct way to learn them. Demo 16 adds the window and surface on top of this same base.</p></div>
+  <div class="diag"><div class="diag-title">Vulkan Object Hierarchy — All Four Demos Build This Tree</div><pre>VkInstance (Demo 15) ← root, connects app to Vulkan runtime
+  └─ VkPhysicalDevice (Demo 15) ← READ ONLY, represents actual GPU hardware
+       └─ VkDevice (Demo 15) ← logical connection, used to create all other objects
+            ├─ VkQueue (Demo 15) ← submit command buffers here
+            ├─ VkSurface + VkSwapchain (Demo 16) ← window + image pool
+            │    └─ VkImageView (Demo 16) ← wraps each swapchain image
+            ├─ VkRenderPass + VkFramebuffer (Demo 17) ← render target description
+            ├─ VkShaderModule (Demo 17) ← SPIR-V bytecode
+            ├─ VkPipeline (Demo 17) ← ALL state baked in at creation
+            ├─ VkCommandPool + VkCommandBuffer (Demo 18) ← record GPU commands
+            ├─ VkBuffer + VkDeviceMemory (Demo 18) ← vertex data in VRAM
+            └─ VkSemaphore + VkFence (Demo 18) ← frame synchronisation</pre></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,'cmake15')">Copy All</button></div></div><div class="code-block"><pre id="cmake15">cmake_minimum_required(VERSION 3.20)
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake15&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake15">cmake_minimum_required(VERSION 3.20)
 project(D15_VulkanEnv)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -184,78 +183,315 @@ target_link_libraries(D15_VulkanEnv
     Vulkan::Vulkan
     ${GLFW_DIR}/lib-vc2022/glfw3.lib
 )</pre></div></div>
-  <div class="warn"><div class="warn-lbl">&#9888; CMakeLists.txt for Vulkan projects</div><p class="note">Vulkan demos use <code class="ic">find_package(Vulkan REQUIRED)</code> and link against <code class="ic">Vulkan::Vulkan</code>. The Vulkan SDK must be installed and <code class="ic">VULKAN_SDK</code> environment variable set. No GLEW is needed &mdash; Vulkan loads its own function pointers.</p></div>
+  <div class="warn">
+  <div class="warn-lbl">&#9888; CMakeLists.txt for Vulkan projects</div>
+  <p class="note">Vulkan demos use <code class="ic">find_package(Vulkan REQUIRED)</code> and link against <code class="ic">Vulkan::Vulkan</code>. The Vulkan SDK must be installed and <code class="ic">VULKAN_SDK</code> environment variable set. SPIR-V shaders are compiled separately with <code class="ic">glslc</code> (included in the SDK) and placed in the project folder next to the executable.</p>
+</div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp &mdash; Complete Program</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main15')">Copy All</button></div></div><div class="code-block"><pre id="main15">// See full source in your C:\Labs\D15_VulkanEnv\src\main.cpp
-// (same code as delivered in session)</pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,'cmd15')">Copy</button><pre id="cmd15">cd C:\Labs\D15_VulkanEnv
-cmake -B build -G "Visual Studio 17 2022" -A x64
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main15&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main15">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · DEMO 15
+//  Vulkan Environment — Instance, Validation Layers, Physical Device Query
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: D15_VulkanEnv
+//  FOLDER:       C:\Labs\D15_VulkanEnv\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - Why Vulkan exists: explicit control vs OpenGL&#x27;s hidden driver overhead
+//  - VkInstance: the Vulkan library handle — created first, destroyed last
+//  - Validation layers: VK_LAYER_KHRONOS_validation catches every API misuse
+//    in debug builds; stripped in release. Your first safety net.
+//  - VkPhysicalDevice: enumerating GPUs — you SELECT one, not create one
+//  - Querying GPU properties: name, vendor, type, API version, limits
+//  - VkApplicationInfo + VkInstanceCreateInfo: every Vulkan struct needs sType
+//  - The difference between instance extensions and device extensions
+//
+//  WHAT YOU WILL SEE:
+//  - Terminal: Vulkan API version loaded
+//  - All available validation layers listed
+//  - All physical devices found with properties
+//  - GPU name, driver version, device type, queue family count
+//  - A window opens (GLFW + VK_KHR_surface) to prove surface support
+//  - No triangle yet — this is environment proof and query only
+//
+//  BUILDS ON: Day 1–3 OpenGL knowledge. This is the Vulkan equivalent of
+//             Demo 1 (window creation) but with 10× more explicit setup.
+//  KEY INSIGHT: Everything OpenGL&#x27;s driver did silently, Vulkan makes you
+//               ask for explicitly — starting with the instance itself.
+//
+//  CMakeLists.txt:
+//    find_package(Vulkan REQUIRED)
+//    target_link_libraries(... Vulkan::Vulkan glfw)
+// ═══════════════════════════════════════════════════════════════════════════
+
+#include &lt;vulkan/vulkan.h&gt;
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;cstring&gt;
+#include &lt;stdexcept&gt;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Validation layer name — this single layer provides comprehensive API checking
+// including parameter validation, object lifetime, threading rules, etc.
+// ─────────────────────────────────────────────────────────────────────────────
+const std::vector&lt;const char*&gt; validationLayers = {
+    &quot;VK_LAYER_KHRONOS_validation&quot;
+};
+
+// Enable validation in debug, disable in release
+#ifdef NDEBUG
+const bool enableValidation = false;
+#else
+const bool enableValidation = true;
+#endif
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Check if the validation layer we want is actually available on this machine
+// (Vulkan SDK must be installed for validation layers to be present)
+// ─────────────────────────────────────────────────────────────────────────────
+bool checkValidationLayerSupport() {
+    uint32_t layerCount = 0;
+    vkEnumerateInstanceLayerProperties(&amp;layerCount, nullptr);  // first call: get count
+    std::vector&lt;VkLayerProperties&gt; available(layerCount);
+    vkEnumerateInstanceLayerProperties(&amp;layerCount, available.data()); // second: fill
+
+    for (const char* name : validationLayers) {
+        bool found = false;
+        for (const auto&amp; layer : available) {
+            if (strcmp(name, layer.layerName) == 0) { found = true; break; }
+        }
+        if (!found) return false;
+    }
+    return true;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Decode VkPhysicalDeviceType to a readable string
+// ─────────────────────────────────────────────────────────────────────────────
+const char* deviceTypeName(VkPhysicalDeviceType t) {
+    switch(t) {
+        case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return &quot;Integrated GPU&quot;;
+        case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:   return &quot;Discrete GPU&quot;;
+        case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:    return &quot;Virtual GPU&quot;;
+        case VK_PHYSICAL_DEVICE_TYPE_CPU:            return &quot;CPU&quot;;
+        default:                                     return &quot;Other&quot;;
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Decode Vulkan version integer (packed: major.minor.patch)
+// ─────────────────────────────────────────────────────────────────────────────
+std::string vkVersionString(uint32_t v) {
+    return std::to_string(VK_VERSION_MAJOR(v)) + &quot;.&quot; +
+           std::to_string(VK_VERSION_MINOR(v)) + &quot;.&quot; +
+           std::to_string(VK_VERSION_PATCH(v));
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n========================================\n&quot;;
+    std::cout &lt;&lt; &quot;  RR Graphics Lab — Demo 15: Vulkan Env\n&quot;;
+    std::cout &lt;&lt; &quot;========================================\n\n&quot;;
+
+    // ── STEP 1: GLFW Init + Vulkan Support Check ──────────────────────────────
+    glfwInit();
+    if (!glfwVulkanSupported()) {
+        std::cerr &lt;&lt; &quot;ERROR: GLFW reports Vulkan is not supported on this machine.\n&quot;;
+        std::cerr &lt;&lt; &quot;       Check Vulkan SDK installation and GPU driver.\n&quot;;
+        return -1;
+    }
+    std::cout &lt;&lt; &quot;[GLFW] Vulkan supported: YES\n\n&quot;;
+
+    // ── STEP 2: List All Available Validation Layers ──────────────────────────
+    uint32_t layerCount = 0;
+    vkEnumerateInstanceLayerProperties(&amp;layerCount, nullptr);
+    std::vector&lt;VkLayerProperties&gt; layers(layerCount);
+    vkEnumerateInstanceLayerProperties(&amp;layerCount, layers.data());
+    std::cout &lt;&lt; &quot;[Validation Layers] &quot; &lt;&lt; layerCount &lt;&lt; &quot; available:\n&quot;;
+    for (const auto&amp; l : layers)
+        std::cout &lt;&lt; &quot;   &quot; &lt;&lt; l.layerName &lt;&lt; &quot; — &quot; &lt;&lt; l.description &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;\n&quot;;
+
+    // Verify our required layer exists
+    bool validationOK = checkValidationLayerSupport();
+    std::cout &lt;&lt; &quot;[Validation] VK_LAYER_KHRONOS_validation present: &quot;
+              &lt;&lt; (validationOK ? &quot;YES&quot; : &quot;NO — install Vulkan SDK&quot;) &lt;&lt; &quot;\n\n&quot;;
+
+    // ── STEP 3: Get Required Extensions (from GLFW + optional debug) ──────────
+    // GLFW tells us which surface extensions it needs (e.g. VK_KHR_surface,
+    // VK_KHR_win32_surface on Windows). We must pass these to VkInstanceCreateInfo.
+    uint32_t glfwExtCount = 0;
+    const char** glfwExts = glfwGetRequiredInstanceExtensions(&amp;glfwExtCount);
+    std::vector&lt;const char*&gt; extensions(glfwExts, glfwExts + glfwExtCount);
+
+    // Add debug utils extension when validation is on
+    if (enableValidation) extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+
+    std::cout &lt;&lt; &quot;[Extensions] Requesting &quot; &lt;&lt; extensions.size() &lt;&lt; &quot; instance extensions:\n&quot;;
+    for (const auto&amp; e : extensions) std::cout &lt;&lt; &quot;   &quot; &lt;&lt; e &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;\n&quot;;
+
+    // ── STEP 4: CREATE VkInstance ─────────────────────────────────────────────
+    // VkApplicationInfo: metadata about your application
+    // sType MUST be set — Vulkan uses it to know which struct this is
+    VkApplicationInfo appInfo{};
+    appInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.pApplicationName   = &quot;RR Graphics Lab — D15&quot;;
+    appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.pEngineName        = &quot;RR Lab Engine&quot;;
+    appInfo.engineVersion      = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.apiVersion         = VK_API_VERSION_1_3;  // request Vulkan 1.3
+
+    // VkInstanceCreateInfo: what we actually pass to vkCreateInstance
+    VkInstanceCreateInfo createInfo{};
+    createInfo.sType                   = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    createInfo.pApplicationInfo        = &amp;appInfo;
+    createInfo.enabledExtensionCount   = (uint32_t)extensions.size();
+    createInfo.ppEnabledExtensionNames = extensions.data();
+
+    // Enable validation layers in debug mode
+    if (enableValidation &amp;&amp; validationOK) {
+        createInfo.enabledLayerCount   = (uint32_t)validationLayers.size();
+        createInfo.ppEnabledLayerNames = validationLayers.data();
+        std::cout &lt;&lt; &quot;[Instance] Validation layers ENABLED\n&quot;;
+    } else {
+        createInfo.enabledLayerCount = 0;
+        std::cout &lt;&lt; &quot;[Instance] Validation layers disabled (release build or SDK missing)\n&quot;;
+    }
+
+    VkInstance instance;
+    VkResult result = vkCreateInstance(&amp;createInfo, nullptr, &amp;instance);
+    // vkCreateInstance returns VkResult — ALWAYS check it
+    // VK_SUCCESS = 0. Any non-zero value is an error.
+    if (result != VK_SUCCESS) {
+        std::cerr &lt;&lt; &quot;ERROR: vkCreateInstance failed (VkResult = &quot; &lt;&lt; result &lt;&lt; &quot;)\n&quot;;
+        return -1;
+    }
+    std::cout &lt;&lt; &quot;[Instance] VkInstance created successfully: &quot; &lt;&lt; instance &lt;&lt; &quot;\n\n&quot;;
+
+    // ── STEP 5: ENUMERATE PHYSICAL DEVICES ───────────────────────────────────
+    // Physical devices are the actual GPUs in the system.
+    // You enumerate them and SELECT the one you want — you do not create them.
+    uint32_t deviceCount = 0;
+    vkEnumeratePhysicalDevices(instance, &amp;deviceCount, nullptr);
+    if (deviceCount == 0) {
+        std::cerr &lt;&lt; &quot;ERROR: No Vulkan-capable GPUs found.\n&quot;;
+        vkDestroyInstance(instance, nullptr);
+        return -1;
+    }
+    std::vector&lt;VkPhysicalDevice&gt; physDevices(deviceCount);
+    vkEnumeratePhysicalDevices(instance, &amp;deviceCount, physDevices.data());
+
+    std::cout &lt;&lt; &quot;[Physical Devices] &quot; &lt;&lt; deviceCount &lt;&lt; &quot; Vulkan-capable GPU(s) found:\n&quot;;
+    std::cout &lt;&lt; std::string(60, &#x27;-&#x27;) &lt;&lt; &quot;\n&quot;;
+
+    for (uint32_t i = 0; i &lt; deviceCount; i++) {
+        VkPhysicalDeviceProperties props{};
+        vkGetPhysicalDeviceProperties(physDevices[i], &amp;props);
+
+        VkPhysicalDeviceMemoryProperties memProps{};
+        vkGetPhysicalDeviceMemoryProperties(physDevices[i], &amp;memProps);
+
+        std::cout &lt;&lt; &quot;GPU &quot; &lt;&lt; i &lt;&lt; &quot;: &quot; &lt;&lt; props.deviceName &lt;&lt; &quot;\n&quot;;
+        std::cout &lt;&lt; &quot;   Type:        &quot; &lt;&lt; deviceTypeName(props.deviceType) &lt;&lt; &quot;\n&quot;;
+        std::cout &lt;&lt; &quot;   API version: &quot; &lt;&lt; vkVersionString(props.apiVersion) &lt;&lt; &quot;\n&quot;;
+        std::cout &lt;&lt; &quot;   Driver ver:  &quot; &lt;&lt; vkVersionString(props.driverVersion) &lt;&lt; &quot;\n&quot;;
+        std::cout &lt;&lt; &quot;   Vendor ID:   0x&quot; &lt;&lt; std::hex &lt;&lt; props.vendorID &lt;&lt; std::dec &lt;&lt; &quot;\n&quot;;
+        std::cout &lt;&lt; &quot;   Max image:   &quot; &lt;&lt; props.limits.maxImageDimension2D &lt;&lt; &quot; px\n&quot;;
+        std::cout &lt;&lt; &quot;   Max UBO:     &quot; &lt;&lt; props.limits.maxUniformBufferRange / 1024 &lt;&lt; &quot; KB\n&quot;;
+
+        // Queue families — each family supports a subset of operations
+        uint32_t qfCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(physDevices[i], &amp;qfCount, nullptr);
+        std::vector&lt;VkQueueFamilyProperties&gt; qfProps(qfCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(physDevices[i], &amp;qfCount, qfProps.data());
+
+        std::cout &lt;&lt; &quot;   Queue families: &quot; &lt;&lt; qfCount &lt;&lt; &quot;\n&quot;;
+        for (uint32_t q = 0; q &lt; qfCount; q++) {
+            std::cout &lt;&lt; &quot;     [&quot; &lt;&lt; q &lt;&lt; &quot;] count=&quot; &lt;&lt; qfProps[q].queueCount &lt;&lt; &quot; flags=&quot;;
+            if (qfProps[q].queueFlags &amp; VK_QUEUE_GRAPHICS_BIT) std::cout &lt;&lt; &quot;GRAPHICS &quot;;
+            if (qfProps[q].queueFlags &amp; VK_QUEUE_COMPUTE_BIT)  std::cout &lt;&lt; &quot;COMPUTE &quot;;
+            if (qfProps[q].queueFlags &amp; VK_QUEUE_TRANSFER_BIT) std::cout &lt;&lt; &quot;TRANSFER &quot;;
+            std::cout &lt;&lt; &quot;\n&quot;;
+        }
+
+        // Memory heaps
+        std::cout &lt;&lt; &quot;   Memory heaps: &quot; &lt;&lt; memProps.memoryHeapCount &lt;&lt; &quot;\n&quot;;
+        for (uint32_t h = 0; h &lt; memProps.memoryHeapCount; h++) {
+            uint64_t mb = memProps.memoryHeaps[h].size / (1024*1024);
+            bool deviceLocal = (memProps.memoryHeaps[h].flags &amp; VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) != 0;
+            std::cout &lt;&lt; &quot;     [&quot; &lt;&lt; h &lt;&lt; &quot;] &quot; &lt;&lt; mb &lt;&lt; &quot; MB&quot;
+                      &lt;&lt; (deviceLocal ? &quot; (device-local / VRAM)&quot; : &quot; (system RAM)&quot;) &lt;&lt; &quot;\n&quot;;
+        }
+        std::cout &lt;&lt; &quot;\n&quot;;
+    }
+
+    // ── STEP 6: Create Window + Surface (proof of surface extension working) ──
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);  // No OpenGL context
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    GLFWwindow* window = glfwCreateWindow(800, 500,
+        &quot;Demo 15 — Vulkan Environment (close to exit)&quot;, nullptr, nullptr);
+
+    VkSurfaceKHR surface;
+    result = glfwCreateWindowSurface(instance, window, nullptr, &amp;surface);
+    if (result == VK_SUCCESS)
+        std::cout &lt;&lt; &quot;[Surface] VkSurfaceKHR created via GLFW — VK_KHR_surface working\n\n&quot;;
+    else
+        std::cout &lt;&lt; &quot;[Surface] WARNING: surface creation failed (VkResult=&quot; &lt;&lt; result &lt;&lt; &quot;)\n\n&quot;;
+
+    std::cout &lt;&lt; &quot;Window open. Close it to exit.\n&quot;;
+    while (!glfwWindowShouldClose(window)) glfwPollEvents();
+
+    // ── CLEANUP: Destroy in REVERSE order of creation ────────────────────────
+    // This is a Vulkan rule: child objects must be destroyed before parent objects
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    vkDestroyInstance(instance, nullptr);       // destroys everything instance-owned
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    std::cout &lt;&lt; &quot;\n[Cleanup] All Vulkan objects destroyed. Done.\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd15&apos;)">Copy</button><pre id="cmd15">cd C:\Labs\D15_VulkanEnv
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
 build\Release\D15_VulkanEnv.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body">
-    <div><span class="ts">[GLFW] Vulkan supported: YES</span></div>
-    <div><span class="ts">[Validation Layers] 5 available:</span></div>
-    <div><span class="to">   VK_LAYER_KHRONOS_validation &mdash; Khronos Validation Layer</span></div>
-    <div><span class="to">   VK_LAYER_RENDERDOC_Capture &mdash; Debugging capture layer for RenderDoc</span></div>
-    <div><span class="ts">[Validation] VK_LAYER_KHRONOS_validation present: YES</span></div>
-    <div><span class="ts">[Extensions] Requesting 3 instance extensions:</span></div>
-    <div><span class="to">   VK_KHR_surface</span></div>
-    <div><span class="to">   VK_KHR_win32_surface</span></div>
-    <div><span class="to">   VK_EXT_debug_utils</span></div>
-    <div><span class="ts">[Instance] Validation layers ENABLED</span></div>
-    <div><span class="ts">[Instance] VkInstance created successfully: 0x...</span></div>
-    <div class="t-hr"></div>
-    <div><span class="ts">[Physical Devices] 1 Vulkan-capable GPU(s) found:</span></div>
-    <div><span class="to">GPU 0: Intel(R) Iris(R) Xe Graphics</span></div>
-    <div><span class="to">   Type:        Integrated GPU</span></div>
-    <div><span class="to">   API version: 1.3.250</span></div>
-    <div><span class="to">   Queue families: 1</span></div>
-    <div><span class="to">     [0] count=1 flags=GRAPHICS COMPUTE TRANSFER</span></div>
-    <div><span class="to">   Memory heaps: 2</span></div>
-    <div><span class="to">     [0] 7962 MB (device-local / VRAM)</span></div>
-    <div><span class="to">     [1] 16249 MB (system RAM)</span></div>
-    <div class="t-hr"></div>
-    <div><span class="ts">[Surface] VkSurfaceKHR created via GLFW &mdash; VK_KHR_surface working</span></div>
-    <div><span class="to">Window open. Close it to exit.</span></div>
-    <div><span class="ts">[Cleanup] All Vulkan objects destroyed. Done.</span></div>
-  </div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list">
-    <li><strong>Intentionally break the sType field:</strong> In VkApplicationInfo, change <code class="ic">sType = VK_STRUCTURE_TYPE_APPLICATION_INFO</code> to <code class="ic">sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO</code>. Run. Validation layers immediately report: VUID error, wrong sType. Proves validation layers catch even subtle struct misuse.</li>
-    <li><strong>Request a non-existent validation layer:</strong> Add <code class="ic">"VK_LAYER_LUNARG_fake_layer"</code> to validationLayers. The checkValidationLayerSupport() function returns false and the programme exits cleanly. Shows the two-call enumeration pattern in action.</li>
-    <li><strong>Destroy in wrong order:</strong> Move <code class="ic">vkDestroyInstance()</code> before any surface or device destroy calls. Validation layers immediately report a lifetime violation. Restore correct order. Shows why destroy-in-reverse-order is mandatory in Vulkan.</li>
-  </ul></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="ts">[1] Validation layers: ENABLED</span></div><div><span class="ts">[2] VkInstance created</span></div><div><span class="ts">[3] Physical devices found: 2</span></div><div><span class="to">    GPU 0: NVIDIA GeForce RTX 3070 [Discrete GPU]  VRAM: 8192 MB  Queue family: 0</span></div><div><span class="to">    GPU 1: Intel UHD Graphics 750 [Integrated GPU] VRAM: 512 MB   Queue family: 0</span></div><div><span class="ts">[4] Selected GPU: NVIDIA GeForce RTX 3070 (queue family 0)</span></div><div><span class="ts">[5] VkDevice (logical device) created</span></div><div><span class="ts">[6] Graphics queue obtained: 0x...</span></div><hr class="t-hr"><div><span class="to">=== Startup complete ===</span></div><div><span class="to">GPU: NVIDIA GeForce RTX 3070 | Queue: family 0 | Validation: ON</span></div><div><span class="ts">[7] Shutting down...</span></div><div><span class="ts">    VkDevice destroyed</span></div><div><span class="ts">    VkInstance destroyed</span></div><div><span class="ts">[8] Clean shutdown. Validation layers: no errors reported.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Intentionally break the sType field:</strong> In VkApplicationInfo, change <code class='ic'>sType = VK_STRUCTURE_TYPE_APPLICATION_INFO</code> to <code class='ic'>sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO</code>. Run. Validation layers immediately report: VUID error, wrong sType. This proves validation layers catch even subtle struct misuse.</li><li><strong>Destroy in wrong order:</strong> Move <code class='ic'>vkDestroyInstance()</code> before <code class='ic'>vkDestroyDevice()</code>. Run. Validation layers report: &quot;Cannot call vkDestroyInstance while logical device is active.&quot; Restore correct order. Shows why destroy-in-reverse-order is mandatory.</li><li><strong>Request a non-existent validation layer:</strong> Add <code class='ic'>"VK_LAYER_LUNARG_fake_layer"</code> to VALIDATION_LAYERS. The checkValidationLayerSupport() function returns false and exits. Shows the two-call enumeration pattern.</li></ul></div>
 </div>
 
-<!-- ═══════════════════════════════ DEMO 16 ═══════════════════════════════ -->
+
 <div class="demo-sec" id="demo16">
-  <div class="demo-eyebrow"><span class="d-badge">Demo 16 &middot; Module 11</span><span class="d-type">Logical Device, Queues, Command Pool, Command Buffer</span></div>
-  <div class="demo-title">VkDevice, VkQueue, VkCommandPool, VkCommandBuffer &mdash; The GPU Interface</div>
-  <div class="demo-desc">Adds the logical device and everything it owns. Selects queue families (graphics + present), creates the VkDevice with VK_KHR_swapchain extension enabled, retrieves graphics and present queues, creates a command pool, allocates a command buffer, and records an empty begin/end to prove the API works. Window stays open &mdash; no rendering yet. Terminal shows selected GPU, queue family indices, and each object created in sequence.</div>
+  <div class="demo-eyebrow"><span class="d-badge">Demo 16 &middot; Module 11</span><span class="d-type">Swapchain &mdash; First Window</span></div>
+  <div class="demo-title">Surface, Swapchain, Image Views &mdash; Connecting Vulkan to the Screen</div>
+  <div class="demo-desc">First Vulkan window. Adds a GLFW window, a VkSurfaceKHR (platform abstraction over the OS window), and a VkSwapchainKHR (the double/triple-buffered image pool). Each frame: acquires an available swapchain image, submits a clear command, presents it. Terminal shows swapchain image count, chosen colour format, and present mode. Window clears to orange.</div>
   <div class="demo-meta">
     <span class="meta-chip">&#128187; Project: D16_VulkanDevice</span>
     <span class="meta-chip">&#9201; ~35 min</span>
-    <span class="meta-chip">New: VkDevice &middot; VkQueue &middot; VkCommandPool &middot; VkCommandBuffer &middot; queue families</span>
+    <span class="meta-chip">New: VkSurfaceKHR &middot; VkSwapchainKHR &middot; VkImageView &middot; present modes &middot; surface formats</span>
   </div>
   <div class="builds-on">
     <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
-    <span class="bo-chip">Demo 15 (instance + surface)</span>
+    <span class="bo-chip">Demo 15 (instance + device)</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">Queue family selection</span>
+    <span class="bo-chip">GLFW window</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">VkDevice + command pool</span>
+    <span class="bo-chip">VkSurface + VkSwapchain</span>
     <span style="color:var(--text3)">=</span>
-    <span class="bo-chip bo-ok">GPU interface ready, no rendering yet &#10003;</span>
+    <span class="bo-chip bo-ok">Orange window, no geometry yet &#10003;</span>
   </div>
   <div class="out-preview">
     <div class="op-label">&#127919; What You Will See</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Plain GLFW window, no colour &mdash; no render pass or swapchain yet</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> GPU name, queue family indices, each Vulkan object created in numbered steps</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Command buffer:</strong> Recorded with empty begin/end &mdash; no crash = API working correctly</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Close window:</strong> Cleanup in reverse order printed to terminal</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Orange background, no geometry — the clear colour from VkRenderPassBeginInfo</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Swapchain image count (2 or 3), chosen format (B8G8R8A8_SRGB), present mode (MAILBOX or FIFO)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Frame loop:</strong> acquire image → (clear only) → submit → present, at vsync rate</div>
   </div>
-  <div class="concept"><div class="concept-lbl">&#128161; VkDevice Is Your Per-Application GPU Handle</div><p class="note">In OpenGL, the device was implicit &mdash; <code class="ic">glDrawArrays()</code> just worked on whatever GPU the driver chose. In Vulkan, <code class="ic">VkDevice</code> is an explicit object you create from a chosen <code class="ic">VkPhysicalDevice</code>. All subsequent objects (queues, buffers, pipelines, command pools) are created from the device. Queues are not created &mdash; they exist inside the physical device. You retrieve them with <code class="ic">vkGetDeviceQueue()</code> after the device is created.</p></div>
+  <div class="concept"><div class="concept-lbl">&#128161; Surface + Swapchain = OpenGL&apos;s glfwSwapBuffers() Unpacked</div><p class="note">In OpenGL, <code class='ic'>glfwSwapBuffers()</code> hid: acquiring a free backbuffer, waiting for vsync, flipping front/back. In Vulkan these are three explicit steps: <code class='ic'>vkAcquireNextImageKHR()</code> gets an image index, your render commands draw into it, <code class='ic'>vkQueuePresentKHR()</code> flips it. The surface is the OS window abstraction that the swapchain renders into.</p></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,'cmake16')">Copy All</button></div></div><div class="code-block"><pre id="cmake16">cmake_minimum_required(VERSION 3.20)
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake16&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake16">cmake_minimum_required(VERSION 3.20)
 project(D16_VulkanDevice)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -273,75 +509,324 @@ target_link_libraries(D16_VulkanDevice
     ${GLFW_DIR}/lib-vc2022/glfw3.lib
 )</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main16')">Copy All</button></div></div><div class="code-block"><pre id="main16">// See full source in your C:\Labs\D16_VulkanDevice\src\main.cpp
-// (same code as delivered in session)</pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,'cmd16')">Copy</button><pre id="cmd16">cd C:\Labs\D16_VulkanDevice
-cmake -B build -G "Visual Studio 17 2022" -A x64
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main16&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main16">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · DEMO 16
+//  Vulkan Device — Logical Device, Queues, Command Pool, Command Buffer
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: D16_VulkanDevice
+//  FOLDER:       C:\Labs\D16_VulkanDevice\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - VkPhysicalDevice → VkDevice: selecting the GPU and creating a logical
+//    interface to it (the device is your per-application GPU handle)
+//  - Queue family selection: finding a family that supports GRAPHICS
+//    AND a family that supports PRESENT (surface presentation)
+//    These may be the same family (usually) or different ones
+//  - VkDeviceQueueCreateInfo: how many queues + their priorities (0.0–1.0)
+//  - VkDevice creation: enabling device extensions (VK_KHR_swapchain)
+//  - VkQueue retrieval: vkGetDeviceQueue — not created, just obtained
+//  - VkCommandPool: allocates memory for command buffers
+//  - VkCommandBuffer: records GPU commands but does NOT execute them yet
+//  - The difference between recording and submitting commands
+//
+//  WHAT YOU WILL SEE:
+//  - Terminal: selected GPU + queue family indices
+//  - Logical device created + validated
+//  - Command pool and command buffer allocated
+//  - A command buffer recorded with a begin/end (no real commands yet)
+//  - Window stays open to confirm everything without crashing
+//
+//  BUILDS ON: Demo 15 (instance + surface)
+//  KEY INSIGHT: In OpenGL, the &quot;device&quot; was implicit — glBegin/glEnd just
+//               worked. In Vulkan you explicitly create your device, choose
+//               which queue to submit work to, and pre-record all commands
+//               before any GPU execution happens.
+// ═══════════════════════════════════════════════════════════════════════════
+
+#include &lt;vulkan/vulkan.h&gt;
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;optional&gt;
+#include &lt;set&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+
+const std::vector&lt;const char*&gt; validationLayers = { &quot;VK_LAYER_KHRONOS_validation&quot; };
+const std::vector&lt;const char*&gt; deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Queue family indices — we need two:
+//   graphicsFamily: a queue that can execute draw commands
+//   presentFamily:  a queue that can present images to the surface
+// Both are usually the same index on desktop GPUs
+// ─────────────────────────────────────────────────────────────────────────────
+struct QueueFamilyIndices {
+    std::optional&lt;uint32_t&gt; graphicsFamily;
+    std::optional&lt;uint32_t&gt; presentFamily;
+    bool isComplete() { return graphicsFamily.has_value() &amp;&amp; presentFamily.has_value(); }
+};
+
+QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) {
+    QueueFamilyIndices indices;
+    uint32_t count = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &amp;count, nullptr);
+    std::vector&lt;VkQueueFamilyProperties&gt; families(count);
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &amp;count, families.data());
+
+    for (uint32_t i = 0; i &lt; count; i++) {
+        // Check for graphics support
+        if (families[i].queueFlags &amp; VK_QUEUE_GRAPHICS_BIT)
+            indices.graphicsFamily = i;
+
+        // Check for presentation support — queue must be able to present to our surface
+        VkBool32 presentSupport = false;
+        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &amp;presentSupport);
+        if (presentSupport) indices.presentFamily = i;
+
+        if (indices.isComplete()) break;  // found both — done
+    }
+    return indices;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Pick the best physical device (prefer discrete GPU over integrated)
+// ─────────────────────────────────────────────────────────────────────────────
+VkPhysicalDevice selectPhysicalDevice(VkInstance instance, VkSurfaceKHR surface) {
+    uint32_t count = 0;
+    vkEnumeratePhysicalDevices(instance, &amp;count, nullptr);
+    std::vector&lt;VkPhysicalDevice&gt; devices(count);
+    vkEnumeratePhysicalDevices(instance, &amp;count, devices.data());
+
+    VkPhysicalDevice best = VK_NULL_HANDLE;
+    int bestScore = -1;
+
+    for (auto&amp; d : devices) {
+        VkPhysicalDeviceProperties p{};
+        vkGetPhysicalDeviceProperties(d, &amp;p);
+        auto qf = findQueueFamilies(d, surface);
+        if (!qf.isComplete()) continue;
+
+        int score = (p.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) ? 1000 : 1;
+        score += p.limits.maxImageDimension2D;
+        if (score &gt; bestScore) { bestScore = score; best = d; }
+    }
+    return best;
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n========================================\n&quot;;
+    std::cout &lt;&lt; &quot;  RR Graphics Lab — Demo 16: Vulkan Device\n&quot;;
+    std::cout &lt;&lt; &quot;========================================\n\n&quot;;
+
+    // ── Boilerplate from Demo 15 (instance + surface) ──────────────────────
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    GLFWwindow* window = glfwCreateWindow(800, 500,
+        &quot;Demo 16 — Vulkan Device Setup&quot;, nullptr, nullptr);
+
+    // Instance
+    VkApplicationInfo appInfo{};
+    appInfo.sType      = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.apiVersion = VK_API_VERSION_1_3;
+
+    uint32_t glfwExtCount = 0;
+    const char** glfwExts = glfwGetRequiredInstanceExtensions(&amp;glfwExtCount);
+    std::vector&lt;const char*&gt; exts(glfwExts, glfwExts + glfwExtCount);
+
+    VkInstanceCreateInfo instInfo{};
+    instInfo.sType                   = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instInfo.pApplicationInfo        = &amp;appInfo;
+    instInfo.enabledExtensionCount   = (uint32_t)exts.size();
+    instInfo.ppEnabledExtensionNames = exts.data();
+    instInfo.enabledLayerCount       = (uint32_t)validationLayers.size();
+    instInfo.ppEnabledLayerNames     = validationLayers.data();
+
+    VkInstance instance;
+    vkCreateInstance(&amp;instInfo, nullptr, &amp;instance);
+    std::cout &lt;&lt; &quot;[1] VkInstance created\n&quot;;
+
+    // Surface
+    VkSurfaceKHR surface;
+    glfwCreateWindowSurface(instance, window, nullptr, &amp;surface);
+    std::cout &lt;&lt; &quot;[2] VkSurfaceKHR created\n&quot;;
+
+    // ── STEP 3: SELECT PHYSICAL DEVICE ───────────────────────────────────────
+    VkPhysicalDevice physDevice = selectPhysicalDevice(instance, surface);
+    if (physDevice == VK_NULL_HANDLE) {
+        std::cerr &lt;&lt; &quot;ERROR: No suitable GPU found\n&quot;; return -1;
+    }
+    VkPhysicalDeviceProperties gpuProps{};
+    vkGetPhysicalDeviceProperties(physDevice, &amp;gpuProps);
+    std::cout &lt;&lt; &quot;[3] Physical device selected: &quot; &lt;&lt; gpuProps.deviceName &lt;&lt; &quot;\n&quot;;
+
+    // ── STEP 4: FIND QUEUE FAMILY INDICES ────────────────────────────────────
+    QueueFamilyIndices qfi = findQueueFamilies(physDevice, surface);
+    std::cout &lt;&lt; &quot;[4] Queue families:\n&quot;;
+    std::cout &lt;&lt; &quot;    Graphics family index: &quot; &lt;&lt; qfi.graphicsFamily.value() &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;    Present  family index: &quot; &lt;&lt; qfi.presentFamily.value()  &lt;&lt; &quot;\n&quot;;
+    bool sameFam = (qfi.graphicsFamily.value() == qfi.presentFamily.value());
+    std::cout &lt;&lt; &quot;    Same family: &quot; &lt;&lt; (sameFam ? &quot;YES (typical on desktop GPUs)&quot; : &quot;NO (need two separate queues)&quot;) &lt;&lt; &quot;\n\n&quot;;
+
+    // ── STEP 5: CREATE LOGICAL DEVICE ────────────────────────────────────────
+    // We need one VkDeviceQueueCreateInfo per UNIQUE queue family
+    // (using a set to deduplicate in case graphics==present)
+    std::set&lt;uint32_t&gt; uniqueFamilies = {
+        qfi.graphicsFamily.value(), qfi.presentFamily.value()
+    };
+    float queuePriority = 1.0f;  // priority range 0.0–1.0 (1.0 = highest)
+
+    std::vector&lt;VkDeviceQueueCreateInfo&gt; queueCreateInfos;
+    for (uint32_t family : uniqueFamilies) {
+        VkDeviceQueueCreateInfo qi{};
+        qi.sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        qi.queueFamilyIndex = family;
+        qi.queueCount       = 1;        // one queue per family is almost always enough
+        qi.pQueuePriorities = &amp;queuePriority;
+        queueCreateInfos.push_back(qi);
+    }
+
+    // Device features we want to enable (none for now — add as needed)
+    VkPhysicalDeviceFeatures deviceFeatures{};
+    // deviceFeatures.samplerAnisotropy = VK_TRUE;  // would enable anisotropic filtering
+
+    // Logical device creation
+    VkDeviceCreateInfo deviceInfo{};
+    deviceInfo.sType                   = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    deviceInfo.queueCreateInfoCount    = (uint32_t)queueCreateInfos.size();
+    deviceInfo.pQueueCreateInfos       = queueCreateInfos.data();
+    deviceInfo.pEnabledFeatures        = &amp;deviceFeatures;
+    deviceInfo.enabledExtensionCount   = (uint32_t)deviceExtensions.size();
+    deviceInfo.ppEnabledExtensionNames = deviceExtensions.data();
+    // Validation layers at device level (deprecated in newer Vulkan but safe to set)
+    deviceInfo.enabledLayerCount       = (uint32_t)validationLayers.size();
+    deviceInfo.ppEnabledLayerNames     = validationLayers.data();
+
+    VkDevice device;
+    VkResult result = vkCreateDevice(physDevice, &amp;deviceInfo, nullptr, &amp;device);
+    if (result != VK_SUCCESS) {
+        std::cerr &lt;&lt; &quot;ERROR: vkCreateDevice failed (&quot; &lt;&lt; result &lt;&lt; &quot;)\n&quot;; return -1;
+    }
+    std::cout &lt;&lt; &quot;[5] VkDevice (logical device) created: &quot; &lt;&lt; device &lt;&lt; &quot;\n\n&quot;;
+
+    // ── STEP 6: RETRIEVE QUEUES ───────────────────────────────────────────────
+    // Queues are retrieved from the device — they are NOT created separately
+    // You just call vkGetDeviceQueue with the family index and queue index (0)
+    VkQueue graphicsQueue, presentQueue;
+    vkGetDeviceQueue(device, qfi.graphicsFamily.value(), 0, &amp;graphicsQueue);
+    vkGetDeviceQueue(device, qfi.presentFamily.value(),  0, &amp;presentQueue);
+    std::cout &lt;&lt; &quot;[6] Queues retrieved:\n&quot;;
+    std::cout &lt;&lt; &quot;    Graphics queue: &quot; &lt;&lt; graphicsQueue &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;    Present  queue: &quot; &lt;&lt; presentQueue  &lt;&lt; &quot;\n\n&quot;;
+
+    // ── STEP 7: CREATE COMMAND POOL ──────────────────────────────────────────
+    // Command pool allocates memory for command buffers.
+    // Commands recorded into buffers — submitted to GPU queue later.
+    // RESET_COMMAND_BUFFER_BIT: allows individual command buffer reset
+    VkCommandPoolCreateInfo poolInfo{};
+    poolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.queueFamilyIndex = qfi.graphicsFamily.value();
+    poolInfo.flags            = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+    VkCommandPool commandPool;
+    vkCreateCommandPool(device, &amp;poolInfo, nullptr, &amp;commandPool);
+    std::cout &lt;&lt; &quot;[7] VkCommandPool created: &quot; &lt;&lt; commandPool &lt;&lt; &quot;\n&quot;;
+
+    // ── STEP 8: ALLOCATE COMMAND BUFFER ──────────────────────────────────────
+    // Command buffers are allocated FROM the pool, not created independently
+    // PRIMARY: can be submitted to queue directly
+    // SECONDARY: called from primary buffers (for reuse)
+    VkCommandBufferAllocateInfo allocInfo{};
+    allocInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool        = commandPool;
+    allocInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandBufferCount = 1;
+
+    VkCommandBuffer commandBuffer;
+    vkAllocateCommandBuffers(device, &amp;allocInfo, &amp;commandBuffer);
+    std::cout &lt;&lt; &quot;[8] VkCommandBuffer allocated: &quot; &lt;&lt; commandBuffer &lt;&lt; &quot;\n\n&quot;;
+
+    // ── STEP 9: RECORD A COMMAND BUFFER (empty — just begin/end) ─────────────
+    // This demonstrates the recording API. Real commands (draw calls) go
+    // between vkBeginCommandBuffer and vkEndCommandBuffer.
+    // ONE_TIME_SUBMIT_BIT: hint that this buffer will be submitted once then reset
+    VkCommandBufferBeginInfo beginInfo{};
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+    vkBeginCommandBuffer(commandBuffer, &amp;beginInfo);
+    // ── Inside here: vkCmdDraw, vkCmdCopyBuffer, vkCmdBeginRenderPass, etc. ──
+    // (nothing recorded yet — just proving the API works)
+    vkEndCommandBuffer(commandBuffer);
+
+    std::cout &lt;&lt; &quot;[9] Command buffer recorded (empty begin/end) — no crash = API working\n\n&quot;;
+
+    std::cout &lt;&lt; &quot;Summary:\n&quot;;
+    std::cout &lt;&lt; &quot;  VkInstance         → VkPhysicalDevice (selected: &quot; &lt;&lt; gpuProps.deviceName &lt;&lt; &quot;)\n&quot;;
+    std::cout &lt;&lt; &quot;  VkPhysicalDevice   → VkDevice (logical interface)\n&quot;;
+    std::cout &lt;&lt; &quot;  VkDevice           → VkQueue (graphics + present)\n&quot;;
+    std::cout &lt;&lt; &quot;  VkDevice           → VkCommandPool → VkCommandBuffer\n&quot;;
+    std::cout &lt;&lt; &quot;\nWindow open. Close to exit.\n&quot;;
+
+    while (!glfwWindowShouldClose(window)) glfwPollEvents();
+
+    // ── CLEANUP (reverse order) ───────────────────────────────────────────────
+    // Command buffers freed when pool is destroyed — no need to free individually
+    vkDestroyCommandPool(device, commandPool, nullptr);
+    vkDestroyDevice(device, nullptr);           // implicitly frees queues
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    vkDestroyInstance(instance, nullptr);
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    std::cout &lt;&lt; &quot;[Cleanup] Done.\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd16&apos;)">Copy</button><pre id="cmd16">cd C:\Labs\D16_VulkanDevice
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
 build\Release\D16_VulkanDevice.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body">
-    <div><span class="ts">========================================</span></div>
-    <div><span class="ts">  RR Graphics Lab &mdash; Demo 16: Vulkan Device</span></div>
-    <div><span class="ts">========================================</span></div>
-    <div><span class="ts">[1] VkInstance created</span></div>
-    <div><span class="ts">[2] VkSurfaceKHR created</span></div>
-    <div><span class="ts">[3] Physical device selected: Intel(R) Iris(R) Xe Graphics</span></div>
-    <div><span class="ts">[4] Queue families:</span></div>
-    <div><span class="to">    Graphics family index: 0</span></div>
-    <div><span class="to">    Present  family index: 0</span></div>
-    <div><span class="to">    Same family: YES (typical on desktop GPUs)</span></div>
-    <div><span class="ts">[5] VkDevice (logical device) created: 0x...</span></div>
-    <div><span class="ts">[6] Queues retrieved:</span></div>
-    <div><span class="to">    Graphics queue: 0x...</span></div>
-    <div><span class="to">    Present  queue: 0x...</span></div>
-    <div><span class="ts">[7] VkCommandPool created: 0x...</span></div>
-    <div><span class="ts">[8] VkCommandBuffer allocated: 0x...</span></div>
-    <div><span class="ts">[9] Command buffer recorded (empty begin/end) &mdash; no crash = API working</span></div>
-    <div class="t-hr"></div>
-    <div><span class="to">Summary:</span></div>
-    <div><span class="to">  VkInstance       &rarr; VkPhysicalDevice (Intel Iris Xe)</span></div>
-    <div><span class="to">  VkPhysicalDevice &rarr; VkDevice (logical interface)</span></div>
-    <div><span class="to">  VkDevice         &rarr; VkQueue (graphics + present)</span></div>
-    <div><span class="to">  VkDevice         &rarr; VkCommandPool &rarr; VkCommandBuffer</span></div>
-    <div><span class="to">Window open. Close to exit.</span></div>
-    <div><span class="ts">[Cleanup] Done.</span></div>
-  </div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list">
-    <li><strong>Force a wrong queue family index:</strong> In findQueueFamilies(), change the return to always assign index 99 to graphicsFamily. Run. <code class="ic">vkCreateDevice()</code> fails with VK_ERROR_INITIALIZATION_FAILED. Validates: Vulkan checks queue family indices strictly against the physical device's actual families.</li>
-    <li><strong>Remove VK_KHR_swapchain from deviceExtensions:</strong> Comment out the swapchain extension and leave an empty vector. Device creates fine here &mdash; but Demo 17 will crash when it tries to create a swapchain. Shows: extensions must be declared at device creation time, not when first used.</li>
-    <li><strong>Request 2 queues from the same family:</strong> Change <code class="ic">qi.queueCount = 2</code>. On Intel Iris Xe this may fail (only 1 queue per family available). Check <code class="ic">vkGetPhysicalDeviceQueueFamilyProperties</code> &mdash; the queueCount field tells you the maximum. Shows: queue count is hardware-limited.</li>
-  </ul></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="ts">[3] GLFW window created</span></div><div><span class="ts">[4] VkSurfaceKHR created</span></div><div><span class="ts">[5] Swapchain: 3 images, format B8G8R8A8_SRGB, present mode MAILBOX</span></div><div><span class="ts">[6] Image views created (3)</span></div><div><span class="ts">[7] Render loop starting...</span></div><div><span class="to">Frame 0: acquired image 0</span></div><div><span class="to">Frame 1: acquired image 1</span></div><div><span class="to">Frame 2: acquired image 2</span></div><div><span class="to">Frame 3: acquired image 0   <- cycles through pool</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change present mode preference:</strong> In surface setup, move VK_PRESENT_MODE_FIFO_KHR to first in the preference list. Rebuild. Frame rate locks to vsync (60 or 144 Hz). MAILBOX renders as fast as possible and replaces the queued image. IMMEDIATE has no vsync — tearing may appear.</li><li><strong>Change clear colour:</strong> In VkRenderPassBeginInfo, change <code class='ic'>clearValue.color = {{{0.9f, 0.4f, 0.1f, 1.0f}}}</code> to navy blue <code class='ic'>{{{0.05f, 0.08f, 0.15f, 1.0f}}}</code>. Rebuild. The window changes colour immediately. This is the Vulkan equivalent of <code class='ic'>glClearColor()</code>.</li></ul></div>
 </div>
 
-<!-- ═══════════════════════════════ DEMO 17 ═══════════════════════════════ -->
+
 <div class="demo-sec" id="demo17">
-  <div class="demo-eyebrow"><span class="d-badge">Demo 17 &middot; Module 11</span><span class="d-type">Swapchain, RenderPass, Framebuffers &mdash; First Coloured Window</span></div>
-  <div class="demo-title">VkSwapchainKHR, VkRenderPass, VkFramebuffer &mdash; Connecting Vulkan to the Screen</div>
-  <div class="demo-desc">First Vulkan window with actual pixel output. Adds a VkSwapchainKHR (the double/triple-buffered image pool), queries surface formats and present modes, creates VkImageViews for each swapchain image, builds a VkRenderPass describing the colour attachment, creates VkFramebuffers binding each image view, and runs a render loop that acquires an image, clears it to navy blue, and presents it. Terminal shows swapchain image count, chosen colour format, and present mode.</div>
+  <div class="demo-eyebrow"><span class="d-badge">Demo 17 &middot; Module 12</span><span class="d-type">Pipeline Object &mdash; Baking All State</span></div>
+  <div class="demo-title">Full Graphics Pipeline Object &mdash; Every OpenGL State Call in One Struct</div>
+  <div class="demo-desc">Creates the complete <code class="ic">VkGraphicsPipelineCreateInfo</code>: SPIR-V vertex and fragment shaders loaded as VkShaderModules, render pass with colour attachment, pipeline layout, vertex input state, rasterizer, depth stencil state, colour blend state, dynamic viewport and scissor. Window clears to navy blue. Terminal lists every pipeline stage created with creation time in milliseconds.</div>
   <div class="demo-meta">
     <span class="meta-chip">&#128187; Project: D17_VulkanSwapchain</span>
     <span class="meta-chip">&#9201; ~35 min</span>
-    <span class="meta-chip">New: VkSwapchainKHR &middot; VkImageView &middot; VkRenderPass &middot; VkFramebuffer &middot; present modes</span>
+    <span class="meta-chip">New: VkShaderModule &middot; VkRenderPass &middot; VkPipeline &middot; VkPipelineLayout &middot; SPIR-V</span>
   </div>
   <div class="builds-on">
     <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
-    <span class="bo-chip">Demo 16 (device + queues)</span>
+    <span class="bo-chip">Demo 16 (swapchain)</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">VkSwapchain + image views</span>
+    <span class="bo-chip">SPIR-V shaders (glslc)</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">RenderPass + framebuffers</span>
+    <span class="bo-chip">VkPipeline with all state</span>
     <span style="color:var(--text3)">=</span>
-    <span class="bo-chip bo-ok">Navy window cleared each frame &#10003;</span>
+    <span class="bo-chip bo-ok">Pipeline object ready, no draw calls yet &#10003;</span>
   </div>
   <div class="out-preview">
     <div class="op-label">&#127919; What You Will See</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Navy blue background, no geometry &mdash; the clear colour from VkRenderPassBeginInfo</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Swapchain image count (2 or 3), chosen format (B8G8R8A8_SRGB), present mode (MAILBOX or FIFO)</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Frame loop:</strong> acquire image &rarr; clear via render pass &rarr; submit &rarr; present, at vsync rate</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Navy background (pipeline created and bound, but vkCmdDraw not yet called)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Each pipeline stage listed with "created in X ms"</div>
+    <div class="op-item"><span class="op-dot"></span><strong>SPIR-V:</strong> <code class="ic">vert.spv</code> and <code class="ic">frag.spv</code> loaded and wrapped in VkShaderModules</div>
   </div>
-  <div class="concept"><div class="concept-lbl">&#128161; Surface + Swapchain = OpenGL&apos;s glfwSwapBuffers() Unpacked</div><p class="note">In OpenGL, <code class="ic">glfwSwapBuffers()</code> hid: acquiring a free backbuffer, waiting for vsync, flipping front/back. In Vulkan these are three explicit steps: <code class="ic">vkAcquireNextImageKHR()</code> gets an image index, your render commands draw into it, <code class="ic">vkQueuePresentKHR()</code> flips it. The surface is the OS window abstraction. The swapchain is the pool of images that rotate through front and back.</p></div>
+  <div class="concept"><div class="concept-lbl">&#128161; The Pipeline Bakes What OpenGL Changed at Runtime</div><p class="note">Every OpenGL call like <code class='ic'>glEnable(GL_DEPTH_TEST)</code>, <code class='ic'>glPolygonMode(GL_FILL)</code>, <code class='ic'>glBlendFunc()</code> changed global state that the driver had to reconcile at every draw call. In Vulkan all of these are fields in <code class='ic'>VkGraphicsPipelineCreateInfo</code> structs — set once at pipeline creation time, never changed. To change polygon mode you create a second pipeline object.</p></div>
+  <div class="sh"><span class="sh-dot"></span>Compile shaders first</div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;shader17&apos;)">Copy</button><pre id="shader17">glslc shader.vert -o vert.spv
+glslc shader.frag -o frag.spv
+
+REM Copy vert.spv and frag.spv next to the .exe before running</pre></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,'cmake17')">Copy All</button></div></div><div class="code-block"><pre id="cmake17">cmake_minimum_required(VERSION 3.20)
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake17&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake17">cmake_minimum_required(VERSION 3.20)
 project(D17_VulkanSwapchain)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -359,87 +844,512 @@ target_link_libraries(D17_VulkanSwapchain
     ${GLFW_DIR}/lib-vc2022/glfw3.lib
 )</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main17')">Copy All</button></div></div><div class="code-block"><pre id="main17">// See full source in your C:\Labs\D17_VulkanSwapchain\src\main.cpp
-// (same code as delivered in session)</pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,'cmd17')">Copy</button><pre id="cmd17">cd C:\Labs\D17_VulkanSwapchain
-cmake -B build -G "Visual Studio 17 2022" -A x64
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main17&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main17">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · DEMO 17
+//  Vulkan Swapchain — Surface Format, Present Mode, Render Pass, Framebuffers
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: D17_VulkanSwapchain
+//  FOLDER:       C:\Labs\D17_VulkanSwapchain\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - VkSwapchainKHR: the queue of images presented to the screen
+//    — Vulkan equivalent of GLFW&#x27;s double buffer, but fully explicit
+//  - Surface capabilities: querying min/max image count, extent limits
+//  - Surface format selection: prefer VK_FORMAT_B8G8R8A8_SRGB +
+//    VK_COLOR_SPACE_SRGB_NONLINEAR_KHR (standard sRGB display)
+//  - Present mode selection: prefer MAILBOX (triple-buffer, no tearing,
+//    low latency) over FIFO (V-sync) — FIFO is the only guaranteed mode
+//  - VkImageView: how Vulkan accesses a swapchain image (not directly)
+//  - VkRenderPass: describes the attachments (colour, depth) and what
+//    happens to them at the start and end of a render pass
+//  - VkFramebuffer: binds specific VkImageViews to a VkRenderPass attachment
+//  - Window shows a cleared navy screen — first pixels rendered by Vulkan
+//
+//  WHAT YOU WILL SEE:
+//  - Terminal: surface format + present mode chosen with reasoning
+//  - Swapchain created with N images
+//  - Render pass and framebuffers created
+//  - Window cleared to navy each frame (vkCmdClearColorImage)
+//  - WASD: deliberate no-op (showing the render loop is running)
+//  - ESC: close
+//
+//  BUILDS ON: Demo 16 (device + command buffer)
+// ═══════════════════════════════════════════════════════════════════════════
+
+#include &lt;vulkan/vulkan.h&gt;
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;optional&gt;
+#include &lt;set&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+#include &lt;array&gt;
+
+const int WIN_W = 900, WIN_H = 600;
+const int MAX_FRAMES_IN_FLIGHT = 2;
+const std::vector&lt;const char*&gt; validationLayers = { &quot;VK_LAYER_KHRONOS_validation&quot; };
+const std::vector&lt;const char*&gt; deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+struct QueueFamilyIndices {
+    std::optional&lt;uint32_t&gt; graphicsFamily;
+    std::optional&lt;uint32_t&gt; presentFamily;
+    bool isComplete() { return graphicsFamily.has_value() &amp;&amp; presentFamily.has_value(); }
+};
+
+struct SwapChainSupportDetails {
+    VkSurfaceCapabilitiesKHR capabilities{};
+    std::vector&lt;VkSurfaceFormatKHR&gt; formats;
+    std::vector&lt;VkPresentModeKHR&gt; presentModes;
+};
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+QueueFamilyIndices findQueueFamilies(VkPhysicalDevice d, VkSurfaceKHR s) {
+    QueueFamilyIndices idx;
+    uint32_t c=0; vkGetPhysicalDeviceQueueFamilyProperties(d,&amp;c,nullptr);
+    std::vector&lt;VkQueueFamilyProperties&gt; f(c);
+    vkGetPhysicalDeviceQueueFamilyProperties(d,&amp;c,f.data());
+    for(uint32_t i=0;i&lt;c;i++){
+        if(f[i].queueFlags&amp;VK_QUEUE_GRAPHICS_BIT) idx.graphicsFamily=i;
+        VkBool32 p=false; vkGetPhysicalDeviceSurfaceSupportKHR(d,i,s,&amp;p);
+        if(p) idx.presentFamily=i;
+        if(idx.isComplete()) break;
+    }
+    return idx;
+}
+
+SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice d, VkSurfaceKHR s) {
+    SwapChainSupportDetails det;
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(d, s, &amp;det.capabilities);
+    uint32_t fc=0; vkGetPhysicalDeviceSurfaceFormatsKHR(d,s,&amp;fc,nullptr);
+    det.formats.resize(fc); vkGetPhysicalDeviceSurfaceFormatsKHR(d,s,&amp;fc,det.formats.data());
+    uint32_t pc=0; vkGetPhysicalDeviceSurfacePresentModesKHR(d,s,&amp;pc,nullptr);
+    det.presentModes.resize(pc); vkGetPhysicalDeviceSurfacePresentModesKHR(d,s,&amp;pc,det.presentModes.data());
+    return det;
+}
+
+// ── Surface format selection ──────────────────────────────────────────────────
+// Prefer 8-bit sRGB colour with standard colour space
+// sRGB gives correct gamma — colours won&#x27;t look washed out
+VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector&lt;VkSurfaceFormatKHR&gt;&amp; formats) {
+    for (const auto&amp; f : formats) {
+        if (f.format == VK_FORMAT_B8G8R8A8_SRGB &amp;&amp;
+            f.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+            std::cout &lt;&lt; &quot;   Format: VK_FORMAT_B8G8R8A8_SRGB (preferred)\n&quot;;
+            return f;
+        }
+    }
+    std::cout &lt;&lt; &quot;   Format: fallback to first available\n&quot;;
+    return formats[0];
+}
+
+// ── Present mode selection ──────────────────────────────────────────────────
+// MAILBOX: triple-buffering, no tearing, low latency — best for games
+// IMMEDIATE: no sync, possible tearing, lowest latency
+// FIFO: V-sync equivalent — guaranteed to exist, used as fallback
+VkPresentModeKHR choosePresentMode(const std::vector&lt;VkPresentModeKHR&gt;&amp; modes) {
+    for (const auto&amp; m : modes) {
+        if (m == VK_PRESENT_MODE_MAILBOX_KHR) {
+            std::cout &lt;&lt; &quot;   Present mode: MAILBOX (triple-buffer, no tearing)\n&quot;;
+            return m;
+        }
+    }
+    std::cout &lt;&lt; &quot;   Present mode: FIFO (V-sync fallback)\n&quot;;
+    return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+// ── Swap extent (image resolution) ───────────────────────────────────────────
+// Usually equals window size, but some monitors (HiDPI) need querying via GLFW
+VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR&amp; cap, GLFWwindow* w) {
+    if (cap.currentExtent.width != std::numeric_limits&lt;uint32_t&gt;::max())
+        return cap.currentExtent;
+    int W,H; glfwGetFramebufferSize(w,&amp;W,&amp;H);
+    VkExtent2D ext = {(uint32_t)W,(uint32_t)H};
+    ext.width  = std::clamp(ext.width,  cap.minImageExtent.width,  cap.maxImageExtent.width);
+    ext.height = std::clamp(ext.height, cap.minImageExtent.height, cap.maxImageExtent.height);
+    return ext;
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n========================================\n&quot;;
+    std::cout &lt;&lt; &quot;  RR Graphics Lab — Demo 17: Swapchain\n&quot;;
+    std::cout &lt;&lt; &quot;========================================\n\n&quot;;
+
+    // ── Init (condensed from Demos 15+16) ─────────────────────────────────
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE,  GLFW_FALSE);
+    GLFWwindow* window = glfwCreateWindow(WIN_W, WIN_H,
+        &quot;Demo 17 — Vulkan Swapchain (ESC to quit)&quot;, nullptr, nullptr);
+
+    VkApplicationInfo appInfo{};
+    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.apiVersion = VK_API_VERSION_1_3;
+    uint32_t ec=0; const char** eg=glfwGetRequiredInstanceExtensions(&amp;ec);
+    std::vector&lt;const char*&gt; exts(eg,eg+ec);
+
+    VkInstanceCreateInfo instInfo{};
+    instInfo.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instInfo.pApplicationInfo=&amp;appInfo;
+    instInfo.enabledExtensionCount=(uint32_t)exts.size();
+    instInfo.ppEnabledExtensionNames=exts.data();
+    instInfo.enabledLayerCount=(uint32_t)validationLayers.size();
+    instInfo.ppEnabledLayerNames=validationLayers.data();
+    VkInstance instance; vkCreateInstance(&amp;instInfo,nullptr,&amp;instance);
+
+    VkSurfaceKHR surface; glfwCreateWindowSurface(instance,window,nullptr,&amp;surface);
+
+    uint32_t dc=0; vkEnumeratePhysicalDevices(instance,&amp;dc,nullptr);
+    std::vector&lt;VkPhysicalDevice&gt; pds(dc); vkEnumeratePhysicalDevices(instance,&amp;dc,pds.data());
+    VkPhysicalDevice physDev = pds[0];
+    VkPhysicalDeviceProperties gpuProps{};
+    vkGetPhysicalDeviceProperties(physDev, &amp;gpuProps);
+    std::cout &lt;&lt; &quot;[1] GPU: &quot; &lt;&lt; gpuProps.deviceName &lt;&lt; &quot;\n&quot;;
+
+    QueueFamilyIndices qfi = findQueueFamilies(physDev, surface);
+    std::set&lt;uint32_t&gt; uniqueFam = {qfi.graphicsFamily.value(), qfi.presentFamily.value()};
+    float prio = 1.0f;
+    std::vector&lt;VkDeviceQueueCreateInfo&gt; qcis;
+    for (uint32_t f : uniqueFam) {
+        VkDeviceQueueCreateInfo q{};
+        q.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        q.queueFamilyIndex=f; q.queueCount=1; q.pQueuePriorities=&amp;prio;
+        qcis.push_back(q);
+    }
+    VkPhysicalDeviceFeatures df{};
+    VkDeviceCreateInfo dci{};
+    dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    dci.queueCreateInfoCount=(uint32_t)qcis.size(); dci.pQueueCreateInfos=qcis.data();
+    dci.pEnabledFeatures=&amp;df;
+    dci.enabledExtensionCount=(uint32_t)deviceExtensions.size();
+    dci.ppEnabledExtensionNames=deviceExtensions.data();
+    dci.enabledLayerCount=(uint32_t)validationLayers.size();
+    dci.ppEnabledLayerNames=validationLayers.data();
+    VkDevice device; vkCreateDevice(physDev,&amp;dci,nullptr,&amp;device);
+    VkQueue graphicsQueue,presentQueue;
+    vkGetDeviceQueue(device,qfi.graphicsFamily.value(),0,&amp;graphicsQueue);
+    vkGetDeviceQueue(device,qfi.presentFamily.value(), 0,&amp;presentQueue);
+    std::cout &lt;&lt; &quot;[2] VkDevice + queues ready\n&quot;;
+
+    // ── STEP 3: QUERY SWAPCHAIN SUPPORT ──────────────────────────────────────
+    SwapChainSupportDetails swapDetails = querySwapChainSupport(physDev, surface);
+    std::cout &lt;&lt; &quot;[3] Swapchain support:\n&quot;;
+    std::cout &lt;&lt; &quot;    Image count range: &quot; &lt;&lt; swapDetails.capabilities.minImageCount
+              &lt;&lt; &quot; – &quot; &lt;&lt; swapDetails.capabilities.maxImageCount &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;    Surface formats available: &quot; &lt;&lt; swapDetails.formats.size() &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; &quot;    Present modes available:   &quot; &lt;&lt; swapDetails.presentModes.size() &lt;&lt; &quot;\n&quot;;
+
+    // ── STEP 4: CHOOSE FORMAT, PRESENT MODE, EXTENT ───────────────────────────
+    VkSurfaceFormatKHR surfFmt = chooseSurfaceFormat(swapDetails.formats);
+    VkPresentModeKHR   presMode = choosePresentMode(swapDetails.presentModes);
+    VkExtent2D extent = chooseSwapExtent(swapDetails.capabilities, window);
+    std::cout &lt;&lt; &quot;   Extent: &quot; &lt;&lt; extent.width &lt;&lt; &quot;×&quot; &lt;&lt; extent.height &lt;&lt; &quot;\n\n&quot;;
+
+    // ── STEP 5: CREATE SWAPCHAIN ──────────────────────────────────────────────
+    // Request one extra image beyond minimum to avoid waiting for driver
+    uint32_t imageCount = swapDetails.capabilities.minImageCount + 1;
+    if (swapDetails.capabilities.maxImageCount &gt; 0)
+        imageCount = std::min(imageCount, swapDetails.capabilities.maxImageCount);
+
+    VkSwapchainCreateInfoKHR sci{};
+    sci.sType            = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    sci.surface          = surface;
+    sci.minImageCount    = imageCount;
+    sci.imageFormat      = surfFmt.format;
+    sci.imageColorSpace  = surfFmt.colorSpace;
+    sci.imageExtent      = extent;
+    sci.imageArrayLayers = 1;  // 1 = no stereoscopic 3D
+    sci.imageUsage       = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
+    // If graphics and present are different queue families, images need CONCURRENT access
+    uint32_t qfis[] = {qfi.graphicsFamily.value(), qfi.presentFamily.value()};
+    if (qfi.graphicsFamily != qfi.presentFamily) {
+        sci.imageSharingMode      = VK_SHARING_MODE_CONCURRENT;
+        sci.queueFamilyIndexCount = 2;
+        sci.pQueueFamilyIndices   = qfis;
+    } else {
+        sci.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;  // faster
+    }
+    sci.preTransform   = swapDetails.capabilities.currentTransform; // no rotation
+    sci.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;         // no window transparency
+    sci.presentMode    = presMode;
+    sci.clipped        = VK_TRUE;  // don&#x27;t render pixels hidden by other windows
+    sci.oldSwapchain   = VK_NULL_HANDLE;
+
+    VkSwapchainKHR swapchain;
+    if (vkCreateSwapchainKHR(device, &amp;sci, nullptr, &amp;swapchain) != VK_SUCCESS) {
+        std::cerr &lt;&lt; &quot;ERROR: vkCreateSwapchainKHR failed\n&quot;; return -1;
+    }
+
+    // Retrieve swapchain images (Vulkan allocates them — we just get handles)
+    uint32_t swapImgCount = 0;
+    vkGetSwapchainImagesKHR(device, swapchain, &amp;swapImgCount, nullptr);
+    std::vector&lt;VkImage&gt; swapImages(swapImgCount);
+    vkGetSwapchainImagesKHR(device, swapchain, &amp;swapImgCount, swapImages.data());
+    std::cout &lt;&lt; &quot;[4] VkSwapchainKHR created: &quot; &lt;&lt; swapImgCount &lt;&lt; &quot; images (&quot;
+              &lt;&lt; extent.width &lt;&lt; &quot;×&quot; &lt;&lt; extent.height &lt;&lt; &quot;)\n&quot;;
+
+    // ── STEP 6: CREATE IMAGE VIEWS ────────────────────────────────────────────
+    // You never access a VkImage directly — you use a VkImageView
+    // The view describes: which part of the image, how to interpret it (2D colour, etc.)
+    std::vector&lt;VkImageView&gt; swapImageViews(swapImgCount);
+    for (uint32_t i = 0; i &lt; swapImgCount; i++) {
+        VkImageViewCreateInfo ivci{};
+        ivci.sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        ivci.image    = swapImages[i];
+        ivci.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        ivci.format   = surfFmt.format;
+        ivci.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        ivci.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        ivci.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        ivci.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        ivci.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+        ivci.subresourceRange.baseMipLevel   = 0;
+        ivci.subresourceRange.levelCount     = 1;
+        ivci.subresourceRange.baseArrayLayer = 0;
+        ivci.subresourceRange.layerCount     = 1;
+        vkCreateImageView(device, &amp;ivci, nullptr, &amp;swapImageViews[i]);
+    }
+    std::cout &lt;&lt; &quot;[5] &quot; &lt;&lt; swapImgCount &lt;&lt; &quot; VkImageViews created\n&quot;;
+
+    // ── STEP 7: CREATE RENDER PASS ────────────────────────────────────────────
+    // A render pass describes the attachments used during rendering and how to
+    // treat them. LOAD_OP_CLEAR: clear at start. STORE_OP_STORE: keep result.
+    // The layout transition (UNDEFINED → PRESENT_SRC) tells Vulkan to prepare
+    // the image for presentation after rendering.
+    VkAttachmentDescription colourAttach{};
+    colourAttach.format         = surfFmt.format;
+    colourAttach.samples        = VK_SAMPLE_COUNT_1_BIT;
+    colourAttach.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;      // clear at start
+    colourAttach.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;     // keep result
+    colourAttach.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    colourAttach.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    colourAttach.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;        // don&#x27;t care what&#x27;s there before
+    colourAttach.finalLayout    = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;  // ready to present after
+
+    VkAttachmentReference colourRef{};
+    colourRef.attachment = 0;   // index into pAttachments array
+    colourRef.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpass{};
+    subpass.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount    = 1;
+    subpass.pColorAttachments       = &amp;colourRef;
+
+    // Subpass dependency: ensures the render pass waits for the swapchain image
+    // to be ready before writing colour output
+    VkSubpassDependency dep{};
+    dep.srcSubpass    = VK_SUBPASS_EXTERNAL;
+    dep.dstSubpass    = 0;
+    dep.srcStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dep.srcAccessMask = 0;
+    dep.dstStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dep.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+    VkRenderPassCreateInfo rpci{};
+    rpci.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    rpci.attachmentCount = 1;
+    rpci.pAttachments    = &amp;colourAttach;
+    rpci.subpassCount    = 1;
+    rpci.pSubpasses      = &amp;subpass;
+    rpci.dependencyCount = 1;
+    rpci.pDependencies   = &amp;dep;
+
+    VkRenderPass renderPass;
+    vkCreateRenderPass(device, &amp;rpci, nullptr, &amp;renderPass);
+    std::cout &lt;&lt; &quot;[6] VkRenderPass created\n&quot;;
+
+    // ── STEP 8: CREATE FRAMEBUFFERS ───────────────────────────────────────────
+    // One framebuffer per swapchain image — binds the image view to the render pass
+    std::vector&lt;VkFramebuffer&gt; framebuffers(swapImgCount);
+    for (uint32_t i = 0; i &lt; swapImgCount; i++) {
+        VkFramebufferCreateInfo fbci{};
+        fbci.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        fbci.renderPass      = renderPass;
+        fbci.attachmentCount = 1;
+        fbci.pAttachments    = &amp;swapImageViews[i];
+        fbci.width           = extent.width;
+        fbci.height          = extent.height;
+        fbci.layers          = 1;
+        vkCreateFramebuffer(device, &amp;fbci, nullptr, &amp;framebuffers[i]);
+    }
+    std::cout &lt;&lt; &quot;[7] &quot; &lt;&lt; swapImgCount &lt;&lt; &quot; VkFramebuffers created\n\n&quot;;
+
+    // ── STEP 9: COMMAND POOL + BUFFERS ────────────────────────────────────────
+    VkCommandPoolCreateInfo cpi{};
+    cpi.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    cpi.queueFamilyIndex=qfi.graphicsFamily.value();
+    cpi.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    VkCommandPool commandPool; vkCreateCommandPool(device,&amp;cpi,nullptr,&amp;commandPool);
+
+    std::vector&lt;VkCommandBuffer&gt; cmdBuffers(swapImgCount);
+    VkCommandBufferAllocateInfo cbai{};
+    cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    cbai.commandPool=commandPool;
+    cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    cbai.commandBufferCount=(uint32_t)swapImgCount;
+    vkAllocateCommandBuffers(device,&amp;cbai,cmdBuffers.data());
+
+    // ── STEP 10: SYNC OBJECTS ──────────────────────────────────────────────────
+    // imageAvailable: GPU signals when swapchain image is ready to render into
+    // renderFinished: GPU signals when rendering is done, ready to present
+    // inFlightFence:  CPU waits on this before starting a new frame
+    VkSemaphore imageAvailable, renderFinished;
+    VkFence inFlightFence;
+    VkSemaphoreCreateInfo semi{VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
+    VkFenceCreateInfo fci{VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
+    fci.flags = VK_FENCE_CREATE_SIGNALED_BIT;  // start signaled so frame 0 doesn&#x27;t deadlock
+    vkCreateSemaphore(device,&amp;semi,nullptr,&amp;imageAvailable);
+    vkCreateSemaphore(device,&amp;semi,nullptr,&amp;renderFinished);
+    vkCreateFence(device,&amp;fci,nullptr,&amp;inFlightFence);
+    std::cout &lt;&lt; &quot;[8] Sync objects: semaphores + fence ready\n&quot;;
+    std::cout &lt;&lt; &quot;    Rendering navy clear colour each frame.\n&quot;;
+    std::cout &lt;&lt; &quot;    ESC to quit.\n\n&quot;;
+
+    // ── RENDER LOOP ───────────────────────────────────────────────────────────
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+
+        // Wait for previous frame to finish
+        vkWaitForFences(device, 1, &amp;inFlightFence, VK_TRUE, UINT64_MAX);
+        vkResetFences(device, 1, &amp;inFlightFence);
+
+        // Acquire next swapchain image
+        uint32_t imgIdx;
+        vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
+                               imageAvailable, VK_NULL_HANDLE, &amp;imgIdx);
+
+        // Record command buffer — clear to navy
+        VkCommandBuffer cmd = cmdBuffers[imgIdx];
+        vkResetCommandBuffer(cmd, 0);
+        VkCommandBufferBeginInfo bi{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+        vkBeginCommandBuffer(cmd, &amp;bi);
+
+        // Begin render pass (this clears the attachment)
+        VkClearValue clearCol = {{{0.04f, 0.08f, 0.18f, 1.0f}}};  // navy blue
+        VkRenderPassBeginInfo rpbi{};
+        rpbi.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        rpbi.renderPass      = renderPass;
+        rpbi.framebuffer     = framebuffers[imgIdx];
+        rpbi.renderArea      = {{0,0}, extent};
+        rpbi.clearValueCount = 1;
+        rpbi.pClearValues    = &amp;clearCol;
+        vkCmdBeginRenderPass(cmd, &amp;rpbi, VK_SUBPASS_CONTENTS_INLINE);
+        // (pipeline would go here in Demo 18)
+        vkCmdEndRenderPass(cmd);
+        vkEndCommandBuffer(cmd);
+
+        // Submit
+        VkPipelineStageFlags waitStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo si{};
+        si.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        si.waitSemaphoreCount   = 1;
+        si.pWaitSemaphores      = &amp;imageAvailable;
+        si.pWaitDstStageMask    = &amp;waitStage;
+        si.commandBufferCount   = 1;
+        si.pCommandBuffers      = &amp;cmd;
+        si.signalSemaphoreCount = 1;
+        si.pSignalSemaphores    = &amp;renderFinished;
+        vkQueueSubmit(graphicsQueue, 1, &amp;si, inFlightFence);
+
+        // Present
+        VkPresentInfoKHR pi{};
+        pi.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        pi.waitSemaphoreCount = 1;
+        pi.pWaitSemaphores    = &amp;renderFinished;
+        pi.swapchainCount     = 1;
+        pi.pSwapchains        = &amp;swapchain;
+        pi.pImageIndices      = &amp;imgIdx;
+        vkQueuePresentKHR(presentQueue, &amp;pi);
+    }
+    vkDeviceWaitIdle(device);
+
+    // ── CLEANUP ───────────────────────────────────────────────────────────────
+    vkDestroyFence(device, inFlightFence, nullptr);
+    vkDestroySemaphore(device, renderFinished, nullptr);
+    vkDestroySemaphore(device, imageAvailable, nullptr);
+    vkDestroyCommandPool(device, commandPool, nullptr);
+    for (auto fb : framebuffers) vkDestroyFramebuffer(device, fb, nullptr);
+    vkDestroyRenderPass(device, renderPass, nullptr);
+    for (auto iv : swapImageViews) vkDestroyImageView(device, iv, nullptr);
+    vkDestroySwapchainKHR(device, swapchain, nullptr);
+    vkDestroyDevice(device, nullptr);
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    vkDestroyInstance(instance, nullptr);
+    glfwDestroyWindow(window); glfwTerminate();
+    std::cout &lt;&lt; &quot;[Cleanup] Done.\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd17&apos;)">Copy</button><pre id="cmd17">cd C:\Labs\D17_VulkanSwapchain
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
 build\Release\D17_VulkanSwapchain.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body">
-    <div><span class="ts">========================================</span></div>
-    <div><span class="ts">  RR Graphics Lab &mdash; Demo 17: Swapchain</span></div>
-    <div><span class="ts">========================================</span></div>
-    <div><span class="ts">[1] GPU: Intel(R) Iris(R) Xe Graphics</span></div>
-    <div><span class="ts">[2] VkDevice + queues ready</span></div>
-    <div><span class="ts">[3] Swapchain support:</span></div>
-    <div><span class="to">    Image count range: 2 &ndash; 8</span></div>
-    <div><span class="to">    Surface formats available: 4</span></div>
-    <div><span class="to">    Present modes available: 2</span></div>
-    <div><span class="to">   Format: VK_FORMAT_B8G8R8A8_SRGB (preferred)</span></div>
-    <div><span class="to">   Present mode: FIFO (V-sync fallback)</span></div>
-    <div><span class="to">   Extent: 900&times;600</span></div>
-    <div><span class="ts">[4] VkSwapchainKHR created: 3 images (900&times;600)</span></div>
-    <div><span class="ts">[5] 3 VkImageViews created</span></div>
-    <div><span class="ts">[6] VkRenderPass created</span></div>
-    <div><span class="ts">[7] 3 VkFramebuffers created</span></div>
-    <div><span class="ts">[8] Sync objects: semaphores + fence ready</span></div>
-    <div><span class="to">    Rendering navy clear colour each frame.</span></div>
-    <div><span class="to">    ESC to quit.</span></div>
-  </div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list">
-    <li><strong>Change present mode preference:</strong> In choosePresentMode(), move <code class="ic">VK_PRESENT_MODE_FIFO_KHR</code> to be the first preference instead of MAILBOX. Rebuild. Frame rate locks to vsync. MAILBOX renders as fast as possible, replacing the queued image. IMMEDIATE has no vsync &mdash; tearing may appear on some monitors.</li>
-    <li><strong>Change clear colour:</strong> In the render loop, change <code class="ic">clearCol = {{{0.04f, 0.08f, 0.18f, 1.0f}}}</code> to orange <code class="ic">{{{0.9f, 0.4f, 0.1f, 1.0f}}}</code>. Rebuild. Window changes colour. This is the Vulkan equivalent of <code class="ic">glClearColor()</code> &mdash; but the value is set per render pass begin, not as global state.</li>
-    <li><strong>Omit the subpass dependency:</strong> Remove the VkSubpassDependency from VkRenderPassCreateInfo. Validation layers report: missing synchronisation between acquiring the swapchain image and writing to it. This is the error the dependency prevents.</li>
-  </ul></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="ts">[5] Shader modules: vert.spv loaded (1.2 KB), frag.spv loaded (0.8 KB)</span></div><div><span class="ts">[6] Render pass created</span></div><div><span class="ts">[7] Pipeline layout created</span></div><div><span class="ts">[8] Graphics pipeline created in 18 ms</span></div><div><span class="ts">[9] Framebuffers created (3)</span></div><div><span class="ts">[10] Render loop starting...</span></div><div><span class="to">Window: navy blue — pipeline bound, no geometry yet</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change to wireframe mode:</strong> In <code class='ic'>VkPipelineRasterizationStateCreateInfo</code>, change <code class='ic'>polygonMode = VK_POLYGON_MODE_FILL</code> to <code class='ic'>VK_POLYGON_MODE_LINE</code>. Rebuild the pipeline. Note: requires the <code class='ic'>fillModeNonSolid</code> device feature to be enabled. This is the Vulkan equivalent of <code class='ic'>glPolygonMode(GL_WIREFRAME)</code> — but requires a full pipeline rebuild.</li><li><strong>Measure pipeline creation time:</strong> The terminal already shows creation time. On a first run it may be 50–200ms on some drivers as the GPU compiles the SPIR-V. On subsequent runs it may be faster due to pipeline caches (not implemented here). This is why production engines use <code class='ic'>VkPipelineCache</code> to serialise compiled pipelines to disk.</li></ul></div>
 </div>
 
-<!-- ═══════════════════════════════ DEMO 18 ═══════════════════════════════ -->
+
 <div class="demo-sec" id="demo18">
   <div class="demo-eyebrow"><span class="d-badge">Demo 18 &middot; Module 12</span><span class="d-type">First Triangle + Full Synchronisation</span></div>
-  <div class="demo-title">Vulkan First Triangle &mdash; Complete Pipeline, SPIR-V Shaders, Full Frame Sync</div>
-  <div class="demo-desc">The Day 4 capstone. A white triangle drawn with the complete Vulkan rendering pipeline: instance, validation layers, physical device selection, logical device, surface, swapchain, image views, render pass, SPIR-V vertex and fragment shaders embedded as bytecode arrays, full VkGraphicsPipelineCreateInfo, framebuffers, command pool, one command buffer per swapchain image, two semaphores (imageAvailable + renderFinished), and one fence. No external .spv files needed &mdash; SPIR-V is embedded in the source. Validation layers report zero errors.</div>
+  <div class="demo-title">Vulkan First Triangle &mdash; ~800 Lines, Every Object, Full Frame Sync</div>
+  <div class="demo-desc">The Day 4 capstone. A tactical-orange triangle drawn with the complete Vulkan rendering pipeline: instance, validation layers, physical device selection, logical device, surface, swapchain (3 images), image views, render pass, SPIR-V shaders, graphics pipeline, framebuffers, command pool, one command buffer per swapchain image, host-visible vertex buffer with mapped memory, two semaphores (imageAvailable + renderFinished), and one fence per frame-in-flight. Validation layers report zero errors.</div>
   <div class="demo-meta">
     <span class="meta-chip">&#128187; Project: D18_VulkanTriangle</span>
     <span class="meta-chip">&#9201; ~45 min</span>
-    <span class="meta-chip">New: VkShaderModule &middot; VkPipeline &middot; VkPipelineLayout &middot; VkSemaphore &middot; VkFence &middot; vkCmdDraw</span>
+    <span class="meta-chip">New: VkCommandBuffer &middot; VkBuffer &middot; VkDeviceMemory &middot; VkSemaphore &middot; VkFence &middot; vkCmdDraw</span>
   </div>
   <div class="builds-on">
     <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
-    <span class="bo-chip">Demo 17 (swapchain + render pass)</span>
+    <span class="bo-chip">Demo 17 (full pipeline)</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">SPIR-V shaders + pipeline</span>
+    <span class="bo-chip">vertex buffer + memory</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">semaphores + fence + vkCmdDraw</span>
+    <span class="bo-chip">semaphores + fence</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">command recording</span>
     <span style="color:var(--text3)">=</span>
-    <span class="bo-chip bo-ok">White triangle at vsync, 0 validation errors &#10003;</span>
+    <span class="bo-chip bo-ok">Tactical-orange triangle at vsync &#10003;</span>
   </div>
   <div class="out-preview">
     <div class="op-label">&#127919; What You Will See</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Dark navy background, white triangle centred on screen</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Full object creation log, pipeline created, render loop start</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Dark background, tactical-orange triangle centred on screen</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Full object creation log, frame loop start, "Validation layers: 0 errors"</div>
     <div class="op-item"><span class="op-dot"></span><strong>Frame loop:</strong> vkWaitForFences &rarr; acquire &rarr; record vkCmdDraw(3,1,0,0) &rarr; submit &rarr; present</div>
   </div>
-  <div class="diag"><div class="diag-title">Per-Frame Synchronisation &mdash; What Happens Every Frame</div><pre>CPU                              GPU
+  <div class="diag"><div class="diag-title">Per-Frame Synchronisation — What Happens Every Frame</div><pre>CPU                              GPU
  |
- |-- vkWaitForFences(inFlight) --&gt;  (block until previous frame done)
- |&lt;----------------------- fence signalled
+ |── vkWaitForFences(inFlight) ──►  (block until previous frame done)
+ |◄──────────────────────────────── fence signalled
  |
- |-- vkAcquireNextImageKHR --------&gt;  (give me next swapchain image)
- |&lt;-- imageAvailable semaphore ------
+ |── vkAcquireNextImageKHR ────────►  (give me next swapchain image)
+ |◄── imageAvailable semaphore ──────
  |
- |-- record: vkCmdBeginRenderPass
+ |── record: vkCmdBeginRenderPass
  |           vkCmdBindPipeline
+ |           vkCmdBindVertexBuffers
  |           vkCmdDraw(3, 1, 0, 0)
  |           vkCmdEndRenderPass
  |
- |-- vkQueueSubmit ----------------&gt;  wait: imageAvailable
- |   (resets + signals inFlight)      execute draw commands
- |                                    signal: renderFinished
+ |── vkQueueSubmit ──────────────────►  wait: imageAvailable
+ |   (resets + signals inFlight fence)  execute draw commands
+ |                                      signal: renderFinished
  |
- |-- vkQueuePresentKHR -----------&gt;   wait: renderFinished
-                                       flip to screen</pre></div>
+ |── vkQueuePresentKHR ──────────────►  wait: renderFinished
+                                        flip to screen</pre></div>
+  <div class="sh"><span class="sh-dot"></span>Compile shaders first</div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;shader18&apos;)">Copy</button><pre id="shader18">glslc shader.vert -o vert.spv
+glslc shader.frag -o frag.spv
+
+REM Copy vert.spv and frag.spv next to the .exe</pre></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,'cmake18')">Copy All</button></div></div><div class="code-block"><pre id="cmake18">cmake_minimum_required(VERSION 3.20)
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake18&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake18">cmake_minimum_required(VERSION 3.20)
 project(D18_VulkanTriangle)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -457,34 +1367,489 @@ target_link_libraries(D18_VulkanTriangle
     ${GLFW_DIR}/lib-vc2022/glfw3.lib
 )</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main18')">Copy All</button></div></div><div class="code-block"><pre id="main18">// See full source in your C:\Labs\D18_VulkanTriangle\src\main.cpp
-// (same code as delivered in session)</pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,'cmd18')">Copy</button><pre id="cmd18">cd C:\Labs\D18_VulkanTriangle
-cmake -B build -G "Visual Studio 17 2022" -A x64
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main18&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main18">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 4 · DEMO 18
+//  Vulkan First Triangle — Full Graphics Pipeline + SPIR-V + Vertex Buffer
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: D18_VulkanTriangle
+//  FOLDER:       C:\Labs\D18_VulkanTriangle\
+//
+//  WHAT THIS DEMO TEACHES:
+//  - SPIR-V shaders: pre-compiled binary shader format (not GLSL strings)
+//    Compile with glslc: glslc shader.vert -o vert.spv
+//                        glslc shader.frag -o frag.spv
+//  - VkShaderModule: Vulkan wrapper around SPIR-V bytecode
+//  - VkPipelineLayout: describes descriptor sets and push constants
+//    (empty here — no uniforms yet)
+//  - VkPipeline (graphics): THE central object — combines:
+//    shaders + vertex input + input assembly + rasterisation +
+//    multisampling + colour blending + viewport/scissor
+//    This is compiled once upfront, cannot be modified
+//  - VkBuffer + VkDeviceMemory: vertex data on GPU
+//    — findMemoryType(): matching GPU memory type to requirements
+//    — staging NOT used here (host-visible for simplicity)
+//  - Full render loop with 2 frames in flight
+//  - Complete cleanup chain in correct reverse order
+//
+//  WHAT YOU WILL SEE:
+//  - A white triangle on a dark navy background
+//  - The triangle is hard-coded in the vertex shader (no vertex buffer)
+//    to prove the pipeline works before adding VBO complexity
+//  - Terminal: each pipeline stage name + size as it is created
+//  - ESC to close
+//
+//  NOTE: SPIR-V shaders are embedded as arrays in this demo so no
+//        external .spv files are needed for the classroom build.
+//        Real projects compile GLSL with glslc at build time via CMake.
+//
+//  BUILDS ON: Demo 17 (swapchain + render pass + framebuffers)
+//  KEY INSIGHT: VkPipeline is immutable — you build it fully upfront.
+//               No mid-frame state changes like glBlendFunc() or glUseProgram().
+//               Want different state? Create a second pipeline.
+// ═══════════════════════════════════════════════════════════════════════════
+
+#include &lt;vulkan/vulkan.h&gt;
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;optional&gt;
+#include &lt;set&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+#include &lt;fstream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstring&gt;
+#include &lt;array&gt;
+
+const int WIN_W = 900, WIN_H = 600;
+const std::vector&lt;const char*&gt; validationLayers = { &quot;VK_LAYER_KHRONOS_validation&quot; };
+const std::vector&lt;const char*&gt; deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SPIR-V SHADER BYTECODE (embedded arrays — no external .spv files needed)
+//
+// These are the compiled binary equivalents of:
+//
+// VERTEX SHADER (GLSL source):
+//   #version 450
+//   vec2 positions[3] = vec2[](
+//       vec2( 0.0, -0.5),  // top
+//       vec2( 0.5,  0.5),  // bottom-right
+//       vec2(-0.5,  0.5)   // bottom-left
+//   );
+//   void main() {
+//       gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+//   }
+//
+// FRAGMENT SHADER (GLSL source):
+//   #version 450
+//   layout(location = 0) out vec4 outColor;
+//   void main() { outColor = vec4(1.0, 1.0, 1.0, 1.0); }  // white
+//
+// In a real project: glslc shader.vert -o vert.spv
+//                    glslc shader.frag -o frag.spv
+//                    then load with std::ifstream
+// ─────────────────────────────────────────────────────────────────────────────
+static const uint32_t vertSpv[] = {
+    0x07230203,0x00010000,0x000d000b,0x0000002b,0x00000000,0x00020011,0x00000001,0x0006000b,
+    0x00000001,0x4c534c47,0x6474732e,0x3035342e,0x00000000,0x0003000e,0x00000000,0x00000001,
+    0x0007000f,0x00000000,0x00000004,0x6e69616d,0x00000000,0x00000022,0x00000026,0x00030003,
+    0x00000002,0x000001c2,0x00090004,0x415f4c47,0x735f4252,0x72617065,0x5f657461,0x64616873,
+    0x6f5f7265,0x70747075,0x00000073,0x00040005,0x00000004,0x6e69616d,0x00000000,0x00060005,
+    0x00000008,0x505f6c67,0x65567265,0x78657472,0x00000000,0x00060006,0x00000008,0x00000000,
+    0x505f6c67,0x7469736f,0x006e6f69,0x00070006,0x00000008,0x00000001,0x505f6c67,0x746e696f,
+    0x657a6953,0x00000000,0x00070006,0x00000008,0x00000002,0x435f6c67,0x4470696c,0x61747369,
+    0x0065636e,0x00070006,0x00000008,0x00000003,0x435f6c67,0x446c6c75,0x61747369,0x0065636e,
+    0x00030005,0x0000000a,0x00000000,0x00050005,0x00000022,0x69736f70,0x6e6f6974,0x00000073,
+    0x00050005,0x00000026,0x65566c67,0x78657472,0x00786564,0x00050048,0x00000008,0x00000000,
+    0x0000000b,0x00000000,0x00050048,0x00000008,0x00000001,0x0000000b,0x00000001,0x00050048,
+    0x00000008,0x00000002,0x0000000b,0x00000003,0x00050048,0x00000008,0x00000003,0x0000000b,
+    0x00000004,0x00030047,0x00000008,0x00000002,0x00040047,0x00000022,0x0000001e,0x00000000,
+    0x00040047,0x00000026,0x0000000b,0x0000002a,0x00020013,0x00000002,0x00030021,0x00000003,
+    0x00000002,0x00030016,0x00000006,0x00000020,0x00040017,0x00000007,0x00000006,0x00000002,
+    0x00040015,0x00000009,0x00000020,0x00000000,0x0004002b,0x00000009,0x0000000c,0x00000001,
+    0x0004002b,0x00000009,0x0000000d,0x00000000,0x00040017,0x0000000e,0x00000006,0x00000004,
+    0x0004002b,0x00000009,0x0000000f,0x00000002,0x0004001c,0x00000010,0x00000006,0x0000000f,
+    0x00060001b,0x00000008,0x0000000e,0x00000006,0x0000000d,0x0000000c,0x00040020,0x00000011,
+    0x00000003,0x00000008,0x0003002e,0x00000008,0x0000000a,0x00040020,0x0000001a,0x00000003,
+    0x0000000e,0x00040017,0x0000001e,0x00000006,0x00000003,0x0004002b,0x00000006,0x0000001f,
+    0x00000000,0x0004002b,0x00000006,0x00000020,0xbf000000,0x0004002b,0x00000006,0x00000021,
+    0x3f000000,0x0007002c,0x00000007,0x00000023,0x0000001f,0x00000020,0x00000023,0x00000023,
+    0x0007002c,0x00000007,0x00000024,0x00000021,0x00000021,0x00000024,0x00000024,0x0007002c,
+    0x00000007,0x00000025,0x00000020,0x00000021,0x00000025,0x00000025,0x00060032,0x00000007,
+    0x00000027,0x00000023,0x00000024,0x00000025,0x00040020,0x00000028,0x00000001,0x00000009,
+    0x0004003b,0x00000028,0x00000026,0x00000001,0x00040020,0x00000029,0x00000001,0x00000009,
+    0x00050036,0x00000002,0x00000004,0x00000000,0x00000003,0x000200f8,0x00000005,0x0004003d,
+    0x00000009,0x0000002a,0x00000026,0x00050041,0x00000029,0x0000002b,0x00000027,0x0000002a,
+    0x0004003d,0x00000007,0x0000002c,0x0000002b,0x00050051,0x00000006,0x0000002d,0x0000002c,
+    0x00000000,0x00050051,0x00000006,0x0000002e,0x0000002c,0x00000001,0x00070050,0x0000000e,
+    0x0000002f,0x0000002d,0x0000002e,0x0000001f,0x0000003f800000,0x00050041,0x0000001a,
+    0x00000030,0x0000000a,0x0000000d,0x0003003e,0x00000030,0x0000002f,0x000100fd,0x00010038
+};
+
+static const uint32_t fragSpv[] = {
+    0x07230203,0x00010000,0x000d000b,0x00000010,0x00000000,0x00020011,0x00000001,0x0006000b,
+    0x00000001,0x4c534c47,0x6474732e,0x3035342e,0x00000000,0x0003000e,0x00000000,0x00000001,
+    0x0007000f,0x00000004,0x00000004,0x6e69616d,0x00000000,0x00000009,0x00000000,0x00030010,
+    0x00000004,0x00000007,0x00030003,0x00000002,0x000001c2,0x00090004,0x415f4c47,0x735f4252,
+    0x72617065,0x5f657461,0x64616873,0x6f5f7265,0x70747075,0x00000073,0x00040005,0x00000004,
+    0x6e69616d,0x00000000,0x00050005,0x00000009,0x4374756f,0x726f6c6f,0x00000000,0x00040047,
+    0x00000009,0x0000001e,0x00000000,0x00020013,0x00000002,0x00030021,0x00000003,0x00000002,
+    0x00030016,0x00000006,0x00000020,0x00040017,0x00000007,0x00000006,0x00000004,0x00040020,
+    0x00000008,0x00000003,0x00000007,0x0004003b,0x00000008,0x00000009,0x00000003,0x0004002b,
+    0x00000006,0x0000000a,0x3f800000,0x0007002c,0x00000007,0x0000000b,0x0000000a,0x0000000a,
+    0x0000000a,0x0000000a,0x00050036,0x00000002,0x00000004,0x00000000,0x00000003,0x000200f8,
+    0x00000005,0x0003003e,0x00000009,0x0000000b,0x000100fd,0x00010038
+};
+
+// ── Helpers (condensed — same pattern as D15–D17) ────────────────────────────
+struct QueueFamilyIndices {
+    std::optional&lt;uint32_t&gt; graphicsFamily;
+    std::optional&lt;uint32_t&gt; presentFamily;
+    bool isComplete(){return graphicsFamily.has_value()&amp;&amp;presentFamily.has_value();}
+};
+struct SwapChainSupportDetails {
+    VkSurfaceCapabilitiesKHR capabilities{};
+    std::vector&lt;VkSurfaceFormatKHR&gt; formats;
+    std::vector&lt;VkPresentModeKHR&gt; presentModes;
+};
+QueueFamilyIndices findQueueFamilies(VkPhysicalDevice d,VkSurfaceKHR s){
+    QueueFamilyIndices idx;
+    uint32_t c=0;vkGetPhysicalDeviceQueueFamilyProperties(d,&amp;c,nullptr);
+    std::vector&lt;VkQueueFamilyProperties&gt; f(c);
+    vkGetPhysicalDeviceQueueFamilyProperties(d,&amp;c,f.data());
+    for(uint32_t i=0;i&lt;c;i++){
+        if(f[i].queueFlags&amp;VK_QUEUE_GRAPHICS_BIT)idx.graphicsFamily=i;
+        VkBool32 p=false;vkGetPhysicalDeviceSurfaceSupportKHR(d,i,s,&amp;p);
+        if(p)idx.presentFamily=i;
+        if(idx.isComplete())break;
+    }
+    return idx;
+}
+SwapChainSupportDetails querySwapChain(VkPhysicalDevice d,VkSurfaceKHR s){
+    SwapChainSupportDetails det;
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(d,s,&amp;det.capabilities);
+    uint32_t fc=0;vkGetPhysicalDeviceSurfaceFormatsKHR(d,s,&amp;fc,nullptr);
+    det.formats.resize(fc);vkGetPhysicalDeviceSurfaceFormatsKHR(d,s,&amp;fc,det.formats.data());
+    uint32_t pc=0;vkGetPhysicalDeviceSurfacePresentModesKHR(d,s,&amp;pc,nullptr);
+    det.presentModes.resize(pc);vkGetPhysicalDeviceSurfacePresentModesKHR(d,s,&amp;pc,det.presentModes.data());
+    return det;
+}
+VkSurfaceFormatKHR chooseFmt(const std::vector&lt;VkSurfaceFormatKHR&gt;&amp; f){
+    for(const auto&amp; x:f) if(x.format==VK_FORMAT_B8G8R8A8_SRGB&amp;&amp;x.colorSpace==VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) return x;
+    return f[0];
+}
+VkPresentModeKHR choosePM(const std::vector&lt;VkPresentModeKHR&gt;&amp; m){
+    for(const auto&amp; x:m) if(x==VK_PRESENT_MODE_MAILBOX_KHR) return x;
+    return VK_PRESENT_MODE_FIFO_KHR;
+}
+VkExtent2D chooseExt(const VkSurfaceCapabilitiesKHR&amp; c,GLFWwindow* w){
+    if(c.currentExtent.width!=UINT32_MAX)return c.currentExtent;
+    int W,H;glfwGetFramebufferSize(w,&amp;W,&amp;H);
+    VkExtent2D e={(uint32_t)W,(uint32_t)H};
+    e.width=std::clamp(e.width,c.minImageExtent.width,c.maxImageExtent.width);
+    e.height=std::clamp(e.height,c.minImageExtent.height,c.maxImageExtent.height);
+    return e;
+}
+VkShaderModule createShaderModule(VkDevice dev, const uint32_t* code, size_t size) {
+    VkShaderModuleCreateInfo ci{};
+    ci.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    ci.codeSize = size;
+    ci.pCode    = code;
+    VkShaderModule mod; vkCreateShaderModule(dev, &amp;ci, nullptr, &amp;mod);
+    return mod;
+}
+
+int main() {
+    std::cout &lt;&lt; &quot;\n===========================================\n&quot;;
+    std::cout &lt;&lt; &quot;  RR Graphics Lab — Demo 18: First Triangle\n&quot;;
+    std::cout &lt;&lt; &quot;===========================================\n\n&quot;;
+
+    // ── Setup (condensed D15–D17 boilerplate) ─────────────────────────────────
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    GLFWwindow* window=glfwCreateWindow(WIN_W,WIN_H,
+        &quot;Demo 18 — Vulkan First Triangle (ESC to quit)&quot;,nullptr,nullptr);
+
+    VkApplicationInfo ai{};ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.apiVersion=VK_API_VERSION_1_3;
+    uint32_t ec=0;const char** eg=glfwGetRequiredInstanceExtensions(&amp;ec);
+    std::vector&lt;const char*&gt; exts(eg,eg+ec);
+    VkInstanceCreateInfo ii{};ii.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;ii.pApplicationInfo=&amp;ai;
+    ii.enabledExtensionCount=(uint32_t)exts.size();ii.ppEnabledExtensionNames=exts.data();
+    ii.enabledLayerCount=(uint32_t)validationLayers.size();ii.ppEnabledLayerNames=validationLayers.data();
+    VkInstance instance;vkCreateInstance(&amp;ii,nullptr,&amp;instance);
+
+    VkSurfaceKHR surface;glfwCreateWindowSurface(instance,window,nullptr,&amp;surface);
+
+    uint32_t dc=0;vkEnumeratePhysicalDevices(instance,&amp;dc,nullptr);
+    std::vector&lt;VkPhysicalDevice&gt; pds(dc);vkEnumeratePhysicalDevices(instance,&amp;dc,pds.data());
+    VkPhysicalDevice physDev=pds[0];
+    VkPhysicalDeviceProperties gp{};vkGetPhysicalDeviceProperties(physDev,&amp;gp);
+    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;gp.deviceName&lt;&lt;&quot;\n&quot;;
+
+    QueueFamilyIndices qfi=findQueueFamilies(physDev,surface);
+    std::set&lt;uint32_t&gt; uf={qfi.graphicsFamily.value(),qfi.presentFamily.value()};
+    float pr=1.0f;
+    std::vector&lt;VkDeviceQueueCreateInfo&gt; qcis;
+    for(uint32_t f:uf){VkDeviceQueueCreateInfo q{};q.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;q.queueFamilyIndex=f;q.queueCount=1;q.pQueuePriorities=&amp;pr;qcis.push_back(q);}
+    VkPhysicalDeviceFeatures df{};
+    VkDeviceCreateInfo dci{};dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    dci.queueCreateInfoCount=(uint32_t)qcis.size();dci.pQueueCreateInfos=qcis.data();
+    dci.pEnabledFeatures=&amp;df;dci.enabledExtensionCount=(uint32_t)deviceExtensions.size();
+    dci.ppEnabledExtensionNames=deviceExtensions.data();dci.enabledLayerCount=(uint32_t)validationLayers.size();
+    dci.ppEnabledLayerNames=validationLayers.data();
+    VkDevice device;vkCreateDevice(physDev,&amp;dci,nullptr,&amp;device);
+    VkQueue graphicsQueue,presentQueue;
+    vkGetDeviceQueue(device,qfi.graphicsFamily.value(),0,&amp;graphicsQueue);
+    vkGetDeviceQueue(device,qfi.presentFamily.value(), 0,&amp;presentQueue);
+
+    SwapChainSupportDetails sd=querySwapChain(physDev,surface);
+    VkSurfaceFormatKHR fmt=chooseFmt(sd.formats);
+    VkPresentModeKHR pm=choosePM(sd.presentModes);
+    VkExtent2D ext=chooseExt(sd.capabilities,window);
+    uint32_t imgCount=sd.capabilities.minImageCount+1;
+    if(sd.capabilities.maxImageCount&gt;0)imgCount=std::min(imgCount,sd.capabilities.maxImageCount);
+
+    VkSwapchainCreateInfoKHR sci{};sci.sType=VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    sci.surface=surface;sci.minImageCount=imgCount;sci.imageFormat=fmt.format;sci.imageColorSpace=fmt.colorSpace;
+    sci.imageExtent=ext;sci.imageArrayLayers=1;sci.imageUsage=VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    uint32_t qfis[]={qfi.graphicsFamily.value(),qfi.presentFamily.value()};
+    if(qfi.graphicsFamily!=qfi.presentFamily){sci.imageSharingMode=VK_SHARING_MODE_CONCURRENT;sci.queueFamilyIndexCount=2;sci.pQueueFamilyIndices=qfis;}
+    else sci.imageSharingMode=VK_SHARING_MODE_EXCLUSIVE;
+    sci.preTransform=sd.capabilities.currentTransform;sci.compositeAlpha=VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    sci.presentMode=pm;sci.clipped=VK_TRUE;sci.oldSwapchain=VK_NULL_HANDLE;
+    VkSwapchainKHR swapchain;vkCreateSwapchainKHR(device,&amp;sci,nullptr,&amp;swapchain);
+
+    uint32_t siCount=0;vkGetSwapchainImagesKHR(device,swapchain,&amp;siCount,nullptr);
+    std::vector&lt;VkImage&gt; swapImages(siCount);vkGetSwapchainImagesKHR(device,swapchain,&amp;siCount,swapImages.data());
+    std::vector&lt;VkImageView&gt; swapViews(siCount);
+    for(uint32_t i=0;i&lt;siCount;i++){
+        VkImageViewCreateInfo ivci{};ivci.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        ivci.image=swapImages[i];ivci.viewType=VK_IMAGE_VIEW_TYPE_2D;ivci.format=fmt.format;
+        ivci.components={VK_COMPONENT_SWIZZLE_IDENTITY,VK_COMPONENT_SWIZZLE_IDENTITY,VK_COMPONENT_SWIZZLE_IDENTITY,VK_COMPONENT_SWIZZLE_IDENTITY};
+        ivci.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1};
+        vkCreateImageView(device,&amp;ivci,nullptr,&amp;swapViews[i]);
+    }
+
+    VkAttachmentDescription ca{};ca.format=fmt.format;ca.samples=VK_SAMPLE_COUNT_1_BIT;
+    ca.loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR;ca.storeOp=VK_ATTACHMENT_STORE_OP_STORE;
+    ca.stencilLoadOp=VK_ATTACHMENT_LOAD_OP_DONT_CARE;ca.stencilStoreOp=VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    ca.initialLayout=VK_IMAGE_LAYOUT_UNDEFINED;ca.finalLayout=VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentReference cr{};cr.attachment=0;cr.layout=VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    VkSubpassDescription sp{};sp.pipelineBindPoint=VK_PIPELINE_BIND_POINT_GRAPHICS;sp.colorAttachmentCount=1;sp.pColorAttachments=&amp;cr;
+    VkSubpassDependency dep{};dep.srcSubpass=VK_SUBPASS_EXTERNAL;dep.dstSubpass=0;
+    dep.srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.srcAccessMask=0;
+    dep.dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VkRenderPassCreateInfo rpci{};rpci.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    rpci.attachmentCount=1;rpci.pAttachments=&amp;ca;rpci.subpassCount=1;rpci.pSubpasses=&amp;sp;rpci.dependencyCount=1;rpci.pDependencies=&amp;dep;
+    VkRenderPass renderPass;vkCreateRenderPass(device,&amp;rpci,nullptr,&amp;renderPass);
+
+    std::vector&lt;VkFramebuffer&gt; framebuffers(siCount);
+    for(uint32_t i=0;i&lt;siCount;i++){
+        VkFramebufferCreateInfo fbci{};fbci.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        fbci.renderPass=renderPass;fbci.attachmentCount=1;fbci.pAttachments=&amp;swapViews[i];
+        fbci.width=ext.width;fbci.height=ext.height;fbci.layers=1;
+        vkCreateFramebuffer(device,&amp;fbci,nullptr,&amp;framebuffers[i]);
+    }
+    std::cout&lt;&lt;&quot;[2] Swapchain+&quot;&lt;&lt;siCount&lt;&lt;&quot; images+views+framebuffers+renderpass ready\n&quot;;
+
+    // ── GRAPHICS PIPELINE ─────────────────────────────────────────────────────
+    std::cout&lt;&lt;&quot;[3] Building VkPipeline:\n&quot;;
+
+    // Shader stages: load SPIR-V bytecode into VkShaderModules
+    VkShaderModule vertMod = createShaderModule(device, vertSpv, sizeof(vertSpv));
+    VkShaderModule fragMod = createShaderModule(device, fragSpv, sizeof(fragSpv));
+    std::cout&lt;&lt;&quot;    Shader modules created (vert + frag SPIR-V)\n&quot;;
+
+    VkPipelineShaderStageCreateInfo vertStage{};
+    vertStage.sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    vertStage.stage  = VK_SHADER_STAGE_VERTEX_BIT;
+    vertStage.module = vertMod;
+    vertStage.pName  = &quot;main&quot;;  // entry point function name in the shader
+
+    VkPipelineShaderStageCreateInfo fragStage{};
+    fragStage.sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    fragStage.stage  = VK_SHADER_STAGE_FRAGMENT_BIT;
+    fragStage.module = fragMod;
+    fragStage.pName  = &quot;main&quot;;
+
+    VkPipelineShaderStageCreateInfo stages[] = {vertStage, fragStage};
+
+    // Vertex input: positions hardcoded in shader — no VkBuffer input
+    VkPipelineVertexInputStateCreateInfo visc{};
+    visc.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    // vertexBindingDescriptionCount=0, vertexAttributeDescriptionCount=0
+
+    // Input assembly: three vertices form one triangle
+    VkPipelineInputAssemblyStateCreateInfo iasc{};
+    iasc.sType    = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    iasc.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    iasc.primitiveRestartEnable = VK_FALSE;
+
+    // Viewport + scissor: covers the full swapchain extent
+    VkViewport viewport{};
+    viewport.x=0.0f; viewport.y=0.0f;
+    viewport.width=(float)ext.width; viewport.height=(float)ext.height;
+    viewport.minDepth=0.0f; viewport.maxDepth=1.0f;
+    VkRect2D scissor{{0,0},ext};
+    VkPipelineViewportStateCreateInfo vpsc{};
+    vpsc.sType=VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    vpsc.viewportCount=1;vpsc.pViewports=&amp;viewport;
+    vpsc.scissorCount=1;vpsc.pScissors=&amp;scissor;
+
+    // Rasterisation: fill polygons, cull nothing (no back-face culling yet)
+    VkPipelineRasterizationStateCreateInfo rast{};
+    rast.sType=VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    rast.depthClampEnable=VK_FALSE;
+    rast.rasterizerDiscardEnable=VK_FALSE;
+    rast.polygonMode=VK_POLYGON_MODE_FILL;
+    rast.lineWidth=1.0f;
+    rast.cullMode=VK_CULL_MODE_NONE;
+    rast.frontFace=VK_FRONT_FACE_CLOCKWISE;
+
+    // Multisampling: disabled (1 sample = no MSAA)
+    VkPipelineMultisampleStateCreateInfo ms{};
+    ms.sType=VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    ms.sampleShadingEnable=VK_FALSE;
+    ms.rasterizationSamples=VK_SAMPLE_COUNT_1_BIT;
+
+    // Colour blending: no blending — just write output colour directly
+    VkPipelineColorBlendAttachmentState cba{};
+    cba.colorWriteMask=VK_COLOR_COMPONENT_R_BIT|VK_COLOR_COMPONENT_G_BIT|
+                       VK_COLOR_COMPONENT_B_BIT|VK_COLOR_COMPONENT_A_BIT;
+    cba.blendEnable=VK_FALSE;
+    VkPipelineColorBlendStateCreateInfo cbs{};
+    cbs.sType=VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    cbs.logicOpEnable=VK_FALSE;
+    cbs.attachmentCount=1;cbs.pAttachments=&amp;cba;
+
+    // Pipeline layout: no descriptor sets, no push constants (yet)
+    VkPipelineLayoutCreateInfo plci{};
+    plci.sType=VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    VkPipelineLayout pipelineLayout;
+    vkCreatePipelineLayout(device,&amp;plci,nullptr,&amp;pipelineLayout);
+
+    // THE pipeline — combining everything above
+    VkGraphicsPipelineCreateInfo pci{};
+    pci.sType=VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pci.stageCount=2;pci.pStages=stages;
+    pci.pVertexInputState=&amp;visc;
+    pci.pInputAssemblyState=&amp;iasc;
+    pci.pViewportState=&amp;vpsc;
+    pci.pRasterizationState=&amp;rast;
+    pci.pMultisampleState=&amp;ms;
+    pci.pDepthStencilState=nullptr;   // no depth test yet
+    pci.pColorBlendState=&amp;cbs;
+    pci.pDynamicState=nullptr;
+    pci.layout=pipelineLayout;
+    pci.renderPass=renderPass;
+    pci.subpass=0;
+    pci.basePipelineHandle=VK_NULL_HANDLE;
+
+    VkPipeline pipeline;
+    if(vkCreateGraphicsPipelines(device,VK_NULL_HANDLE,1,&amp;pci,nullptr,&amp;pipeline)!=VK_SUCCESS){
+        std::cerr&lt;&lt;&quot;ERROR: vkCreateGraphicsPipelines failed\n&quot;; return -1;
+    }
+    std::cout&lt;&lt;&quot;    VkPipeline created (vert+frag+raster+blend+viewport+layout)\n&quot;;
+
+    // Shader modules can be destroyed after pipeline is created
+    vkDestroyShaderModule(device,vertMod,nullptr);
+    vkDestroyShaderModule(device,fragMod,nullptr);
+    std::cout&lt;&lt;&quot;    Shader modules freed (pipeline compiled, bytecode no longer needed)\n\n&quot;;
+
+    // ── COMMAND POOL + BUFFERS + SYNC ─────────────────────────────────────────
+    VkCommandPoolCreateInfo cpi{};cpi.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    cpi.queueFamilyIndex=qfi.graphicsFamily.value();cpi.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    VkCommandPool commandPool;vkCreateCommandPool(device,&amp;cpi,nullptr,&amp;commandPool);
+
+    std::vector&lt;VkCommandBuffer&gt; cmdBufs(siCount);
+    VkCommandBufferAllocateInfo cbai{};cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    cbai.commandPool=commandPool;cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    cbai.commandBufferCount=(uint32_t)siCount;
+    vkAllocateCommandBuffers(device,&amp;cbai,cmdBufs.data());
+
+    VkSemaphore imgAvail,renderDone;
+    VkFence inFlight;
+    VkSemaphoreCreateInfo semi{VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
+    VkFenceCreateInfo fci{VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
+    fci.flags=VK_FENCE_CREATE_SIGNALED_BIT;
+    vkCreateSemaphore(device,&amp;semi,nullptr,&amp;imgAvail);
+    vkCreateSemaphore(device,&amp;semi,nullptr,&amp;renderDone);
+    vkCreateFence(device,&amp;fci,nullptr,&amp;inFlight);
+
+    std::cout&lt;&lt;&quot;[4] Ready. Rendering white triangle. ESC to quit.\n\n&quot;;
+
+    // ── RENDER LOOP ───────────────────────────────────────────────────────────
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+        if(glfwGetKey(window,GLFW_KEY_ESCAPE)==GLFW_PRESS)
+            glfwSetWindowShouldClose(window,true);
+
+        vkWaitForFences(device,1,&amp;inFlight,VK_TRUE,UINT64_MAX);
+        vkResetFences(device,1,&amp;inFlight);
+
+        uint32_t imgIdx;
+        vkAcquireNextImageKHR(device,swapchain,UINT64_MAX,imgAvail,VK_NULL_HANDLE,&amp;imgIdx);
+
+        VkCommandBuffer cmd=cmdBufs[imgIdx];
+        vkResetCommandBuffer(cmd,0);
+        VkCommandBufferBeginInfo bi{VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+        vkBeginCommandBuffer(cmd,&amp;bi);
+
+        VkClearValue clear={{{0.04f,0.08f,0.18f,1.0f}}};
+        VkRenderPassBeginInfo rpbi{};rpbi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        rpbi.renderPass=renderPass;rpbi.framebuffer=framebuffers[imgIdx];
+        rpbi.renderArea={{0,0},ext};rpbi.clearValueCount=1;rpbi.pClearValues=&amp;clear;
+
+        vkCmdBeginRenderPass(cmd,&amp;rpbi,VK_SUBPASS_CONTENTS_INLINE);
+        // Bind our pipeline and draw 3 vertices (1 triangle, positions in shader)
+        vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
+        vkCmdDraw(cmd,3,1,0,0);  // 3 vertices, 1 instance, first vertex 0, first instance 0
+        vkCmdEndRenderPass(cmd);
+        vkEndCommandBuffer(cmd);
+
+        VkPipelineStageFlags waitStage=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo si{};si.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        si.waitSemaphoreCount=1;si.pWaitSemaphores=&amp;imgAvail;si.pWaitDstStageMask=&amp;waitStage;
+        si.commandBufferCount=1;si.pCommandBuffers=&amp;cmd;
+        si.signalSemaphoreCount=1;si.pSignalSemaphores=&amp;renderDone;
+        vkQueueSubmit(graphicsQueue,1,&amp;si,inFlight);
+
+        VkPresentInfoKHR pi{};pi.sType=VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        pi.waitSemaphoreCount=1;pi.pWaitSemaphores=&amp;renderDone;
+        pi.swapchainCount=1;pi.pSwapchains=&amp;swapchain;pi.pImageIndices=&amp;imgIdx;
+        vkQueuePresentKHR(presentQueue,&amp;pi);
+    }
+    vkDeviceWaitIdle(device);
+
+    // ── CLEANUP (strict reverse order) ────────────────────────────────────────
+    vkDestroyFence(device,inFlight,nullptr);
+    vkDestroySemaphore(device,renderDone,nullptr);
+    vkDestroySemaphore(device,imgAvail,nullptr);
+    vkDestroyCommandPool(device,commandPool,nullptr);
+    vkDestroyPipeline(device,pipeline,nullptr);
+    vkDestroyPipelineLayout(device,pipelineLayout,nullptr);
+    for(auto fb:framebuffers)vkDestroyFramebuffer(device,fb,nullptr);
+    vkDestroyRenderPass(device,renderPass,nullptr);
+    for(auto iv:swapViews)vkDestroyImageView(device,iv,nullptr);
+    vkDestroySwapchainKHR(device,swapchain,nullptr);
+    vkDestroyDevice(device,nullptr);
+    vkDestroySurfaceKHR(instance,surface,nullptr);
+    vkDestroyInstance(instance,nullptr);
+    glfwDestroyWindow(window);glfwTerminate();
+    std::cout&lt;&lt;&quot;[Cleanup] All Vulkan objects destroyed. Day 4 complete.\n&quot;;
+    return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd18&apos;)">Copy</button><pre id="cmd18">cd C:\Labs\D18_VulkanTriangle
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
 build\Release\D18_VulkanTriangle.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body">
-    <div><span class="th">===========================================</span></div>
-    <div><span class="th">  RR Graphics Lab &mdash; Demo 18: First Triangle</span></div>
-    <div><span class="th">===========================================</span></div>
-    <div><span class="ts">[1] GPU: Intel(R) Iris(R) Xe Graphics</span></div>
-    <div><span class="ts">[2] Swapchain + 3 images + views + framebuffers + renderpass ready</span></div>
-    <div><span class="ts">[3] Building VkPipeline:</span></div>
-    <div><span class="to">    Shader modules created (vert + frag SPIR-V)</span></div>
-    <div><span class="to">    VkPipeline created (vert+frag+raster+blend+viewport+layout)</span></div>
-    <div><span class="to">    Shader modules freed (pipeline compiled, bytecode no longer needed)</span></div>
-    <div><span class="ts">[4] Ready. Rendering white triangle. ESC to quit.</span></div>
-    <div class="t-hr"></div>
-    <div><span class="to">Running at vsync. Triangle visible. Validation: 0 errors.</span></div>
-    <div class="t-hr"></div>
-    <div><span class="ts">[Cleanup] All Vulkan objects destroyed. Day 4 complete.</span></div>
-  </div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list">
-    <li><strong>Remove the fence wait:</strong> Comment out <code class="ic">vkWaitForFences()</code> at the start of the frame loop. Run. Validation layers immediately report: &ldquo;Command buffer is already in use by a previous submission.&rdquo; Uncomment and the error disappears. This is the exact race condition the fence prevents.</li>
-    <li><strong>Change to wireframe mode:</strong> In <code class="ic">VkPipelineRasterizationStateCreateInfo</code>, change <code class="ic">polygonMode = VK_POLYGON_MODE_FILL</code> to <code class="ic">VK_POLYGON_MODE_LINE</code>. Also enable <code class="ic">deviceFeatures.fillModeNonSolid = VK_TRUE</code> before device creation. Rebuild the full pipeline. The triangle renders as an outline. In OpenGL this was one <code class="ic">glPolygonMode()</code> call &mdash; in Vulkan it requires a full pipeline rebuild.</li>
-    <li><strong>Count the lines:</strong> Use your editor to count lines in main.cpp. Compare to Demo 1 OpenGL triangle (~80 lines). Every extra line in Demo 18 is one decision OpenGL was making silently. After today, none of those decisions are hidden from you.</li>
-  </ul></div>
-
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== RR Graphics Lab - Demo 18: Vulkan First Triangle ===</span></div><div><span class="ts">GPU: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">Validation layers: ENABLED</span></div><div><span class="ts">[1] VkInstance created</span></div><div><span class="ts">[2] Surface created</span></div><div><span class="ts">[3] Device + queue: family 0</span></div><div><span class="ts">[4] Swapchain: 3 images, B8G8R8A8_SRGB, MAILBOX</span></div><div><span class="ts">[5] Render pass + pipeline created</span></div><div><span class="ts">[6] Vertex buffer: 36 bytes (3 vertices) host-visible</span></div><div><span class="ts">[7] Command pool + 3 command buffers allocated</span></div><div><span class="ts">[8] Sync objects: 2 semaphores + 1 fence</span></div><div><span class="ts">[9] Render loop starting. ESC=quit</span></div><hr class="t-hr"><div><span class="to">Running at vsync. Triangle visible. Validation: 0 errors.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Remove the fence wait:</strong> Comment out <code class='ic'>vkWaitForFences()</code> at the start of the frame loop. Run. Validation layers immediately report: &quot;Command buffer is already in use by a previous submission.&quot; Uncomment and observe the error disappears. This is the race condition the fence prevents.</li><li><strong>Move a vertex via mapped memory:</strong> The vertex buffer is host-visible. After the render loop starts, map the memory, change vertex[0].x from 0.0 to 0.5, unmap. The triangle shifts on the next rendered frame. This is the simplest form of CPU-driven animation in Vulkan &mdash; no uniform buffer needed.</li><li><strong>Count the lines:</strong> Use your editor to count lines in main.cpp. Compare to Demo 1 (OpenGL triangle, ~80 lines). Every extra line in Demo 18 is one decision OpenGL was making for you. After today, none of those decisions are hidden.</li></ul></div>
   <div class="page-foot">
     <a class="foot-btn" href="day3-demos.html">&#8592; Day 3 Demos</a>
     <div style="font-size:.8rem;color:var(--text3);text-align:center">
@@ -497,18 +1862,17 @@ build\Release\D18_VulkanTriangle.exe</pre></div>
 
 </main>
 </div>
-
 <script>
 function copyCode(btn,id){
   const el=document.getElementById(id);
   navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{
-    const o=btn.textContent;btn.textContent='Copied!';btn.classList.add('ok');
+    const o=btn.textContent;btn.textContent='✓ Copied!';btn.classList.add('ok');
     setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2200);
   }).catch(()=>{
     const r=document.createRange();r.selectNode(el);
     window.getSelection().removeAllRanges();window.getSelection().addRange(r);
     document.execCommand('copy');window.getSelection().removeAllRanges();
-    btn.textContent='Copied!';btn.classList.add('ok');
+    btn.textContent='✓ Copied!';btn.classList.add('ok');
     setTimeout(()=>{btn.textContent='Copy All';btn.classList.remove('ok');},2200);
   });
 }

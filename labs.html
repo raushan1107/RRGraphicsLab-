@@ -163,9 +163,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 
 <nav>
   <a class="nav-brand" href="index.html">
-    <div class="nav-brand-hex">⬡
-    <a class="nav-link" href="day1-script.html">Teaching Script</a>
-  </div>
+    <div class="nav-brand-hex">&#x2B21;</div>
     RR Graphics Lab <span class="nav-mct">MCT</span>
   </a>
   <div class="nav-links">
@@ -367,18 +365,33 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
         <div class="day-card-title">NavalBridgeRenderer — Vulkan from Scratch</div>
         <div class="day-card-desc">Instance, device, swapchain, graphics pipeline, vertex buffer, vkCmdDraw, production frame sync. 5 labs building one renderer.</div>
       </div>
-      <span class="day-status status-done" style="background:rgba(251,146,60,.12);color:var(--orange);border-color:rgba(251,146,60,.3)">Day 4 ✓</span>
-      <span style="color:var(--text3);font-size:1.1rem;margin-left:1rem" id="arrow-day4">▶</span>
+      <span class="day-status status-live" style="background:rgba(251,146,60,.12);color:var(--orange);border:1px solid rgba(251,146,60,.3)">&#9679; Live</span>
+      <span style="color:var(--text3);font-size:1.1rem;margin-left:1rem" id="arrow-day4">&#9660;</span>
     </div>
-    <div class="day-card-body hidden" id="body-day4">
+    <div class="day-card-body" id="body-day4">
+      <div class="scenario-banner" style="background:linear-gradient(135deg,rgba(251,146,60,.06),rgba(245,158,11,.04));border:1px solid rgba(251,146,60,.2)">
+        <div class="scenario-icon">&#9875;</div>
+        <div class="scenario-text">
+          <h3>Scenario: Naval Bridge Renderer</h3>
+          <p>You are a graphics programmer replacing the ship's legacy OpenGL tactical display with a new Vulkan renderer for lower latency and better CPU utilisation across the CIC multicore system. One project folder, one CMakeLists.txt, five <code style="font-family:var(--font-mono);font-size:.78rem;color:var(--cyan)">main.cpp</code> replacements — each lab builds one layer of the stack, from a bare VkInstance to a fully synchronised, animated tactical display.</p>
+          <span class="scenario-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Vulkan 1.0+</span>
+          <span class="scenario-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Explicit GPU control</span>
+          <span class="scenario-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.25);color:var(--orange)">SPIR-V shaders</span>
+          <span class="scenario-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Frame synchronisation</span>
+          <span class="scenario-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Vertex buffers</span>
+        </div>
+      </div>
       <div class="labs-pills">
-        <div class="lab-pill"><span style="background:rgba(251,146,60,.15);color:var(--orange)">L1</span>VkInstance, GPU Scoring, Device</div>
+        <div class="lab-pill"><span style="background:rgba(251,146,60,.15);color:var(--orange)">L1</span>VkInstance, GPU Scoring, Logical Device</div>
         <div class="lab-pill"><span style="background:rgba(251,146,60,.15);color:var(--orange)">L2</span>Surface + Swapchain + Clear Loop</div>
         <div class="lab-pill"><span style="background:rgba(251,146,60,.15);color:var(--orange)">L3</span>SPIR-V + Full Graphics Pipeline</div>
         <div class="lab-pill"><span style="background:rgba(251,146,60,.15);color:var(--orange)">L4</span>Vertex Buffer + vkCmdDraw</div>
         <div class="lab-pill"><span style="background:rgba(251,146,60,.15);color:var(--orange)">L5</span>MAX_FRAMES_IN_FLIGHT Capstone</div>
       </div>
-      <a class="open-btn" href="lab-day4.html" onclick="event.stopPropagation()">Open Day 4 Labs &rarr;</a>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <a class="open-btn open-btn-primary" href="lab-day4.html" style="background:linear-gradient(135deg,rgba(251,146,60,.2),rgba(245,158,11,.1));border:1px solid rgba(251,146,60,.35);color:var(--orange)">&#128300; Open Day 4 Labs</a>
+        <a class="open-btn open-btn-ghost" href="day4-demos.html">&#9889; Day 4 Demos First</a>
+      </div>
     </div>
   </div>
 
@@ -410,7 +423,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 
 <footer>
   <div class="footer-brand">RR Graphics Lab — Lab Challenges</div>
-  <div class="footer-sub">OpenGL & Vulkan Training · US Navy Department · 5 Capstone Projects</div>
+  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan · 5 Capstone Projects</div>
   <div class="footer-links">
     <a class="footer-link" href="index.html">Module Notes</a>
     <a class="footer-link" href="demos.html">Code Demos</a>
@@ -428,10 +441,11 @@ function toggleCard(day) {
   const body = document.getElementById('body-' + day);
   const arrow = document.getElementById('arrow-' + day);
   body.classList.toggle('hidden');
-  arrow.textContent = body.classList.contains('hidden') ? '▶' : '▼';
+  arrow.textContent = body.classList.contains('hidden') ? '\u25B6' : '\u25BC';
 }
 // Day 1 open by default
 document.getElementById('body-day1').classList.remove('hidden');
+document.getElementById('arrow-day1').textContent = '\u25BC';
 </script>
 </body>
 </html>

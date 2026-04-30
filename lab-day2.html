@@ -3,546 +3,605 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Day 2 Lab — RR Graphics Lab</title>
+<title>Day 2 Labs — 3D Vessel Briefing System | RR Graphics Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222636;
-  --border:#2a2f40;--border2:#3a4055;
-  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
-  --accent:#06b6d4;--accent2:#0ea5e9;
-  --green:#4ade80;--orange:#fb923c;--purple:#a78bfa;--pink:#f472b6;
-  --day2:#06b6d4;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
-
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,15,20,.95);
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 2rem;height:56px;gap:1rem}
-.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;
-  font-weight:800;font-size:1rem;color:var(--text);white-space:nowrap}
-.nav-badge{background:linear-gradient(135deg,#6c63ff,#38bdf8);color:#fff;
-  font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.4px;text-transform:uppercase}
-.nav-links{display:flex;gap:2px;flex:1;margin-left:1rem}
-.nav-link{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;
-  text-decoration:none;font-size:13px;font-weight:600;color:var(--text2);
-  border:1px solid transparent;transition:.18s}
-.nav-link:hover{background:var(--bg3);color:var(--text)}
-.nav-link.active{color:var(--green);background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.2)}
-.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.nav-right{margin-left:auto;font-size:11px;color:var(--text3);font-weight:600}
-
-/* HERO */
-.hero{margin-top:56px;padding:3rem 2rem 2rem;
-  background:linear-gradient(180deg,rgba(6,182,212,.05) 0%,transparent 100%);
-  border-bottom:1px solid var(--border)}
-.hero-inner{max-width:900px;margin:0 auto}
-.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--accent);margin-bottom:.75rem}
-.hero h1{font-size:2rem;font-weight:800;margin-bottom:.75rem}
-.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.scenario-card{background:var(--bg2);border:1px solid rgba(6,182,212,.3);border-radius:14px;
-  padding:1.5rem;margin-top:1.5rem}
-.scenario-label{font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:var(--accent);margin-bottom:.5rem}
-.scenario-card h2{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
-.scenario-card p{color:var(--text2);font-size:.9rem;margin-bottom:.75rem}
-.scenario-tags{display:flex;gap:.4rem;flex-wrap:wrap}
-.s-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;
-  background:rgba(6,182,212,.12);color:var(--accent);border:1px solid rgba(6,182,212,.2)}
-
-/* LAB NAVIGATION */
-.lab-nav{display:flex;gap:.4rem;justify-content:center;padding:1.5rem 2rem;
-  border-bottom:1px solid var(--border);flex-wrap:wrap}
-.lab-tab{padding:7px 20px;border-radius:8px;border:1px solid var(--border);
-  background:var(--bg2);color:var(--text2);font-size:13px;font-weight:700;
-  cursor:pointer;text-decoration:none;transition:.18s}
-.lab-tab:hover{border-color:var(--border2);color:var(--text)}
-.lab-tab.active{background:rgba(74,222,128,.1);border-color:var(--green);color:var(--green)}
-
-/* PROGRESS */
-.progress-bar{background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:.75rem 2rem;display:flex;align-items:center;gap:1rem}
-.progress-label{font-size:11px;color:var(--text3);font-weight:600;white-space:nowrap}
-.progress-track{flex:1;height:4px;background:var(--bg3);border-radius:2px}
-.progress-fill{height:4px;border-radius:2px;
-  background:linear-gradient(90deg,var(--accent),var(--green));transition:width .4s}
-.progress-pct{font-size:11px;color:var(--accent);font-weight:700;white-space:nowrap}
-
-/* MAIN CONTENT */
-.main{max-width:900px;margin:0 auto;padding:2.5rem 2rem}
-
-/* BEFORE YOU BEGIN */
-.before-box{background:linear-gradient(135deg,rgba(251,146,60,.08),rgba(251,146,60,.03));
-  border:1px solid rgba(251,146,60,.25);border-radius:12px;padding:1.25rem;margin-bottom:2rem}
-.before-label{font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:var(--orange);margin-bottom:.5rem}
-.before-box ul{padding-left:1.25rem;color:var(--text2);font-size:.875rem}
-.before-box li{margin-bottom:.3rem}
-.before-box a{color:var(--accent);text-decoration:none}
-.before-box a:hover{text-decoration:underline}
-
-/* LAB SECTION */
-.lab{display:none;animation:fadeIn .3s ease}
-.lab.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-.lab-header{margin-bottom:2rem}
-.lab-num{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
-.lab-num-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;font-size:12px;font-weight:800;padding:4px 12px;border-radius:6px}
-.lab-num-sub{font-size:11px;color:var(--text3);font-weight:600}
-.lab-header h2{font-size:1.5rem;font-weight:800;margin-bottom:.5rem}
-.lab-header p{color:var(--text2);font-size:.95rem}
-
-/* BRIEF */
-.brief{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
-  padding:1.25rem;margin-bottom:1.5rem}
-.brief-label{font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:#a78bfa;margin-bottom:.75rem}
-.brief p{color:var(--text2);font-size:.9rem;margin-bottom:.5rem}
-.brief p:last-child{margin-bottom:0}
-.requirement-list{list-style:none;padding:0;margin:.75rem 0 0}
-.requirement-list li{display:flex;gap:.6rem;align-items:flex-start;
-  padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.875rem;color:var(--text2)}
-.requirement-list li:last-child{border-bottom:none}
-.req-icon{color:var(--accent);flex-shrink:0;font-size:.9rem}
-
-/* STEPS */
-.steps{margin-bottom:1.5rem}
-.step{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
-  margin-bottom:.75rem;overflow:hidden}
-.step-header{display:flex;align-items:center;gap:.75rem;padding:.875rem 1.25rem;
-  cursor:pointer;user-select:none;transition:.15s}
-.step-header:hover{background:var(--bg3)}
-.step-num{width:26px;height:26px;border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;
-  justify-content:center;flex-shrink:0}
-.step-title{font-size:.9rem;font-weight:700;flex:1}
-.step-arrow{color:var(--text3);transition:transform .2s}
-.step.open .step-arrow{transform:rotate(90deg)}
-.step-body{display:none;padding:0 1.25rem 1.25rem;border-top:1px solid var(--border)}
-.step.open .step-body{display:block}
-.step-body p{color:var(--text2);font-size:.875rem;margin:.75rem 0 .5rem}
-.step-body ul{padding-left:1.25rem;color:var(--text2);font-size:.875rem}
-.step-body li{margin-bottom:.3rem}
-
-/* CODE BLOCK */
-.code-wrap{position:relative;margin:.75rem 0}
-.code-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
-  color:var(--text3);padding:.4rem 1rem;background:var(--bg3);
-  border:1px solid var(--border);border-bottom:none;border-radius:6px 6px 0 0;
-  display:flex;justify-content:space-between;align-items:center}
-.copy-btn{background:rgba(6,182,212,.15);color:var(--accent);
-  border:1px solid rgba(6,182,212,.3);padding:2px 8px;border-radius:4px;
-  font-size:10px;font-weight:700;cursor:pointer;transition:.15s}
-.copy-btn:hover{background:rgba(6,182,212,.25)}
-.copy-btn.copied{background:rgba(74,222,128,.15);color:var(--green);
-  border-color:rgba(74,222,128,.3)}
-pre{background:var(--bg4);border:1px solid var(--border);
-  border-radius:0 0 6px 6px;padding:1rem;overflow-x:auto;
-  font-family:'Courier New',monospace;font-size:12px;line-height:1.7;color:var(--text)}
-.c-comment{color:#64748b;font-style:italic}
-.c-keyword{color:#38bdf8}
-.c-type{color:#a78bfa}
-.c-func{color:#4ade80}
-.c-num{color:#fb923c}
-.c-string{color:#fbbf24}
-
-/* HINT */
-.hint{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);
-  border-radius:8px;padding:.875rem 1rem;margin:.75rem 0;font-size:.85rem;color:var(--text2)}
-.hint strong{color:#a78bfa}
-
-/* DELIVERABLE */
-.deliverable{background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(6,182,212,.04));
-  border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem}
-.deliverable-label{font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:var(--green);margin-bottom:.75rem}
-.deliverable h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem}
-.deliverable ul{padding-left:1.25rem;color:var(--text2);font-size:.875rem}
-.deliverable li{margin-bottom:.3rem}
-
-/* CHECKLIST */
-.checklist{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
-  padding:1.25rem;margin-bottom:1.5rem}
-.checklist-label{font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:var(--orange);margin-bottom:.75rem}
-.check-item{display:flex;align-items:center;gap:.75rem;padding:.4rem 0;
-  border-bottom:1px solid var(--border);cursor:pointer}
-.check-item:last-child{border-bottom:none}
-.check-item input{width:16px;height:16px;accent-color:var(--green);cursor:pointer}
-.check-item label{font-size:.875rem;color:var(--text2);cursor:pointer;flex:1}
-.check-item.done label{text-decoration:line-through;color:var(--text3)}
-
-/* NAV BUTTONS */
-.nav-btns{display:flex;gap:1rem;justify-content:space-between;margin-top:2.5rem;
-  padding-top:2rem;border-top:1px solid var(--border)}
-.nav-btn{padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;
-  text-decoration:none;transition:.18s;border:1px solid var(--border);
-  background:var(--bg2);color:var(--text2)}
-.nav-btn:hover{border-color:var(--border2);color:var(--text)}
-.nav-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;border:none}
-.nav-btn.primary:hover{opacity:.9}
-
-/* SVG SUMMARY */
-.summary-section{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
-  padding:2rem;margin-top:3rem}
-.summary-title{font-size:1rem;font-weight:800;margin-bottom:1.5rem;
-  color:var(--accent);text-align:center}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
-@media(max-width:700px){.summary-grid{grid-template-columns:1fr}}
-.svg-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.25rem}
-.svg-card h4{font-size:.8rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:.8px;color:var(--text3);margin-bottom:1rem;text-align:center}
-
-footer{border-top:1px solid var(--border);padding:2rem;text-align:center;
-  color:var(--text3);font-size:.8rem;margin-top:3rem}
-footer a{color:var(--accent);text-decoration:none}
+:root{--bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;--border:#1e2535;--border2:#2a3148;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--accent:#6366f1;--accent2:#818cf8;--cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--pink:#f472b6;--yellow:#fbbf24;--red:#f87171;--d2:#22d3ee;--nav-h:62px;--radius:12px;--font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+::selection{background:rgba(34,211,238,.25);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--d2)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);background:rgba(8,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;font-weight:700;white-space:nowrap}
+.nav-hex{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--cyan));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0}
+.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;border:1px solid rgba(99,102,241,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1;margin-left:1.5rem}
+.nav-link{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.nav-link.active{color:var(--green);background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-badge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);color:var(--d2)}
+.page{display:flex;padding-top:var(--nav-h)}
+.sidebar{width:270px;flex-shrink:0;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0}
+.main{flex:1;min-width:0;padding:3rem 2.5rem;max-width:1050px}
+.sb-grp{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);padding:0 1.25rem;margin-bottom:.5rem;margin-top:1rem}
+.sb-link{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;cursor:pointer;border-left:2px solid transparent;text-decoration:none}
+.sb-link:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border2)}
+.sb-link.active{background:rgba(34,211,238,.06);color:var(--d2);border-left-color:var(--d2)}
+.sb-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
+.sb-link.active .sb-num{background:rgba(34,211,238,.15);border-color:rgba(34,211,238,.35);color:var(--d2)}
+.sb-sep{height:1px;background:var(--border);margin:.75rem 1.25rem}
+.sb-prog{padding:1rem 1.25rem}
+.sb-prog-title{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:.4rem;display:flex;justify-content:space-between}
+.prog-bar{height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--d2),var(--green));border-radius:2px;transition:width .4s}
+.lab-sec{padding:3rem 0;border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--nav-h) + 1rem)}
+.lab-sec:last-of-type{border-bottom:none}
+.eyebrow-row{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.lab-badge{font-family:var(--font-display);font-size:10px;font-weight:700;padding:3px 14px;border-radius:20px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);color:var(--d2)}
+.lab-diff{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3)}
+.lab-title{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:700;color:var(--text);margin-bottom:.5rem;line-height:1.25}
+.lab-desc{font-size:.9rem;color:var(--text2);line-height:1.85;max-width:700px;margin-bottom:1rem}
+.lab-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.meta-chip{font-size:11px;color:var(--text3);font-weight:600;background:var(--bg3);border:1px solid var(--border);padding:4px 12px;border-radius:20px}
+.adds-over{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.adds-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d2);margin-bottom:.6rem}
+.adds-list{list-style:none}
+.adds-list li{font-size:.86rem;color:var(--text2);padding:3px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.65}
+.adds-dot{color:var(--green);flex-shrink:0;font-size:.8rem;margin-top:3px}
+.out-box{background:rgba(34,211,238,.04);border:1px solid rgba(34,211,238,.2);border-left:3px solid var(--d2);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.out-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d2);margin-bottom:.5rem}
+.out-item{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--text2);line-height:1.6;margin-top:.3rem}
+.out-dot{width:7px;height:7px;border-radius:50%;background:var(--d2);flex-shrink:0;margin-top:5px}
+.concept{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(34,211,238,.03));border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.concept-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
+.concept p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.warn{background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.2);border-left:3px solid var(--orange);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:.4rem}
+.warn p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.tip{background:rgba(34,211,238,.04);border:1px solid rgba(34,211,238,.2);border-left:3px solid var(--d2);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.tip-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d2);margin-bottom:.4rem}
+.tip p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.obj-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem}
+.obj-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
+.obj-list{list-style:none}
+.obj-list li{font-size:.86rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.65}
+.obj-chk{width:16px;height:16px;border-radius:4px;border:1px solid var(--border2);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s}
+.obj-chk:hover{border-color:var(--d2);background:rgba(34,211,238,.1)}
+.obj-chk.done{background:var(--d2);border-color:var(--d2);color:var(--bg)}
+.sh{font-size:.92rem;font-weight:700;color:var(--text);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:8px}
+.sh-dot{width:6px;height:6px;border-radius:50%;background:var(--d2);box-shadow:0 0 8px var(--d2)}
+p.note{font-size:.87rem;color:var(--text2);line-height:1.8;margin:.35rem 0}
+.diag{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin:1.25rem 0;overflow-x:auto}
+.diag-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;text-align:center}
+.diag pre{font-family:var(--font-mono);font-size:.77rem;color:var(--text2);line-height:1.65}
+.ftree{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.ftree-title{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
+.ftree pre{font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8}
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:.6rem 1rem}
+.code-fname{font-family:var(--font-mono);font-size:11px;color:var(--text2);font-weight:600}
+.code-meta{display:flex;align-items:center;gap:.75rem}
+.code-lang{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.copy-btn{padding:4px 14px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.copy-btn:hover{border-color:var(--d2);color:var(--d2)}
+.copy-btn.ok{color:var(--green);border-color:var(--green)}
+.code-block{background:#03050a;border:1px solid var(--border2);border-radius:0 0 var(--radius) var(--radius);overflow:auto;max-height:700px}
+.code-block pre{font-family:var(--font-mono);font-size:.78rem;line-height:1.9;padding:1.25rem 1.5rem;white-space:pre;color:#cdd6f4;min-width:max-content}
+.cmd-wrap{background:#030508;border:1px solid rgba(34,211,238,.18);border-left:3px solid var(--d2);border-radius:var(--radius);padding:1rem 1.25rem;margin:.75rem 0;position:relative}
+.cmd-label{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--d2);margin-bottom:.4rem}
+.cmd-wrap pre{font-family:var(--font-mono);font-size:.8rem;color:var(--d2);line-height:1.7}
+.cmd-copy-btn{position:absolute;top:.75rem;right:.75rem;padding:3px 10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);font-size:10px;cursor:pointer;transition:all .2s}
+.cmd-copy-btn:hover{color:var(--d2);border-color:var(--d2)}
+.del-box{background:linear-gradient(135deg,rgba(34,211,238,.07),rgba(99,102,241,.04));border:1px solid rgba(34,211,238,.25);border-radius:var(--radius);padding:1.5rem;margin-top:2rem}
+.del-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d2);margin-bottom:.5rem}
+.del-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.del-desc{font-size:.85rem;color:var(--text2);line-height:1.75;margin-bottom:.75rem}
+.del-list{list-style:none}
+.del-list li{font-size:.85rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px}
+.del-dot{width:6px;height:6px;border-radius:50%;background:var(--d2);flex-shrink:0;margin-top:7px}
+.exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--pink);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.exp-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--pink);margin-bottom:.5rem}
+.exp-list{list-style:none;margin:.3rem 0}
+.exp-list li{font-size:.86rem;color:var(--text2);padding:3px 0 3px 18px;position:relative;line-height:1.7}
+.exp-list li::before{content:"\25B8";position:absolute;left:0;color:var(--pink);font-size:.75rem;top:5px}
+code.ic{font-family:var(--font-mono);font-size:.79rem;background:var(--bg4);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+.page-foot{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:1px solid var(--border);margin-top:3rem}
+.foot-btn{padding:9px 20px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.foot-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--d2)}
+.foot-btn.primary{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:var(--d2)}
+@media(max-width:900px){.sidebar{display:none}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a class="nav-brand" href="index.html">
-    <span style="background:linear-gradient(135deg,#6c63ff,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.3rem">⬡</span>
-    RR Graphics Lab
-    <span class="nav-badge">MCT</span>
+    <div class="nav-hex">&#x2736;</div>
+    RR Graphics Lab <span class="nav-mct">MCT</span>
   </a>
   <div class="nav-links">
-    <a class="nav-link" href="index.html">
-      <span class="nav-dot" style="background:#a78bfa"></span>Module Notes
-    </a>
-    <a class="nav-link" href="demo-day2.html">
-      <span class="nav-dot" style="background:#38bdf8"></span>Code Demos
-    </a>
-    <a class="nav-link active" href="labs.html">
-      <span class="nav-dot" style="background:#4ade80"></span>Lab Challenges
-    </a>
+    <a class="nav-link" href="index.html"><span class="nav-dot" style="background:var(--accent)"></span>Module Notes</a>
+    <a class="nav-link" href="demos.html"><span class="nav-dot" style="background:var(--cyan)"></span>Code Demos</a>
+    <a class="nav-link active" href="labs.html"><span class="nav-dot" style="background:var(--green)"></span>Lab Challenges</a>
   </div>
-  <div class="nav-right">Raushan Ranjan · MCT</div>
+  <div class="nav-right">
+    <span class="nav-badge">Day 2 Labs &mdash; 3D Vessel System</span>
+    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan &middot; MCT</span>
+  </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">Lab Challenge · Day 2 · Modules 4–6</div>
-    <h1>Build a <span>3D Vessel Briefing System</span></h1>
-    <div class="scenario-card">
-      <div class="scenario-label">🚢 Scenario Brief</div>
-      <h2>Naval Vessel Identification & Briefing Display</h2>
-      <p>The operations centre needs a 3D display that shows a vessel model with correct lighting and surface textures — used to brief personnel on vessel type, threat level, and visual recognition features. The system must render a recognisable 3D shape, apply Phong lighting so shape and depth are clear, and texture the surface with appropriate markings.</p>
-      <p><strong>Deliverable across 3 labs:</strong> A rotating 3D vessel silhouette with full Phong lighting and texture mapping.</p>
-      <div class="scenario-tags">
-        <span class="s-tag">MVP Transforms</span>
-        <span class="s-tag">Depth Testing</span>
-        <span class="s-tag">Phong Lighting</span>
-        <span class="s-tag">Texture Mapping</span>
-        <span class="s-tag">Module 4–6</span>
-      </div>
-    </div>
+<div class="page">
+<aside class="sidebar">
+  <div class="sb-grp">Scenario</div>
+  <div class="sb-link active" onclick="scrollTo('overview')"><span class="sb-num" style="font-size:8px">&#9432;</span>3D Vessel System</div>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">3 Labs</div>
+  <a class="sb-link" href="#lab1"><span class="sb-num">L1</span>3D Shape &amp; Camera</a>
+  <a class="sb-link" href="#lab2"><span class="sb-num">L2</span>Phong Lighting</a>
+  <a class="sb-link" href="#lab3"><span class="sb-num">L3</span>Texture &amp; Final Scene</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Navigation</div>
+  <a class="sb-link" href="lab-day1.html"><span class="sb-num" style="font-size:9px">&#8592;</span>Day 1 Labs</a>
+  <a class="sb-link" href="lab-day3.html"><span class="sb-num" style="font-size:9px">&#8594;</span>Day 3 Labs</a>
+  <a class="sb-link" href="day2-demos.html"><span class="sb-num" style="font-size:9px">&#9654;</span>Day 2 Demos</a>
+  <div class="sb-sep"></div>
+  <div class="sb-prog">
+    <div class="sb-prog-title"><span>Day 2 Progress</span><span id="pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- OVERVIEW -->
+<div id="overview" style="padding-bottom:3rem;border-bottom:1px solid var(--border);margin-bottom:1rem">
+  <div style="display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--d2);border:1px solid rgba(34,211,238,.25);background:rgba(34,211,238,.06);padding:5px 14px;border-radius:30px;margin-bottom:1rem">
+    <span style="width:5px;height:5px;border-radius:50%;background:var(--d2);animation:pulse 2s infinite"></span>
+    Day 2 Capstone &middot; 3 Labs &middot; Build a Real 3D System
+  </div>
+  <div style="font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--text);margin-bottom:.75rem;line-height:1.2">3D Vessel Briefing System</div>
+  <div style="font-size:.93rem;color:var(--text2);line-height:1.85;max-width:700px;margin-bottom:1.5rem">You are building a 3D briefing display for a naval operations centre &mdash; used to show a vessel model with correct lighting and surface textures for threat classification and visual recognition. Each lab builds on the previous one. By Lab 3, you have a fully lit, textured, rotating vessel with all Day 2 concepts active simultaneously. <strong style="color:var(--text)">Every lab is one complete <code class="ic">main.cpp</code> &mdash; copy the whole file, build, run.</strong></div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">MVP Matrix</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Depth Testing</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Phong Lighting</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Texture Mapping</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Normals</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">stb_image</span>
   </div>
 </div>
 
-<!-- LAB TABS -->
-<div class="lab-nav">
-  <a class="lab-tab active" href="#" onclick="switchLab(0,event)">Lab 1 — 3D Shape &amp; Camera</a>
-  <a class="lab-tab" href="#" onclick="switchLab(1,event)">Lab 2 — Phong Lighting</a>
-  <a class="lab-tab" href="#" onclick="switchLab(2,event)">Lab 3 — Texture &amp; Final Scene</a>
+<div class="concept" style="margin-bottom:2.5rem">
+  <div class="concept-lbl">&#128193; Project Setup &mdash; Do This Once Before Lab 1</div>
+  <p class="note">All 3 labs share <strong>one project folder</strong>: <code class="ic">C:\Labs\VesselBriefing\</code>. The <strong>CMakeLists.txt is identical for all labs</strong> &mdash; you write it once and never change it. Each lab replaces only <code class="ic">src\main.cpp</code>. Build once after Lab 1 setup, then just replace main.cpp + rebuild for each subsequent lab.</p>
 </div>
 
-<!-- PROGRESS -->
-<div class="progress-bar">
-  <span class="progress-label">Day 2 Progress</span>
-  <div class="progress-track">
-    <div class="progress-fill" id="progressFill" style="width:33%"></div>
+<div class="ftree">
+  <div class="ftree-title">Create This Folder Structure &mdash; Before Lab 1</div>
+  <pre>C:\Labs\VesselBriefing\
+&#9500;&#9472;&#9472; CMakeLists.txt     &#8592; write once, same for all 3 labs
+&#9500;&#9472;&#9472; metal_plate.jpg    &#8592; texture for Lab 3 (from C:\Resources\textures\)
+&#9492;&#9472;&#9472; src\
+    &#9492;&#9472;&#9472; main.cpp          &#8592; replace with each lab's complete file</pre>
+</div>
+
+<div class="code-wrap"><div class="code-header"><span class="code-fname">CMakeLists.txt &mdash; same for all 3 labs</span><div class="code-meta"><span class="code-lang">CMake</span><button class="copy-btn" onclick="cp(this,'cmake_all')">Copy All</button></div></div><div class="code-block"><pre id="cmake_all">cmake_minimum_required(VERSION 3.20)
+project(VesselBriefing)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(OpenGL REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLEW_DIR $ENV{GLEW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLEW_DIR}/include
+    ${GLM_DIR}
+)
+add_executable(VesselBriefing src/main.cpp)
+target_link_libraries(VesselBriefing
+    OpenGL::GL
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+    ${GLEW_DIR}/lib/Release/x64/glew32s.lib
+)</pre></div></div>
+
+<div class="cmd-wrap"><div class="cmd-label">Build &amp; Run &mdash; Developer Command Prompt for VS 2022</div><button class="cmd-copy-btn" onclick="cpCmd(this,'build_all')">Copy</button><pre id="build_all">cd C:\Labs\VesselBriefing
+cmake -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+build\Release\VesselBriefing.exe</pre></div>
+
+<div class="tip">
+  <div class="tip-lbl">&#10003; Build Procedure &mdash; Same Every Lab</div>
+  <p>Write your lab's <code class="ic">main.cpp</code> (or copy the complete file below) &rarr; open Developer Command Prompt for VS 2022 &rarr; run the 4 build commands above. The CMakeLists.txt and folder path never change. Only <code class="ic">src\main.cpp</code> changes between labs.</p>
+</div>
+
+<!-- ═══════════ LAB 1 ═══════════ -->
+<div class="lab-sec" id="lab1">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 1 of 3</span>
+    <span class="lab-diff">&#11035; Intermediate &middot; ~35 min</span>
   </div>
-  <span class="progress-pct" id="progressPct">Lab 1 of 3</span>
-</div>
+  <div class="lab-title">Place a 3D Vessel Shape in World Space</div>
+  <div class="lab-desc">Build a recognisable 3D shape using a cube mesh. Apply the full MVP pipeline so it sits in a 3D world with a proper fixed camera and perspective projection. Enable depth testing. This geometry foundation carries through Labs 2 and 3 &mdash; lighting and texture are applied on top of it.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: Model Matrix &middot; View Matrix &middot; Projection &middot; Depth Test</span>
+    <span class="meta-chip">&#9889; Do Demo 7 (Model Matrix) and Demo 8 (Full MVP) first</span>
+  </div>
 
-<!-- MAIN -->
-<div class="main">
-
-<!-- ============================================================ -->
-<!-- LAB 1 -->
-<!-- ============================================================ -->
-<div class="lab active" id="lab-1">
-  <div class="before-box">
-    <div class="before-label">⚡ Before You Begin — Repeat These Demos First (15 min)</div>
-    <ul>
-      <li>Run <a href="demo-day2.html#d2-01">D2-01</a>: model matrix — confirm rotating triangle works</li>
-      <li>Run <a href="demo-day2.html#d2-02">D2-02</a>: view matrix (lookAt) — camera orbits fixed object</li>
-      <li>Run <a href="demo-day2.html#d2-03">D2-03</a>: projection matrix — see perspective vs ortho switch</li>
-      <li>Run <a href="demo-day2.html#d2-04">D2-04</a>: depth test — confirm two cubes render correctly</li>
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Build in This Lab</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>36-vertex cube mesh (6 faces &times; 2 triangles) with position + normal per vertex</li>
+      <li><span class="adds-dot">&#9658;</span>Model matrix: slow Y-axis rotation (12&deg;/sec) for 360&deg; visual identification</li>
+      <li><span class="adds-dot">&#9658;</span>Fixed briefing camera: above-right angle at vec3(2, 1.5, 3) looking at origin</li>
+      <li><span class="adds-dot">&#9658;</span>Perspective projection 45&deg; FOV &mdash; realistic depth appearance</li>
+      <li><span class="adds-dot">&#9658;</span>Depth test enabled &mdash; near faces correctly cover far faces</li>
     </ul>
   </div>
 
-  <div class="lab-header">
-    <div class="lab-num">
-      <span class="lab-num-badge">Lab 1</span>
-      <span class="lab-num-sub">Day 2 · Module 4</span>
-    </div>
-    <h2>Place a 3D Vessel Shape in World Space</h2>
-    <p>Build a recognisable 3D shape using a cube mesh. Apply the full MVP pipeline so it sits in a 3D world with a proper camera and perspective projection. This is the geometric foundation the lighting and texture will be applied on top of in Labs 2 and 3.</p>
+  <div class="out-box">
+    <div class="out-label">&#127919; What You Will See When This Runs</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Screen:</strong> Solid grey/white cube rotating slowly on its Y axis, camera from above-right</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Depth:</strong> Near faces cover far faces &mdash; no bleed-through or flickering</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Perspective:</strong> Far edges appear smaller &mdash; realistic 3D depth</div>
   </div>
 
-  <div class="brief">
-    <div class="brief-label">📋 Operational Requirements</div>
-    <p>The display system must:</p>
-    <ul class="requirement-list">
-      <li><span class="req-icon">→</span>Render a 3D box-shaped vessel silhouette (a cube is your approximation)</li>
-      <li><span class="req-icon">→</span>Apply a model matrix so it rotates slowly on the Y-axis (continuous rotation for visual identification)</li>
-      <li><span class="req-icon">→</span>Place the camera at a fixed briefing angle: slightly above and in front of the vessel</li>
-      <li><span class="req-icon">→</span>Use perspective projection (45° FOV) to give realistic depth appearance</li>
-      <li><span class="req-icon">→</span>Enable depth testing so near faces correctly cover far faces</li>
+  <div class="concept">
+    <div class="concept-lbl">&#128161; Why 36 Vertices for a Cube?</div>
+    <p>OpenGL draws triangles, not quads. Each face = 2 triangles &times; 3 vertices = 6. Six faces = 36 total. We cannot share vertices across faces because each face has a different outward normal &mdash; the same corner vertex needs a different normal depending on which face it belongs to. So we duplicate all 4 corners per face.</p>
+  </div>
+
+  <div class="diag">
+    <div class="diag-title">MVP Transform Chain &mdash; Applied Right to Left Inside the GPU</div>
+    <pre>
+  Local coords         World coords         Camera/View          Clip coords
+  (vertex data)   ×M   (after model)   ×V   (lookAt space)  ×P   (gl_Position)
+
+  aPos  ────────→  FragPos  ──────────→  view space  ──────→  gl_Position
+                   uModel               uView                 uProj
+
+  gl_Position = uProj * uView * uModel * vec4(aPos, 1.0)
+  uModel: translate / rotate / scale the vessel
+  uView:  glm::lookAt(eye, centre, up) — camera position
+  uProj:  glm::perspective(45deg, aspect, 0.1, 100.0) — frustum</pre>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives &mdash; Check Off As You Complete</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>36-vertex cube data declared (position + normal, 6 floats per vertex)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>VAO + VBO uploaded with stride 6, attribute 0 = pos, attribute 1 = normal</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Vertex shader: MVP applied, FragPos and Normal passed out for Lab 2</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader: solid grey colour (all lighting deferred to Lab 2)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>glEnable(GL_DEPTH_TEST) called, glClear includes GL_DEPTH_BUFFER_BIT</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Model matrix rotates 12 degrees per second around Y</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Camera at (2, 1.5, 3) looking at origin, Y-up</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Perspective 45&deg;, near 0.1, far 100</li>
     </ul>
   </div>
 
-  <div class="steps">
-    <div class="step open">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">1</span>
-        <span class="step-title">Create your project and cube vertex data</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <p>Create <code>C:\Labs\Day2_Lab1_VesselShape\src\main.cpp</code>. Copy your Day 1 Lab CMakeLists.txt (rename project to <code>day2lab1</code>). Your cube needs 36 vertices (6 faces × 2 triangles × 3 vertices). Each vertex has position (xyz) and normal (xyz) — 6 floats per vertex.</p>
-        <div class="code-wrap">
-          <div class="code-label"><span>Cube vertex data — 36 vertices, position + normal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-comment">// 36 vertices = 6 cube faces × 2 triangles × 3 vertices
-// Each row: x, y, z, nx, ny, nz (position + outward normal)</span>
-<span class="c-type">float</span> cubeVerts[] = {
-    <span class="c-comment">// FRONT FACE  (normal = +Z)</span>
-    -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,   <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,   <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,
-     <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,
-    <span class="c-comment">// BACK FACE   (normal = -Z)</span>
-     <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,-<span class="c-num">1</span>,  -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,-<span class="c-num">1</span>,  -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,-<span class="c-num">1</span>,
-    -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,-<span class="c-num">1</span>,   <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,-<span class="c-num">1</span>,   <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,-<span class="c-num">1</span>,
-    <span class="c-comment">// LEFT FACE   (normal = -X)</span>
-    -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, -<span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, -<span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, -<span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,
-    -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, -<span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, -<span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, -<span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,
-    <span class="c-comment">// RIGHT FACE  (normal = +X)</span>
-     <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,
-     <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">1</span>,<span class="c-num">0</span>,<span class="c-num">0</span>,
-    <span class="c-comment">// TOP FACE    (normal = +Y)</span>
-    -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">1</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">1</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">1</span>,<span class="c-num">0</span>,
-     <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">1</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">1</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">1</span>,<span class="c-num">0</span>,
-    <span class="c-comment">// BOTTOM FACE (normal = -Y)</span>
-    -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,-<span class="c-num">1</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,-<span class="c-num">1</span>,<span class="c-num">0</span>,   <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,-<span class="c-num">1</span>,<span class="c-num">0</span>,
-     <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,-<span class="c-num">1</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,-<span class="c-num">1</span>,<span class="c-num">0</span>,  -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>,  <span class="c-num">0</span>,-<span class="c-num">1</span>,<span class="c-num">0</span>,
-};</pre>
-        </div>
-        <div class="hint"><strong>💡 Why 36 not 8?</strong> OpenGL draws triangles, not quads. Each face = 2 triangles. We can't share vertices across faces because each face has a different normal direction — so we duplicate all 4 corners per face rather than sharing them.</div>
-      </div>
-    </div>
+  <div class="warn">
+    <div class="warn-lbl">&#9997; Write It First &mdash; Then Verify</div>
+    <p>Try writing <code class="ic">main.cpp</code> from memory using what you learned in Demos 7 and 8. The vertex shader MVP line and the glm::lookAt call are the key pieces. Only look at the complete file below if you are stuck after a genuine attempt.</p>
+  </div>
 
-    <div class="step">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">2</span>
-        <span class="step-title">Upload to GPU — VAO and VBO with position + normal layout</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <div class="code-wrap">
-          <div class="code-label"><span>VAO/VBO Setup — stride 6 floats</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-type">unsigned int</span> VAO, VBO;
-<span class="c-func">glGenVertexArrays</span>(<span class="c-num">1</span>, &VAO);
-<span class="c-func">glGenBuffers</span>(<span class="c-num">1</span>, &VBO);
-<span class="c-func">glBindVertexArray</span>(VAO);
-<span class="c-func">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);
-<span class="c-func">glBufferData</span>(GL_ARRAY_BUFFER, <span class="c-keyword">sizeof</span>(cubeVerts), cubeVerts, GL_STATIC_DRAW);
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Lab 1</div>
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 1 Complete File</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab1_main')">Copy All</button></div></div><div class="code-block"><pre id="lab1_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 2 · LAB 1 of 3
+//  3D Vessel Briefing System — Place a 3D Shape in World Space
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME:  VesselBriefing
+//  FOLDER:        C:\Labs\VesselBriefing\
+//
+//  WHAT THIS LAB DOES:
+//  Renders a rotating 3D cube (vessel silhouette) using the full MVP matrix
+//  pipeline. Depth testing ensures correct face ordering. The vertex shader
+//  already outputs FragPos and Normal so Lab 2 can add lighting without
+//  changing the vertex shader.
+//
+//  WHAT YOU WILL SEE:
+//  - Grey cube rotating slowly on Y axis, camera from above-right
+//  - Near faces correctly cover far faces (depth test working)
+//  - Perspective gives realistic 3D depth appearance
+// ═══════════════════════════════════════════════════════════════════════════
 
-<span class="c-comment">// Position: attribute 0, 3 floats, stride = 6 floats, offset = 0</span>
-<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">0</span>, <span class="c-num">3</span>, GL_FLOAT, GL_FALSE, <span class="c-num">6</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)<span class="c-num">0</span>);
-<span class="c-func">glEnableVertexAttribArray</span>(<span class="c-num">0</span>);
-<span class="c-comment">// Normal: attribute 1, 3 floats, stride = 6 floats, offset = 3 floats</span>
-<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">1</span>, <span class="c-num">3</span>, GL_FLOAT, GL_FALSE, <span class="c-num">6</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)(<span class="c-num">3</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>)));
-<span class="c-func">glEnableVertexAttribArray</span>(<span class="c-num">1</span>);</pre>
-        </div>
-      </div>
-    </div>
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;glm/gtc/matrix_transform.hpp&gt;
+#include &lt;glm/gtc/type_ptr.hpp&gt;
+#include &lt;iostream&gt;
 
-    <div class="step">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">3</span>
-        <span class="step-title">Write vertex shader — MVP pipeline</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <div class="code-wrap">
-          <div class="code-label"><span>Vertex shader — full MVP, pass normal and position for later lighting</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-keyword">const char</span>* vertSrc = <span class="c-string">R"(
+const int W = 900, H = 600;
+
+// 36 vertices: 6 faces x 2 triangles x 3 vertices
+// Format per vertex: x, y, z (position)  nx, ny, nz (outward normal)
+float cubeVerts[] = {
+    // FRONT (+Z)
+    -0.5f,-0.5f, 0.5f,  0,0,1,   0.5f,-0.5f, 0.5f,  0,0,1,   0.5f, 0.5f, 0.5f,  0,0,1,
+     0.5f, 0.5f, 0.5f,  0,0,1,  -0.5f, 0.5f, 0.5f,  0,0,1,  -0.5f,-0.5f, 0.5f,  0,0,1,
+    // BACK (-Z)
+     0.5f,-0.5f,-0.5f,  0,0,-1, -0.5f,-0.5f,-0.5f,  0,0,-1, -0.5f, 0.5f,-0.5f,  0,0,-1,
+    -0.5f, 0.5f,-0.5f,  0,0,-1,  0.5f, 0.5f,-0.5f,  0,0,-1,  0.5f,-0.5f,-0.5f,  0,0,-1,
+    // LEFT (-X)
+    -0.5f,-0.5f,-0.5f, -1,0,0,  -0.5f,-0.5f, 0.5f, -1,0,0,  -0.5f, 0.5f, 0.5f, -1,0,0,
+    -0.5f, 0.5f, 0.5f, -1,0,0,  -0.5f, 0.5f,-0.5f, -1,0,0,  -0.5f,-0.5f,-0.5f, -1,0,0,
+    // RIGHT (+X)
+     0.5f,-0.5f, 0.5f,  1,0,0,   0.5f,-0.5f,-0.5f,  1,0,0,   0.5f, 0.5f,-0.5f,  1,0,0,
+     0.5f, 0.5f,-0.5f,  1,0,0,   0.5f, 0.5f, 0.5f,  1,0,0,   0.5f,-0.5f, 0.5f,  1,0,0,
+    // TOP (+Y)
+    -0.5f, 0.5f, 0.5f,  0,1,0,   0.5f, 0.5f, 0.5f,  0,1,0,   0.5f, 0.5f,-0.5f,  0,1,0,
+     0.5f, 0.5f,-0.5f,  0,1,0,  -0.5f, 0.5f,-0.5f,  0,1,0,  -0.5f, 0.5f, 0.5f,  0,1,0,
+    // BOTTOM (-Y)
+    -0.5f,-0.5f,-0.5f,  0,-1,0,  0.5f,-0.5f,-0.5f,  0,-1,0,  0.5f,-0.5f, 0.5f,  0,-1,0,
+     0.5f,-0.5f, 0.5f,  0,-1,0, -0.5f,-0.5f, 0.5f,  0,-1,0, -0.5f,-0.5f,-0.5f,  0,-1,0,
+};
+
+// Vertex shader: MVP pipeline + pass FragPos and Normal for Lab 2 lighting
+const char* vertSrc = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aNormal;
-
-out vec3 FragPos;   // world position (for Lab 2 lighting)
-out vec3 Normal;    // world normal  (for Lab 2 lighting)
-
-uniform mat4 uModel;
-uniform mat4 uView;
-uniform mat4 uProj;
-
+out vec3 FragPos;
+out vec3 Normal;
+uniform mat4 uModel, uView, uProj;
 void main() {
     FragPos     = vec3(uModel * vec4(aPos, 1.0));
     Normal      = mat3(transpose(inverse(uModel))) * aNormal;
     gl_Position = uProj * uView * vec4(FragPos, 1.0);
 }
-)"</span>;</pre>
-        </div>
-        <div class="hint"><strong>Why pass FragPos and Normal even in Lab 1?</strong> You'll add lighting in Lab 2 without changing the vertex shader. These outputs are ready — the fragment shader in Lab 1 just won't use them yet.</div>
-      </div>
-    </div>
+)";
 
-    <div class="step">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">4</span>
-        <span class="step-title">Set up MVP matrices and render loop</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <div class="code-wrap">
-          <div class="code-label"><span>Render loop — MVP + depth test</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-comment">// Before loop — enable depth test and set projection</span>
-<span class="c-func">glEnable</span>(GL_DEPTH_TEST);
-glm::<span class="c-type">mat4</span> proj = glm::<span class="c-func">perspective</span>(glm::<span class="c-func">radians</span>(<span class="c-num">45.0f</span>), <span class="c-num">800.0f</span>/<span class="c-num">600.0f</span>, <span class="c-num">0.1f</span>, <span class="c-num">100.0f</span>);
-<span class="c-func">glUseProgram</span>(shaderProgram);
-<span class="c-func">glUniformMatrix4fv</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uProj"</span>), <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(proj));
+// Fragment shader: solid grey — lighting added in Lab 2 without changing vert shader
+const char* fragSrc = R"(
+#version 330 core
+in vec3 FragPos;
+in vec3 Normal;
+out vec4 FragColor;
+void main() {
+    // Simple flat grey — Phong lighting replaces this in Lab 2
+    FragColor = vec4(0.5, 0.55, 0.6, 1.0);  // navy grey
+}
+)";
 
-<span class="c-comment">// Camera fixed at briefing angle: above-right, looking at origin</span>
-glm::<span class="c-type">mat4</span> view = glm::<span class="c-func">lookAt</span>(
-    glm::<span class="c-func">vec3</span>(<span class="c-num">2.0f</span>, <span class="c-num">1.5f</span>, <span class="c-num">3.0f</span>),   <span class="c-comment">// camera position</span>
-    glm::<span class="c-func">vec3</span>(<span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>, <span class="c-num">0.0f</span>),   <span class="c-comment">// looking at vessel centre</span>
-    glm::<span class="c-func">vec3</span>(<span class="c-num">0.0f</span>, <span class="c-num">1.0f</span>, <span class="c-num">0.0f</span>)    <span class="c-comment">// Y is up</span>
-);
-<span class="c-func">glUniformMatrix4fv</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uView"</span>), <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(view));
+static unsigned int makeShader(const char* vs, const char* fs) {
+    auto compile = [](GLenum t, const char* src) {
+        unsigned int s = glCreateShader(t);
+        glShaderSource(s, 1, &src, nullptr);
+        glCompileShader(s);
+        int ok; glGetShaderiv(s, GL_COMPILE_STATUS, &ok);
+        if (!ok) { char buf[512]; glGetShaderInfoLog(s,512,nullptr,buf); std::cerr << buf << "\n"; }
+        return s;
+    };
+    unsigned int v = compile(GL_VERTEX_SHADER, vs), f = compile(GL_FRAGMENT_SHADER, fs);
+    unsigned int p = glCreateProgram();
+    glAttachShader(p, v); glAttachShader(p, f); glLinkProgram(p);
+    glDeleteShader(v); glDeleteShader(f);
+    return p;
+}
 
-<span class="c-comment">// RENDER LOOP</span>
-<span class="c-keyword">while</span> (!<span class="c-func">glfwWindowShouldClose</span>(window)) {
-    <span class="c-func">process_input</span>(window);
-    <span class="c-func">glClearColor</span>(<span class="c-num">0.05f</span>, <span class="c-num">0.08f</span>, <span class="c-num">0.12f</span>, <span class="c-num">1.0f</span>);
-    <span class="c-func">glClear</span>(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); <span class="c-comment">// clear BOTH buffers</span>
+int main() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* win = glfwCreateWindow(W, H, "Vessel Briefing System — Lab 1", nullptr, nullptr);
+    glfwMakeContextCurrent(win);
+    glewExperimental = GL_TRUE; glewInit();
 
-    <span class="c-type">float</span> time  = (<span class="c-type">float</span>)<span class="c-func">glfwGetTime</span>();
-    <span class="c-comment">// Model: slowly rotate vessel around Y axis (12 deg/sec)</span>
-    glm::<span class="c-type">mat4</span> model = glm::<span class="c-func">rotate</span>(glm::<span class="c-type">mat4</span>(<span class="c-num">1.0f</span>),
-        glm::<span class="c-func">radians</span>(time * <span class="c-num">12.0f</span>), glm::<span class="c-func">vec3</span>(<span class="c-num">0</span>, <span class="c-num">1</span>, <span class="c-num">0</span>));
-    <span class="c-func">glUniformMatrix4fv</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uModel"</span>), <span class="c-num">1</span>, GL_FALSE, glm::<span class="c-func">value_ptr</span>(model));
+    glViewport(0, 0, W, H);
+    glfwSetFramebufferSizeCallback(win, [](GLFWwindow*, int w, int h){ glViewport(0,0,w,h); });
 
-    <span class="c-func">glBindVertexArray</span>(VAO);
-    <span class="c-func">glDrawArrays</span>(GL_TRIANGLES, <span class="c-num">0</span>, <span class="c-num">36</span>);
-    <span class="c-func">glfwSwapBuffers</span>(window);
-    <span class="c-func">glfwPollEvents</span>();
-}</pre>
-        </div>
-      </div>
-    </div>
-  </div><!-- steps -->
+    std::cout &lt;&lt; "GPU: " &lt;&lt; glGetString(GL_RENDERER) &lt;&lt; "\n";
+    std::cout &lt;&lt; "OpenGL: " &lt;&lt; glGetString(GL_VERSION) &lt;&lt; "\n";
+    std::cout &lt;&lt; "Lab 1 ready. ESC=quit.\n";
 
-  <div class="deliverable">
-    <div class="deliverable-label">✅ Lab 1 Deliverable — Show Your Instructor</div>
-    <h4>3D Vessel Shape in World Space</h4>
-    <ul>
-      <li>A solid grey/white cube rotating slowly on its Y axis</li>
-      <li>Depth correctly resolved (near faces cover far faces — no bleed-through)</li>
-      <li>Camera is positioned above-right looking down at the vessel</li>
-      <li>Perspective projection gives realistic 3D depth appearance</li>
-      <li>Press ESC to close cleanly</li>
+    // Upload cube to GPU
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO); glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerts), cubeVerts, GL_STATIC_DRAW);
+    // Attribute 0: position  (3 floats, stride 6, offset 0)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // Attribute 1: normal    (3 floats, stride 6, offset 3)
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    unsigned int shader = makeShader(vertSrc, fragSrc);
+    glEnable(GL_DEPTH_TEST);
+
+    // Fixed projection and view — set once before loop
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)W/H, 0.1f, 100.0f);
+    glm::mat4 view = glm::lookAt(
+        glm::vec3(2.0f, 1.5f, 3.0f),  // camera: above-right briefing angle
+        glm::vec3(0.0f, 0.0f, 0.0f),  // looking at vessel centre
+        glm::vec3(0.0f, 1.0f, 0.0f)   // Y is up
+    );
+    glUseProgram(shader);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uProj"), 1, GL_FALSE, glm::value_ptr(proj));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uView"), 1, GL_FALSE, glm::value_ptr(view));
+
+    while (!glfwWindowShouldClose(win)) {
+        if (glfwGetKey(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(win, true);
+
+        // Clear BOTH colour and depth buffers each frame
+        glClearColor(0.04f, 0.06f, 0.10f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Model matrix: rotate 12 degrees per second on Y axis
+        float t = (float)glfwGetTime();
+        glm::mat4 model = glm::rotate(glm::mat4(1.0f),
+            glm::radians(t * 12.0f), glm::vec3(0, 1, 0));
+        glUniformMatrix4fv(glGetUniformLocation(shader, "uModel"), 1, GL_FALSE, glm::value_ptr(model));
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glfwSwapBuffers(win); glfwPollEvents();
+    }
+
+    glDeleteVertexArrays(1, &VAO); glDeleteBuffers(1, &VBO);
+    glDeleteProgram(shader);
+    glfwTerminate();
+    return 0;
+}</pre></div></div>
+
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>Comment out glEnable(GL_DEPTH_TEST):</strong> The cube faces flicker as it rotates &mdash; far faces bleed through near faces. This is why depth testing is mandatory for any 3D scene.</li>
+      <li><strong>Change the rotation speed:</strong> Replace <code class="ic">t * 12.0f</code> with <code class="ic">t * 60.0f</code> for fast spin, or <code class="ic">t * 3.0f</code> for slow presentation rotation. The 12 deg/sec rate is chosen for slow identification viewing.</li>
+      <li><strong>Move the camera:</strong> Change <code class="ic">glm::vec3(2.0f, 1.5f, 3.0f)</code> to <code class="ic">glm::vec3(0, 5, 0)</code> for top-down view. Try <code class="ic">vec3(5, 0, 0)</code> for a pure side view. Notice how the perspective changes what you see.</li>
     </ul>
   </div>
 
-  <div class="checklist">
-    <div class="checklist-label">☐ Completion Checklist</div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Cube renders with 6 distinct faces visible</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Rotation is smooth and continuous on Y axis</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Depth test: far faces hidden behind near faces</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Perspective: far edges appear smaller than near edges</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Project builds with cmake --build with zero errors</label>
-    </div>
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 1 Deliverable &mdash; Show Your Instructor</div>
+    <div class="del-title">3D Vessel Shape in World Space</div>
+    <div class="del-desc">A solid grey cube rotating slowly on its Y axis, viewed from a fixed above-right camera with perspective projection and correct depth ordering.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Cube rotates continuously at ~12 degrees per second</li>
+      <li><span class="del-dot"></span>Depth test: far faces hidden behind near faces &mdash; no bleed-through</li>
+      <li><span class="del-dot"></span>Perspective: far edges visibly smaller than near edges</li>
+      <li><span class="del-dot"></span>ESC closes cleanly</li>
+    </ul>
   </div>
 
-  <div class="nav-btns">
-    <a class="nav-btn" href="lab-day1.html">← Day 1 Labs</a>
-    <a class="nav-btn primary" href="#" onclick="switchLab(1,event)">Lab 2 — Add Phong Lighting →</a>
+  <div class="page-foot">
+    <a class="foot-btn" href="lab-day1.html">&#8592; Day 1 Labs</a>
+    <a class="foot-btn primary" href="#lab2">Lab 2 &mdash; Add Phong Lighting &#8594;</a>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- LAB 2 -->
-<!-- ============================================================ -->
-<div class="lab" id="lab-2">
-  <div class="before-box">
-    <div class="before-label">⚡ Before You Begin — Repeat These Demos First (10 min)</div>
-    <ul>
-      <li>Run <a href="demo-day2.html#d2-05">D2-05</a>: ambient light — understand base light</li>
-      <li>Run <a href="demo-day2.html#d2-06">D2-06</a>: diffuse light — watch dot product in action</li>
-      <li>Run <a href="demo-day2.html#d2-07">D2-07</a>: specular Blinn-Phong — change shininess value</li>
+<!-- ═══════════ LAB 2 ═══════════ -->
+<div class="lab-sec" id="lab2">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 2 of 3</span>
+    <span class="lab-diff">&#11035; Intermediate &middot; ~35 min &middot; Builds on Lab 1</span>
+  </div>
+  <div class="lab-title">Add Phong Lighting to the Vessel</div>
+  <div class="lab-desc">Take the rotating cube from Lab 1 and add full Phong lighting: ambient (base visibility), diffuse (surface-angle brightness), and specular (metallic sheen). The vertex shader is unchanged &mdash; only the fragment shader and a few uniform calls are added. The vessel must read clearly as a 3D solid shape with depth.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: Ambient &middot; Diffuse &middot; Specular &middot; Blinn-Phong &middot; Normal matrix</span>
+    <span class="meta-chip">&#9889; Do Demo 9 (Phong Lighting) first</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Add Over Lab 1</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Light position fixed at (3, 3, 3) &mdash; upper-front-right corner</li>
+      <li><span class="adds-dot">&#9658;</span>Ambient strength 0.1 &mdash; dark surfaces dim but not black</li>
+      <li><span class="adds-dot">&#9658;</span>Diffuse: <code class="ic">dot(norm, lightDir)</code> &mdash; surface angle determines brightness</li>
+      <li><span class="adds-dot">&#9658;</span>Specular: Blinn-Phong half-vector, shininess 64 &mdash; moderate metallic sheen</li>
+      <li><span class="adds-dot">&#9658;</span>Object colour navy grey vec3(0.5, 0.55, 0.6)</li>
+      <li><span class="adds-dot">&#9658;</span>Vertex shader: unchanged from Lab 1 (FragPos and Normal already in output)</li>
     </ul>
   </div>
 
-  <div class="lab-header">
-    <div class="lab-num">
-      <span class="lab-num-badge">Lab 2</span>
-      <span class="lab-num-sub">Day 2 · Module 5 · Builds on Lab 1</span>
-    </div>
-    <h2>Add Phong Lighting to the Vessel</h2>
-    <p>Take your rotating cube from Lab 1 and add full Phong lighting — ambient, diffuse, and specular. The vessel must look three-dimensional and solid, with the light source positioned to simulate a scene light (operational room overhead or sunlight depending on context).</p>
+  <div class="out-box">
+    <div class="out-label">&#127919; What You Will See When This Runs</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Lit face:</strong> Bright when facing the light &mdash; clearly the front of the vessel</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Dark face:</strong> Dim but not black &mdash; ambient keeps it readable</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Specular:</strong> Small bright highlight on the most lit face &mdash; metallic surface</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Rotation:</strong> Different faces catch the light as the vessel turns</div>
   </div>
 
-  <div class="brief">
-    <div class="brief-label">📋 Operational Requirements</div>
-    <ul class="requirement-list">
-      <li><span class="req-icon">→</span>Keep Lab 1 geometry and MVP setup exactly as-is (no changes to vertex data)</li>
-      <li><span class="req-icon">→</span>Light source is fixed at position (3, 3, 3) — upper-front-right corner</li>
-      <li><span class="req-icon">→</span>Ambient strength: 0.1 (dark surfaces are dim but not black)</li>
-      <li><span class="req-icon">→</span>Diffuse: standard Phong dot product — surface angle determines brightness</li>
-      <li><span class="req-icon">→</span>Specular: Blinn-Phong with shininess 64 — moderate metallic sheen</li>
-      <li><span class="req-icon">→</span>Vessel colour: navy grey (vec3(0.5, 0.55, 0.6))</li>
+  <div class="concept">
+    <div class="concept-lbl">&#128161; Why the Normal Matrix is not just uModel</div>
+    <p>If you scale the vessel non-uniformly (e.g. stretch it), the model matrix distorts the normals &mdash; a normal that was perpendicular to the surface would no longer be perpendicular after the same transform. The normal matrix (<code class="ic">transpose(inverse(uModel))</code>) corrects this distortion. For uniform scaling or rotation-only models it produces the same result, but it is correct practice for all cases.</p>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives &mdash; Check Off As You Complete</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>Lab 1 folder copied to VesselBriefing_L2 (or replace main.cpp in same folder)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader: ambient + diffuse + specular computation</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Uniforms: uLightPos, uViewPos, uObjectColor, uLightColor, uAmbientStr, uShininess</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>uViewPos matches the eye position used in glm::lookAt (2, 1.5, 3)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Lit face bright, dark face dim (not black), specular highlight visible</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Experiment: change uShininess to 8 (wide glow) and 256 (tiny dot)</li>
     </ul>
   </div>
 
-  <div class="steps">
-    <div class="step open">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">1</span>
-        <span class="step-title">Copy Lab 1 project and update the fragment shader only</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <p>Copy your entire Day2_Lab1 folder to Day2_Lab2. The vertex shader stays identical. Only the fragment shader and the uniform-sending code in the render loop change.</p>
-        <div class="code-wrap">
-          <div class="code-label"><span>Fragment shader — full Phong lighting</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-keyword">const char</span>* fragSrc = <span class="c-string">R"(
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Lab 2</div>
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 2 Complete File</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab2_main')">Copy All</button></div></div><div class="code-block"><pre id="lab2_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 2 · LAB 2 of 3
+//  3D Vessel Briefing System — Phong Lighting on the Hull
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  WHAT THIS LAB ADDS OVER LAB 1:
+//  Full Phong lighting in the fragment shader. Vertex shader UNCHANGED.
+//  Light at (3,3,3). Ambient 0.1. Shininess 64. Navy grey vessel colour.
+// ═══════════════════════════════════════════════════════════════════════════
+
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;glm/gtc/matrix_transform.hpp&gt;
+#include &lt;glm/gtc/type_ptr.hpp&gt;
+#include &lt;iostream&gt;
+
+const int W = 900, H = 600;
+
+// Same cube vertex data as Lab 1 (position + normal, 6 floats per vertex)
+float cubeVerts[] = {
+    -0.5f,-0.5f, 0.5f,  0,0,1,   0.5f,-0.5f, 0.5f,  0,0,1,   0.5f, 0.5f, 0.5f,  0,0,1,
+     0.5f, 0.5f, 0.5f,  0,0,1,  -0.5f, 0.5f, 0.5f,  0,0,1,  -0.5f,-0.5f, 0.5f,  0,0,1,
+     0.5f,-0.5f,-0.5f,  0,0,-1, -0.5f,-0.5f,-0.5f,  0,0,-1, -0.5f, 0.5f,-0.5f,  0,0,-1,
+    -0.5f, 0.5f,-0.5f,  0,0,-1,  0.5f, 0.5f,-0.5f,  0,0,-1,  0.5f,-0.5f,-0.5f,  0,0,-1,
+    -0.5f,-0.5f,-0.5f, -1,0,0,  -0.5f,-0.5f, 0.5f, -1,0,0,  -0.5f, 0.5f, 0.5f, -1,0,0,
+    -0.5f, 0.5f, 0.5f, -1,0,0,  -0.5f, 0.5f,-0.5f, -1,0,0,  -0.5f,-0.5f,-0.5f, -1,0,0,
+     0.5f,-0.5f, 0.5f,  1,0,0,   0.5f,-0.5f,-0.5f,  1,0,0,   0.5f, 0.5f,-0.5f,  1,0,0,
+     0.5f, 0.5f,-0.5f,  1,0,0,   0.5f, 0.5f, 0.5f,  1,0,0,   0.5f,-0.5f, 0.5f,  1,0,0,
+    -0.5f, 0.5f, 0.5f,  0,1,0,   0.5f, 0.5f, 0.5f,  0,1,0,   0.5f, 0.5f,-0.5f,  0,1,0,
+     0.5f, 0.5f,-0.5f,  0,1,0,  -0.5f, 0.5f,-0.5f,  0,1,0,  -0.5f, 0.5f, 0.5f,  0,1,0,
+    -0.5f,-0.5f,-0.5f,  0,-1,0,  0.5f,-0.5f,-0.5f,  0,-1,0,  0.5f,-0.5f, 0.5f,  0,-1,0,
+     0.5f,-0.5f, 0.5f,  0,-1,0, -0.5f,-0.5f, 0.5f,  0,-1,0, -0.5f,-0.5f,-0.5f,  0,-1,0,
+};
+
+// Vertex shader: UNCHANGED from Lab 1
+const char* vertSrc = R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+out vec3 FragPos;
+out vec3 Normal;
+uniform mat4 uModel, uView, uProj;
+void main() {
+    FragPos     = vec3(uModel * vec4(aPos, 1.0));
+    Normal      = mat3(transpose(inverse(uModel))) * aNormal;
+    gl_Position = uProj * uView * vec4(FragPos, 1.0);
+}
+)";
+
+// Fragment shader: full Phong lighting — ONLY change from Lab 1
+const char* fragSrc = R"(
 #version 330 core
 in vec3 FragPos;
 in vec3 Normal;
 out vec4 FragColor;
 
-uniform vec3  uLightPos;      // fixed at (3,3,3) — upper front right
-uniform vec3  uViewPos;       // camera position for specular
-uniform vec3  uObjectColor;   // navy grey: (0.5, 0.55, 0.6)
-uniform vec3  uLightColor;    // white: (1, 1, 1)
-uniform float uAmbientStr;    // 0.1
-uniform float uShininess;     // 64.0
+uniform vec3  uLightPos;     // (3,3,3) — upper front right
+uniform vec3  uViewPos;      // camera eye — must match lookAt eye
+uniform vec3  uObjectColor;  // navy grey (0.5, 0.55, 0.6)
+uniform vec3  uLightColor;   // white (1, 1, 1)
+uniform float uAmbientStr;   // 0.1
+uniform float uShininess;    // 64.0
 
 void main() {
-    // AMBIENT — base visibility even on dark side
+    // AMBIENT — base visibility on dark side
     vec3 ambient = uAmbientStr * uLightColor;
 
-    // DIFFUSE — angle of surface to light
+    // DIFFUSE — surface angle to light
     vec3 norm     = normalize(Normal);
     vec3 lightDir = normalize(uLightPos - FragPos);
     float diff    = max(dot(norm, lightDir), 0.0);
@@ -557,176 +616,268 @@ void main() {
     vec3 result = (ambient + diffuse + specular) * uObjectColor;
     FragColor = vec4(result, 1.0);
 }
-)"</span>;</pre>
-        </div>
-      </div>
-    </div>
+)";
 
-    <div class="step">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">2</span>
-        <span class="step-title">Send lighting uniforms in render loop</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <div class="code-wrap">
-          <div class="code-label"><span>Lighting uniform setup — add before render loop</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-comment">// Set these once — they don't change per frame</span>
-<span class="c-func">glUseProgram</span>(shaderProgram);
-glm::<span class="c-func">vec3</span> lightPos(<span class="c-num">3.0f</span>, <span class="c-num">3.0f</span>, <span class="c-num">3.0f</span>);
-glm::<span class="c-func">vec3</span> camPos(<span class="c-num">2.0f</span>, <span class="c-num">1.5f</span>, <span class="c-num">3.0f</span>);   <span class="c-comment">// same as your view matrix eye position</span>
+static unsigned int makeShader(const char* vs, const char* fs) {
+    auto compile = [](GLenum t, const char* src) {
+        unsigned int s = glCreateShader(t);
+        glShaderSource(s, 1, &src, nullptr);
+        glCompileShader(s);
+        int ok; glGetShaderiv(s, GL_COMPILE_STATUS, &ok);
+        if (!ok) { char buf[512]; glGetShaderInfoLog(s,512,nullptr,buf); std::cerr &lt;&lt; buf &lt;&lt; "\n"; }
+        return s;
+    };
+    unsigned int v = compile(GL_VERTEX_SHADER, vs), f = compile(GL_FRAGMENT_SHADER, fs);
+    unsigned int p = glCreateProgram();
+    glAttachShader(p, v); glAttachShader(p, f); glLinkProgram(p);
+    glDeleteShader(v); glDeleteShader(f);
+    return p;
+}
 
-<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uLightPos"</span>),    lightPos.x, lightPos.y, lightPos.z);
-<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uViewPos"</span>),     camPos.x,   camPos.y,   camPos.z);
-<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uObjectColor"</span>),  <span class="c-num">0.5f</span>, <span class="c-num">0.55f</span>, <span class="c-num">0.6f</span>);  <span class="c-comment">// navy grey</span>
-<span class="c-func">glUniform3f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uLightColor"</span>),   <span class="c-num">1.0f</span>, <span class="c-num">1.0f</span>,  <span class="c-num">1.0f</span>);
-<span class="c-func">glUniform1f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uAmbientStr"</span>),  <span class="c-num">0.1f</span>);
-<span class="c-func">glUniform1f</span>(<span class="c-func">glGetUniformLocation</span>(shaderProgram, <span class="c-string">"uShininess"</span>),   <span class="c-num">64.0f</span>);</pre>
-        </div>
-        <div class="hint"><strong>💡 uViewPos must match your lookAt eye position.</strong> If they differ, the specular highlight will appear in the wrong location relative to your camera.</div>
-      </div>
-    </div>
-  </div>
+int main() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* win = glfwCreateWindow(W, H, "Vessel Briefing System — Lab 2: Phong Lighting", nullptr, nullptr);
+    glfwMakeContextCurrent(win);
+    glewExperimental = GL_TRUE; glewInit();
+    glViewport(0, 0, W, H);
+    glfwSetFramebufferSizeCallback(win, [](GLFWwindow*, int w, int h){ glViewport(0,0,w,h); });
 
-  <div class="deliverable">
-    <div class="deliverable-label">✅ Lab 2 Deliverable</div>
-    <h4>Lit 3D Vessel Silhouette</h4>
-    <ul>
-      <li>Cube clearly shows lit face (bright) and dark face (dim but not black)</li>
-      <li>As it rotates, different faces catch the light — the 3D shape reads clearly</li>
-      <li>A small specular highlight is visible on the face most directly facing the light</li>
-      <li>Navy grey colour with white light reads as realistic metallic surface</li>
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO); glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerts), cubeVerts, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    unsigned int shader = makeShader(vertSrc, fragSrc);
+    glEnable(GL_DEPTH_TEST);
+
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)W/H, 0.1f, 100.0f);
+    glm::vec3 camPos(2.0f, 1.5f, 3.0f);
+    glm::mat4 view = glm::lookAt(camPos, glm::vec3(0.0f), glm::vec3(0,1,0));
+
+    glUseProgram(shader);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uProj"), 1, GL_FALSE, glm::value_ptr(proj));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uView"), 1, GL_FALSE, glm::value_ptr(view));
+
+    // Lighting uniforms — set once (constant for this scene)
+    glUniform3f(glGetUniformLocation(shader, "uLightPos"),    3.0f, 3.0f, 3.0f);
+    glUniform3f(glGetUniformLocation(shader, "uViewPos"),     camPos.x, camPos.y, camPos.z);
+    glUniform3f(glGetUniformLocation(shader, "uObjectColor"), 0.5f, 0.55f, 0.6f);  // navy grey
+    glUniform3f(glGetUniformLocation(shader, "uLightColor"),  1.0f, 1.0f, 1.0f);
+    glUniform1f(glGetUniformLocation(shader, "uAmbientStr"),  0.1f);
+    glUniform1f(glGetUniformLocation(shader, "uShininess"),   64.0f);
+
+    std::cout &lt;&lt; "Lab 2: Phong lighting active. ESC=quit.\n";
+    std::cout &lt;&lt; "Experiment: change uShininess (8=glow, 256=tight dot)\n";
+
+    while (!glfwWindowShouldClose(win)) {
+        if (glfwGetKey(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(win, true);
+
+        glClearColor(0.04f, 0.06f, 0.10f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        float t = (float)glfwGetTime();
+        glm::mat4 model = glm::rotate(glm::mat4(1.0f),
+            glm::radians(t * 12.0f), glm::vec3(0, 1, 0));
+        glUniformMatrix4fv(glGetUniformLocation(shader, "uModel"), 1, GL_FALSE, glm::value_ptr(model));
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glfwSwapBuffers(win); glfwPollEvents();
+    }
+
+    glDeleteVertexArrays(1, &VAO); glDeleteBuffers(1, &VBO);
+    glDeleteProgram(shader);
+    glfwTerminate();
+    return 0;
+}</pre></div></div>
+
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>Change uShininess to 8:</strong> The specular highlight spreads across a large portion of the face. Change to 256: it becomes a tiny bright dot. Shininess controls how "polished" the surface appears — lower = matte/rough, higher = mirror-like.</li>
+      <li><strong>Set uAmbientStr to 0.0:</strong> The dark side of the cube goes completely black. Set it to 0.5: the whole cube is uniformly bright. The 0.1 value is the standard for indoor lighting that is realistic but preserves shape readability.</li>
+      <li><strong>Move the light:</strong> Change uLightPos to (0, 5, 0) for overhead lighting. To (-3, 0, 0) for side lighting. Observe which faces become the bright face and which face goes dark.</li>
     </ul>
   </div>
 
-  <div class="checklist">
-    <div class="checklist-label">☐ Completion Checklist</div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Dark faces are dim but not completely black (ambient working)</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Bright faces light up as they rotate toward the light (diffuse working)</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Small specular highlight visible on the most lit face</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Change uShininess to 8 — glow spreads. To 256 — tiny dot. Both work.</label>
-    </div>
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 2 Deliverable &mdash; Show Your Instructor</div>
+    <div class="del-title">Lit 3D Vessel Silhouette</div>
+    <div class="del-desc">Rotating cube with visible Phong lighting — the 3D shape reads clearly as a solid object. All three lighting components demonstrably active.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Dark faces dim but not black &mdash; ambient working</li>
+      <li><span class="del-dot"></span>Faces brighten as they rotate toward the light &mdash; diffuse working</li>
+      <li><span class="del-dot"></span>Specular highlight visible on the most lit face</li>
+      <li><span class="del-dot"></span>Can change shininess and demonstrate the difference</li>
+    </ul>
   </div>
 
-  <div class="nav-btns">
-    <a class="nav-btn" href="#" onclick="switchLab(0,event)">← Lab 1</a>
-    <a class="nav-btn primary" href="#" onclick="switchLab(2,event)">Lab 3 — Apply Texture →</a>
+  <div class="page-foot">
+    <a class="foot-btn" href="#lab1">&#8592; Lab 1</a>
+    <a class="foot-btn primary" href="#lab3">Lab 3 &mdash; Apply Texture &#8594;</a>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- LAB 3 -->
-<!-- ============================================================ -->
-<div class="lab" id="lab-3">
-  <div class="before-box">
-    <div class="before-label">⚡ Before You Begin — Repeat These Demos First (10 min)</div>
-    <ul>
-      <li>Run <a href="demo-day2.html#d2-08">D2-08</a>: load and apply a texture — confirm stb_image loads correctly</li>
-      <li>Run <a href="demo-day2.html#d2-09">D2-09</a>: texture filtering — try GL_NEAREST vs GL_LINEAR</li>
+<!-- ═══════════ LAB 3 ═══════════ -->
+<div class="lab-sec" id="lab3">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 3 of 3 &mdash; Capstone</span>
+    <span class="lab-diff">&#11035; Intermediate &middot; ~40 min &middot; Builds on Lab 2</span>
+  </div>
+  <div class="lab-title">Apply Surface Texture &mdash; Final Vessel Scene</div>
+  <div class="lab-desc">Add a texture to the lit vessel. UV coordinates are added to the vertex data (8 floats per vertex: position + normal + UV). The fragment shader multiplies Phong lighting output by the texture sample &mdash; lighting tells you how much light, texture tells you the surface colour. The final scene combines all Day 2 concepts: rotation, depth, lighting, and texture.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: UV coords &middot; stb_image &middot; glTexImage2D &middot; sampler2D &middot; Phong × texture</span>
+    <span class="meta-chip">&#9889; Do Demo 10 (Textures) first</span>
+    <span class="meta-chip">&#128190; Requires: metal_plate.jpg in project folder</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Add Over Lab 2</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Vertex data extended from 6 to 8 floats per vertex: position + normal + UV</li>
+      <li><span class="adds-dot">&#9658;</span>Attribute 2: UV coords (2 floats, stride 8, offset 6)</li>
+      <li><span class="adds-dot">&#9658;</span>stb_image loads metal_plate.jpg, glTexImage2D uploads to GPU</li>
+      <li><span class="adds-dot">&#9658;</span>Vertex shader: passes UV to fragment shader via <code class="ic">out vec2 vTexCoord</code></li>
+      <li><span class="adds-dot">&#9658;</span>Fragment shader: <code class="ic">result = (ambient + diffuse + specular) * texColor</code></li>
     </ul>
   </div>
 
-  <div class="lab-header">
-    <div class="lab-num">
-      <span class="lab-num-badge">Lab 3</span>
-      <span class="lab-num-sub">Day 2 · Module 6 · Builds on Lab 2</span>
-    </div>
-    <h2>Apply Surface Texture — Final Vessel Scene</h2>
-    <p>Add a texture to your lit vessel. The surface texture simulates hull plating or identification markings. Combine the Phong lighting from Lab 2 with texture sampling — the final colour is lighting result × texture colour.</p>
+  <div class="out-box">
+    <div class="out-label">&#127919; What You Will See When This Runs</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Screen:</strong> Rotating vessel with hull plating texture visible on all 6 faces</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Lighting:</strong> Phong still active &mdash; textured surface responds to light</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Lit face:</strong> Texture bright and detailed. Dark face: texture dim but still readable</div>
   </div>
 
-  <div class="brief">
-    <div class="brief-label">📋 Operational Requirements</div>
-    <ul class="requirement-list">
-      <li><span class="req-icon">→</span>Keep Lab 2 lighting setup exactly as-is</li>
-      <li><span class="req-icon">→</span>Add UV coordinates to vertex data (rebuild VBO with position + normal + UV)</li>
-      <li><span class="req-icon">→</span>Load a texture file (use metal_plate.jpg from VM resources, or any JPG)</li>
-      <li><span class="req-icon">→</span>In fragment shader: multiply lighting result by texture sample</li>
-      <li><span class="req-icon">→</span>Final scene must show: rotation + correct depth + Phong shading + surface texture</li>
+  <div class="concept">
+    <div class="concept-lbl">&#128161; Why Multiply Lighting by Texture Colour</div>
+    <p>The Phong calculation produces a scalar value: how much light reaches this surface point (0.0 = none, 1.0 = full). The texture provides the surface colour: what colour the material is when fully lit. Multiplying them gives you the final colour: the material's colour, darkened or brightened by the amount of light. This is the standard PBR-adjacent approach used in all real-time rendering.</p>
+  </div>
+
+  <div class="warn">
+    <div class="warn-lbl">&#9888; stb_image Setup</div>
+    <p>Add <code class="ic">#define STB_IMAGE_IMPLEMENTATION</code> before <code class="ic">#include "stb_image.h"</code> in exactly one source file. The header is at <code class="ic">C:\Resources\headers\stb_image.h</code> on the VM &mdash; copy it to your project's <code class="ic">src\</code> folder and add the include path to CMakeLists if needed.</p>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives &mdash; Check Off As You Complete</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>Vertex data rebuilt with 8 floats per vertex (pos + normal + UV)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Attribute 2 added: UV, stride 8, offset 6</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>stb_image.h included and STB_IMAGE_IMPLEMENTATION defined</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Texture loaded from metal_plate.jpg, uploaded with glTexImage2D</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Vertex shader: aTexCoord in, vTexCoord out</div></li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader: texColor = texture(uTexture, vTexCoord).rgb</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Final line: result = (ambient + diffuse + specular) * texColor</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>All 6 cube faces show correct texture mapping</li>
     </ul>
   </div>
 
-  <div class="steps">
-    <div class="step open">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">1</span>
-        <span class="step-title">Extend vertex data to include UV coordinates</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <p>Each vertex now has 8 floats: position (3) + normal (3) + UV (2). You need to rebuild your vertex array. Here is the full format for the front face — apply the same pattern for all 6 faces:</p>
-        <div class="code-wrap">
-          <div class="code-label"><span>Front face — 8 floats per vertex (pos + normal + UV)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-comment">// Format: x,y,z, nx,ny,nz, u,v
-// For cube faces: UV goes 0,0 → 1,0 → 1,1 → 0,1 around each face</span>
-<span class="c-type">float</span> cubeVerts[] = {
-    <span class="c-comment">// FRONT FACE (+Z normal)         UV</span>
-    -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  <span class="c-num">0.0f</span>,<span class="c-num">0.0f</span>,
-     <span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  <span class="c-num">1.0f</span>,<span class="c-num">0.0f</span>,
-     <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  <span class="c-num">1.0f</span>,<span class="c-num">1.0f</span>,
-     <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  <span class="c-num">1.0f</span>,<span class="c-num">1.0f</span>,
-    -<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  <span class="c-num">0.0f</span>,<span class="c-num">1.0f</span>,
-    -<span class="c-num">0.5f</span>,-<span class="c-num">0.5f</span>, <span class="c-num">0.5f</span>,  <span class="c-num">0</span>,<span class="c-num">0</span>,<span class="c-num">1</span>,  <span class="c-num">0.0f</span>,<span class="c-num">0.0f</span>,
-    <span class="c-comment">// Repeat same UV pattern for all remaining 5 faces</span>
-    <span class="c-comment">// ... (back, left, right, top, bottom)</span>
-};</pre>
-        </div>
+  <div class="sh"><span class="sh-dot"></span>Complete src/main.cpp &mdash; Lab 3</div>
+<div class="code-wrap"><div class="code-header"><span class="code-fname">src/main.cpp &mdash; Lab 3 Complete File</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'lab3_main')">Copy All</button></div></div><div class="code-block"><pre id="lab3_main">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 2 · LAB 3 of 3  [CAPSTONE]
+//  3D Vessel Briefing System — Texture + Phong = Full Final Scene
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  WHAT THIS LAB ADDS OVER LAB 2:
+//  - Vertex data: 8 floats/vertex (pos + normal + UV)
+//  - stb_image loads metal_plate.jpg
+//  - Fragment shader multiplies Phong result by texture colour
+//  - All Day 2 concepts active simultaneously
+//
+//  REQUIRES: metal_plate.jpg in the same folder as the .exe
+//            stb_image.h in src/ (from C:\Resources\headers\)
+// ═══════════════════════════════════════════════════════════════════════════
 
-        <p>Update glVertexAttribPointer — stride is now <strong>8 floats</strong>:</p>
-        <div class="code-wrap">
-          <div class="code-label"><span>Updated attribute pointers — stride 8</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-comment">// Position: 3 floats, offset 0</span>
-<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">0</span>, <span class="c-num">3</span>, GL_FLOAT, GL_FALSE, <span class="c-num">8</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)<span class="c-num">0</span>);
-<span class="c-func">glEnableVertexAttribArray</span>(<span class="c-num">0</span>);
-<span class="c-comment">// Normal: 3 floats, offset 3</span>
-<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">1</span>, <span class="c-num">3</span>, GL_FLOAT, GL_FALSE, <span class="c-num">8</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)(<span class="c-num">3</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>)));
-<span class="c-func">glEnableVertexAttribArray</span>(<span class="c-num">1</span>);
-<span class="c-comment">// UV: 2 floats, offset 6</span>
-<span class="c-func">glVertexAttribPointer</span>(<span class="c-num">2</span>, <span class="c-num">2</span>, GL_FLOAT, GL_FALSE, <span class="c-num">8</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>), (<span class="c-type">void</span>*)(<span class="c-num">6</span>*<span class="c-keyword">sizeof</span>(<span class="c-type">float</span>)));
-<span class="c-func">glEnableVertexAttribArray</span>(<span class="c-num">2</span>);</pre>
-        </div>
-      </div>
-    </div>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
-    <div class="step">
-      <div class="step-header" onclick="toggleStep(this)">
-        <span class="step-num">2</span>
-        <span class="step-title">Load texture and update both shaders</span>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step-body">
-        <div class="code-wrap">
-          <div class="code-label"><span>Texture load + updated vertex + fragment shaders</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-          <pre><span class="c-comment">// ── VERTEX SHADER (add UV passthrough) ──</span>
-<span class="c-keyword">const char</span>* vertSrc = <span class="c-string">R"(
+#include &lt;GL/glew.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;glm/gtc/matrix_transform.hpp&gt;
+#include &lt;glm/gtc/type_ptr.hpp&gt;
+#include &lt;iostream&gt;
+
+const int W = 900, H = 600;
+
+// 8 floats per vertex: x,y,z  nx,ny,nz  u,v
+// UV 0,0=bottom-left  1,0=bottom-right  1,1=top-right  0,1=top-left
+float cubeVerts[] = {
+    // FRONT (+Z)
+    -0.5f,-0.5f, 0.5f,  0,0,1,  0.0f,0.0f,
+     0.5f,-0.5f, 0.5f,  0,0,1,  1.0f,0.0f,
+     0.5f, 0.5f, 0.5f,  0,0,1,  1.0f,1.0f,
+     0.5f, 0.5f, 0.5f,  0,0,1,  1.0f,1.0f,
+    -0.5f, 0.5f, 0.5f,  0,0,1,  0.0f,1.0f,
+    -0.5f,-0.5f, 0.5f,  0,0,1,  0.0f,0.0f,
+    // BACK (-Z)
+     0.5f,-0.5f,-0.5f,  0,0,-1, 0.0f,0.0f,
+    -0.5f,-0.5f,-0.5f,  0,0,-1, 1.0f,0.0f,
+    -0.5f, 0.5f,-0.5f,  0,0,-1, 1.0f,1.0f,
+    -0.5f, 0.5f,-0.5f,  0,0,-1, 1.0f,1.0f,
+     0.5f, 0.5f,-0.5f,  0,0,-1, 0.0f,1.0f,
+     0.5f,-0.5f,-0.5f,  0,0,-1, 0.0f,0.0f,
+    // LEFT (-X)
+    -0.5f,-0.5f,-0.5f, -1,0,0,  0.0f,0.0f,
+    -0.5f,-0.5f, 0.5f, -1,0,0,  1.0f,0.0f,
+    -0.5f, 0.5f, 0.5f, -1,0,0,  1.0f,1.0f,
+    -0.5f, 0.5f, 0.5f, -1,0,0,  1.0f,1.0f,
+    -0.5f, 0.5f,-0.5f, -1,0,0,  0.0f,1.0f,
+    -0.5f,-0.5f,-0.5f, -1,0,0,  0.0f,0.0f,
+    // RIGHT (+X)
+     0.5f,-0.5f, 0.5f,  1,0,0,  0.0f,0.0f,
+     0.5f,-0.5f,-0.5f,  1,0,0,  1.0f,0.0f,
+     0.5f, 0.5f,-0.5f,  1,0,0,  1.0f,1.0f,
+     0.5f, 0.5f,-0.5f,  1,0,0,  1.0f,1.0f,
+     0.5f, 0.5f, 0.5f,  1,0,0,  0.0f,1.0f,
+     0.5f,-0.5f, 0.5f,  1,0,0,  0.0f,0.0f,
+    // TOP (+Y)
+    -0.5f, 0.5f, 0.5f,  0,1,0,  0.0f,0.0f,
+     0.5f, 0.5f, 0.5f,  0,1,0,  1.0f,0.0f,
+     0.5f, 0.5f,-0.5f,  0,1,0,  1.0f,1.0f,
+     0.5f, 0.5f,-0.5f,  0,1,0,  1.0f,1.0f,
+    -0.5f, 0.5f,-0.5f,  0,1,0,  0.0f,1.0f,
+    -0.5f, 0.5f, 0.5f,  0,1,0,  0.0f,0.0f,
+    // BOTTOM (-Y)
+    -0.5f,-0.5f,-0.5f,  0,-1,0, 0.0f,0.0f,
+     0.5f,-0.5f,-0.5f,  0,-1,0, 1.0f,0.0f,
+     0.5f,-0.5f, 0.5f,  0,-1,0, 1.0f,1.0f,
+     0.5f,-0.5f, 0.5f,  0,-1,0, 1.0f,1.0f,
+    -0.5f,-0.5f, 0.5f,  0,-1,0, 0.0f,1.0f,
+    -0.5f,-0.5f,-0.5f,  0,-1,0, 0.0f,0.0f,
+};
+
+// Vertex shader: adds UV passthrough
+const char* vertSrc = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aNormal;
-layout(location = 2) in vec2 aTexCoord;   // NEW
-
+layout(location = 2) in vec2 aTexCoord;
 out vec3 FragPos;
 out vec3 Normal;
-out vec2 vTexCoord;    // NEW — pass UV to fragment shader
-
+out vec2 vTexCoord;
 uniform mat4 uModel, uView, uProj;
-
 void main() {
-    FragPos    = vec3(uModel * vec4(aPos, 1.0));
-    Normal     = mat3(transpose(inverse(uModel))) * aNormal;
-    vTexCoord  = aTexCoord;
+    FragPos     = vec3(uModel * vec4(aPos, 1.0));
+    Normal      = mat3(transpose(inverse(uModel))) * aNormal;
+    vTexCoord   = aTexCoord;
     gl_Position = uProj * uView * vec4(FragPos, 1.0);
 }
-)"</span>;
+)";
 
-<span class="c-comment">// ── FRAGMENT SHADER (multiply lighting by texture) ──</span>
-<span class="c-keyword">const char</span>* fragSrc = <span class="c-string">R"(
+// Fragment shader: Phong lighting multiplied by texture colour
+const char* fragSrc = R"(
 #version 330 core
 in vec3 FragPos;
 in vec3 Normal;
@@ -734,10 +885,11 @@ in vec2 vTexCoord;
 out vec4 FragColor;
 
 uniform sampler2D uTexture;
-uniform vec3 uLightPos, uViewPos, uLightColor;
+uniform vec3  uLightPos, uViewPos, uLightColor;
 uniform float uAmbientStr, uShininess;
 
 void main() {
+    // Sample texture — this replaces the hardcoded object colour from Lab 2
     vec3 texColor = texture(uTexture, vTexCoord).rgb;
 
     vec3 ambient  = uAmbientStr * uLightColor;
@@ -750,204 +902,192 @@ void main() {
     float spec    = pow(max(dot(norm, halfDir), 0.0), uShininess);
     vec3 specular = 0.5 * spec * uLightColor;
 
-    // KEY LINE: multiply ALL lighting by the texture colour
-    // Phong tells us how much light — texture tells us surface colour
+    // KEY LINE: Phong tells us how much light, texture tells us the colour
     vec3 result = (ambient + diffuse + specular) * texColor;
     FragColor = vec4(result, 1.0);
 }
-)"</span>;
+)";
 
-<span class="c-comment">// ── LOAD TEXTURE (same as D2-08 demo) ──</span>
-<span class="c-func">stbi_set_flip_vertically_on_load</span>(<span class="c-num">true</span>);
-<span class="c-type">unsigned int</span> tex; <span class="c-func">glGenTextures</span>(<span class="c-num">1</span>, &tex); <span class="c-func">glBindTexture</span>(GL_TEXTURE_2D, tex);
-<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-<span class="c-func">glTexParameteri</span>(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-<span class="c-type">int</span> w,h,ch; <span class="c-type">unsigned char</span>* data = <span class="c-func">stbi_load</span>(<span class="c-string">"metal_plate.jpg"</span>, &w, &h, &ch, <span class="c-num">0</span>);
-<span class="c-keyword">if</span>(data){ <span class="c-func">glTexImage2D</span>(GL_TEXTURE_2D,<span class="c-num">0</span>,GL_RGB,w,h,<span class="c-num">0</span>,GL_RGB,GL_UNSIGNED_BYTE,data);
-           <span class="c-func">glGenerateMipmap</span>(GL_TEXTURE_2D); }
-<span class="c-func">stbi_image_free</span>(data);</pre>
-        </div>
-        <div class="hint"><strong>💡 Where to get metal_plate.jpg?</strong> VM resources folder at <code>C:\Resources\textures\</code>. Or use any JPG — rename it metal_plate.jpg and place it in the same folder as your executable.</div>
-      </div>
-    </div>
-  </div>
+static unsigned int makeShader(const char* vs, const char* fs) {
+    auto compile = [](GLenum t, const char* src) {
+        unsigned int s = glCreateShader(t);
+        glShaderSource(s, 1, &src, nullptr);
+        glCompileShader(s);
+        int ok; glGetShaderiv(s, GL_COMPILE_STATUS, &ok);
+        if (!ok) { char buf[512]; glGetShaderInfoLog(s,512,nullptr,buf); std::cerr &lt;&lt; buf &lt;&lt; "\n"; }
+        return s;
+    };
+    unsigned int v = compile(GL_VERTEX_SHADER, vs), f = compile(GL_FRAGMENT_SHADER, fs);
+    unsigned int p = glCreateProgram();
+    glAttachShader(p, v); glAttachShader(p, f); glLinkProgram(p);
+    glDeleteShader(v); glDeleteShader(f);
+    return p;
+}
 
-  <div class="deliverable">
-    <div class="deliverable-label">✅ Final Lab 3 Deliverable — Day 2 Complete</div>
-    <h4>3D Vessel Briefing Display — Fully Complete</h4>
-    <ul>
-      <li>Rotating 3D vessel shape with correct depth resolution</li>
-      <li>Full Phong lighting — lit face bright, dark face dim, specular highlight visible</li>
-      <li>Surface texture correctly applied — hull plating detail visible</li>
-      <li>Lighting and texture combine correctly — textured surface responds to light</li>
-      <li>Show instructor: rotate effect, lighting gradient, specular spot, texture detail</li>
+static unsigned int loadTexture(const char* path) {
+    unsigned int tex; glGenTextures(1, &tex); glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    stbi_set_flip_vertically_on_load(true);
+    int w,h,ch; unsigned char* data = stbi_load(path, &w, &h, &ch, 0);
+    if (data) {
+        GLenum fmt = (ch == 4) ? GL_RGBA : GL_RGB;
+        glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        std::cout &lt;&lt; "Texture loaded: " &lt;&lt; path &lt;&lt; " (" &lt;&lt; w &lt;&lt; "x" &lt;&lt; h &lt;&lt; ")\n";
+    } else {
+        std::cerr &lt;&lt; "WARNING: Could not load " &lt;&lt; path &lt;&lt; " — using solid grey fallback\n";
+        // 1x1 grey pixel as fallback so the programme still runs
+        unsigned char grey[] = {128, 130, 140};
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, grey);
+    }
+    stbi_image_free(data);
+    return tex;
+}
+
+int main() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* win = glfwCreateWindow(W, H, "Vessel Briefing System — Lab 3: Textured", nullptr, nullptr);
+    glfwMakeContextCurrent(win);
+    glewExperimental = GL_TRUE; glewInit();
+    glViewport(0, 0, W, H);
+    glfwSetFramebufferSizeCallback(win, [](GLFWwindow*, int w, int h){ glViewport(0,0,w,h); });
+
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO); glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVerts), cubeVerts, GL_STATIC_DRAW);
+    // stride = 8 floats (pos3 + normal3 + uv2)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    unsigned int shader = makeShader(vertSrc, fragSrc);
+    unsigned int tex    = loadTexture("metal_plate.jpg");
+    glEnable(GL_DEPTH_TEST);
+
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)W/H, 0.1f, 100.0f);
+    glm::vec3 camPos(2.0f, 1.5f, 3.0f);
+    glm::mat4 view = glm::lookAt(camPos, glm::vec3(0.0f), glm::vec3(0,1,0));
+
+    glUseProgram(shader);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uProj"), 1, GL_FALSE, glm::value_ptr(proj));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "uView"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniform3f(glGetUniformLocation(shader, "uLightPos"),   3.0f, 3.0f, 3.0f);
+    glUniform3f(glGetUniformLocation(shader, "uViewPos"),    camPos.x, camPos.y, camPos.z);
+    glUniform3f(glGetUniformLocation(shader, "uLightColor"), 1.0f, 1.0f, 1.0f);
+    glUniform1f(glGetUniformLocation(shader, "uAmbientStr"), 0.15f);   // slightly brighter for texture
+    glUniform1f(glGetUniformLocation(shader, "uShininess"),  64.0f);
+    glUniform1i(glGetUniformLocation(shader, "uTexture"),    0);  // texture unit 0
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    std::cout &lt;&lt; "Lab 3 capstone — all Day 2 concepts active. ESC=quit.\n";
+
+    while (!glfwWindowShouldClose(win)) {
+        if (glfwGetKey(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(win, true);
+
+        glClearColor(0.04f, 0.06f, 0.10f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        float t = (float)glfwGetTime();
+        glm::mat4 model = glm::rotate(glm::mat4(1.0f),
+            glm::radians(t * 12.0f), glm::vec3(0, 1, 0));
+        glUniformMatrix4fv(glGetUniformLocation(shader, "uModel"), 1, GL_FALSE, glm::value_ptr(model));
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glfwSwapBuffers(win); glfwPollEvents();
+    }
+
+    glDeleteVertexArrays(1, &VAO); glDeleteBuffers(1, &VBO);
+    glDeleteTextures(1, &tex);
+    glDeleteProgram(shader);
+    glfwTerminate();
+    return 0;
+}</pre></div></div>
+
+  <div class="exp">
+    <div class="exp-lbl">&#128300; Break-to-Learn Experiments</div>
+    <ul class="exp-list">
+      <li><strong>Change the texture file:</strong> Replace <code class="ic">metal_plate.jpg</code> with any image file &mdash; rename it and update the path. A checkerboard pattern or hull camo makes the UV mapping immediately visible on all 6 faces.</li>
+      <li><strong>Disable texture &mdash; restore Lab 2:</strong> In the fragment shader, replace <code class="ic">texture(uTexture, vTexCoord).rgb</code> with <code class="ic">vec3(0.5, 0.55, 0.6)</code>. The result is identical to Lab 2. This proves the only change between labs was the texture line.</li>
+      <li><strong>Add UV scaling:</strong> Change <code class="ic">vTexCoord = aTexCoord</code> to <code class="ic">vTexCoord = aTexCoord * 2.0</code> in the vertex shader. The texture tiles twice per face. Change to 0.5 and the texture zooms in. This demonstrates UV scaling without touching C++ code.</li>
     </ul>
   </div>
 
-  <div class="checklist">
-    <div class="checklist-label">☐ Final Completion Checklist</div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Texture maps correctly across all 6 cube faces</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Phong lighting still works — lit faces brighter than dark faces</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Rotation is smooth — no jitter or flickering</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>ESC key closes the window cleanly</label>
-    </div>
-    <div class="check-item" onclick="toggleCheck(this)">
-      <input type="checkbox"><label>Can explain to the instructor: what uModel does, what the view matrix does, and what the fragment shader's final multiply line does</label>
-    </div>
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 3 Deliverable &mdash; Day 2 Complete</div>
+    <div class="del-title">3D Vessel Briefing Display &mdash; Fully Complete</div>
+    <div class="del-desc">Rotating vessel with hull texture, Phong lighting, depth ordering, and perspective projection all active simultaneously. All Day 2 concepts demonstrated in one scene.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Texture maps correctly across all 6 cube faces</li>
+      <li><span class="del-dot"></span>Phong lighting still active &mdash; lit faces brighter than dark faces</li>
+      <li><span class="del-dot"></span>Rotation smooth &mdash; no jitter or flickering</li>
+      <li><span class="del-dot"></span>Can explain to instructor: what the uModel does, what glm::lookAt does, and what the final multiply line in the fragment shader does</li>
+    </ul>
   </div>
 
-  <!-- SUMMARY SVGS -->
-  <div class="summary-section">
-    <div class="summary-title">Day 2 — Visual Summary</div>
-    <div class="summary-grid">
-
-      <div class="svg-card">
-        <h4>MVP Transform Chain</h4>
-        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;font-family:monospace">
-          <rect x="5" y="20" width="70" height="36" rx="6" fill="#1a1e28" stroke="#2a2f40"/>
-          <text x="40" y="34" fill="#e2e8f0" font-size="9" text-anchor="middle">Local</text>
-          <text x="40" y="46" fill="#94a3b8" font-size="8" text-anchor="middle">vertex data</text>
-          <text x="80" y="42" fill="#3a4055" font-size="14" text-anchor="middle">×</text>
-          <rect x="90" y="20" width="70" height="36" rx="6" fill="#1a1e28" stroke="#a78bfa"/>
-          <text x="125" y="34" fill="#a78bfa" font-size="9" text-anchor="middle">uModel</text>
-          <text x="125" y="46" fill="#94a3b8" font-size="8" text-anchor="middle">→ World</text>
-          <text x="165" y="42" fill="#3a4055" font-size="14" text-anchor="middle">×</text>
-          <rect x="175" y="20" width="70" height="36" rx="6" fill="#1a1e28" stroke="#38bdf8"/>
-          <text x="210" y="34" fill="#38bdf8" font-size="9" text-anchor="middle">uView</text>
-          <text x="210" y="46" fill="#94a3b8" font-size="8" text-anchor="middle">→ Camera</text>
-          <text x="250" y="42" fill="#3a4055" font-size="14" text-anchor="middle">×</text>
-          <rect x="260" y="20" width="70" height="36" rx="6" fill="#1a1e28" stroke="#06b6d4"/>
-          <text x="295" y="34" fill="#06b6d4" font-size="9" text-anchor="middle">uProj</text>
-          <text x="295" y="46" fill="#94a3b8" font-size="8" text-anchor="middle">→ Clip</text>
-          <text x="170" y="90" fill="#4ade80" font-size="10" text-anchor="middle">gl_Position = uProj × uView × uModel × vec4(aPos,1)</text>
-          <text x="170" y="110" fill="#64748b" font-size="9" text-anchor="middle">Applied right to left inside the GPU vertex shader</text>
-          <text x="170" y="130" fill="#64748b" font-size="8" text-anchor="middle">uModel: translate/rotate/scale  |  uView: lookAt()  |  uProj: perspective()</text>
-        </svg>
-      </div>
-
-      <div class="svg-card">
-        <h4>Phong Lighting Components</h4>
-        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;font-family:monospace">
-          <rect x="10" y="15" width="90" height="50" rx="6" fill="#1a1e28" stroke="#64748b"/>
-          <text x="55" y="35" fill="#94a3b8" font-size="9" text-anchor="middle">AMBIENT</text>
-          <text x="55" y="49" fill="#64748b" font-size="8" text-anchor="middle">str × lightCol</text>
-          <text x="55" y="60" fill="#64748b" font-size="7" text-anchor="middle">no direction</text>
-          <rect x="125" y="15" width="90" height="50" rx="6" fill="#1a1e28" stroke="#38bdf8"/>
-          <text x="170" y="35" fill="#38bdf8" font-size="9" text-anchor="middle">DIFFUSE</text>
-          <text x="170" y="49" fill="#94a3b8" font-size="8" text-anchor="middle">dot(norm,light)</text>
-          <text x="170" y="60" fill="#64748b" font-size="7" text-anchor="middle">surface angle</text>
-          <rect x="240" y="15" width="90" height="50" rx="6" fill="#1a1e28" stroke="#fb923c"/>
-          <text x="285" y="35" fill="#fb923c" font-size="9" text-anchor="middle">SPECULAR</text>
-          <text x="285" y="49" fill="#94a3b8" font-size="8" text-anchor="middle">pow(dot,shine)</text>
-          <text x="285" y="60" fill="#64748b" font-size="7" text-anchor="middle">viewer-dependent</text>
-          <text x="170" y="90" fill="#3a4055" font-size="18" text-anchor="middle">+</text>
-          <text x="170" y="100" fill="#3a4055" font-size="18" text-anchor="middle">+</text>
-          <rect x="60" y="115" width="220" height="30" rx="6" fill="#1a1e28" stroke="#4ade80"/>
-          <text x="170" y="130" fill="#4ade80" font-size="9" text-anchor="middle">(ambient + diffuse + specular) × objectColor</text>
-          <text x="170" y="142" fill="#64748b" font-size="7" text-anchor="middle">× texColor in Lab 3</text>
-        </svg>
-      </div>
-
-      <div class="svg-card">
-        <h4>Texture UV Mapping</h4>
-        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;font-family:monospace">
-          <rect x="20" y="20" width="100" height="100" rx="4" fill="#1a1e28" stroke="#2a2f40"/>
-          <text x="70" y="72" fill="#64748b" font-size="9" text-anchor="middle">texture.jpg</text>
-          <text x="20" y="135" fill="#94a3b8" font-size="8">(0,0)</text>
-          <text x="100" y="135" fill="#94a3b8" font-size="8">(1,0)</text>
-          <text x="20" y="18" fill="#94a3b8" font-size="8">(0,1)</text>
-          <text x="100" y="18" fill="#94a3b8" font-size="8">(1,1)</text>
-          <circle cx="20" cy="120" r="3" fill="#06b6d4"/>
-          <circle cx="120" cy="120" r="3" fill="#06b6d4"/>
-          <circle cx="120" cy="20" r="3" fill="#06b6d4"/>
-          <circle cx="20" cy="20" r="3" fill="#06b6d4"/>
-          <line x1="130" y1="70" x2="160" y2="70" stroke="#3a4055" stroke-width="1.5" marker-end="url(#arr)"/>
-          <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6Z" fill="#3a4055"/></marker></defs>
-          <polygon points="170,120 260,120 260,20 170,20" fill="#13161e" stroke="#2a2f40"/>
-          <text x="215" y="75" fill="#64748b" font-size="9" text-anchor="middle">3D surface</text>
-          <text x="215" y="87" fill="#64748b" font-size="8" text-anchor="middle">with UV coords</text>
-          <text x="170" y="150" fill="#94a3b8" font-size="8">texture(uTexture, vTexCoord)</text>
-        </svg>
-      </div>
-
-      <div class="svg-card">
-        <h4>Depth Buffer — How It Works</h4>
-        <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;font-family:monospace">
-          <rect x="10" y="10" width="315" height="28" rx="4" fill="#1a1e28" stroke="#2a2f40"/>
-          <text x="167" y="28" fill="#94a3b8" font-size="9" text-anchor="middle">Color Buffer: pixel RGBA values</text>
-          <rect x="10" y="45" width="315" height="28" rx="4" fill="#1a1e28" stroke="#06b6d4"/>
-          <text x="167" y="63" fill="#06b6d4" font-size="9" text-anchor="middle">Depth Buffer: 0.0 (near) → 1.0 (far) per pixel</text>
-          <text x="167" y="95" fill="#94a3b8" font-size="8" text-anchor="middle">For each new fragment:</text>
-          <text x="60" y="112" fill="#4ade80" font-size="8">if newDepth &lt; storedDepth →</text>
-          <text x="60" y="124" fill="#4ade80" font-size="8">  write color + update depth buffer</text>
-          <text x="60" y="138" fill="#64748b" font-size="8">else → discard fragment (behind something)</text>
-          <text x="167" y="152" fill="#3a4055" font-size="7" text-anchor="middle">glEnable(GL_DEPTH_TEST)  |  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)</text>
-        </svg>
-      </div>
-
+  <div class="page-foot">
+    <a class="foot-btn" href="#lab2">&#8592; Lab 2</a>
+    <div style="font-size:.8rem;color:var(--text3);text-align:center">
+      By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>
+      Koenig Original AI-Courseware &middot; Day 2 Labs Complete
     </div>
-  </div><!-- summary -->
-
-  <div class="nav-btns">
-    <a class="nav-btn" href="#" onclick="switchLab(1,event)">← Lab 2</a>
-    <a class="nav-btn primary" href="lab-day3.html">Day 3 Labs — Shaders &amp; Effects →</a>
+    <a class="foot-btn primary" href="lab-day3.html">Day 3 Labs &#8594;</a>
   </div>
 </div>
 
-</div><!-- main -->
-
-<footer>
-  <p>By <strong>Raushan Ranjan (MCT | Educator)</strong> · Koenig Solutions<br>
-  Koenig Original AI-Courseware · Day 2 of 5 · <a href="labs.html">All Labs</a> · <a href="demo-day2.html">Day 2 Demos</a></p>
-</footer>
+</main>
+</div><!-- page -->
 
 <script>
-// Lab switcher
-const labs = document.querySelectorAll('.lab');
-const tabs = document.querySelectorAll('.lab-tab');
-const fills = [33, 66, 100];
-const labels = ['Lab 1 of 3', 'Lab 2 of 3', 'Lab 3 of 3'];
-
-function switchLab(idx, e) {
-  if(e) e.preventDefault();
-  labs.forEach((l,i) => l.classList.toggle('active', i===idx));
-  tabs.forEach((t,i) => t.classList.toggle('active', i===idx));
-  document.getElementById('progressFill').style.width = fills[idx]+'%';
-  document.getElementById('progressPct').textContent = labels[idx];
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-// Step accordion
-function toggleStep(header) {
-  const step = header.parentElement;
-  step.classList.toggle('open');
-}
-
-// Checklist
-function toggleCheck(item) {
-  const cb = item.querySelector('input');
-  cb.checked = !cb.checked;
-  item.classList.toggle('done', cb.checked);
-}
-
-// Copy button
-function copyCode(btn) {
-  const pre = btn.closest('.code-wrap').querySelector('pre');
-  navigator.clipboard.writeText(pre.innerText).then(() => {
-    btn.textContent = 'Copied!'; btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+function cp(btn, id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+    const o = btn.textContent; btn.textContent = '✓ Copied!'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = o; btn.classList.remove('ok'); }, 2200);
   });
 }
+function cpCmd(btn, id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+    const o = btn.textContent; btn.textContent = '✓'; btn.style.color = 'var(--green)';
+    setTimeout(() => { btn.textContent = o; btn.style.color = ''; }, 2000);
+  });
+}
+function chk(el) {
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+  // Update progress bar
+  const all = document.querySelectorAll('.obj-chk');
+  const done = document.querySelectorAll('.obj-chk.done').length;
+  const pct = Math.round(done / all.length * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('pct').textContent = pct + '%';
+}
+// Sidebar active link on scroll
+const secs = document.querySelectorAll('.lab-sec');
+const sbls = document.querySelectorAll('.sidebar .sb-link[href^="#"]');
+secs.forEach(s => new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = '#' + e.target.id;
+      sbls.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+    }
+  });
+}, {threshold: 0.25, rootMargin: '-65px 0px -55% 0px'}).observe(s));
 </script>
-
 </body>
 </html>

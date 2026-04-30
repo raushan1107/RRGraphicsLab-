@@ -54,7 +54,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);backgrou
 .concept{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(251,146,60,.03));border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
 .concept-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
 .concept p{font-size:.86rem;color:var(--text2);line-height:1.8}
-.warn{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-left:3px solid var(--red,#f87171);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.warn{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-left:3px solid #f87171;border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
 .warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#f87171;margin-bottom:.4rem}
 .warn p{font-size:.86rem;color:var(--text2);line-height:1.8}
 .exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--pink);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
@@ -117,10 +117,10 @@ code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);borde
 <div class="page">
 <aside class="sidebar">
   <div class="sb-grp">Day 4 &mdash; 4 Demos</div>
-  <a class="sb-link active" href="#demo15"><span class="sb-num">D15</span>VkInstance + Device</a>
-  <a class="sb-link" href="#demo16"><span class="sb-num">D16</span>Swapchain</a>
-  <a class="sb-link" href="#demo17"><span class="sb-num">D17</span>Graphics Pipeline</a>
-  <a class="sb-link" href="#demo18"><span class="sb-num">D18</span>First Triangle + Sync</a>
+  <a class="sb-link active" href="#demo15"><span class="sb-num">D15</span>Vulkan Environment</a>
+  <a class="sb-link" href="#demo16"><span class="sb-num">D16</span>Logical Device</a>
+  <a class="sb-link" href="#demo17"><span class="sb-num">D17</span>Swapchain + Clear</a>
+  <a class="sb-link" href="#demo18"><span class="sb-num">D18</span>First Triangle</a>
   <div class="sb-sep"></div>
   <div class="sb-grp">Navigation</div>
   <a class="sb-link" href="day3-demos.html"><span class="sb-num" style="font-size:9px">&#8592;</span>Day 3 Demos</a>
@@ -130,40 +130,43 @@ code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);borde
 
 
 <div class="demo-sec" id="demo15">
-  <div class="demo-eyebrow"><span class="d-badge">Demo 15 &middot; Module 10</span><span class="d-type">Vulkan Startup Sequence &mdash; Terminal Only</span></div>
-  <div class="demo-title">VkInstance, Physical Device, Logical Device &mdash; The Root of Every Vulkan Programme</div>
-  <div class="demo-desc">No window. No rendering. Pure startup sequence printed to terminal. Creates a VkInstance with validation layers, enumerates every GPU in the system with its VRAM and driver version, selects the best GPU, finds a graphics queue family, and creates a VkDevice with a graphics queue. Then destroys everything in reverse order. This sequence is present in every Vulkan programme ever written.</div>
+  <div class="demo-eyebrow"><span class="d-badge">Demo 15 &middot; Module 10</span><span class="d-type">Vulkan Environment — Instance, Layers, Physical Device</span></div>
+  <div class="demo-title">VkInstance, Validation Layers, Physical Device Enumeration</div>
+  <div class="demo-desc">Creates a VkInstance with validation layers, lists all available validation layers with descriptions, requests GLFW surface extensions, then enumerates every GPU in the system — printing name, type, API version, driver version, vendor ID, max texture size, queue families (with GRAPHICS/COMPUTE/TRANSFER flags), and memory heaps with sizes. Creates a VkSurfaceKHR via GLFW to prove surface extension support, opens a window to confirm, then shuts down. No logical device yet — this is a pure environment probe and query demo.</div>
   <div class="demo-meta">
     <span class="meta-chip">&#128187; Project: D15_VulkanEnv</span>
     <span class="meta-chip">&#9201; ~35 min</span>
-    <span class="meta-chip">New: VkInstance &middot; VkPhysicalDevice &middot; VkDevice &middot; VkQueue &middot; validation layers</span>
+    <span class="meta-chip">266 lines</span>
+    <span class="meta-chip">New: VkInstance &middot; validation layers &middot; VkPhysicalDevice &middot; VkSurfaceKHR</span>
   </div>
   <div class="builds-on">
     <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
     <span class="bo-chip">Nothing</span>
     <span style="color:var(--text3)">=</span>
-    <span class="bo-chip bo-ok">Vulkan starting point for every demo &#10003;</span>
+    <span class="bo-chip bo-ok">Vulkan environment proof — window opens, GPU listed &#10003;</span>
   </div>
   <div class="out-preview">
     <div class="op-label">&#127919; What You Will See</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> All GPUs listed with name, type, VRAM in MB, and graphics queue family index</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Selected GPU:</strong> Discrete GPU preferred, fallback to integrated if no discrete present</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Validation:</strong> "VK_LAYER_KHRONOS_validation ENABLED" — catches all API mistakes in development</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Shutdown:</strong> VkDevice destroyed, then VkInstance — reverse creation order demonstrated</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> All installed validation layers listed with descriptions</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> All GPUs enumerated — name, type, driver version, queue families, VRAM heap sizes</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> VkSurfaceKHR created successfully via GLFW (proves surface extension works)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> GLFW window opens titled "Demo 15 — Vulkan Environment" — close it to exit</div>
+    <div class="op-item"><span class="op-dot"></span><strong>No logical device</strong> — D16 adds that. This demo is query-only.</div>
   </div>
-  <div class="concept"><div class="concept-lbl">&#128161; Why This Demo Has No Window</div><p class="note">The startup sequence is completely independent of rendering. You create the instance and device once at application startup, and they persist until shutdown. Understanding them in isolation — without the complexity of swapchains and pipelines — is the correct way to learn them. Demo 16 adds the window and surface on top of this same base.</p></div>
+  <div class="concept"><div class="concept-lbl">&#128161; D15 = The Vulkan Census — Inventory Before Building</div><p class="note">Before creating anything, Vulkan requires you to know what hardware you have. <code class='ic'>vkEnumeratePhysicalDevices()</code> lists the GPUs. <code class='ic'>vkGetPhysicalDeviceProperties()</code> gives capabilities. <code class='ic'>vkGetPhysicalDeviceQueueFamilyProperties()</code> tells you which queues exist. This query phase is mandatory — you choose your GPU based on what it supports, not what OpenGL assumed for you.</p></div>
   <div class="diag"><div class="diag-title">Vulkan Object Hierarchy — All Four Demos Build This Tree</div><pre>VkInstance (Demo 15) ← root, connects app to Vulkan runtime
   └─ VkPhysicalDevice (Demo 15) ← READ ONLY, represents actual GPU hardware
-       └─ VkDevice (Demo 15) ← logical connection, used to create all other objects
-            ├─ VkQueue (Demo 15) ← submit command buffers here
-            ├─ VkSurface + VkSwapchain (Demo 16) ← window + image pool
-            │    └─ VkImageView (Demo 16) ← wraps each swapchain image
-            ├─ VkRenderPass + VkFramebuffer (Demo 17) ← render target description
-            ├─ VkShaderModule (Demo 17) ← SPIR-V bytecode
-            ├─ VkPipeline (Demo 17) ← ALL state baked in at creation
-            ├─ VkCommandPool + VkCommandBuffer (Demo 18) ← record GPU commands
-            ├─ VkBuffer + VkDeviceMemory (Demo 18) ← vertex data in VRAM
-            └─ VkSemaphore + VkFence (Demo 18) ← frame synchronisation</pre></div>
+       └─ VkDevice (Demo 16) ← logical connection, used to create all other objects
+            ├─ VkQueue (Demo 16) ← graphics + present queues
+            ├─ VkCommandPool + VkCommandBuffer (Demo 16) ← record GPU commands
+            ├─ VkSurface + VkSwapchain (Demo 17) ← window + image pool
+            │    └─ VkImageView + VkFramebuffer (Demo 17) ← render targets
+            ├─ VkRenderPass (Demo 17) ← load/store rules for attachments
+            ├─ VkShaderModule (Demo 18) ← SPIR-V bytecode (embedded arrays)
+            ├─ VkPipeline (Demo 18) ← ALL state baked at creation
+            └─ VkSemaphore × 2 + VkFence (Demo 18) ← frame synchronisation
+
+VkSurfaceKHR (Demo 15) ← created from GLFW window</pre></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake15&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake15">cmake_minimum_required(VERSION 3.20)
 project(D15_VulkanEnv)
@@ -182,11 +185,7 @@ target_link_libraries(D15_VulkanEnv
     Vulkan::Vulkan
     ${GLFW_DIR}/lib-vc2022/glfw3.lib
 )</pre></div></div>
-  <div class="warn">
-  <div class="warn-lbl">&#9888; CMakeLists.txt for Vulkan projects</div>
-  <p class="note">Vulkan demos use <code class="ic">find_package(Vulkan REQUIRED)</code> and link against <code class="ic">Vulkan::Vulkan</code>. The Vulkan SDK must be installed and <code class="ic">VULKAN_SDK</code> environment variable set. SPIR-V shaders are compiled separately with <code class="ic">glslc</code> (included in the SDK) and placed in the project folder next to the executable.</p>
-</div>
-  <div class="sh"><span class="sh-dot"></span>src/main.cpp &mdash; Complete Program</div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main15&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main15">// ═══════════════════════════════════════════════════════════════════════════
 //  RR GRAPHICS LAB — DAY 4 · DEMO 15
 //  Vulkan Environment — Instance, Validation Layers, Physical Device Query
@@ -454,41 +453,44 @@ int main() {
     return 0;
 }
 </pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd15&apos;)">Copy</button><pre id="cmd15">cd C:\Labs\D15_VulkanEnv
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd15&apos;)">Copy</button><pre id="cmd15">cd C:\\Labs\\D15_VulkanEnv
 cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
-build\Release\D15_VulkanEnv.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="ts">[1] Validation layers: ENABLED</span></div><div><span class="ts">[2] VkInstance created</span></div><div><span class="ts">[3] Physical devices found: 2</span></div><div><span class="to">    GPU 0: NVIDIA GeForce RTX 3070 [Discrete GPU]  VRAM: 8192 MB  Queue family: 0</span></div><div><span class="to">    GPU 1: Intel UHD Graphics 750 [Integrated GPU] VRAM: 512 MB   Queue family: 0</span></div><div><span class="ts">[4] Selected GPU: NVIDIA GeForce RTX 3070 (queue family 0)</span></div><div><span class="ts">[5] VkDevice (logical device) created</span></div><div><span class="ts">[6] Graphics queue obtained: 0x...</span></div><hr class="t-hr"><div><span class="to">=== Startup complete ===</span></div><div><span class="to">GPU: NVIDIA GeForce RTX 3070 | Queue: family 0 | Validation: ON</span></div><div><span class="ts">[7] Shutting down...</span></div><div><span class="ts">    VkDevice destroyed</span></div><div><span class="ts">    VkInstance destroyed</span></div><div><span class="ts">[8] Clean shutdown. Validation layers: no errors reported.</span></div></div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Intentionally break the sType field:</strong> In VkApplicationInfo, change <code class='ic'>sType = VK_STRUCTURE_TYPE_APPLICATION_INFO</code> to <code class='ic'>sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO</code>. Run. Validation layers immediately report: VUID error, wrong sType. This proves validation layers catch even subtle struct misuse.</li><li><strong>Destroy in wrong order:</strong> Move <code class='ic'>vkDestroyInstance()</code> before <code class='ic'>vkDestroyDevice()</code>. Run. Validation layers report: &quot;Cannot call vkDestroyInstance while logical device is active.&quot; Restore correct order. Shows why destroy-in-reverse-order is mandatory.</li><li><strong>Request a non-existent validation layer:</strong> Add <code class='ic'>"VK_LAYER_LUNARG_fake_layer"</code> to VALIDATION_LAYERS. The checkValidationLayerSupport() function returns false and exits. Shows the two-call enumeration pattern.</li></ul></div>
+build\\Release\\D15_VulkanEnv.exe</pre></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== RR Graphics Lab — Demo 15: Vulkan Env ===</span></div><hr class="t-hr"><div><span class="ts">[GLFW] Vulkan supported: YES</span></div><hr class="t-hr"><div><span class="ts">[Validation Layers] 6 available:</span></div><div><span class="to">   VK_LAYER_KHRONOS_validation — Khronos validation layer</span></div><div><span class="to">   VK_LAYER_LUNARG_monitor — FPS monitoring layer</span></div><div><span class="to">   ... (all installed layers listed with descriptions)</span></div><hr class="t-hr"><div><span class="ts">[Validation] VK_LAYER_KHRONOS_validation present: YES</span></div><div><span class="ts">[Extensions] Requesting 3 instance extensions:</span></div><div><span class="to">   VK_KHR_surface</span></div><div><span class="to">   VK_KHR_win32_surface</span></div><div><span class="to">   VK_EXT_debug_utils</span></div><div><span class="ts">[Instance] Validation layers ENABLED</span></div><div><span class="ts">[Instance] VkInstance created successfully: 0x...</span></div><hr class="t-hr"><div><span class="ts">[Physical Devices] 2 Vulkan-capable GPU(s) found:</span></div><div><span class="to">GPU 0: NVIDIA GeForce RTX 3070</span></div><div><span class="to">   Type:        Discrete GPU</span></div><div><span class="to">   API version: 1.3.260</span></div><div><span class="to">   Driver ver:  531.41.0</span></div><div><span class="to">   Queue families: 3</span></div><div><span class="to">     [0] count=16 flags=GRAPHICS COMPUTE TRANSFER</span></div><div><span class="to">     [1] count=2  flags=COMPUTE TRANSFER</span></div><div><span class="to">     [2] count=8  flags=TRANSFER</span></div><div><span class="to">   Memory heaps: 2</span></div><div><span class="to">     [0] 8192 MB (device-local / VRAM)</span></div><div><span class="to">     [1] 16383 MB (system RAM)</span></div><hr class="t-hr"><div><span class="ts">[Surface] VkSurfaceKHR created via GLFW — VK_KHR_surface working</span></div><div><span class="to">Window open. Close it to exit.</span></div><hr class="t-hr"><div><span class="ts">[Cleanup] All Vulkan objects destroyed. Done.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Intentionally break the sType field:</strong> In <code class='ic'>VkApplicationInfo</code>, change <code class='ic'>sType = VK_STRUCTURE_TYPE_APPLICATION_INFO</code> to <code class='ic'>sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO</code>. Run. Validation layers immediately report a VUID error. This proves validation layers catch even subtle struct misuse.</li><li><strong>Enumerate instance extensions:</strong> Before creating the instance, call <code class='ic'>vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr)</code> then fill a vector and print all available extensions. Compare what the SDK installed vs what GLFW needs.</li><li><strong>Query device features:</strong> Call <code class='ic'>vkGetPhysicalDeviceFeatures(physDevices[0], &features)</code> and print <code class='ic'>features.geometryShader</code>, <code class='ic'>features.tessellationShader</code>, <code class='ic'>features.samplerAnisotropy</code>. These must be explicitly enabled in D16's VkDeviceCreateInfo before use.</li></ul></div>
 </div>
 
 
 <div class="demo-sec" id="demo16">
-  <div class="demo-eyebrow"><span class="d-badge">Demo 16 &middot; Module 11</span><span class="d-type">Swapchain &mdash; First Window</span></div>
-  <div class="demo-title">Surface, Swapchain, Image Views &mdash; Connecting Vulkan to the Screen</div>
-  <div class="demo-desc">First Vulkan window. Adds a GLFW window, a VkSurfaceKHR (platform abstraction over the OS window), and a VkSwapchainKHR (the double/triple-buffered image pool). Each frame: acquires an available swapchain image, submits a clear command, presents it. Terminal shows swapchain image count, chosen colour format, and present mode. Window clears to orange.</div>
+  <div class="demo-eyebrow"><span class="d-badge">Demo 16 &middot; Module 11</span><span class="d-type">Logical Device, Queues, Command Pool, Command Buffer</span></div>
+  <div class="demo-title">VkDevice, VkQueue, VkCommandPool, VkCommandBuffer &mdash; Connecting to the GPU</div>
+  <div class="demo-desc">Builds on Demo 15's instance and surface. Selects the best physical device (scoring discrete GPU higher), finds both graphics and present queue family indices, creates the logical VkDevice with the VK_KHR_swapchain extension enabled, retrieves graphics and present queues. Then creates a VkCommandPool and allocates a VkCommandBuffer — recording an empty begin/end to prove the API works. Opens a window that stays open until closed. No swapchain, no render loop — that comes in Demo 17.</div>
   <div class="demo-meta">
     <span class="meta-chip">&#128187; Project: D16_VulkanDevice</span>
     <span class="meta-chip">&#9201; ~35 min</span>
-    <span class="meta-chip">New: VkSurfaceKHR &middot; VkSwapchainKHR &middot; VkImageView &middot; present modes &middot; surface formats</span>
+    <span class="meta-chip">275 lines</span>
+    <span class="meta-chip">New: VkDevice &middot; VkQueue &middot; VkCommandPool &middot; VkCommandBuffer</span>
   </div>
   <div class="builds-on">
     <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
-    <span class="bo-chip">Demo 15 (instance + device)</span>
+    <span class="bo-chip">Demo 15 (instance + surface)</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">GLFW window</span>
+    <span class="bo-chip">logical device + queues</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">VkSurface + VkSwapchain</span>
+    <span class="bo-chip">command pool + buffer</span>
     <span style="color:var(--text3)">=</span>
-    <span class="bo-chip bo-ok">Orange window, no geometry yet &#10003;</span>
+    <span class="bo-chip bo-ok">Device ready, command buffer recorded, window open &#10003;</span>
   </div>
   <div class="out-preview">
     <div class="op-label">&#127919; What You Will See</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Orange background, no geometry — the clear colour from VkRenderPassBeginInfo</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Swapchain image count (2 or 3), chosen format (B8G8R8A8_SRGB), present mode (MAILBOX or FIFO)</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Frame loop:</strong> acquire image → (clear only) → submit → present, at vsync rate</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> VkInstance and surface created, physical device selected with name</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Graphics and present queue family indices printed (usually same on desktop)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> VkDevice created, both queues retrieved, command pool and buffer allocated</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> "Command buffer recorded (empty begin/end) — no crash = API working"</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Opens and stays open — close it to trigger cleanup and exit</div>
   </div>
-  <div class="concept"><div class="concept-lbl">&#128161; Surface + Swapchain = OpenGL&apos;s glfwSwapBuffers() Unpacked</div><p class="note">In OpenGL, <code class='ic'>glfwSwapBuffers()</code> hid: acquiring a free backbuffer, waiting for vsync, flipping front/back. In Vulkan these are three explicit steps: <code class='ic'>vkAcquireNextImageKHR()</code> gets an image index, your render commands draw into it, <code class='ic'>vkQueuePresentKHR()</code> flips it. The surface is the OS window abstraction that the swapchain renders into.</p></div>
+  <div class="concept"><div class="concept-lbl">&#128161; VkDevice = Your Logical Handle to the GPU</div><p class="note">A VkPhysicalDevice is read-only hardware facts. A VkDevice is your per-application interface to that hardware — the object you use to create everything else. In OpenGL the device was the implicit current context. In Vulkan you create it explicitly, choose which queue families to activate, and enable only the extensions you need. Once created, every subsequent Vulkan object (swapchain, pipeline, buffer) is created through the device.</p></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake16&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake16">cmake_minimum_required(VERSION 3.20)
 project(D16_VulkanDevice)
@@ -784,46 +786,44 @@ int main() {
     return 0;
 }
 </pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd16&apos;)">Copy</button><pre id="cmd16">cd C:\Labs\D16_VulkanDevice
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd16&apos;)">Copy</button><pre id="cmd16">cd C:\\Labs\\D16_VulkanDevice
 cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
-build\Release\D16_VulkanDevice.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="ts">[3] GLFW window created</span></div><div><span class="ts">[4] VkSurfaceKHR created</span></div><div><span class="ts">[5] Swapchain: 3 images, format B8G8R8A8_SRGB, present mode MAILBOX</span></div><div><span class="ts">[6] Image views created (3)</span></div><div><span class="ts">[7] Render loop starting...</span></div><div><span class="to">Frame 0: acquired image 0</span></div><div><span class="to">Frame 1: acquired image 1</span></div><div><span class="to">Frame 2: acquired image 2</span></div><div><span class="to">Frame 3: acquired image 0   <- cycles through pool</span></div></div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change present mode preference:</strong> In surface setup, move VK_PRESENT_MODE_FIFO_KHR to first in the preference list. Rebuild. Frame rate locks to vsync (60 or 144 Hz). MAILBOX renders as fast as possible and replaces the queued image. IMMEDIATE has no vsync — tearing may appear.</li><li><strong>Change clear colour:</strong> In VkRenderPassBeginInfo, change <code class='ic'>clearValue.color = {{{0.9f, 0.4f, 0.1f, 1.0f}}}</code> to navy blue <code class='ic'>{{{0.05f, 0.08f, 0.15f, 1.0f}}}</code>. Rebuild. The window changes colour immediately. This is the Vulkan equivalent of <code class='ic'>glClearColor()</code>.</li></ul></div>
+build\\Release\\D16_VulkanDevice.exe</pre></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== RR Graphics Lab — Demo 16: Vulkan Device ===</span></div><hr class="t-hr"><div><span class="ts">[1] VkInstance created</span></div><div><span class="ts">[2] VkSurfaceKHR created</span></div><div><span class="ts">[3] Physical device selected: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">[4] Queue families:</span></div><div><span class="to">    Graphics family index: 0</span></div><div><span class="to">    Present  family index: 0</span></div><div><span class="to">    Same family: YES (typical on desktop GPUs)</span></div><div><span class="ts">[5] VkDevice (logical device) created: 0x...</span></div><hr class="t-hr"><div><span class="ts">[6] Queues retrieved:</span></div><div><span class="to">    Graphics queue: 0x...</span></div><div><span class="to">    Present  queue: 0x...</span></div><div><span class="ts">[7] VkCommandPool created: 0x...</span></div><div><span class="ts">[8] VkCommandBuffer allocated: 0x...</span></div><hr class="t-hr"><div><span class="ts">[9] Command buffer recorded (empty begin/end) — no crash = API working</span></div><hr class="t-hr"><div><span class="to">Summary:</span></div><div><span class="to">  VkInstance         → VkPhysicalDevice (selected: NVIDIA GeForce RTX 3070)</span></div><div><span class="to">  VkPhysicalDevice   → VkDevice (logical interface)</span></div><div><span class="to">  VkDevice           → VkQueue (graphics + present)</span></div><div><span class="to">  VkDevice           → VkCommandPool → VkCommandBuffer</span></div><hr class="t-hr"><div><span class="to">Window open. Close to exit.</span></div><div><span class="ts">[Cleanup] Done.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Intentionally use the wrong queue family index:</strong> Change <code class='ic'>qfi.graphicsFamily.value()</code> to a hard-coded <code class='ic'>99</code> in VkDeviceQueueCreateInfo. Run. Validation layers report: VUID violation — queue family index out of range for this device. Shows that queue family indices are hardware-specific and must be queried.</li><li><strong>Enable samplerAnisotropy:</strong> Set <code class='ic'>deviceFeatures.samplerAnisotropy = VK_TRUE</code> in VkDeviceCreateInfo. Run. Confirm no error. Now comment it out but try to use anisotropy in a sampler (you would need one) — validation layers would catch the mismatch. Features must be explicitly enabled before use.</li><li><strong>Allocate multiple command buffers:</strong> Change <code class='ic'>commandBufferCount = 1</code> to <code class='ic'>3</code> and declare <code class='ic'>VkCommandBuffer cmdBufs[3]</code>. Run. Observe: a pool allocates efficiently. In Demo 17, we allocate one buffer per swapchain image (typically 3).</li></ul></div>
 </div>
 
 
 <div class="demo-sec" id="demo17">
-  <div class="demo-eyebrow"><span class="d-badge">Demo 17 &middot; Module 12</span><span class="d-type">Pipeline Object &mdash; Baking All State</span></div>
-  <div class="demo-title">Full Graphics Pipeline Object &mdash; Every OpenGL State Call in One Struct</div>
-  <div class="demo-desc">Creates the complete <code class="ic">VkGraphicsPipelineCreateInfo</code>: SPIR-V vertex and fragment shaders loaded as VkShaderModules, render pass with colour attachment, pipeline layout, vertex input state, rasterizer, depth stencil state, colour blend state, dynamic viewport and scissor. Window clears to navy blue. Terminal lists every pipeline stage created with creation time in milliseconds.</div>
+  <div class="demo-eyebrow"><span class="d-badge">Demo 17 &middot; Module 11</span><span class="d-type">Swapchain, Render Pass, Framebuffers, Clear Loop</span></div>
+  <div class="demo-title">VkSwapchainKHR, VkRenderPass, VkFramebuffer &mdash; First Pixels on Screen</div>
+  <div class="demo-desc">Adds the full windowed rendering stack on top of Demo 16's device. Queries surface capabilities, selects the best colour format (B8G8R8A8_SRGB) and present mode (MAILBOX preferred, FIFO fallback), creates VkSwapchainKHR, wraps each image in a VkImageView, defines a VkRenderPass with clear/store load ops, and creates one VkFramebuffer per swapchain image. Runs a full acquire&ndash;clear&ndash;present frame loop with semaphore and fence synchronisation. Window clears to navy blue every frame. No pipeline, no shaders, no geometry &mdash; that is Demo 18.</div>
   <div class="demo-meta">
     <span class="meta-chip">&#128187; Project: D17_VulkanSwapchain</span>
     <span class="meta-chip">&#9201; ~35 min</span>
-    <span class="meta-chip">New: VkShaderModule &middot; VkRenderPass &middot; VkPipeline &middot; VkPipelineLayout &middot; SPIR-V</span>
+    <span class="meta-chip">442 lines</span>
+    <span class="meta-chip">New: VkSwapchainKHR &middot; VkImageView &middot; VkRenderPass &middot; VkFramebuffer &middot; present modes &middot; frame sync</span>
   </div>
   <div class="builds-on">
     <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
-    <span class="bo-chip">Demo 16 (swapchain)</span>
+    <span class="bo-chip">Demo 16 (device + command buffer)</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">SPIR-V shaders (glslc)</span>
+    <span class="bo-chip">swapchain + render pass</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">VkPipeline with all state</span>
+    <span class="bo-chip">acquire → clear → present loop</span>
     <span style="color:var(--text3)">=</span>
-    <span class="bo-chip bo-ok">Pipeline object ready, no draw calls yet &#10003;</span>
+    <span class="bo-chip bo-ok">Navy window clearing at vsync, semaphores + fence active &#10003;</span>
   </div>
   <div class="out-preview">
     <div class="op-label">&#127919; What You Will See</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Navy background (pipeline created and bound, but vkCmdDraw not yet called)</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Each pipeline stage listed with "created in X ms"</div>
-    <div class="op-item"><span class="op-dot"></span><strong>SPIR-V:</strong> <code class="ic">vert.spv</code> and <code class="ic">frag.spv</code> loaded and wrapped in VkShaderModules</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Swapchain support details — image count range, format count, present mode count</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Chosen format (B8G8R8A8_SRGB) and present mode (MAILBOX or FIFO) with reasoning</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Swapchain created with N images, image views created, render pass created, framebuffers created</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Navy blue (<code class="ic">0.04, 0.08, 0.18</code>) clearing every frame — first real Vulkan pixels</div>
+    <div class="op-item"><span class="op-dot"></span><strong>ESC</strong> to quit. No geometry yet &mdash; pipeline is Demo 18.</div>
   </div>
-  <div class="concept"><div class="concept-lbl">&#128161; The Pipeline Bakes What OpenGL Changed at Runtime</div><p class="note">Every OpenGL call like <code class='ic'>glEnable(GL_DEPTH_TEST)</code>, <code class='ic'>glPolygonMode(GL_FILL)</code>, <code class='ic'>glBlendFunc()</code> changed global state that the driver had to reconcile at every draw call. In Vulkan all of these are fields in <code class='ic'>VkGraphicsPipelineCreateInfo</code> structs — set once at pipeline creation time, never changed. To change polygon mode you create a second pipeline object.</p></div>
-  <div class="sh"><span class="sh-dot"></span>Compile shaders first</div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;shader17&apos;)">Copy</button><pre id="shader17">glslc shader.vert -o vert.spv
-glslc shader.frag -o frag.spv
-
-REM Copy vert.spv and frag.spv next to the .exe before running</pre></div>
+  <div class="concept"><div class="concept-lbl">&#128161; glfwSwapBuffers() Unpacked — Three Explicit Steps</div><p class="note">In OpenGL, <code class='ic'>glfwSwapBuffers()</code> hid: acquiring a free backbuffer, waiting for vsync, flipping front/back. In Vulkan these are three explicit steps every frame: <code class='ic'>vkAcquireNextImageKHR()</code> gets an image index, your recorded commands render into it, <code class='ic'>vkQueuePresentKHR()</code> flips it. The semaphores signal between these steps so the GPU never reads and writes the same image simultaneously.</p></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake17&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake17">cmake_minimum_required(VERSION 3.20)
 project(D17_VulkanSwapchain)
@@ -1286,67 +1286,50 @@ int main() {
     return 0;
 }
 </pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd17&apos;)">Copy</button><pre id="cmd17">cd C:\Labs\D17_VulkanSwapchain
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd17&apos;)">Copy</button><pre id="cmd17">cd C:\\Labs\\D17_VulkanSwapchain
 cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
-build\Release\D17_VulkanSwapchain.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="ts">[5] Shader modules: vert.spv loaded (1.2 KB), frag.spv loaded (0.8 KB)</span></div><div><span class="ts">[6] Render pass created</span></div><div><span class="ts">[7] Pipeline layout created</span></div><div><span class="ts">[8] Graphics pipeline created in 18 ms</span></div><div><span class="ts">[9] Framebuffers created (3)</span></div><div><span class="ts">[10] Render loop starting...</span></div><div><span class="to">Window: navy blue — pipeline bound, no geometry yet</span></div></div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change to wireframe mode:</strong> In <code class='ic'>VkPipelineRasterizationStateCreateInfo</code>, change <code class='ic'>polygonMode = VK_POLYGON_MODE_FILL</code> to <code class='ic'>VK_POLYGON_MODE_LINE</code>. Rebuild the pipeline. Note: requires the <code class='ic'>fillModeNonSolid</code> device feature to be enabled. This is the Vulkan equivalent of <code class='ic'>glPolygonMode(GL_WIREFRAME)</code> — but requires a full pipeline rebuild.</li><li><strong>Measure pipeline creation time:</strong> The terminal already shows creation time. On a first run it may be 50–200ms on some drivers as the GPU compiles the SPIR-V. On subsequent runs it may be faster due to pipeline caches (not implemented here). This is why production engines use <code class='ic'>VkPipelineCache</code> to serialise compiled pipelines to disk.</li></ul></div>
+build\\Release\\D17_VulkanSwapchain.exe</pre></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== RR Graphics Lab — Demo 17: Swapchain ===</span></div><hr class="t-hr"><div><span class="ts">[1] GPU: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">[2] VkDevice + queues ready</span></div><div><span class="ts">[3] Swapchain support:</span></div><div><span class="to">    Image count range: 2 – 8</span></div><div><span class="to">    Surface formats available: 4</span></div><div><span class="to">    Present modes available:   3</span></div><div><span class="to">   Format: VK_FORMAT_B8G8R8A8_SRGB (preferred)</span></div><div><span class="to">   Present mode: MAILBOX (triple-buffer, no tearing)</span></div><div><span class="to">   Extent: 900×600</span></div><div><span class="ts">[4] VkSwapchainKHR created: 3 images (900×600)</span></div><div><span class="ts">[5] 3 VkImageViews created</span></div><div><span class="ts">[6] VkRenderPass created</span></div><div><span class="ts">[7] 3 VkFramebuffers created</span></div><hr class="t-hr"><div><span class="ts">[8] Sync objects: semaphores + fence ready</span></div><div><span class="to">    Rendering navy clear colour each frame.</span></div><div><span class="to">    ESC to quit.</span></div><hr class="t-hr"><div><span class="to">[Navy blue window — clearing at vsync. No geometry yet.]</span></div><div><span class="ts">[Cleanup] Done.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change the clear colour:</strong> In the render loop, change <code class='ic'>clearCol = {{{0.04f, 0.08f, 0.18f, 1.0f}}}</code> to orange <code class='ic'>{{{0.98f, 0.57f, 0.24f, 1.0f}}}</code>. Rebuild. The window colour changes immediately. This is the Vulkan equivalent of <code class='ic'>glClearColor()</code> — but note that the colour is set per-frame in VkRenderPassBeginInfo, not as global state.</li><li><strong>Force FIFO present mode:</strong> Change <code class='ic'>choosePresentMode()</code> to always return <code class='ic'>VK_PRESENT_MODE_FIFO_KHR</code>. Rebuild. Frame rate locks to vsync. Compare to MAILBOX — on a 144Hz display you should see MAILBOX running significantly faster (uncapped by CPU, only capped by vsync on present).</li><li><strong>Remove the fence wait:</strong> Comment out <code class='ic'>vkWaitForFences()</code> at the start of the frame loop. Run. Validation layers report: command buffer in use. This shows why the fence exists — without it, the CPU races ahead and re-records a command buffer the GPU is still executing.</li></ul></div>
 </div>
 
 
 <div class="demo-sec" id="demo18">
-  <div class="demo-eyebrow"><span class="d-badge">Demo 18 &middot; Module 12</span><span class="d-type">First Triangle + Full Synchronisation</span></div>
-  <div class="demo-title">Vulkan First Triangle &mdash; ~800 Lines, Every Object, Full Frame Sync</div>
-  <div class="demo-desc">The Day 4 capstone. A tactical-orange triangle drawn with the complete Vulkan rendering pipeline: instance, validation layers, physical device selection, logical device, surface, swapchain (3 images), image views, render pass, SPIR-V shaders, graphics pipeline, framebuffers, command pool, one command buffer per swapchain image, host-visible vertex buffer with mapped memory, two semaphores (imageAvailable + renderFinished), and one fence per frame-in-flight. Validation layers report zero errors.</div>
+  <div class="demo-eyebrow"><span class="d-badge">Demo 18 &middot; Module 12</span><span class="d-type">Graphics Pipeline + First Triangle</span></div>
+  <div class="demo-title">VkPipeline, SPIR-V, vkCmdDraw &mdash; First Triangle on Screen</div>
+  <div class="demo-desc">The Day 4 capstone. Adds a full <code class="ic">VkGraphicsPipelineCreateInfo</code> on top of Demo 17's swapchain stack. SPIR-V shader bytecode is <strong>embedded directly as C++ uint32_t arrays</strong> (no external .spv files needed) — the vertex shader hard-codes three positions using <code class="ic">gl_VertexIndex</code>, the fragment shader outputs solid white. Pipeline state covers: vertex input (empty — no VkBuffer), input assembly (TRIANGLE_LIST), viewport, rasterizer (fill, no cull), multisample (off), colour blend (opaque write). Calls <code class="ic">vkCmdDraw(3, 1, 0, 0)</code>. Renders a <strong>white triangle</strong> on a navy background.</div>
   <div class="demo-meta">
     <span class="meta-chip">&#128187; Project: D18_VulkanTriangle</span>
     <span class="meta-chip">&#9201; ~45 min</span>
-    <span class="meta-chip">New: VkCommandBuffer &middot; VkBuffer &middot; VkDeviceMemory &middot; VkSemaphore &middot; VkFence &middot; vkCmdDraw</span>
+    <span class="meta-chip">476 lines</span>
+    <span class="meta-chip">New: VkShaderModule &middot; VkPipeline &middot; VkPipelineLayout &middot; vkCmdDraw &middot; embedded SPIR-V</span>
   </div>
   <div class="builds-on">
     <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
-    <span class="bo-chip">Demo 17 (full pipeline)</span>
+    <span class="bo-chip">Demo 17 (swapchain + render pass)</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">vertex buffer + memory</span>
+    <span class="bo-chip">embedded SPIR-V shaders</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">semaphores + fence</span>
+    <span class="bo-chip">full VkPipeline</span>
     <span style="color:var(--text3)">+</span>
-    <span class="bo-chip">command recording</span>
+    <span class="bo-chip">vkCmdDraw(3,1,0,0)</span>
     <span style="color:var(--text3)">=</span>
-    <span class="bo-chip bo-ok">Tactical-orange triangle at vsync &#10003;</span>
+    <span class="bo-chip bo-ok">White triangle, navy background, no VkBuffer &#10003;</span>
   </div>
   <div class="out-preview">
     <div class="op-label">&#127919; What You Will See</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Dark background, tactical-orange triangle centred on screen</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Full object creation log, frame loop start, "Validation layers: 0 errors"</div>
-    <div class="op-item"><span class="op-dot"></span><strong>Frame loop:</strong> vkWaitForFences &rarr; acquire &rarr; record vkCmdDraw(3,1,0,0) &rarr; submit &rarr; present</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Navy background, <strong>white triangle</strong> centred on screen — positions hard-coded in vertex shader via gl_VertexIndex</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> "Shader modules created (vert + frag SPIR-V)" — loaded from embedded uint32_t arrays, no .spv files needed</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> "VkPipeline created" then "Shader modules freed" — bytecode discarded after pipeline compilation</div>
+    <div class="op-item"><span class="op-dot"></span><strong>No VkBuffer</strong> — vertices are hard-coded in the shader. Day 5 / Lab 4 adds host-visible vertex buffers.</div>
+    <div class="op-item"><span class="op-dot"></span><strong>ESC</strong> to quit. Validation layers: 0 errors.</div>
   </div>
-  <div class="diag"><div class="diag-title">Per-Frame Synchronisation — What Happens Every Frame</div><pre>CPU                              GPU
- |
- |── vkWaitForFences(inFlight) ──►  (block until previous frame done)
- |◄──────────────────────────────── fence signalled
- |
- |── vkAcquireNextImageKHR ────────►  (give me next swapchain image)
- |◄── imageAvailable semaphore ──────
- |
- |── record: vkCmdBeginRenderPass
- |           vkCmdBindPipeline
- |           vkCmdBindVertexBuffers
- |           vkCmdDraw(3, 1, 0, 0)
- |           vkCmdEndRenderPass
- |
- |── vkQueueSubmit ──────────────────►  wait: imageAvailable
- |   (resets + signals inFlight fence)  execute draw commands
- |                                      signal: renderFinished
- |
- |── vkQueuePresentKHR ──────────────►  wait: renderFinished
-                                        flip to screen</pre></div>
-  <div class="sh"><span class="sh-dot"></span>Compile shaders first</div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;shader18&apos;)">Copy</button><pre id="shader18">glslc shader.vert -o vert.spv
-glslc shader.frag -o frag.spv
-
-REM Copy vert.spv and frag.spv next to the .exe</pre></div>
+  <div class="warn">
+    <div class="warn-lbl">&#9888; No External .spv Files Needed</div>
+    <p class="note">Demo 18 embeds SPIR-V bytecode as <code class="ic">static const uint32_t vertSpv[]</code> and <code class="ic">fragSpv[]</code> arrays directly in the C++ source. This is intentional for classroom use — no glslc compilation step required. In production (and in Day 4 Labs 3–5) you compile GLSL to .spv with <code class="ic">glslc shader.vert -o vert.spv</code> and load them with ifstream at runtime.</p>
+  </div>
+  <div class="concept"><div class="concept-lbl">&#128161; VkPipeline is Immutable — All State Baked at Creation</div><p class="note">Every OpenGL call like <code class='ic'>glEnable(GL_DEPTH_TEST)</code>, <code class='ic'>glPolygonMode(GL_FILL)</code>, <code class='ic'>glBlendFunc()</code> changed global state that the driver reconciled at every draw call. In Vulkan, all of that is declared in <code class='ic'>VkGraphicsPipelineCreateInfo</code> structs at creation time and compiled into an immutable pipeline object. At draw time: one <code class='ic'>vkCmdBindPipeline()</code> call — all state set, zero reconciliation overhead.</p></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake18&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake18">cmake_minimum_required(VERSION 3.20)
 project(D18_VulkanTriangle)
@@ -1843,12 +1826,12 @@ int main() {
     return 0;
 }
 </pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd18&apos;)">Copy</button><pre id="cmd18">cd C:\Labs\D18_VulkanTriangle
+  <div class="cmd"><div class="cmd-lbl">Build &amp; Run</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd18&apos;)">Copy</button><pre id="cmd18">cd C:\\Labs\\D18_VulkanTriangle
 cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
 cmake --build build --config Release
-build\Release\D18_VulkanTriangle.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== RR Graphics Lab - Demo 18: Vulkan First Triangle ===</span></div><div><span class="ts">GPU: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">Validation layers: ENABLED</span></div><div><span class="ts">[1] VkInstance created</span></div><div><span class="ts">[2] Surface created</span></div><div><span class="ts">[3] Device + queue: family 0</span></div><div><span class="ts">[4] Swapchain: 3 images, B8G8R8A8_SRGB, MAILBOX</span></div><div><span class="ts">[5] Render pass + pipeline created</span></div><div><span class="ts">[6] Vertex buffer: 36 bytes (3 vertices) host-visible</span></div><div><span class="ts">[7] Command pool + 3 command buffers allocated</span></div><div><span class="ts">[8] Sync objects: 2 semaphores + 1 fence</span></div><div><span class="ts">[9] Render loop starting. ESC=quit</span></div><hr class="t-hr"><div><span class="to">Running at vsync. Triangle visible. Validation: 0 errors.</span></div></div></div>
-  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Remove the fence wait:</strong> Comment out <code class='ic'>vkWaitForFences()</code> at the start of the frame loop. Run. Validation layers immediately report: &quot;Command buffer is already in use by a previous submission.&quot; Uncomment and observe the error disappears. This is the race condition the fence prevents.</li><li><strong>Move a vertex via mapped memory:</strong> The vertex buffer is host-visible. After the render loop starts, map the memory, change vertex[0].x from 0.0 to 0.5, unmap. The triangle shifts on the next rendered frame. This is the simplest form of CPU-driven animation in Vulkan &mdash; no uniform buffer needed.</li><li><strong>Count the lines:</strong> Use your editor to count lines in main.cpp. Compare to Demo 1 (OpenGL triangle, ~80 lines). Every extra line in Demo 18 is one decision OpenGL was making for you. After today, none of those decisions are hidden.</li></ul></div>
+build\\Release\\D18_VulkanTriangle.exe</pre></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== RR Graphics Lab — Demo 18: First Triangle ===</span></div><hr class="t-hr"><div><span class="ts">[1] GPU: NVIDIA GeForce RTX 3070</span></div><div><span class="ts">[2] Swapchain+3 images+views+framebuffers+renderpass ready</span></div><div><span class="ts">[3] Building VkPipeline:</span></div><div><span class="to">    Shader modules created (vert + frag SPIR-V)</span></div><div><span class="to">    VkPipeline created (vert+frag+raster+blend+viewport+layout)</span></div><div><span class="to">    Shader modules freed (pipeline compiled, bytecode no longer needed)</span></div><hr class="t-hr"><div><span class="ts">[4] Ready. Rendering white triangle. ESC to quit.</span></div><hr class="t-hr"><div><span class="to">[White triangle on navy background — running at vsync]</span></div><div><span class="to">[Validation layers: 0 errors]</span></div><hr class="t-hr"><div><span class="ts">[Cleanup] All Vulkan objects destroyed. Day 4 complete.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change the triangle colour:</strong> In the embedded <code class='ic'>fragSpv[]</code> array the fragment shader outputs <code class='ic'>vec4(1.0, 1.0, 1.0, 1.0)</code> (white). To change colour without recompiling SPIR-V: write a new <code class='ic'>shader.frag</code> file with your colour (e.g. <code class='ic'>vec4(0.98, 0.57, 0.24, 1.0)</code> for tactical orange), run <code class='ic'>glslc shader.frag -o frag.spv</code>, then modify the <code class='ic'>createShaderModule()</code> call to load from the .spv file with ifstream instead of the embedded array.</li><li><strong>Change triangle vertex positions:</strong> The vertex shader comment shows the three NDC positions: top <code class='ic'>(0.0, -0.5)</code>, bottom-right <code class='ic'>(0.5, 0.5)</code>, bottom-left <code class='ic'>(-0.5, 0.5)</code>. Write a new <code class='ic'>shader.vert</code> with different positions (e.g. a wide flat triangle), compile with glslc, load from file. This teaches the shader-to-pipeline compilation workflow used in Labs 3–5.</li><li><strong>Remove the fence wait:</strong> Comment out <code class='ic'>vkWaitForFences()</code>. Run. Validation layers immediately report: &quot;Command buffer is already in use by a previous submission.&quot; Uncomment and observe the error disappears. Every extra line in Demo 18 vs an OpenGL triangle is one decision the OpenGL driver was making silently.</li></ul></div>
   <div class="page-foot">
     <a class="foot-btn" href="day3-demos.html">&#8592; Day 3 Demos</a>
     <div style="font-size:.8rem;color:var(--text3);text-align:center">

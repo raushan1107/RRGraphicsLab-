@@ -565,12 +565,39 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <div class="day-badge" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Day 4 — Introduction to Vulkan</div>
       <div class="day-header-info">
         <div class="day-title">Vulkan Instance, Devices, Swapchain, Pipeline, First Triangle</div>
-        <div class="day-desc">6 demos · Modules 10, 11, 12 — Coming soon</div>
+        <div class="day-desc">4 demos · Modules 10, 11, 12</div>
       </div>
-      <div class="day-cta" style="border-color:rgba(251,146,60,.25);color:var(--orange);background:rgba(251,146,60,.05);cursor:default">🔒 Upcoming</div>
+      <a class="day-cta" href="day4-demos.html" style="border-color:rgba(251,146,60,.35);color:var(--orange);background:rgba(251,146,60,.08)">View All &rarr;</a>
     </div>
-    <div style="background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--radius);padding:2rem;text-align:center;color:var(--text3);font-size:.88rem">
-      Demos 20–25: Vulkan SDK Setup & vulkaninfo · VkInstance Creation · Physical + Logical Device · Swapchain Setup · Full Graphics Pipeline Object · Vulkan First Triangle with Sync
+    <div class="demo-grid">
+      <a class="demo-card" href="day4-demos.html#demo15">
+        <div class="demo-card-bar" style="background:var(--orange)"></div>
+        <div class="demo-num" style="color:var(--orange)">D15</div>
+        <div class="demo-name">VkInstance + Device</div>
+        <div class="demo-summary">Create VkInstance with validation layers, enumerate and score all GPUs, create logical device and graphics queue. Terminal only.</div>
+        <div class="demo-tags"><span class="tag">VkInstance</span><span class="tag">VkPhysicalDevice</span><span class="tag">Validation</span></div>
+      </a>
+      <a class="demo-card" href="day4-demos.html#demo16">
+        <div class="demo-card-bar" style="background:var(--orange)"></div>
+        <div class="demo-num" style="color:var(--orange)">D16</div>
+        <div class="demo-name">Surface + Swapchain</div>
+        <div class="demo-summary">GLFW window, VkSurfaceKHR, VkSwapchainKHR. Query formats and present modes. Acquire–clear–present loop. Orange window.</div>
+        <div class="demo-tags"><span class="tag">VkSwapchainKHR</span><span class="tag">Present modes</span><span class="tag">Image views</span></div>
+      </a>
+      <a class="demo-card" href="day4-demos.html#demo17">
+        <div class="demo-card-bar" style="background:var(--orange)"></div>
+        <div class="demo-num" style="color:var(--orange)">D17</div>
+        <div class="demo-name">Graphics Pipeline Object</div>
+        <div class="demo-summary">SPIR-V shaders, VkRenderPass, full VkGraphicsPipelineCreateInfo with all state baked in. Pipeline bound, navy window.</div>
+        <div class="demo-tags"><span class="tag">VkPipeline</span><span class="tag">SPIR-V</span><span class="tag">Render pass</span></div>
+      </a>
+      <a class="demo-card" href="day4-demos.html#demo18">
+        <div class="demo-card-bar" style="background:var(--orange)"></div>
+        <div class="demo-num" style="color:var(--orange)">D18</div>
+        <div class="demo-name">First Triangle + Sync</div>
+        <div class="demo-summary">Vertex buffer, host-visible memory, vkCmdDraw. Full frame sync: imageAvailable semaphore, renderFinished semaphore, inFlight fence.</div>
+        <div class="demo-tags"><span class="tag">VkBuffer</span><span class="tag">Semaphores</span><span class="tag">Fence</span></div>
+      </a>
     </div>
   </div>
 

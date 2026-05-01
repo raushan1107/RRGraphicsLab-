@@ -647,15 +647,52 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 
   <div class="day-section" id="day5">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Day 5 — Advanced Vulkan & Integration</div>
+      <div class="day-badge" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Day 5 — Advanced Vulkan &amp; Integration</div>
       <div class="day-header-info">
-        <div class="day-title">Compute Shaders, Model Loading, Descriptors, Cross-Platform, Capstone</div>
-        <div class="day-desc">5 demos · Modules 13, 14, 15 — Coming soon</div>
+        <div class="day-title">Descriptor Sets, UBO, Compute Shaders, C# Integration, Capstone</div>
+        <div class="day-desc">2 demos · Modules 13, 14, 15 · From glUniform replacement to GPU compute pipelines</div>
       </div>
-      <div class="day-cta" style="border-color:rgba(244,114,182,.25);color:var(--pink);background:rgba(244,114,182,.05);cursor:default">🔒 Upcoming</div>
+      <a class="day-cta" href="day5-demos.html" style="border-color:rgba(244,114,182,.4);color:var(--pink);background:rgba(244,114,182,.08)">
+        ⚡ Open Day 5 Demos →
+      </a>
     </div>
-    <div style="background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--radius);padding:2rem;text-align:center;color:var(--text3);font-size:.88rem">
-      Demos 26–30: Vulkan Compute Shader (image processing) · Assimp Model Loading · Descriptor Sets & UBOs · C# P/Invoke Integration · Capstone Demo Build
+
+    <div class="demos-grid">
+
+      <!-- D19 -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d5)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 19 · Module 13</div>
+          <div class="demo-title">UBO + Descriptor Sets &mdash; Replacing glUniform*()</div>
+          <div class="demo-desc">Builds the complete Vulkan descriptor system: VkDescriptorSetLayout (binding 0 = uniform buffer), VkDescriptorPool, one VkDescriptorSet per swapchain image. Each frame: updates the UBO (MVP matrices) via persistent mapped memory, binds the descriptor set, draws an animated rotating orange triangle.</div>
+          <div class="demo-tags"><span class="demo-tag">VkDescriptorSetLayout</span><span class="demo-tag">VkDescriptorPool</span><span class="demo-tag">UBO</span><span class="demo-tag">vkUpdateDescriptorSets</span></div>
+          <div class="demo-what" style="border-color:var(--d5)">🎯 What you'll see: Orange triangle rotating at 45°/sec driven by MVP matrix in UBO. Terminal prints frame count. Validation: 0 errors.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day5-demos.html#demo19">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~40 min</span>
+        </div>
+      </div>
+
+      <!-- D20 -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d5)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 20 · Module 13</div>
+          <div class="demo-title">Vulkan Compute Shader &mdash; GPU Parallel Image Processing</div>
+          <div class="demo-desc">Creates a Vulkan compute pipeline (no graphics pipeline, no window, no swapchain). Dispatches a compute shader across a 256×256 image: each of 65,536 GPU threads inverts one pixel. Storage buffers (SSBO) hold input and output. Pipeline barrier ensures GPU writes complete before CPU reads. Terminal reports timing and throughput.</div>
+          <div class="demo-tags"><span class="demo-tag">VkComputePipeline</span><span class="demo-tag">SSBO</span><span class="demo-tag">vkCmdDispatch</span><span class="demo-tag">Pipeline barriers</span></div>
+          <div class="demo-what" style="border-color:var(--d5)">🎯 What you'll see: Terminal only. Input/output pixel values verified, dispatch time in µs, throughput in pixels/second. No window required.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day5-demos.html#demo20">⚡ Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <span class="demo-duration">~40 min</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -663,11 +700,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 
 <footer>
   <div class="footer-brand">RR Graphics Lab — Code Demos</div>
-  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan · 30+ Concept Demos</div>
+  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan · 20+ Concept Demos</div>
   <div class="footer-links">
     <a class="footer-link" href="index.html">Module Notes</a>
     <a class="footer-link" href="demos.html">Code Demos</a>
     <a class="footer-link" href="labs.html">Lab Challenges</a>
+    <a class="footer-link" href="day1-demos.html">Day 1 Demos</a>
   </div>
   <div class="footer-copy">
     By <strong>Raushan Ranjan</strong> (MCT | Educator) · Koenig Solutions · Koenig Original AI-Courseware<br>

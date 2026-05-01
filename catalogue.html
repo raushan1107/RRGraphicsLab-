@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo Catalogue — RR Graphics Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;
+  --border:#1e2535;--border2:#2a3148;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --accent:#6366f1;--accent2:#818cf8;
+  --cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--pink:#f472b6;--yellow:#fbbf24;
+  --nav-h:62px;--radius:12px;
+  --font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+::selection{background:rgba(34,211,238,.25);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--cyan)}
+
+/* ── NAV ───────────────────────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);
+  background:rgba(8,10,15,.96);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;font-weight:700;white-space:nowrap}
+.nav-hex{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--cyan));
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0}
+.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  border:1px solid rgba(34,211,238,.25);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1;margin-left:1.5rem}
+.nav-link{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:12.5px;
+  font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.nav-link.active{color:var(--cyan);background:rgba(34,211,238,.08);border-color:rgba(34,211,238,.2)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;
+  background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);color:var(--cyan)}
+
+/* ── HERO ──────────────────────────────────────────────────────────────── */
+.hero{padding:calc(var(--nav-h)+3.5rem) 2rem 2rem;max-width:900px;margin:0 auto;text-align:center;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);
+  border:1px solid rgba(34,211,238,.25);background:rgba(34,211,238,.06);
+  padding:6px 16px;border-radius:30px;margin-bottom:1.25rem}
+.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:var(--font-display);font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:700;line-height:1.2;margin-bottom:1rem}
+.h1-accent{background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:.93rem;color:var(--text2);max-width:620px;margin:0 auto 2rem;line-height:1.85}
+
+/* ── STAT ROW ──────────────────────────────────────────────────────────── */
+.stat-row{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:.75rem 1.5rem;text-align:center;min-width:100px}
+.stat-num{font-family:var(--font-display);font-size:1.5rem;font-weight:700;
+  background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-lbl{font-size:.72rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-top:.2rem}
+
+/* ── FILTER BAR ────────────────────────────────────────────────────────── */
+.filter-bar{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;padding:0 2rem}
+.filter-btn{padding:7px 18px;border-radius:30px;font-size:12px;font-weight:700;
+  background:var(--bg3);border:1px solid var(--border2);color:var(--text3);
+  cursor:pointer;transition:all .2s}
+.filter-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.filter-btn.active{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.35);color:var(--cyan)}
+.filter-count{font-size:10px;background:var(--bg4);border-radius:10px;padding:1px 7px;margin-left:4px;color:var(--text3)}
+
+/* ── SEARCH ────────────────────────────────────────────────────────────── */
+.search-wrap{display:flex;justify-content:center;margin-bottom:1.5rem;padding:0 2rem}
+.search-box{width:100%;max-width:420px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:30px;padding:.55rem 1.25rem;font-family:var(--font-body);font-size:.87rem;
+  color:var(--text);outline:none;transition:all .2s}
+.search-box::placeholder{color:var(--text3)}
+.search-box:focus{border-color:rgba(34,211,238,.4);background:var(--bg4)}
+
+/* ── SECTION HEADERS ───────────────────────────────────────────────────── */
+.section-hdr{padding:0 2rem;margin-bottom:1.5rem}
+.section-eyebrow{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.4rem}
+.section-title{font-family:var(--font-display);font-size:clamp(1.1rem,2vw,1.45rem);font-weight:700;margin-bottom:.3rem}
+.section-sub{font-size:.85rem;color:var(--text2);line-height:1.75}
+.section-rule{height:1px;background:var(--border);margin:0 2rem 2.5rem}
+
+/* ── GRID ──────────────────────────────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.25rem;padding:0 2rem;margin-bottom:3rem}
+
+/* ── CARD ──────────────────────────────────────────────────────────────── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.card.hidden{display:none}
+
+.card-thumb{height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0}
+.card-thumb-icon{font-size:1.7rem;line-height:1;opacity:.85}
+.card-thumb-label{font-family:var(--font-display);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.7}
+
+.card-body{padding:1rem;flex:1;display:flex;flex-direction:column;gap:.5rem}
+.card-eyebrow{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.card-title{font-family:var(--font-display);font-size:.88rem;font-weight:700;color:var(--text);line-height:1.35}
+.card-scenario-lbl{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--orange);margin-top:.1rem}
+.card-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.15rem}
+.tag{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px}
+.card-desc{font-size:.8rem;color:var(--text2);line-height:1.75;flex:1}
+
+.card-challenge{background:rgba(251,146,60,.05);border:1px solid rgba(251,146,60,.18);
+  border-left:2px solid var(--orange);border-radius:8px;padding:.65rem .85rem;margin-top:.25rem}
+.challenge-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--orange);margin-bottom:.25rem}
+.challenge-txt{font-size:.78rem;color:var(--text2);line-height:1.65}
+
+.card-foot{padding:.75rem 1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.6rem;background:var(--bg3)}
+.card-foot-top{display:flex;align-items:center}
+.diff-badge{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 9px;border-radius:20px}
+.card-actions{display:flex;gap:.5rem}
+.btn-read,.btn-dl{flex:1;padding:7px 0;border-radius:8px;font-size:11.5px;font-weight:700;
+  text-align:center;transition:all .2s;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.btn-read{background:var(--bg4);border:1px solid var(--border2);color:var(--text2)}
+.btn-read:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-dl{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);color:var(--cyan)}
+.btn-dl:hover{background:rgba(34,211,238,.18)}
+
+/* ── SETUP SECTION ─────────────────────────────────────────────────────── */
+.setup-section{margin:0 2rem 4rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.setup-header{padding:1.5rem 1.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.setup-header-icon{font-size:1.5rem}
+.setup-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text)}
+.setup-sub{font-size:.83rem;color:var(--text3);margin-top:.15rem}
+.setup-body{padding:1.75rem}
+.setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+.setup-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.1rem}
+.setup-step-num{font-family:var(--font-display);font-size:1.3rem;font-weight:700;
+  background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.4rem}
+.setup-step-title{font-size:.87rem;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.setup-step-desc{font-size:.78rem;color:var(--text2);line-height:1.7}
+code.ic{font-family:var(--font-mono);font-size:.75rem;background:var(--bg4);border:1px solid var(--border2);
+  padding:1px 6px;border-radius:4px;color:var(--cyan)}
+.cmd-block{background:var(--bg);border:1px solid var(--border2);border-radius:8px;
+  padding:.75rem 1rem;margin:.5rem 0;font-family:var(--font-mono);font-size:.76rem;
+  color:var(--green);line-height:1.8;overflow-x:auto;white-space:pre}
+.setup-divider{height:1px;background:var(--border);margin:1.5rem 0}
+.setup-grid-sm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-top:1rem}
+.env-var{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem}
+.env-name{font-family:var(--font-mono);font-size:.78rem;color:var(--yellow);font-weight:600;margin-bottom:.3rem}
+.env-desc{font-size:.75rem;color:var(--text3);line-height:1.6}
+
+/* ── FOOTER ────────────────────────────────────────────────────────────── */
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--text3);font-size:.83rem;line-height:1.7}
+footer strong{color:var(--text2)}
+
+/* ── NO RESULTS ────────────────────────────────────────────────────────── */
+#no-results{display:none;text-align:center;padding:3rem;color:var(--text3);font-size:.9rem;grid-column:1/-1}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .grid{grid-template-columns:1fr;padding:0 1rem}
+  .stat-row{gap:.75rem}
+  .setup-body{padding:1.25rem}
+}
+</style>
+</head>
+<body>
+
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-hex">✶</div>
+    RR Graphics Lab
+    <span class="nav-mct">MCT</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html"><span class="nav-dot" style="background:var(--accent)"></span>Module Notes</a>
+    <a class="nav-link" href="demos.html"><span class="nav-dot" style="background:var(--cyan)"></span>Code Demos</a>
+    <a class="nav-link" href="labs.html"><span class="nav-dot" style="background:var(--green)"></span>Lab Challenges</a>
+    <a class="nav-link active" href="catalogue.html"><span class="nav-dot" style="background:var(--orange)"></span>Demo Catalogue</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">33 Demos + 3 Capstones</span>
+    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan · MCT</span>
+  </div>
+</nav>
+
+
+<div class="hero">
+  <div class="eyebrow">
+    <span class="eyebrow-dot"></span>
+    OpenGL &amp; Vulkan · US Navy · Koenig Original AI-Courseware
+  </div>
+  <h1>Demo <span class="h1-accent">Catalogue</span></h1>
+  <p class="hero-sub">Every demo from all 5 days — OpenGL foundations, 3D lighting, Vulkan from scratch, compute shaders, and real-world capstones. Read the short description, open full instructions, try the challenge, or download the project to run on your machine.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num">20</div><div class="stat-lbl">Course Demos</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-lbl">Vulkan Deep-Dives</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Capstone Projects</div></div>
+    <div class="stat"><div class="stat-num">33+</div><div class="stat-lbl">Total Demos</div></div>
+  </div>
+</div>
+
+
+<div class="search-wrap">
+  <input class="search-box" id="searchBox" type="text" placeholder="Search demos… e.g. UBO, texture, compute, radar">
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">All Demos <span class="filter-count">33</span></button>
+  <button class="filter-btn" data-filter="gl">OpenGL <span class="filter-count">14</span></button>
+  <button class="filter-btn" data-filter="vk">Vulkan <span class="filter-count">16</span></button>
+  <button class="filter-btn" data-filter="capstone">Capstones <span class="filter-count">3</span></button>
+</div>
+
+
+<div class="section-hdr">
+  <div class="section-eyebrow" style="color:var(--cyan)">📘 5-Day Course · Modules 1–15</div>
+  <div class="section-title">Course Demos — D01 to D20</div>
+  <p class="section-sub">The main demo sequence from the OpenGL &amp; Vulkan training course for the US Navy Department. Each demo introduces one new concept, builds on the previous, and includes a break-to-learn challenge for hands-on reinforcement.</p>
+</div>
+<div class="section-rule"></div>
+
+<div class="grid" id="grid-course">
+<div id="no-results">No demos match your filter. Try a different keyword.</div>
+
+<div class="card" id="d01" data-tags="opengl no code concept gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 1</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 1 · M1</div>
+    <div class="card-title">The Rendering Pipeline Walkthrough</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">No Code</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Concept</span></div>
+    <p class="card-desc">Interactive animated diagram of the GPU pipeline: vertex shader → rasterisation → fragment shader. Explains where each glEnable() call fits, what the driver does vs what you write, and why vertex position flows from CPU RAM to screen pixel.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Explain what happens between vkCmdDraw() and a pixel lighting up on screen.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#4ade8022;color:#4ade80;border:1px solid #4ade8055">BEGINNER</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day1-demos.html#demo-pipeline" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d02" data-tags="opengl glfw context gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 2</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 2 · M2</div>
+    <div class="card-title">First OpenGL Window</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">GLFW</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Context</span></div>
+    <p class="card-desc">Sets up a GLFW window, creates an OpenGL 3.3 core context, enters the event loop with glfwPollEvents(), clears to navy blue each frame, prints GPU name to terminal. Proves your environment works before writing a single shader.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Change the clear colour each second using glfwGetTime(). Change window title to show FPS.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#4ade8022;color:#4ade80;border:1px solid #4ade8055">BEGINNER</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day1-demos.html#demo-window" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d03" data-tags="opengl vbo gpu memory gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 3</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 3 · M3</div>
+    <div class="card-title">VBO — Uploading Vertex Data to GPU</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">VBO</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">GPU Memory</span></div>
+    <p class="card-desc">Creates a VkBuffer (OpenGL: glGenBuffers), uploads 3 vertices with glBufferData(), then reads back the data to confirm the upload. Prints byte size, memory address, and confirms round-trip integrity. Foundation for every GPU draw call.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Upload 6 vertices (two triangles) and verify all 6 come back correctly.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#4ade8022;color:#4ade80;border:1px solid #4ade8055">BEGINNER</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day1-demos.html#demo-vbo" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d04" data-tags="opengl vao stride/offset gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 4</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 4 · M3</div>
+    <div class="card-title">VAO + glVertexAttribPointer Decoded</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">VAO</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Stride/Offset</span></div>
+    <p class="card-desc">Shows how a VAO records the connection between a VBO and shader attribute locations. Live diagram printed to terminal: stride=20 bytes, location 0=position (offset 0), location 1=colour (offset 12). Break it by changing stride to see garbage output.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Add a third attribute — UV coordinates — without breaking position or colour.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day1-demos.html#demo-vao" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d05" data-tags="opengl glsl fragment shader gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 5</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 5 · M3</div>
+    <div class="card-title">First Triangle + Shaders</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">GLSL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Fragment Shader</span></div>
+    <p class="card-desc">Compiles vertex and fragment shaders at runtime, links a program, draws the first triangle using glDrawArrays(). Shader compilation errors are printed to terminal with full GLSL log. The simplest possible full render pipeline.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Write a fragment shader that outputs sin(time)*0.5+0.5 as red channel — watch the triangle pulse red.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day1-demos.html#demo-triangle" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d06" data-tags="opengl ebo index buffer gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 6</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 6 · M3</div>
+    <div class="card-title">EBO — Rectangle from 4 Vertices</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">EBO</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Index Buffer</span></div>
+    <p class="card-desc">Uses glDrawElements() + an index buffer to draw a rectangle from only 4 vertices (vs 6 duplicate vertices without EBO). Prints memory saved vs brute-force approach. Introduces TRIANGLE_LIST indexing pattern used in every production renderer.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Draw a hexagon from 6 outer vertices + 1 centre vertex using a 12-index EBO.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day1-demos.html#demo-ebo" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d07" data-tags="opengl uniforms animation gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 7</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 7 · M3 & M4</div>
+    <div class="card-title">Uniforms + Animation — Time-Driven Motion</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Uniforms</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Animation</span></div>
+    <p class="card-desc">Sends a float time uniform each frame via glUniform1f(), drives a translation and colour shift in the vertex shader. Shows glGetUniformLocation() cache pattern and why GPU uniforms are cheaper than per-vertex data for shared values.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Add a glUniform2f() mouse position. Make the triangle follow the cursor using glfwGetCursorPos().</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day1-demos.html#demo-uniforms" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d08" data-tags="opengl mvp camera glm gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 8</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 8 · M4</div>
+    <div class="card-title">Full MVP + Fly Camera — WASD + Mouse Look</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">MVP</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Camera</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">GLM</span></div>
+    <p class="card-desc">Builds a full projection pipeline: glm::translate/rotate/scale → model matrix, glm::lookAt → view, glm::perspective → projection. WASD keys move the camera; mouse drag rotates. Demonstrates view frustum and near/far plane clipping live.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Add a pitch angle limit (±89°) to prevent camera gimbal lock. Add Shift to sprint.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day2-demos.html#demo8" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d09" data-tags="opengl phong normals glsl gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 9</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 9 · M5</div>
+    <div class="card-title">Phong Lighting — Ambient + Diffuse + Specular</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Phong</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Normals</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">GLSL</span></div>
+    <p class="card-desc">Implements Blinn-Phong: ambient constant + diffuse dot(N,L) + specular pow(dot(N,H), shininess). UP/DOWN keys change shininess live (2→256). Normal matrix corrects for non-uniform model scale. Orbiting point light demonstrates all three components separately.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Add a second light source of a different colour. See how both contribute to the final fragment colour.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day2-demos.html#demo9" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d10" data-tags="opengl textures uv stb_image gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 10</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 10 · M6</div>
+    <div class="card-title">Textures — UV Coords, stb_image, Textured Lit Cube</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Textures</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">UV</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">stb_image</span></div>
+    <p class="card-desc">Loads a PNG via stb_image into a GL_TEXTURE_2D object, binds to sampler uniform, applies to a lit 3D cube. UV coordinates are interleaved with positions and normals in a single VBO. Demonstrates mip-mapping, GL_REPEAT wrap mode, and texture × Phong multiplication.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Apply a normal map texture — modify the fragment shader to perturb the normal using the normal map's RGB values.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day2-demos.html#demo10" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d11" data-tags="opengl glsl procedural atan/fract gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 11</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 11 · M7</div>
+    <div class="card-title">Procedural Radar Shader — GLSL Deep Dive</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">GLSL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Procedural</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">atan/fract</span></div>
+    <p class="card-desc">Writes an entire radar PPI display inside a fragment shader using no textures. atan(x,y) computes bearing, fract() creates range rings, mod() drives the rotating sweep, smoothstep() softens edges. No geometry beyond one quad — the GPU draws everything via math.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Add a contact blip: flash a bright dot at a fixed bearing/range using step() and sin(time).</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day3-demos.html#demo11" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d12" data-tags="opengl instancing gl_instanceid vbo gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 12</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 12 · M7</div>
+    <div class="card-title">Instancing — 1,000 Contacts, One Draw Call</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Instancing</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">gl_InstanceID</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">VBO</span></div>
+    <p class="card-desc">Renders 1,000 coloured contacts with one glDrawArraysInstanced() call. Instance data (position, colour, size) is in a second VBO with glVertexAttribDivisor(1,1). Toggle instancing off and measure the frame time difference — see CPU overhead vs GPU throughput.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Change divisor to 2 and observe that every pair of contacts shares the same position — explain why.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day3-demos.html#demo12" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d13" data-tags="opengl fbo post-processing fullscreen quad gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 13</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 13 · M8</div>
+    <div class="card-title">FBO Post-Processing — Render Scene to Texture</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">FBO</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Post-Processing</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Fullscreen Quad</span></div>
+    <p class="card-desc">Two-pass render: scene → off-screen FBO texture, then fullscreen quad → apply shader filter. Keys 1-4 switch between passthrough, greyscale, invert, and Sobel edge detection without rebuilding any scene geometry. Classic deferred rendering foundation.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Write a vignette pass: darken pixels by 1-smoothstep(0.5, 1.0, length(uv-0.5)*1.5).</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#f8717122;color:#f87171;border:1px solid #f8717155">EXPERT</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day3-demos.html#demo13" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d14" data-tags="opengl stencil buffer alpha blending two-pass gl" data-type="gl">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(34,211,238,.15) 0%,rgba(34,211,238,.04) 100%);border-bottom:1px solid rgba(34,211,238,.25)">
+    <div class="card-thumb-icon" style="color:#22d3ee">▲</div>
+    <div class="card-thumb-label" style="color:rgba(34,211,238,.7)">Demo 14</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#22d3ee">Demo 14 · M8</div>
+    <div class="card-title">Stencil Outline + Transparent Radar Sweep</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">OpenGL</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Stencil Buffer</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Alpha Blending</span><span class="tag" style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);color:#22d3ee">Two-Pass</span></div>
+    <p class="card-desc">Two-pass stencil: first pass writes object pixels to stencil buffer; second pass draws scaled-up outline only where stencil=0 (outside original). Then adds a transparent alpha-blended radar sweep sector on top. Demonstrates blending order and depth–stencil interaction.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Add a third pass that draws a transparent red warning zone circle using additive blending.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#f8717122;color:#f87171;border:1px solid #f8717155">EXPERT</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day3-demos.html#demo14" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d15" data-tags="vulkan vkinstance validation layers gpu enumeration vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">Demo 15</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">Demo 15 · M10</div>
+    <div class="card-title">Vulkan Environment — Instance, Layers, Physical Devices</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkInstance</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Validation Layers</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">GPU Enumeration</span></div>
+    <p class="card-desc">Creates VkInstance with validation enabled, enumerates all GPUs, scores each by VRAM and device type, creates VkSurfaceKHR via GLFW, destroys everything in correct order. Terminal shows GPU names, VRAM, and queue family availability. No rendering — pure setup.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Add VkPhysicalDeviceProperties output: print maxImageDimension2D and maxUniformBufferRange for each GPU.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day4-demos.html#demo15" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d16" data-tags="vulkan vkdevice vkqueue vkcommandpool vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">Demo 16</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">Demo 16 · M11</div>
+    <div class="card-title">Logical Device + Queues + Command Pool</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkDevice</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkQueue</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkCommandPool</span></div>
+    <p class="card-desc">Creates VkDevice requesting graphics + present queues, creates VkCommandPool and allocates a primary command buffer, records a no-op (empty) command buffer and submits it with a fence. Validates the full command recording and submission cycle before adding any rendering.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Record vkCmdSetEvent() and vkCmdWaitEvents() in the command buffer and verify the fence signals after the wait.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day4-demos.html#demo16" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d17" data-tags="vulkan vkswapchainkhr vkrenderpass vkframebuffer vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">Demo 17</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">Demo 17 · M11</div>
+    <div class="card-title">Swapchain + Render Pass — First Real Pixels</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkSwapchainKHR</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkRenderPass</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkFramebuffer</span></div>
+    <p class="card-desc">Creates VkSwapchainKHR, wraps images in VkImageViews, builds a VkRenderPass with LOAD_OP_CLEAR, creates framebuffers, runs the acquire → record → submit → present frame loop clearing to an animated navy colour via VkClearValue. First time real pixels appear.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Change the clear colour each frame using a sine wave on the red channel. Confirm the framerate matches the display refresh.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day4-demos.html#demo17" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d18" data-tags="vulkan vkpipeline spir-v vkcmddraw vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">Demo 18</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">Demo 18 · M12</div>
+    <div class="card-title">Full Pipeline + vkCmdDraw — First Vulkan Triangle</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkPipeline</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">SPIR-V</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">vkCmdDraw</span></div>
+    <p class="card-desc">Compiles GLSL to SPIR-V with glslc, loads .spv at runtime, creates VkShaderModules, builds VkGraphicsPipelineCreateInfo baking all state. Draws a white triangle on navy. No vertex buffer — positions hardcoded in vertex shader via gl_VertexIndex. Complete frame loop with semaphore+fence sync.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Change VK_POLYGON_MODE_FILL to VK_POLYGON_MODE_LINE in the rasteriser and recompile — draw wireframe without shader changes.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day4-demos.html#demo18" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d19" data-tags="vulkan ubo vkdescriptorset rotating triangle vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">Demo 19</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">Demo 19 · M13</div>
+    <div class="card-title">UBO + Descriptor Sets — Replacing glUniform*()</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">UBO</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkDescriptorSet</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Rotating Triangle</span></div>
+    <p class="card-desc">Builds the full descriptor system: VkDescriptorSetLayout (binding 0 = uniform buffer), VkDescriptorPool, one VkDescriptorSet per swapchain image. Each frame updates MVP matrices via persistent-mapped UBO memory and binds before vkCmdDraw. Orange triangle rotates via shader MVP with Vulkan Y-flip correction.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Change the model matrix to also include a scale driven by abs(sin(time)) — watch the triangle pulse in size while rotating.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day5-demos.html#demo19" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="d20" data-tags="vulkan compute ssbo vkcmddispatch vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">Demo 20</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">Demo 20 · M13</div>
+    <div class="card-title">Vulkan Compute Shader — GPU Parallel Image Processing</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Compute</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">SSBO</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">vkCmdDispatch</span></div>
+    <p class="card-desc">Creates a compute-only pipeline (no swapchain, no window). 256×256 synthetic image uploaded to storage buffer, compute shader inverts RGB of all 65,536 pixels in parallel (16×16 workgroups). Pipeline barrier ensures GPU writes complete before CPU reads. Prints timing and throughput in pixels/sec.</p>
+    
+        <div class="card-challenge">
+          <div class="challenge-lbl">🧪 Try This Challenge</div>
+          <p class="challenge-txt">Change the kernel to greyscale: r_out = g_out = b_out = (r+g+b)/3. Recompile compute shader and verify output changes.</p>
+        </div>
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="day5-demos.html#demo20" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section-hdr">
+  <div class="section-eyebrow" style="color:var(--pink)">🔷 Standalone Vulkan Series · VK01–VK10</div>
+  <div class="section-title">10 Vulkan Learning Demos</div>
+  <p class="section-sub">A self-contained Vulkan learning series starting from absolute zero. Each project is a standalone CMake build with complete main.cpp, GLSL shaders, and CMakeLists.txt. Shared VulkanBase.h provides common helpers — no duplication, no mystery code.</p>
+</div>
+<div class="section-rule"></div>
+
+<div class="grid" id="grid-vk">
+
+<div class="card" id="vk01" data-tags="vulkan vkinstance vkdevice gpu scoring vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK01</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK01</div>
+    <div class="card-title">Hello Window — Instance + Device Setup</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkInstance</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkDevice</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">GPU Scoring</span></div>
+    <p class="card-desc">The definitive Vulkan hello-world. Creates VkInstance with validation, enumerates + scores all GPUs by VRAM and device type, creates VkDevice + queues, builds a VkSwapchainKHR. Every object printed to terminal. No shaders. No rendering. Proves your toolchain is working before anything else.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#4ade8022;color:#4ade80;border:1px solid #4ade8055">BEGINNER</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="EASY" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk02" data-tags="vulkan vkpipeline vkrenderpass vkcmddraw vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK02</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK02</div>
+    <div class="card-title">First Triangle — Render Pass, Pipeline, Draw</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkPipeline</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkRenderPass</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">vkCmdDraw</span></div>
+    <p class="card-desc">First rendered output in Vulkan. Vertex positions hardcoded in shader.vert via gl_VertexIndex — no vertex buffer. Builds complete VkGraphicsPipelineCreateInfo baking all fixed-function state. Shows acquire → record → vkCmdBeginRenderPass → vkCmdDraw → present loop with semaphore+fence synchronisation.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#4ade8022;color:#4ade80;border:1px solid #4ade8055">BEGINNER</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="EASY" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk03" data-tags="vulkan vkbuffer vkmapmemory triangle_fan vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK03</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK03</div>
+    <div class="card-title">Vertex Buffer — Real Geometry from CPU</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkBuffer</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">vkMapMemory</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">TRIANGLE_FAN</span></div>
+    <p class="card-desc">Uploads a coloured pentagon from CPU memory to a HOST_VISIBLE buffer using vkMapMemory + memcpy. VkVertexInputBindingDescription describes stride; VkVertexInputAttributeDescription describes location, format, and byte offset for position (vec2) and colour (vec3). Topology: TRIANGLE_FAN from centre vertex.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#4ade8022;color:#4ade80;border:1px solid #4ade8055">BEGINNER</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="EASY" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk04" data-tags="vulkan ebo staging buffer device_local vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK04</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK04</div>
+    <div class="card-title">Index Buffer — Device-Local via Staging</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">EBO</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Staging Buffer</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">DEVICE_LOCAL</span></div>
+    <p class="card-desc">Draws a rectangle from 4 vertices + 6 indices with vkCmdDrawIndexed. Introduces the staging pattern: CPU writes to HOST_VISIBLE buffer → one-shot command buffer copies to DEVICE_LOCAL memory → staging buffer destroyed. Device-local is faster GPU memory — the standard pattern for all static geometry.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="MEDIUM" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk05" data-tags="vulkan ubo vkdescriptorset mvp vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK05</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK05</div>
+    <div class="card-title">Uniform Buffer — MVP Animation via Descriptor Sets</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">UBO</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkDescriptorSet</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">MVP</span></div>
+    <p class="card-desc">Builds the complete descriptor infrastructure: layout → pool → sets → update. One UBO per swapchain image (prevents CPU overwriting data GPU is reading). Rotating quad driven by MVP matrix. Persistent vkMapMemory + memcpy per frame. proj[1][1]*=-1 corrects Vulkan Y-axis flip.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="MEDIUM" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk06" data-tags="vulkan vkimage vksampler image layout vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK06</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK06</div>
+    <div class="card-title">Textures — VkImage, VkSampler, Combined Sampler</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkImage</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkSampler</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Image Layout</span></div>
+    <p class="card-desc">Uploads a procedural 256×256 checkerboard texture via staging buffer → vkCmdCopyBufferToImage. Two image layout transitions: UNDEFINED→TRANSFER_DST→SHADER_READ_ONLY. Descriptor set with two bindings: UBO (binding 0) + COMBINED_IMAGE_SAMPLER (binding 1). Rotating textured quad.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="MEDIUM" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk07" data-tags="vulkan depth buffer vkformat 3d cube vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK07</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK07</div>
+    <div class="card-title">Depth Buffer — 3D Rotating Cube</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Depth Buffer</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">VkFormat</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">3D Cube</span></div>
+    <p class="card-desc">Adds a depth attachment: VkImage with D32_SFLOAT format, render pass with two attachments, two VkClearValues (colour + depth=1.0). VkPipelineDepthStencilStateCreateInfo enables LESS compare op. 36-vertex cube with unique face colours. Back-face culling ON. Validates face ordering without depth corruption.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="MEDIUM" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk08" data-tags="vulkan push constants vkcmdpushconstants orbiting vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK08</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK08</div>
+    <div class="card-title">Multiple Objects — Push Constants</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Push Constants</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">vkCmdPushConstants</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Orbiting</span></div>
+    <p class="card-desc">Draws 5 cubes with one shared vertex buffer but unique transforms via 80-byte push constants (mat4 model + vec4 colour). Push constants are the fastest per-draw update path — no descriptor overhead. Shared VP UBO for camera. Each cube orbits at a different radius and speed.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fbbf2422;color:#fbbf24;border:1px solid #fbbf2455">MEDIUM</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="MEDIUM" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk09" data-tags="vulkan blinn-phong normal matrix uv sphere vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK09</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK09</div>
+    <div class="card-title">Blinn-Phong Lighting — Normals, Fresnel, UV Sphere</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Blinn-Phong</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Normal Matrix</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">UV Sphere</span></div>
+    <p class="card-desc">Procedurally generated UV sphere (32 stacks × 64 slices). SceneUBO carries model/view/proj + lightPos + viewPos. Normal matrix: transpose(inverse(model)). Blinn-Phong in fragment shader: ambient + diffuse dot(N,L) + specular pow(dot(N,H), shininess). Shininess adjustable with UP/DOWN keys.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="HARD" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="vk10" data-tags="vulkan compute ssbo mandelbrot vk" data-type="vk">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15) 0%,rgba(244,114,182,.04) 100%);border-bottom:1px solid rgba(244,114,182,.25)">
+    <div class="card-thumb-icon" style="color:#f472b6">◆</div>
+    <div class="card-thumb-label" style="color:rgba(244,114,182,.7)">VK10</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#f472b6">VK10</div>
+    <div class="card-title">Compute Filter — Sobel, Blur, Sharpen</div>
+    
+    <div class="card-tags"><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Vulkan</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Compute</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">SSBO</span><span class="tag" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#f472b6">Mandelbrot</span></div>
+    <p class="card-desc">Full compute + graphics dual pipeline. Compute shader runs Sobel edge detection / box blur / sharpen on a Mandelbrot fractal (generated in code). Output copied to a VkImage. Graphics renders it as a fullscreen triangle via a combined image sampler. Keys 1/2/3/4 switch filters every frame.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      <span class="diff-badge" style="background:#fb923c22;color:#fb923c;border:1px solid #fb923c55">ADVANCED</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="HARD" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section-hdr">
+  <div class="section-eyebrow" style="color:var(--orange)">🎯 Real-World Naval Scenarios · CAP01–CAP03</div>
+  <div class="section-title">3 Capstone Projects</div>
+  <p class="section-sub">Three production-quality graphics programs built for real naval training scenarios. Each capstone integrates multiple Vulkan concepts into a single working system — the kind of code you would write on a real defence contract.</p>
+</div>
+<div class="section-rule"></div>
+
+<div class="grid" id="grid-cap">
+
+<div class="card" id="cap01" data-tags="real-world alpha blending dynamic vb two pipelines capstone" data-type="capstone">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(251,146,60,.15) 0%,rgba(251,146,60,.04) 100%);border-bottom:1px solid rgba(251,146,60,.25)">
+    <div class="card-thumb-icon" style="color:#fb923c">★</div>
+    <div class="card-thumb-label" style="color:rgba(251,146,60,.7)">CAP01</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#fb923c">CAP01</div>
+    <div class="card-title">Naval Tactical Radar Display</div>
+    <div class="card-scenario-lbl">🎯 Real-World Scenario</div>
+    <div class="card-tags"><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Real-World</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Alpha Blending</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Dynamic VB</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Two Pipelines</span></div>
+    <p class="card-desc">USS Monterey CIC scenario. Rotating green sweep beam with persistent alpha-blended trail. 4 range rings, north/south/east/west crosshair, 8 simulated surface contacts orbiting at different ranges and speeds. Two pipelines in one render pass: LINE_LIST for rings, TRIANGLE_LIST for sweep sector. Dynamic vertex buffer rebuilt each frame. +/- keys change sweep speed.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cap02" data-tags="real-world vertex animation fresnel fly camera capstone" data-type="capstone">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(251,146,60,.15) 0%,rgba(251,146,60,.04) 100%);border-bottom:1px solid rgba(251,146,60,.25)">
+    <div class="card-thumb-icon" style="color:#fb923c">★</div>
+    <div class="card-thumb-label" style="color:rgba(251,146,60,.7)">CAP02</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#fb923c">CAP02</div>
+    <div class="card-title">Ocean Surface Renderer (Gerstner Waves)</div>
+    <div class="card-scenario-lbl">🎯 Real-World Scenario</div>
+    <div class="card-tags"><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Real-World</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Vertex Animation</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Fresnel</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Fly Camera</span></div>
+    <p class="card-desc">Royal Australian Navy bridge simulator scenario. 64×64 grid mesh uploaded once — all wave displacement computed in vertex shader via 4 superimposed Gerstner waves (no CPU geometry rebuild per frame). Blinn-Phong sun lighting, Fresnel edge glow, foam on wave crests, depth colour gradient. Fly camera: WASD + mouse drag + +/- wave height.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cap03" data-tags="real-world compute physics additive blend vkcmddispatch capstone" data-type="capstone">
+  <div class="card-thumb" style="background:linear-gradient(135deg,rgba(251,146,60,.15) 0%,rgba(251,146,60,.04) 100%);border-bottom:1px solid rgba(251,146,60,.25)">
+    <div class="card-thumb-icon" style="color:#fb923c">★</div>
+    <div class="card-thumb-label" style="color:rgba(251,146,60,.7)">CAP03</div>
+  </div>
+  <div class="card-body">
+    <div class="card-eyebrow" style="color:#fb923c">CAP03</div>
+    <div class="card-title">GPU Particle System — 100,000 Particles</div>
+    <div class="card-scenario-lbl">🎯 Real-World Scenario</div>
+    <div class="card-tags"><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Real-World</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Compute Physics</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">Additive Blend</span><span class="tag" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c">vkCmdDispatch</span></div>
+    <p class="card-desc">Naval simulation game scenario — missile exhaust fire. 100,000 particles simulated entirely on GPU: compute shader integrates velocity, applies gravity, respawns dead particles. Critical compute→graphics pipeline barrier ensures GPU writes complete before vertex reads. Additive blending creates fire glow. Circular soft-edged point sprites via gl_PointCoord. SPACE adds new emitter.</p>
+    
+  </div>
+  <div class="card-foot">
+    <div class="card-foot-top">
+      
+    </div>
+    <div class="card-actions">
+      <a class="btn-read" href="None" target="_blank">📖 Instructions</a>
+      <a class="btn-dl" href="#download" title="Download project ZIP">⬇ Download</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section-hdr">
+  <div class="section-eyebrow" style="color:var(--green)">⚙️ Environment Setup</div>
+  <div class="section-title">How to Build &amp; Run Any Demo</div>
+  <p class="section-sub">All demos use the same toolchain. Set up once, run everything. Windows 10/11 with Visual Studio 2022 recommended.</p>
+</div>
+<div class="section-rule"></div>
+
+
+<div class="setup-section">
+  <div class="setup-header">
+    <div class="setup-header-icon">🛠️</div>
+    <div>
+      <div class="setup-title">Prerequisites &amp; Installation</div>
+      <div class="setup-sub">Install these once. All demos will build without any further config changes.</div>
+    </div>
+  </div>
+  <div class="setup-body">
+
+    <div class="setup-grid">
+
+      <div class="setup-card">
+        <div class="setup-step-num">01</div>
+        <div class="setup-step-title">Vulkan SDK</div>
+        <div class="setup-step-desc">
+          Download from <code class="ic">lunarg.com/vulkan-sdk</code> and run the installer.
+          It installs <code class="ic">glslc.exe</code> (shader compiler),
+          <code class="ic">VK_LAYER_KHRONOS_validation</code>, and headers.<br><br>
+          Verify: open a terminal and type:
+        </div>
+        <div class="cmd-block">glslc --version</div>
+        <div class="setup-step-desc">You should see the Vulkan SDK version. If not, add <code class="ic">%VULKAN_SDK%\Bin</code> to your PATH.</div>
+      </div>
+
+      <div class="setup-card">
+        <div class="setup-step-num">02</div>
+        <div class="setup-step-title">GLFW 3 (Window &amp; Input)</div>
+        <div class="setup-step-desc">
+          Download pre-built Windows binaries from <code class="ic">glfw.org/download</code>.<br>
+          Extract to a folder, e.g. <code class="ic">C:\libs\glfw</code>.<br>
+          Set environment variable:
+        </div>
+        <div class="cmd-block">setx GLFW_DIR "C:\libs\glfw"</div>
+        <div class="setup-step-desc">All CMakeLists.txt files read <code class="ic">$ENV{GLFW_DIR}</code> automatically.</div>
+      </div>
+
+      <div class="setup-card">
+        <div class="setup-step-num">03</div>
+        <div class="setup-step-title">GLM (Math Library)</div>
+        <div class="setup-step-desc">
+          Header-only math library. Download from <code class="ic">github.com/g-truc/glm</code> (releases page, zip).<br>
+          Extract to e.g. <code class="ic">C:\libs\glm</code>.<br>
+          Set environment variable:
+        </div>
+        <div class="cmd-block">setx GLM_DIR "C:\libs\glm"</div>
+        <div class="setup-step-desc">No compilation needed — it's pure headers.</div>
+      </div>
+
+      <div class="setup-card">
+        <div class="setup-step-num">04</div>
+        <div class="setup-step-title">Visual Studio 2022</div>
+        <div class="setup-step-desc">
+          Install "Desktop development with C++" workload.<br>
+          Also install CMake via the VS installer (or separately from cmake.org).<br>
+          Verify CMake is on PATH:
+        </div>
+        <div class="cmd-block">cmake --version</div>
+        <div class="setup-step-desc">Need v3.20 or higher. The installer adds it to PATH automatically.</div>
+      </div>
+
+    </div>
+
+    <div class="setup-divider"></div>
+
+    <div class="section-title" style="font-size:.95rem;margin-bottom:.75rem">Environment Variables Summary</div>
+    <div class="setup-grid-sm">
+      <div class="env-var"><div class="env-name">VULKAN_SDK</div><div class="env-desc">Set automatically by the Vulkan SDK installer. Points to the SDK root.</div></div>
+      <div class="env-var"><div class="env-name">GLFW_DIR</div><div class="env-desc">You set this manually. Points to the GLFW directory containing <code class="ic">include/</code> and <code class="ic">lib-vc2022/</code>.</div></div>
+      <div class="env-var"><div class="env-name">GLM_DIR</div><div class="env-desc">You set this manually. Points to the GLM root containing the <code class="ic">glm/</code> header folder.</div></div>
+    </div>
+
+    <div class="setup-divider"></div>
+
+    <div class="section-title" style="font-size:.95rem;margin-bottom:.75rem">Build Any Demo — Universal Steps</div>
+    <p style="font-size:.83rem;color:var(--text2);margin-bottom:.75rem">Replace <code class="ic">VK05_UniformBuffer</code> with any demo folder name. Steps are identical for every project.</p>
+
+    <div class="cmd-block">REM Step 1 — compile shaders to SPIR-V (Vulkan demos only; skip for OpenGL demos)
+cd C:\Labs\VK05_UniformBuffer
+glslc shader.vert -o vert.spv
+glslc shader.frag -o frag.spv
+
+REM Step 2 — configure CMake (Visual Studio 2022, 64-bit)
+cmake -B build -G "Visual Studio 17 2022" -A x64
+
+REM Step 3 — build the project
+cmake --build build --config Release
+
+REM Step 4 — copy SPIR-V binaries next to .exe (Vulkan only)
+copy vert.spv build\Release\
+
+REM Step 5 — run
+build\Release\VK05_UniformBuffer.exe</div>
+
+    <div class="setup-divider"></div>
+
+    <div class="section-title" style="font-size:.95rem;margin-bottom:.75rem">OpenGL Demos — Extra Dependency</div>
+    <p style="font-size:.83rem;color:var(--text2);margin-bottom:.75rem">OpenGL demos (D01–D14) also require GLEW. Download the pre-built Windows binary from <code class="ic">glew.sourceforge.net</code>, extract it, and add to your CMakeLists manually, or use vcpkg:</p>
+    <div class="cmd-block">vcpkg install glew:x64-windows</div>
+
+    <div class="setup-divider"></div>
+
+    <div class="section-title" style="font-size:.95rem;margin-bottom:.75rem">Compute Shaders — Extra Compile Step (VK10 + CAP03)</div>
+    <div class="cmd-block">REM Compute shaders use .comp extension
+glslc filter.comp   -o comp.spv    # VK10
+glslc particle.comp -o comp.spv    # CAP03
+copy comp.spv build\Release\</div>
+
+    <div class="setup-divider"></div>
+
+    <div class="section-title" style="font-size:.95rem;margin-bottom:.75rem">Quick Troubleshooting</div>
+    <div class="setup-grid">
+      <div class="setup-card">
+        <div class="setup-step-title">❌ "Cannot open vert.spv"</div>
+        <div class="setup-step-desc">You forgot to compile shaders or copy them next to the .exe. Run glslc commands in Step 1 and copy .spv files to <code class="ic">build\Release\</code>.</div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-step-title">❌ "vulkan-1.dll not found"</div>
+        <div class="setup-step-desc">Vulkan runtime not installed. Install the Vulkan SDK. If on a system without a GPU, install the Vulkan LunarG CPU emulation layer.</div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-step-title">❌ "VK_LAYER_KHRONOS_validation not found"</div>
+        <div class="setup-step-desc">Vulkan validation layers missing. Re-run the SDK installer and ensure "Debugging Tools" component is checked.</div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-step-title">❌ Blank window or black screen</div>
+        <div class="setup-step-desc">Run from a terminal — check for validation layer errors printed to stdout. Enable VK_LAYER_KHRONOS_validation (already on in all demos) and read the error message.</div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-step-title">❌ CMake can't find GLFW or GLM</div>
+        <div class="setup-step-desc">The environment variables GLFW_DIR and GLM_DIR are not set. Run <code class="ic">setx GLFW_DIR "C:\libs\glfw"</code> in a new terminal, then rebuild.</div>
+      </div>
+      <div class="setup-card">
+        <div class="setup-step-title">❌ "glslc is not recognised"</div>
+        <div class="setup-step-desc">Add <code class="ic">%VULKAN_SDK%\Bin</code> to your system PATH via System Properties → Environment Variables → Path → Edit → New.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<footer>
+  <strong>RR Graphics Lab</strong> — Demo Catalogue<br>
+  Computer Graphics with OpenGL and Vulkan · US Navy Department · 33+ Demos &amp; 3 Capstone Projects<br>
+  By <strong>Raushan Ranjan</strong> (MCT | Educator) · Koenig Solutions · Koenig Original AI-Courseware
+  <br><span style="font-size:.75rem;color:var(--text3)">v1.0 · 2026 · All demos run directly — download, compile, run.</span>
+</footer>
+
+
+<script>
+// ── Filter + search ────────────────────────────────────────────────────
+const cards = Array.from(document.querySelectorAll('.card'));
+let activeFilter = 'all';
+let searchQuery  = '';
+
+function applyFilters(){
+  let visible = 0;
+  cards.forEach(c=>{
+    const type = c.dataset.type || '';
+    const tags = (c.dataset.tags||'').toLowerCase();
+    const title= (c.querySelector('.card-title')?.textContent||'').toLowerCase();
+    const desc = (c.querySelector('.card-desc')?.textContent||'').toLowerCase();
+    const eyebrow=(c.querySelector('.card-eyebrow')?.textContent||'').toLowerCase();
+
+    const matchFilter = activeFilter==='all' || type===activeFilter;
+    const matchSearch = !searchQuery ||
+      tags.includes(searchQuery) || title.includes(searchQuery) ||
+      desc.includes(searchQuery) || eyebrow.includes(searchQuery);
+
+    const show = matchFilter && matchSearch;
+    c.classList.toggle('hidden', !show);
+    if(show) visible++;
+  });
+  document.getElementById('no-results').style.display = visible===0?'block':'none';
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.getElementById('searchBox').addEventListener('input',e=>{
+  searchQuery = e.target.value.trim().toLowerCase();
+  applyFilters();
+});
+
+// ── Card count on load ─────────────────────────────────────────────────
+console.log('RR Graphics Lab Catalogue loaded — '+cards.length+' demos');
+</script>
+</body>
+</html>

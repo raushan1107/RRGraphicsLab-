@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Capstone: Tactical Radar Display — RR Skillverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══ TOKENS (identical to handbook) ═══ */
+:root{
+  --void:#0a0c10;--deep:#0e1117;--surface:#141822;--raised:#1c2232;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --text1:#eef0f5;--text2:#9aa3b8;--text3:#5a6380;
+  --vk:#e05a2b;--vk2:#f08060;--gl:#3b82f6;--gl2:#7db4ff;
+  --gold:#f0b429;--gold2:#ffd86e;--teal:#14b8a6;--green:#22c55e;
+  --purple:#a78bfa;--red:#f43f5e;
+  --font-body:'Inter',sans-serif;
+  --font-display:'Playfair Display',serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius:10px;--radius-lg:16px;--nav-w:280px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--deep);color:var(--text1);line-height:1.8;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(224,90,43,.25);color:#fff}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--void)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--nav-w);
+  background:var(--void);border-right:1px solid var(--border);
+  overflow-y:auto;z-index:200;display:flex;flex-direction:column;
+}
+.sb-brand{padding:1.4rem 1.4rem 1rem;border-bottom:1px solid var(--border)}
+.sb-logo{font-family:var(--font-display);font-size:1rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:.5rem}
+.sb-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold)}
+.sb-tagline{font-size:.68rem;color:var(--text3);margin-top:.25rem;letter-spacing:.04em}
+.nav-sec{padding:.65rem 0 .2rem}
+.nav-sec-label{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:0 1.35rem;margin-bottom:.25rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.36rem 1.35rem;font-size:.79rem;color:var(--text2);border-left:2px solid transparent;transition:all .12s}
+.nav-item:hover{color:var(--text1);background:rgba(255,255,255,.04)}
+.nav-item.active{color:var(--gold2);border-left-color:var(--gold);background:rgba(240,180,41,.07)}
+.nav-item.phase-gl{}.nav-item.phase-gl.active{color:var(--gl2);border-left-color:var(--gl);background:rgba(59,130,246,.07)}
+.nav-item.phase-vk.active{color:var(--vk2);border-left-color:var(--vk);background:rgba(224,90,43,.07)}
+.nav-item.phase-done.active{color:var(--green);border-left-color:var(--green);background:rgba(34,197,94,.06)}
+.nav-num{font-family:var(--font-mono);font-size:.6rem;color:var(--text3);min-width:20px}
+.nav-check{font-size:.65rem;margin-left:auto;color:var(--text3)}
+.nav-sep{height:1px;background:var(--border);margin:.4rem 1.2rem}
+.sb-progress-wrap{padding:.75rem 1.35rem;border-top:1px solid var(--border)}
+.sb-progress-label{font-size:.68rem;color:var(--text3);margin-bottom:.4rem;font-family:var(--font-mono)}
+.sb-progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.sb-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gl),var(--vk),var(--gold));transition:width .4s ease}
+.sb-progress-pct{font-family:var(--font-mono);font-size:.65rem;color:var(--gold);margin-top:.3rem;text-align:right}
+.sb-back{
+  display:flex;align-items:center;gap:.5rem;margin:.65rem 1.2rem;
+  padding:.45rem .85rem;background:rgba(255,255,255,.04);
+  border:1px solid var(--border);border-radius:7px;
+  font-size:.73rem;color:var(--text2);transition:all .12s;
+}
+.sb-back:hover{color:var(--text1);border-color:var(--border2)}
+
+/* ═══ PROGRESS BAR TOP ═══ */
+.progress-bar{position:fixed;top:0;left:var(--nav-w);right:0;height:2px;z-index:300;background:var(--border)}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gl),var(--vk),var(--gold));transition:width .2s}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:var(--nav-w);min-height:100vh}
+.phase{max-width:900px;margin:0 auto;padding:4rem 3rem;border-bottom:1px solid var(--border)}
+.phase:last-child{border-bottom:none}
+
+/* ═══ HERO ═══ */
+.hero{background:var(--void);padding:5rem 3rem;max-width:900px;margin:0 auto;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:380px;height:380px;background:radial-gradient(circle,rgba(240,180,41,.1) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-40px;width:280px;height:280px;background:radial-gradient(circle,rgba(224,90,43,.07) 0%,transparent 70%);pointer-events:none}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.25);
+  color:var(--gold2);font-family:var(--font-mono);font-size:.7rem;font-weight:600;
+  padding:.3rem .85rem;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.1rem;
+}
+.hero-h1{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,3.8rem);font-weight:700;line-height:1.08;color:#fff;margin-bottom:.9rem}
+.hero-h1 .vk{color:var(--vk2)}.hero-h1 .gl{color:var(--gl2)}.hero-h1 .gold{color:var(--gold2)}
+.hero-sub{font-size:.96rem;font-weight:300;color:var(--text2);max-width:580px;line-height:1.85;margin-bottom:1.75rem}
+.hero-author{display:flex;align-items:center;gap:.7rem;padding:.85rem 1.1rem;background:rgba(255,255,255,.04);border-radius:var(--radius);border:1px solid var(--border);width:fit-content;margin-bottom:2rem}
+.ha-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--vk),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.7rem;font-weight:600;color:#fff;flex-shrink:0}
+.ha-name{font-weight:600;font-size:.85rem;color:#fff}
+.ha-title{font-size:.72rem;color:var(--text3)}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:1.5rem}
+.hs-val{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--gold2);display:block}
+.hs-label{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em}
+
+/* ═══ PHASE HEADERS ═══ */
+.ph-header{padding-top:1.5rem;margin-bottom:2rem}
+.ph-tag{font-family:var(--font-mono);font-size:.66rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.ph-tag-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ph-tag.gold{color:var(--gold2)}.ph-tag.gold .ph-tag-dot{background:var(--gold)}
+.ph-tag.gl{color:var(--gl2)}.ph-tag.gl .ph-tag-dot{background:var(--gl)}
+.ph-tag.vk{color:var(--vk2)}.ph-tag.vk .ph-tag-dot{background:var(--vk)}
+.ph-tag.done{color:var(--green)}.ph-tag.done .ph-tag-dot{background:var(--green)}
+.ph-title{font-family:var(--font-display);font-size:clamp(1.7rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.85rem;line-height:1.12}
+.ph-lead{font-size:.95rem;font-weight:300;color:var(--text2);max-width:640px;line-height:1.9;margin-bottom:2rem;padding-left:1.1rem;border-left:3px solid var(--gold)}
+.ph-lead.gl{border-left-color:var(--gl)}.ph-lead.vk{border-left-color:var(--vk)}.ph-lead.done{border-left-color:var(--green)}
+.ph-stripe{border-top:2px solid var(--gold)}
+.ph-stripe.gl{border-top-color:var(--gl)}.ph-stripe.vk{border-top-color:var(--vk)}.ph-stripe.done{border-top-color:var(--green)}
+h2{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:#fff;margin:2.5rem 0 .75rem;padding-bottom:.45rem;border-bottom:1px solid var(--border)}
+h3{font-size:.93rem;font-weight:600;color:var(--text1);margin:1.7rem 0 .45rem;display:flex;align-items:center;gap:.45rem}
+h3::before{content:'';width:3px;height:13px;background:var(--vk);border-radius:2px;flex-shrink:0}
+p{color:var(--text2);line-height:1.85;margin-bottom:.9rem}
+strong{color:var(--text1);font-weight:600}
+code{font-family:var(--font-mono);font-size:.82rem;background:var(--raised);border:1px solid var(--border2);padding:1px 5px;border-radius:4px;color:var(--vk2)}
+
+/* ═══ CHECKPOINT (interactive checkbox task) ═══ */
+.checkpoint{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.1rem 1.25rem;
+  margin:.5rem 0;display:flex;align-items:flex-start;gap:.85rem;
+  transition:all .2s;cursor:pointer;position:relative;
+}
+.checkpoint:hover{border-color:var(--border2)}
+.checkpoint.done{background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.25)}
+.checkpoint.done .cp-title{text-decoration:line-through;color:var(--text3)}
+.cp-box{
+  width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;transition:all .2s;background:var(--raised);
+}
+.checkpoint.done .cp-box{background:var(--green);border-color:var(--green)}
+.cp-check{font-size:.75rem;color:#fff;opacity:0;transition:opacity .15s}
+.checkpoint.done .cp-check{opacity:1}
+.cp-body{flex:1}
+.cp-title{font-weight:600;font-size:.89rem;color:var(--text1);margin-bottom:.18rem;transition:all .2s}
+.cp-desc{font-size:.8rem;color:var(--text3);line-height:1.6}
+.cp-tag{font-family:var(--font-mono);font-size:.62rem;padding:.15rem .5rem;border-radius:8px;margin-left:auto;flex-shrink:0;align-self:flex-start;margin-top:2px}
+.cp-tag.build{background:rgba(59,130,246,.12);color:var(--gl2)}
+.cp-tag.code{background:rgba(224,90,43,.1);color:var(--vk2)}
+.cp-tag.test{background:rgba(34,197,94,.08);color:var(--green)}
+.cp-tag.think{background:rgba(240,180,41,.1);color:var(--gold2)}
+
+/* ═══ CELEBRATION TOAST ═══ */
+.toast{
+  position:fixed;bottom:2rem;right:2rem;
+  background:var(--surface);border:1px solid rgba(34,197,94,.3);
+  border-radius:var(--radius-lg);padding:1rem 1.35rem;
+  max-width:320px;z-index:9999;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  transform:translateY(100px);opacity:0;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem}
+.toast-icon{font-size:1.1rem}
+.toast-title{font-weight:600;font-size:.88rem;color:var(--green)}
+.toast-msg{font-size:.79rem;color:var(--text2);line-height:1.6}
+
+/* ═══ MILESTONE CARD ═══ */
+.milestone{
+  background:linear-gradient(135deg,rgba(240,180,41,.08),rgba(224,90,43,.06));
+  border:1px solid rgba(240,180,41,.2);
+  border-radius:var(--radius-lg);padding:1.35rem 1.5rem;margin:1.75rem 0;
+  position:relative;overflow:hidden;
+}
+.milestone::before{content:'🏆';position:absolute;right:1.25rem;top:1.1rem;font-size:1.5rem;opacity:.3}
+.milestone-label{font-family:var(--font-mono);font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold2);margin-bottom:.4rem}
+.milestone-title{font-family:var(--font-display);font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:.4rem}
+.milestone-desc{font-size:.83rem;color:var(--text2);line-height:1.65}
+
+/* ═══ CODE BLOCKS ═══ */
+.cb{background:#0b0d12;border-radius:var(--radius);margin:1.2rem 0;overflow:hidden;border:1px solid var(--border)}
+.cb-head{display:flex;align-items:center;justify-content:space-between;padding:.48rem 1rem;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border)}
+.cb-label{font-family:var(--font-mono);font-size:.63rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text3)}
+.cb-lang{font-family:var(--font-mono);font-size:.63rem;font-weight:600;color:var(--vk2)}
+.cb-lang.glsl{color:var(--gl2)}.cb-lang.sh{color:var(--green)}.cb-lang.cmake{color:var(--gold)}.cb-lang.cpp{color:var(--vk2)}
+.cb pre{font-family:var(--font-mono);font-size:.79rem;color:#cdd6f4;line-height:1.8;padding:1rem 1.15rem;overflow-x:auto;white-space:pre}
+.kw{color:#cba6f7}.fn{color:#89b4fa}.tp{color:#a6e3a1}.st{color:#a6e3a1}
+.cm{color:#585b70;font-style:italic}.nm{color:#fab387}.vf{color:#89dceb}.vt{color:#f9e2af}.pp{color:#f38ba8}
+
+/* ═══ THINK BLOCK ═══ */
+.think{
+  border-radius:var(--radius);padding:1.1rem 1.3rem;margin:1.5rem 0;
+  background:rgba(167,139,250,.06);border-left:3px solid var(--purple);
+}
+.think-label{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem}
+.think p{margin:0;font-size:.87rem;line-height:1.8;color:#9b86e8}
+
+/* ═══ CALLOUTS ═══ */
+.callout{border-radius:var(--radius);padding:1.05rem 1.3rem;margin:1.4rem 0;border-left:3px solid}
+.callout-label{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}
+.callout p{margin:0;font-size:.87rem;line-height:1.8}
+.ca-tip{background:rgba(20,184,166,.07);border-color:var(--teal)}.ca-tip .callout-label{color:var(--teal)}.ca-tip p{color:#4db8ae}
+.ca-warn{background:rgba(224,90,43,.07);border-color:var(--vk)}.ca-warn .callout-label{color:var(--vk2)}.ca-warn p{color:#d07860}
+.ca-key{background:rgba(59,130,246,.07);border-color:var(--gl)}.ca-key .callout-label{color:var(--gl2)}.ca-key p{color:#6ca0d8}
+
+/* ═══ FILE TREE ═══ */
+.ftree{background:var(--void);border-radius:var(--radius);padding:.9rem 1.2rem;margin:1rem 0;font-family:var(--font-mono);font-size:.78rem;line-height:2;color:var(--text2);border:1px solid var(--border)}
+.ft-dir{color:#89b4fa;font-weight:500}.ft-file{color:#a6e3a1}.ft-new{color:var(--gold2);font-weight:500}
+.ft-cm{color:var(--text3);font-style:italic}.ft-spv{color:#f9e2af}
+
+/* ═══ STEP INDICATOR ═══ */
+.step-row{display:flex;gap:.85rem;align-items:flex-start;margin:.65rem 0}
+.step-n{font-family:var(--font-mono);font-size:.72rem;font-weight:600;color:#fff;background:var(--vk);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-n.gl{background:var(--gl)}.step-n.gold{background:var(--gold);color:var(--void)}
+.step-body .st-title{font-weight:600;font-size:.88rem;color:var(--text1);margin-bottom:.2rem}
+.step-body .st-desc{font-size:.82rem;color:var(--text2);line-height:1.65}
+.step-body code{font-size:.76rem}
+
+/* ═══ RADAR PREVIEW DIAGRAM ═══ */
+.radar-preview{
+  background:var(--void);border-radius:var(--radius-lg);
+  padding:2rem;margin:1.5rem 0;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.radar-preview::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%,rgba(34,197,94,.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* ═══ FEATURE GRID ═══ */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.7rem;margin:1.25rem 0}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem;transition:border-color .13s}
+.feat-card:hover{border-color:var(--border2)}
+.fc-icon{font-size:1.1rem;margin-bottom:.4rem}
+.fc-title{font-weight:600;font-size:.85rem;color:var(--text1);margin-bottom:.2rem}
+.fc-body{font-size:.78rem;color:var(--text3);line-height:1.5}
+
+/* ═══ DIVIDER ═══ */
+.divider{height:1px;background:var(--border);margin:2rem 0}
+
+/* ═══ PHASE SUMMARY BOX ═══ */
+.phase-summary{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--radius-lg);padding:1.25rem 1.4rem;margin:2rem 0;
+}
+.ps-title{font-family:var(--font-mono);font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
+.ps-items{display:flex;flex-wrap:wrap;gap:.4rem}
+.ps-item{font-size:.75rem;padding:.22rem .65rem;border-radius:8px;font-family:var(--font-mono)}
+.ps-gl{background:rgba(59,130,246,.1);color:var(--gl2)}.ps-vk{background:rgba(224,90,43,.1);color:var(--vk2)}
+.ps-both{background:rgba(240,180,41,.1);color:var(--gold2)}.ps-tool{background:rgba(20,184,166,.08);color:var(--teal)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:960px){
+  .sidebar{display:none}.main{margin-left:0}.progress-bar{left:0}
+  .phase{padding:2.5rem 1.5rem}.hero{padding:3rem 1.5rem}
+}
+@media print{.sidebar,.progress-bar,.toast{display:none}.main{margin-left:0}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo"><div class="sb-logo-dot"></div>RR Skillverse</div>
+    <div class="sb-tagline">Capstone Project — Week 1 Finale</div>
+  </div>
+  <a class="sb-back" href="https://raushan1107.github.io/Vulkan-tutotrial-by-Raushan/#ch0" target="_blank">← Back to Handbook</a>
+
+  <div class="nav-sec">
+    <div class="nav-sec-label">Project Overview</div>
+    <a class="nav-item" href="#hero"><span class="nav-num">00</span>What We're Building</a>
+    <a class="nav-item" href="#phase0"><span class="nav-num">01</span>How to Think About This</a>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-sec">
+    <div class="nav-sec-label">Phase 1 — OpenGL Prototype</div>
+    <a class="nav-item phase-gl" href="#p1s1"><span class="nav-num">02</span>Folder &amp; Build Setup</a>
+    <a class="nav-item phase-gl" href="#p1s2"><span class="nav-num">03</span>The Radar Circle</a>
+    <a class="nav-item phase-gl" href="#p1s3"><span class="nav-num">04</span>Rotating Sweep Line</a>
+    <a class="nav-item phase-gl" href="#p1s4"><span class="nav-num">05</span>Blip Contacts</a>
+    <a class="nav-item phase-gl" href="#p1s5"><span class="nav-num">06</span>Fade Trail Effect</a>
+    <a class="nav-item phase-gl" href="#p1s6"><span class="nav-num">07</span>HUD Overlay Text</a>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-sec">
+    <div class="nav-sec-label">Phase 2 — Vulkan Upgrade</div>
+    <a class="nav-item phase-vk" href="#p2s1"><span class="nav-num">08</span>New Project Structure</a>
+    <a class="nav-item phase-vk" href="#p2s2"><span class="nav-num">09</span>Vulkan Boilerplate</a>
+    <a class="nav-item phase-vk" href="#p2s3"><span class="nav-num">10</span>Radar Ring Pipeline</a>
+    <a class="nav-item phase-vk" href="#p2s4"><span class="nav-num">11</span>Sweep Uniform Buffer</a>
+    <a class="nav-item phase-vk" href="#p2s5"><span class="nav-num">12</span>Blip Push Constants</a>
+    <a class="nav-item phase-vk" href="#p2s6"><span class="nav-num">13</span>Per-Frame Sync Loop</a>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-sec">
+    <div class="nav-sec-label">Finishing</div>
+    <a class="nav-item phase-done" href="#final"><span class="nav-num">14</span>Final Polish &amp; Review</a>
+    <a class="nav-item phase-done" href="#reflect"><span class="nav-num">15</span>What You Just Built</span></a>
+  </div>
+  <div class="nav-sep"></div>
+
+  <div class="sb-progress-wrap">
+    <div class="sb-progress-label">Your progress</div>
+    <div class="sb-progress-bar"><div class="sb-progress-fill" id="sidebar-progress"></div></div>
+    <div class="sb-progress-pct" id="sidebar-pct">0 / 0 tasks</div>
+  </div>
+</aside>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+<div class="toast" id="toast">
+  <div class="toast-head"><span class="toast-icon" id="toast-icon">🎉</span><span class="toast-title" id="toast-title">Nice work!</span></div>
+  <div class="toast-msg" id="toast-msg">Keep going.</div>
+</div>
+
+<main class="main">
+
+<!-- ══════ HERO ══════ -->
+<div class="hero" id="hero">
+  <div class="hero-badge">Capstone Project · Week 1 Finale</div>
+  <h1 class="hero-h1">
+    Tactical <span class="gold">Radar</span><br>
+    <span class="gl">OpenGL</span> → <span class="vk">Vulkan</span>
+  </h1>
+  <p class="hero-sub">Build a real-time 3D tactical radar display — first as a working OpenGL prototype, then rebuild it in Vulkan. Every concept from the week crystallises into one coherent application.</p>
+  <div class="hero-author">
+    <div class="ha-av">RR</div>
+    <div>
+      <div class="ha-name">Building with Raushan Ranjan</div>
+      <div class="ha-title">MCT · Senior Corporate Trainer · Koenig Solutions</div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div><span class="hs-val">2</span><span class="hs-label">Complete programmes</span></div>
+    <div><span class="hs-val">6</span><span class="hs-label">Build stages</span></div>
+    <div><span class="hs-val">30+</span><span class="hs-label">Checkpoints</span></div>
+    <div><span class="hs-val">1</span><span class="hs-label">Week of learning = this</span></div>
+  </div>
+</div>
+
+<!-- ══════ WHAT WE'RE BUILDING ══════ -->
+<section class="phase" id="phase-overview">
+  <div class="ph-stripe gold"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gold"><div class="ph-tag-dot"></div>Overview</div>
+    <h1 class="ph-title">What We're Building</h1>
+    <p class="ph-lead">A Tactical Radar Display — the kind you'd see in a naval operations room. A circular scope, a rotating sweep line leaving a green phosphor trail, and blip contacts that fade in and out. Real-time, animated, hardware-accelerated.</p>
+  </div>
+
+  <!-- RADAR PREVIEW SVG -->
+  <div class="radar-preview">
+    <svg width="320" height="320" viewBox="0 0 320 320" role="img">
+      <title>Tactical Radar Display preview</title>
+      <defs>
+        <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#0a1a0a"/>
+          <stop offset="100%" stop-color="#050b05"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Background -->
+      <circle cx="160" cy="160" r="148" fill="url(#bgGrad)" stroke="rgba(34,197,94,.3)" stroke-width="1"/>
+      <!-- Range rings -->
+      <circle cx="160" cy="160" r="37" fill="none" stroke="rgba(34,197,94,.18)" stroke-width=".8"/>
+      <circle cx="160" cy="160" r="74" fill="none" stroke="rgba(34,197,94,.18)" stroke-width=".8"/>
+      <circle cx="160" cy="160" r="111" fill="none" stroke="rgba(34,197,94,.18)" stroke-width=".8"/>
+      <circle cx="160" cy="160" r="148" fill="none" stroke="rgba(34,197,94,.3)" stroke-width="1"/>
+      <!-- Cross hairs -->
+      <line x1="12" y1="160" x2="308" y2="160" stroke="rgba(34,197,94,.12)" stroke-width=".7"/>
+      <line x1="160" y1="12" x2="160" y2="308" stroke="rgba(34,197,94,.12)" stroke-width=".7"/>
+      <line x1="55" y1="55" x2="265" y2="265" stroke="rgba(34,197,94,.08)" stroke-width=".6"/>
+      <line x1="265" y1="55" x2="55" y2="265" stroke="rgba(34,197,94,.08)" stroke-width=".6"/>
+      <!-- Sweep line (at ~40 degrees) with fade trail -->
+      <path d="M 160 160 L 274 113" stroke="rgba(34,197,94,.85)" stroke-width="1.5" filter="url(#glow)"/>
+      <!-- Trail wedge approximation -->
+      <path d="M 160 160 L 262 96 A 110 110 0 0 0 270 115 Z" fill="rgba(34,197,94,.06)"/>
+      <path d="M 160 160 L 249 79 A 110 110 0 0 0 264 96 Z" fill="rgba(34,197,94,.04)"/>
+      <!-- Blip contacts -->
+      <circle cx="210" cy="105" r="4" fill="rgba(34,197,94,.9)" filter="url(#glow)"/>
+      <circle cx="210" cy="105" r="8" fill="none" stroke="rgba(34,197,94,.3)" stroke-width="1"/>
+      <circle cx="118" cy="218" r="3.5" fill="rgba(34,197,94,.7)" filter="url(#glow)"/>
+      <circle cx="118" cy="218" r="7" fill="none" stroke="rgba(34,197,94,.2)" stroke-width=".8"/>
+      <circle cx="238" cy="195" r="3" fill="rgba(34,197,94,.5)"/>
+      <circle cx="88" cy="130" r="2.5" fill="rgba(34,197,94,.4)"/>
+      <!-- Center dot -->
+      <circle cx="160" cy="160" r="3.5" fill="#22c55e" filter="url(#glow)"/>
+      <!-- HUD text -->
+      <text x="20" y="30" font-family="'JetBrains Mono',monospace" font-size="8" fill="rgba(34,197,94,.6)">RNG: 50NM</text>
+      <text x="20" y="44" font-family="'JetBrains Mono',monospace" font-size="8" fill="rgba(34,197,94,.6)">HDG: 045°</text>
+      <text x="230" y="30" font-family="'JetBrains Mono',monospace" font-size="8" fill="rgba(34,197,94,.6)">CONTACTS: 4</text>
+      <text x="230" y="44" font-family="'JetBrains Mono',monospace" font-size="8" fill="rgba(34,197,94,.6)">MODE: AIR</text>
+      <text x="130" y="310" font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(34,197,94,.5)">RR SKILLVERSE</text>
+    </svg>
+    <p style="font-size:.72rem;color:var(--text3);margin-top:.75rem;font-family:var(--font-mono)">What you will have running by the end of Phase 1</p>
+  </div>
+
+  <h2>Features You Will Build</h2>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="fc-icon">⭕</div><div class="fc-title">Range Rings</div><div class="fc-body">Concentric circles generated from a vertex loop</div></div>
+    <div class="feat-card"><div class="fc-icon">↻</div><div class="fc-title">Sweep Line</div><div class="fc-body">Real-time rotation using a uniform / push constant</div></div>
+    <div class="feat-card"><div class="fc-icon">🌿</div><div class="fc-title">Phosphor Trail</div><div class="fc-body">Alpha fade using blending — classic CRT look</div></div>
+    <div class="feat-card"><div class="fc-icon">🔵</div><div class="fc-title">Blip Contacts</div><div class="fc-body">Point data rendered as instanced or individual draws</div></div>
+    <div class="feat-card"><div class="fc-icon">📟</div><div class="fc-title">HUD Text</div><div class="fc-body">Bitmap font overlay with range and heading data</div></div>
+    <div class="feat-card"><div class="fc-icon">⚡</div><div class="fc-title">Vulkan Rebuild</div><div class="fc-body">Same visual, explicit GPU control, zero driver guessing</div></div>
+  </div>
+
+  <div class="phase-summary">
+    <div class="ps-title">Concepts from this week you will use</div>
+    <div class="ps-items">
+      <span class="ps-gl">VAO/VBO</span><span class="ps-gl">GLSL shaders</span><span class="ps-gl">glUniform</span>
+      <span class="ps-gl">Alpha blending</span><span class="ps-gl">Render loop</span>
+      <span class="ps-vk">VkPipeline</span><span class="ps-vk">Push constants</span><span class="ps-vk">VkBuffer</span>
+      <span class="ps-vk">Render pass</span><span class="ps-vk">Swapchain</span><span class="ps-vk">Semaphores</span>
+      <span class="ps-both">GLSL 450</span><span class="ps-both">NDC coords</span><span class="ps-both">Vertex shaders</span>
+      <span class="ps-tool">CMake</span><span class="ps-tool">glslc</span><span class="ps-tool">GLFW</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ PHASE 0 — HOW TO THINK ══════ -->
+<section class="phase" id="phase0">
+  <div class="ph-stripe gold"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gold"><div class="ph-tag-dot"></div>Before You Code · Mindset</div>
+    <h1 class="ph-title">How to Think About This Project</h1>
+    <p class="ph-lead">The most important skill in graphics programming is not knowing the API — it is knowing how to decompose a visual into geometry, attributes, and draw calls. Read this section before writing a single line.</p>
+  </div>
+
+  <h2>The Decomposition Rule</h2>
+  <p>Every graphics programme starts with one question: <strong>what shapes do I need, and what data describes each shape?</strong> The radar display is complex visually but decomposes simply:</p>
+
+  <div class="think">
+    <div class="think-label">🧠 How a graphics programmer looks at the radar</div>
+    <p>Four separate "things" to draw: (1) The ring geometry — a circle approximated by 360 line segments, repeated 4 times at different radii. (2) The sweep line — a single line from center to edge, rotated by the current angle. (3) The blip contacts — points or small circles at known positions. (4) The HUD text — a textured quad per character OR a simple vertex-coloured overlay. Each "thing" is its own VBO, its own draw call, possibly its own shader.</p>
+  </div>
+
+  <h2>The Right Order to Build</h2>
+  <p>Always build in this order: <strong>get something visible first, then add detail.</strong> A programmer who tries to build the whole radar at once writes 400 lines and sees a black screen. A programmer who follows this order sees progress every 20 minutes:</p>
+
+  <div class="step-row"><div class="step-n gold">1</div><div class="step-body"><div class="st-title">One ring on screen</div><div class="st-desc">Just a white circle. No colour, no animation, no blending. Confirm: vertex data is correct, shader is correct, draw call is correct.</div></div></div>
+  <div class="step-row"><div class="step-n gold">2</div><div class="step-body"><div class="st-title">All four rings + colour</div><div class="st-desc">Add the remaining rings. Apply the green phosphor colour in the fragment shader. Confirm: the rings look right.</div></div></div>
+  <div class="step-row"><div class="step-n gold">3</div><div class="step-body"><div class="st-title">The sweep line moving</div><div class="st-desc">Add the sweep line as a second draw call. Pass the current angle as a uniform. Confirm: it rotates. Now you have animation.</div></div></div>
+  <div class="step-row"><div class="step-n gold">4</div><div class="step-body"><div class="st-title">Blip contacts</div><div class="st-desc">Add a few hardcoded blip positions as points or small circles. Confirm: they appear at the right positions in NDC.</div></div></div>
+  <div class="step-row"><div class="step-n gold">5</div><div class="step-body"><div class="st-title">The trail fade</div><div class="st-desc">Enable alpha blending. Render the sweep wedge with low alpha. The phosphor trail effect emerges from physics of the frame buffer, not from magic.</div></div></div>
+
+  <div class="callout ca-key">
+    <div class="callout-label">📌 The Hidden Rule of This Project</div>
+    <p>Every time you complete a stage and it works — stop. Look at the screen. Understand <em>why</em> it works before moving to the next stage. This reflection is what converts working code into transferable understanding. A checklist cannot force this — but your professional instinct should.</p>
+  </div>
+
+  <h2>NDC to Radar Coordinates</h2>
+  <p>The GPU thinks in NDC: X and Y from −1 to +1, center at (0,0). The radar scope is a circle of radius ~0.9 (leaving a small margin). A ring at range R (where R is 0.0 to 1.0) is a circle of radius <code>R * 0.9</code> in NDC. A blip at polar position (angle θ, range r) has NDC coordinates:</p>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">Converting polar blip position to NDC</span><span class="cb-lang">GLSL math</span></div>
+    <pre><span class="cm">// Blip at bearing theta (radians, 0=North=up) and range r (0..1)</span>
+<span class="cm">// Radar radius in NDC = 0.9</span>
+<span class="kw">float</span> radar_r = r * <span class="nm">0.9f</span>;
+<span class="kw">float</span> ndc_x   = radar_r * sin(theta);  <span class="cm">// East = +X in NDC</span>
+<span class="kw">float</span> ndc_y   = radar_r * cos(theta);  <span class="cm">// North = +Y in NDC (OpenGL convention)</span>
+<span class="cm">// In Vulkan: ndc_y = -radar_r * cos(theta) (Y axis is flipped)</span></pre>
+  </div>
+
+  <div class="callout ca-tip">
+    <div class="callout-label">✅ Confirm this before writing any code</div>
+    <p>Draw this on paper first. Mark (0,0) at center. Mark NDC (+1,0) = East, (0,+1) = North. Mark where a blip at bearing 045° range 50% would land on the circle. Now you know your coordinate system and no code will surprise you.</p>
+  </div>
+</section>
+<!-- ══════════════════════════════════════════════════════════
+     PHASE 1 — OPENGL PROTOTYPE
+══════════════════════════════════════════════════════════ -->
+<section class="phase" id="p1s1">
+  <div class="ph-stripe gl"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gl"><div class="ph-tag-dot"></div>Phase 1 · Stage 1 — OpenGL</div>
+    <h1 class="ph-title">Folder &amp; Build Setup</h1>
+    <p class="ph-lead gl">Create the project skeleton in under 5 minutes. Every file has a defined purpose. You will never wonder where a file goes.</p>
+  </div>
+
+  <h2>Create the Folder Structure — Exact Commands</h2>
+  <p>Open a <strong>Developer Command Prompt for VS 2022</strong> (not regular cmd). Run:</p>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">Create all folders and files in one block</span><span class="cb-lang sh">Shell</span></div>
+    <pre>mkdir C:\Labs\Capstone\RadarGL
+cd C:\Labs\Capstone\RadarGL
+mkdir src shaders
+
+<span class="cm"># Create empty files you will fill in the following stages</span>
+type nul > CMakeLists.txt
+type nul > src\main.cpp
+type nul > shaders\radar.vert
+type nul > shaders\radar.frag</pre>
+  </div>
+
+  <p>Your folder now looks like this. Every file below is the <strong>complete content</strong> — no missing pieces:</p>
+
+  <div class="ftree">
+    <span class="ft-dir">C:\Labs\Capstone\RadarGL\</span><br>
+    <span class="ft-dir">├── CMakeLists.txt</span>       <span class="ft-cm">← build config (fill next)</span><br>
+    <span class="ft-dir">├── src\</span><br>
+    <span class="ft-file">│   └── main.cpp</span>         <span class="ft-cm">← all C++ code lives here</span><br>
+    <span class="ft-dir">└── shaders\</span><br>
+    <span class="ft-file">    ├── radar.vert</span>       <span class="ft-cm">← vertex shader (GLSL)</span><br>
+    <span class="ft-file">    └── radar.frag</span>       <span class="ft-cm">← fragment shader (GLSL)</span>
+  </div>
+
+  <h2>CMakeLists.txt — Complete, Copy Exactly</h2>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">CMakeLists.txt</span><span class="cb-lang cmake">CMake</span></div>
+    <pre>cmake_minimum_required(VERSION <span class="nm">3.20</span>)
+project(RadarGL)
+set(CMAKE_CXX_STANDARD <span class="nm">17</span>)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+<span class="cm"># GLEW — OpenGL function loader</span>
+set(GLEW_DIR $ENV{GLEW_DIR})
+include_directories(${GLEW_DIR}/include)
+
+<span class="cm"># GLFW — window and input</span>
+set(GLFW_DIR $ENV{GLFW_DIR})
+include_directories(${GLFW_DIR}/include)
+
+<span class="cm"># GLM — math (header only, no linking needed)</span>
+set(GLM_DIR $ENV{GLM_DIR})
+include_directories(${GLM_DIR})
+
+add_executable(RadarGL src/main.cpp)
+
+target_link_libraries(RadarGL
+    ${GLEW_DIR}/lib/Release/x64/glew32.lib
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+    opengl32.lib
+)
+
+<span class="cm"># Copy GLEW dll next to the exe automatically</span>
+add_custom_command(TARGET RadarGL POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${GLEW_DIR}/bin/Release/x64/glew32.dll"
+        "$&lt;TARGET_FILE_DIR:RadarGL&gt;"
+)</pre>
+  </div>
+
+  <div class="callout ca-warn">
+    <div class="callout-label">⚠️ Environment Variables Must Exist</div>
+    <p>The CMakeLists.txt reads <code>GLEW_DIR</code>, <code>GLFW_DIR</code>, and <code>GLM_DIR</code> from your system environment. From Day 1–3 you already have <code>GLFW_DIR</code> set. If <code>GLEW_DIR</code> or <code>GLM_DIR</code> are missing: System Properties → Environment Variables → New. Then restart your command prompt. <code>GLEW_DIR</code> points to your GLEW root, <code>GLM_DIR</code> points to the glm/ header folder.</p>
+  </div>
+
+  <h2>Build Commands — Run These Now</h2>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">Configure + build (you'll re-run the second line after every code change)</span><span class="cb-lang sh">Shell</span></div>
+    <pre>cd C:\Labs\Capstone\RadarGL
+
+<span class="cm"># Generate Visual Studio project files (run once)</span>
+cmake -B build -G <span class="st">"Visual Studio 17 2022"</span> -A x64
+
+<span class="cm"># Build (run after every code change)</span>
+cmake --build build --config Release
+
+<span class="cm"># Run — ALWAYS from project root (shaders folder must be visible)</span>
+build\Release\RadarGL.exe</pre>
+  </div>
+
+  <h2>Stage 1 Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Build system configured! Now the fun begins." data-icon="🔧">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Folders created: src\ and shaders\ exist</div><div class="cp-desc">Verify with: <code>dir C:\Labs\Capstone\RadarGL</code></div></div>
+    <span class="cp-tag build">build</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="CMake configured! VS project files are generated." data-icon="⚙️">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">cmake -B build completes without errors</div><div class="cp-desc">You should see "Build files have been written to: ...build"</div></div>
+    <span class="cp-tag build">build</span>
+  </div>
+</section>
+
+<!-- ══════ PHASE 1 STAGE 2 — THE RADAR RINGS ══════ -->
+<section class="phase" id="p1s2">
+  <div class="ph-stripe gl"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gl"><div class="ph-tag-dot"></div>Phase 1 · Stage 2 — OpenGL</div>
+    <h1 class="ph-title">The Radar Rings</h1>
+    <p class="ph-lead gl">Get something visible immediately. A ring is just a polygon with enough sides that it looks round. 360 vertices = a perfect circle. Write the shaders first, then the C++.</p>
+  </div>
+
+  <div class="think">
+    <div class="think-label">🧠 Before you type — think about this</div>
+    <p>A ring is a set of N points on a circle of radius R, connected as a line loop. The vertex shader receives each point's (x,y) position in NDC and passes it through to <code>gl_Position</code>. The fragment shader outputs a solid green colour. That's all the shaders do at this stage — no uniforms, no interpolation, no tricks. Keep it minimal until it works.</p>
+  </div>
+
+  <h2>The Shaders — Create These First</h2>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">shaders/radar.vert — paste this exactly</span><span class="cb-lang glsl">GLSL</span></div>
+    <pre><span class="kw">#version</span> <span class="nm">330</span> core
+
+<span class="kw">layout</span>(location = <span class="nm">0</span>) <span class="kw">in</span> <span class="tp">vec2</span> inPos;   <span class="cm">// NDC position of each vertex</span>
+
+<span class="kw">uniform float</span> uAngle;    <span class="cm">// sweep angle in radians — used by sweep line draw</span>
+<span class="kw">uniform float</span> uAlpha;    <span class="cm">// per-object opacity for trail fade</span>
+
+<span class="kw">void</span> <span class="fn">main</span>() {
+    gl_Position = <span class="tp">vec4</span>(inPos, <span class="nm">0.0</span>, <span class="nm">1.0</span>);
+    <span class="cm">// No transform matrix needed — everything is already in NDC.
+    // The radar circle fills the viewport, centered at (0,0).</span>
+}
+</pre>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">shaders/radar.frag — paste this exactly</span><span class="cb-lang glsl">GLSL</span></div>
+    <pre><span class="kw">#version</span> <span class="nm">330</span> core
+
+<span class="kw">uniform float</span> uAlpha;           <span class="cm">// 0.0 = fully transparent, 1.0 = fully opaque</span>
+<span class="kw">uniform vec3</span>  uColour;          <span class="cm">// RGB colour to draw this geometry</span>
+
+<span class="kw">out</span> <span class="tp">vec4</span> fragColour;
+
+<span class="kw">void</span> <span class="fn">main</span>() {
+    fragColour = <span class="tp">vec4</span>(uColour, uAlpha);
+    <span class="cm">// Alpha is controlled by C++ per draw call.
+    // The trail effect comes from drawing with low alpha over a dark background.</span>
+}
+</pre>
+  </div>
+
+  <h2>main.cpp — Stage 2: Rings Only</h2>
+  <p>Write <code>src/main.cpp</code> with this complete content. Read every comment — they explain <em>why</em>, not just what.</p>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">src/main.cpp — Rings only (working programme)</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ═══════════════════════════════════════════════════════════════════
+// RadarGL — Capstone Project · RR Skillverse
+// Stage 2: Four concentric range rings
+// ═══════════════════════════════════════════════════════════════════</span>
+<span class="pp">#include</span> <span class="st">&lt;GL/glew.h&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;GLFW/glfw3.h&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;glm/glm.hpp&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;glm/gtc/type_ptr.hpp&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;iostream&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;vector&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;fstream&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;sstream&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;cmath&gt;</span>
+
+<span class="kw">const int</span>   WIN_W  = <span class="nm">900</span>, WIN_H = <span class="nm">900</span>;
+<span class="kw">const float</span> PI     = <span class="nm">3.14159265358979f</span>;
+<span class="kw">const float</span> RADAR_R = <span class="nm">0.88f</span>;  <span class="cm">// radar circle radius in NDC</span>
+<span class="kw">const int</span>   SEGMENTS = <span class="nm">360</span>;   <span class="cm">// vertices per ring — more = smoother circle</span>
+
+<span class="cm">// ── Load shader source from file ──────────────────────────────────────</span>
+std::string <span class="fn">loadFile</span>(<span class="kw">const</span> std::string& path) {
+    std::ifstream f(path);
+    <span class="kw">if</span> (!f.is_open()) {
+        std::cerr &lt;&lt; <span class="st">"ERROR: Cannot open "</span> &lt;&lt; path &lt;&lt; <span class="st">"\n"</span>;
+        exit(<span class="nm">1</span>);
+    }
+    std::ostringstream ss; ss &lt;&lt; f.rdbuf(); <span class="kw">return</span> ss.str();
+}
+
+<span class="cm">// ── Compile + link a vertex/fragment shader pair ──────────────────────</span>
+<span class="vt">GLuint</span> <span class="fn">makeProgram</span>(<span class="kw">const</span> std::string& vsPath, <span class="kw">const</span> std::string& fsPath) {
+    <span class="kw">auto</span> vsSrc = loadFile(vsPath), fsSrc = loadFile(fsPath);
+    <span class="kw">const char</span>* vsC = vsSrc.c_str(), *fsC = fsSrc.c_str();
+
+    <span class="vt">GLuint</span> vs = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vs, <span class="nm">1</span>, &vsC, <span class="kw">nullptr</span>); glCompileShader(vs);
+    <span class="vt">GLint</span> ok; glGetShaderiv(vs, GL_COMPILE_STATUS, &ok);
+    <span class="kw">if</span> (!ok) {
+        <span class="kw">char</span> log[<span class="nm">512</span>]; glGetShaderInfoLog(vs, <span class="nm">512</span>, <span class="kw">nullptr</span>, log);
+        std::cerr &lt;&lt; <span class="st">"VERT ERROR:\n"</span> &lt;&lt; log; exit(<span class="nm">1</span>);
+    }
+    <span class="vt">GLuint</span> fs = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fs, <span class="nm">1</span>, &fsC, <span class="kw">nullptr</span>); glCompileShader(fs);
+    glGetShaderiv(fs, GL_COMPILE_STATUS, &ok);
+    <span class="kw">if</span> (!ok) {
+        <span class="kw">char</span> log[<span class="nm">512</span>]; glGetShaderInfoLog(fs, <span class="nm">512</span>, <span class="kw">nullptr</span>, log);
+        std::cerr &lt;&lt; <span class="st">"FRAG ERROR:\n"</span> &lt;&lt; log; exit(<span class="nm">1</span>);
+    }
+    <span class="vt">GLuint</span> prog = glCreateProgram();
+    glAttachShader(prog, vs); glAttachShader(prog, fs); glLinkProgram(prog);
+    glDeleteShader(vs); glDeleteShader(fs);
+    <span class="kw">return</span> prog;
+}
+
+<span class="cm">// ── Generate circle vertices (line loop) ─────────────────────────────
+// Returns a vector of 2D NDC points forming a circle of given radius</span>
+std::vector&lt;glm::vec2&gt; <span class="fn">makeCircle</span>(<span class="kw">float</span> radius, <span class="kw">int</span> segs) {
+    std::vector&lt;glm::vec2&gt; pts;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt;= segs; i++) {
+        <span class="kw">float</span> a = (<span class="kw">float</span>)i / segs * <span class="nm">2.0f</span> * PI;
+        pts.push_back({ radius * cos(a), radius * sin(a) });
+    }
+    <span class="kw">return</span> pts;
+}
+
+<span class="cm">// ── Upload geometry to a VAO/VBO pair, return VAO id ─────────────────</span>
+<span class="vt">GLuint</span> <span class="fn">makeVAO</span>(<span class="kw">const</span> std::vector&lt;glm::vec2&gt;& pts) {
+    <span class="vt">GLuint</span> vao, vbo;
+    glGenVertexArrays(<span class="nm">1</span>, &vao); glBindVertexArray(vao);
+    glGenBuffers(<span class="nm">1</span>, &vbo);      glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, pts.size() * <span class="kw">sizeof</span>(glm::vec2),
+                 pts.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(<span class="nm">0</span>, <span class="nm">2</span>, GL_FLOAT, GL_FALSE,
+                          <span class="kw">sizeof</span>(glm::vec2), (<span class="kw">void</span>*)<span class="nm">0</span>);
+    glEnableVertexAttribArray(<span class="nm">0</span>);
+    glBindVertexArray(<span class="nm">0</span>);
+    <span class="kw">return</span> vao;
+}
+
+<span class="cm">// ── Helper: set shader uniforms ───────────────────────────────────────</span>
+<span class="kw">void</span> <span class="fn">setColour</span>(<span class="vt">GLuint</span> prog, glm::vec3 col, <span class="kw">float</span> alpha) {
+    glUniform3fv(glGetUniformLocation(prog, <span class="st">"uColour"</span>), <span class="nm">1</span>, glm::value_ptr(col));
+    glUniform1f(glGetUniformLocation(prog,  <span class="st">"uAlpha"</span>), alpha);
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// ── Init GLFW ─────────────────────────────────────────────────────</span>
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, <span class="nm">3</span>);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, <span class="nm">3</span>);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    <span class="vt">GLFWwindow</span>* win = glfwCreateWindow(WIN_W, WIN_H,
+        <span class="st">"Tactical Radar — RR Skillverse"</span>, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>);
+    glfwMakeContextCurrent(win);
+    glewExperimental = GL_TRUE; glewInit();
+
+    <span class="cm">// ── Shader programme ──────────────────────────────────────────────</span>
+    <span class="vt">GLuint</span> prog = makeProgram(<span class="st">"shaders/radar.vert"</span>, <span class="st">"shaders/radar.frag"</span>);
+
+    <span class="cm">// ── Build four range rings at 25%, 50%, 75%, 100% radar radius ───</span>
+    <span class="kw">struct</span> Ring { <span class="vt">GLuint</span> vao; <span class="kw">int</span> count; };
+    std::vector&lt;Ring&gt; rings;
+    <span class="kw">float</span> radii[] = { <span class="nm">0.22f</span>, <span class="nm">0.44f</span>, <span class="nm">0.66f</span>, RADAR_R };
+    <span class="kw">for</span> (<span class="kw">float</span> r : radii) {
+        <span class="kw">auto</span> pts = makeCircle(r, SEGMENTS);
+        rings.push_back({ makeVAO(pts), (<span class="kw">int</span>)pts.size() });
+    }
+
+    <span class="cm">// ── Background colour: near-black green-tinted ────────────────────</span>
+    glClearColor(<span class="nm">0.02f</span>, <span class="nm">0.06f</span>, <span class="nm">0.02f</span>, <span class="nm">1.0f</span>);
+
+    <span class="cm">// ── Enable blending for alpha (needed for trail effect later) ─────</span>
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    <span class="cm">// ── Render loop ───────────────────────────────────────────────────</span>
+    <span class="kw">while</span> (!glfwWindowShouldClose(win)) {
+        glfwPollEvents();
+        <span class="kw">if</span> (glfwGetKey(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(win, <span class="kw">true</span>);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUseProgram(prog);
+
+        <span class="cm">// Draw range rings: outer ring brighter, inner rings dimmer</span>
+        glm::vec3 greenDim  = { <span class="nm">0.0f</span>, <span class="nm">0.5f</span>, <span class="nm">0.15f</span> };
+        glm::vec3 greenBold = { <span class="nm">0.0f</span>, <span class="nm">0.9f</span>, <span class="nm">0.3f</span> };
+
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; (<span class="kw">int</span>)rings.size(); i++) {
+            <span class="kw">float</span> alpha = (i == (<span class="kw">int</span>)rings.size()-<span class="nm">1</span>) ? <span class="nm">0.8f</span> : <span class="nm">0.3f</span>;
+            glm::vec3 col = (i == (<span class="kw">int</span>)rings.size()-<span class="nm">1</span>) ? greenBold : greenDim;
+            setColour(prog, col, alpha);
+            glBindVertexArray(rings[i].vao);
+            glDrawArrays(GL_LINE_STRIP, <span class="nm">0</span>, rings[i].count);
+        }
+
+        glfwSwapBuffers(win);
+    }
+
+    glfwTerminate();
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+  </div>
+
+  <h2>Build and Run</h2>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">Build and confirm rings are visible</span><span class="cb-lang sh">Shell</span></div>
+    <pre>cd C:\Labs\Capstone\RadarGL
+cmake --build build --config Release
+build\Release\RadarGL.exe</pre>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">🏆 Stage 2 Milestone</div>
+    <div class="milestone-title">Four Green Rings on Screen</div>
+    <div class="milestone-desc">You should see four concentric circles — bright outer boundary ring, dimmer inner range rings — on a dark green-tinted background. No animation yet. That's correct. The rendering pipeline is working.</div>
+  </div>
+
+  <h2>Stage 2 Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Shaders compiled! Your GLSL is working." data-icon="✨">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Shader files saved and no compile errors in terminal</div><div class="cp-desc">If you see "VERT ERROR" or "FRAG ERROR" output, check for typos in the GLSL files</div></div>
+    <span class="cp-tag code">code</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Four rings visible — radar scope alive! 🎯" data-icon="⭕">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Four green rings visible on dark background</div><div class="cp-desc">Outer ring brighter than inner rings. Circle is symmetric (looks round, not oval)</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="You understand why — that's the real win." data-icon="🧠">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">You can explain: why does makeCircle() use cos() and sin()?</div><div class="cp-desc">If you can't answer this, re-read the NDC coordinate section above before moving on</div></div>
+    <span class="cp-tag think">think</span>
+  </div>
+</section>
+
+<!-- ══════ PHASE 1 STAGE 3 — SWEEP LINE ══════ -->
+<section class="phase" id="p1s3">
+  <div class="ph-stripe gl"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gl"><div class="ph-tag-dot"></div>Phase 1 · Stage 3 — OpenGL</div>
+    <h1 class="ph-title">The Rotating Sweep Line</h1>
+    <p class="ph-lead gl">Add real-time animation. The sweep line is a single line from (0,0) to the edge of the radar circle. Its angle changes every frame via a uniform. This is your first <em>animated</em> draw call.</p>
+  </div>
+
+  <div class="think">
+    <div class="think-label">🧠 Think first</div>
+    <p>The sweep line is TWO vertices: the center (0, 0) and the tip at angle θ. The tip's NDC position is (RADAR_R × sin(θ), RADAR_R × cos(θ)). Every frame, θ increases by a small delta. Instead of updating the VBO each frame (expensive), pass θ as a uniform and compute the tip position inside the vertex shader for the second vertex. The center vertex always stays at (0,0).</p>
+  </div>
+
+  <h2>Update the Vertex Shader</h2>
+  <p>Replace the content of <code>shaders/radar.vert</code> with this version that handles the sweep line rotation:</p>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">shaders/radar.vert — updated with sweep line rotation</span><span class="cb-lang glsl">GLSL</span></div>
+    <pre><span class="kw">#version</span> <span class="nm">330</span> core
+
+<span class="kw">layout</span>(location = <span class="nm">0</span>) <span class="kw">in</span> <span class="tp">vec2</span> inPos;
+
+<span class="kw">uniform float</span> uAngle;    <span class="cm">// current sweep angle in radians</span>
+<span class="kw">uniform float</span> uAlpha;
+<span class="kw">uniform</span>  <span class="kw">int</span>  uIsSweep;  <span class="cm">// 1 = this is a sweep line draw, 0 = normal</span>
+<span class="kw">uniform float</span> uRadarR;   <span class="cm">// radar radius in NDC (passed from C++)</span>
+
+<span class="kw">void</span> <span class="fn">main</span>() {
+    <span class="tp">vec2</span> pos = inPos;
+
+    <span class="kw">if</span> (uIsSweep == <span class="nm">1</span>) {
+        <span class="cm">// Vertex 0 = center, stays at (0,0)
+        // Vertex 1 = tip, computed from angle
+        // We pass vertex index via inPos.x: 0.0 = center, 1.0 = tip</span>
+        <span class="kw">if</span> (inPos.x > <span class="nm">0.5</span>) {  <span class="cm">// tip vertex</span>
+            pos = <span class="tp">vec2</span>(uRadarR * sin(uAngle), uRadarR * cos(uAngle));
+        } <span class="kw">else</span> {              <span class="cm">// center vertex</span>
+            pos = <span class="tp">vec2</span>(<span class="nm">0.0</span>, <span class="nm">0.0</span>);
+        }
+    }
+
+    gl_Position = <span class="tp">vec4</span>(pos, <span class="nm">0.0</span>, <span class="nm">1.0</span>);
+}
+</pre>
+  </div>
+
+  <h2>Add Sweep Line to main.cpp</h2>
+  <p>Add these additions to your existing <code>main.cpp</code>. Find the section comment and insert the new code there:</p>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">main.cpp additions — add after makeVAO helper, before main()</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ── Sweep line: two vertices — 0.0 (center) and 1.0 (tip) ───────────
+// The vertex shader uses this "index" to compute actual NDC positions.
+// This VBO never changes — the angle comes in via uAngle uniform.</span>
+<span class="vt">GLuint</span> <span class="fn">makeSweepLine</span>() {
+    <span class="kw">float</span> pts[] = {
+        <span class="nm">0.0f</span>, <span class="nm">0.0f</span>,   <span class="cm">// vertex 0: center (inPos.x = 0.0 → stays at origin)</span>
+        <span class="nm">1.0f</span>, <span class="nm">0.0f</span>    <span class="cm">// vertex 1: tip    (inPos.x = 1.0 → rotated by shader)</span>
+    };
+    <span class="vt">GLuint</span> vao, vbo;
+    glGenVertexArrays(<span class="nm">1</span>, &vao); glBindVertexArray(vao);
+    glGenBuffers(<span class="nm">1</span>, &vbo); glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, <span class="kw">sizeof</span>(pts), pts, GL_STATIC_DRAW);
+    glVertexAttribPointer(<span class="nm">0</span>, <span class="nm">2</span>, GL_FLOAT, GL_FALSE,
+                          <span class="nm">2</span>*<span class="kw">sizeof</span>(<span class="kw">float</span>), (<span class="kw">void</span>*)<span class="nm">0</span>);
+    glEnableVertexAttribArray(<span class="nm">0</span>);
+    glBindVertexArray(<span class="nm">0</span>);
+    <span class="kw">return</span> vao;
+}</pre>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">main.cpp — inside main(), add after ring setup, before render loop</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// Sweep line VAO</span>
+<span class="vt">GLuint</span> sweepVAO = makeSweepLine();
+<span class="kw">float</span>  sweepAngle = <span class="nm">0.0f</span>;                <span class="cm">// current angle in radians</span>
+<span class="kw">const float</span> SWEEP_SPEED = <span class="nm">1.2f</span>;         <span class="cm">// radians per second</span>
+<span class="kw">float</span> lastTime = (<span class="kw">float</span>)glfwGetTime();</pre>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">main.cpp — inside the render loop, after drawing rings, before SwapBuffers</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ── Update sweep angle ────────────────────────────────────────────</span>
+<span class="kw">float</span> now   = (<span class="kw">float</span>)glfwGetTime();
+<span class="kw">float</span> delta = now - lastTime; lastTime = now;
+sweepAngle += SWEEP_SPEED * delta;
+<span class="kw">if</span> (sweepAngle > <span class="nm">2.0f</span> * PI) sweepAngle -= <span class="nm">2.0f</span> * PI;
+
+<span class="cm">// ── Draw sweep line ───────────────────────────────────────────────</span>
+glUniform1f(glGetUniformLocation(prog, <span class="st">"uAngle"</span>),  sweepAngle);
+glUniform1f(glGetUniformLocation(prog, <span class="st">"uRadarR"</span>), RADAR_R);
+glUniform1i(glGetUniformLocation(prog, <span class="st">"uIsSweep"</span>), <span class="nm">1</span>);
+setColour(prog, { <span class="nm">0.0f</span>, <span class="nm">1.0f</span>, <span class="nm">0.4f</span> }, <span class="nm">0.95f</span>); <span class="cm">// bright green</span>
+glLineWidth(<span class="nm">2.0f</span>);
+glBindVertexArray(sweepVAO);
+glDrawArrays(GL_LINES, <span class="nm">0</span>, <span class="nm">2</span>);
+glUniform1i(glGetUniformLocation(prog, <span class="st">"uIsSweep"</span>), <span class="nm">0</span>); <span class="cm">// reset</span>
+glLineWidth(<span class="nm">1.0f</span>);</pre>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">🏆 Stage 3 Milestone</div>
+    <div class="milestone-title">The Radar Is Alive — Sweep Rotating</div>
+    <div class="milestone-desc">A bright green line rotates clockwise around the radar scope. This is your first real-time animation using a uniform. The sweep speed is controlled by SWEEP_SPEED — try changing it to 3.0f and rebuild to feel the difference.</div>
+  </div>
+
+  <h2>Stage 3 Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Sweep line rotating! Real-time animation achieved." data-icon="↻">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Bright sweep line rotates smoothly around the scope</div><div class="cp-desc">One full rotation takes roughly 5 seconds at SWEEP_SPEED=1.2</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Frame-rate independent! Professional quality." data-icon="⏱️">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Animation uses delta time — speed is frame-rate independent</div><div class="cp-desc">Test: add glfwSwapInterval(0) before the loop. The sweep speed should not change even if FPS jumps to 300+</div></div>
+    <span class="cp-tag think">think</span>
+  </div>
+</section>
+
+<!-- ══════ PHASE 1 STAGE 4 — BLIP CONTACTS ══════ -->
+<section class="phase" id="p1s4">
+  <div class="ph-stripe gl"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gl"><div class="ph-tag-dot"></div>Phase 1 · Stage 4 — OpenGL</div>
+    <h1 class="ph-title">Blip Contacts</h1>
+    <p class="ph-lead gl">Add radar contacts — the small bright dots that represent tracked objects. Each blip has a polar position (bearing, range). You convert these to NDC and render them as GL_POINTS with a custom size.</p>
+  </div>
+
+  <div class="think">
+    <div class="think-label">🧠 Think first — how to store blips</div>
+    <p>Define a <code>Blip</code> struct with bearing (0–360°), range (0–1), and age (seconds since sweep last passed over it — controls brightness). Upload all blip NDC positions to one VBO. Redraw with <code>GL_POINTS</code>. The brightness fade is just the alpha uniform: age drives alpha. A newly-hit blip = alpha 1.0, old blip = alpha 0.1.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">main.cpp — Blip struct + data + render (add to existing file)</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ── Blip contact definition ───────────────────────────────────────────</span>
+<span class="kw">struct</span> Blip {
+    <span class="kw">float</span> bearing;  <span class="cm">// degrees, 0=North, clockwise</span>
+    <span class="kw">float</span> range;    <span class="cm">// 0.0 (center) to 1.0 (outer ring)</span>
+    <span class="kw">float</span> age;      <span class="cm">// seconds since last sweep — drives fade</span>
+};
+
+<span class="cm">// Hardcoded contact list — in a real system this comes from sensor data</span>
+std::vector&lt;Blip&gt; contacts = {
+    { <span class="nm">045.0f</span>, <span class="nm">0.60f</span>, <span class="nm">0.1f</span> },   <span class="cm">// NE, medium range</span>
+    { <span class="nm">135.0f</span>, <span class="nm">0.35f</span>, <span class="nm">1.8f</span> },   <span class="cm">// SE, short range, older</span>
+    { <span class="nm">260.0f</span>, <span class="nm">0.75f</span>, <span class="nm">0.4f</span> },   <span class="cm">// W, long range, fresh</span>
+    { <span class="nm">340.0f</span>, <span class="nm">0.50f</span>, <span class="nm">2.5f</span> },   <span class="cm">// NNW, medium range, fading</span>
+    { <span class="nm">090.0f</span>, <span class="nm">0.85f</span>, <span class="nm">0.8f</span> },   <span class="cm">// E, far range</span>
+};
+
+<span class="cm">// ── Convert polar blip to NDC vec2 ────────────────────────────────────</span>
+glm::vec2 <span class="fn">blipNDC</span>(<span class="kw">const</span> Blip& b) {
+    <span class="kw">float</span> rad = b.bearing * PI / <span class="nm">180.0f</span>;
+    <span class="kw">float</span> r   = b.range * RADAR_R;
+    <span class="kw">return</span> { r * sin(rad), r * cos(rad) };
+}
+
+<span class="cm">// ── Build blip VBO from contact list ─────────────────────────────────</span>
+<span class="vt">GLuint</span> <span class="fn">makeBlipVAO</span>(<span class="kw">const</span> std::vector&lt;Blip&gt;& blips) {
+    std::vector&lt;glm::vec2&gt; pts;
+    <span class="kw">for</span> (<span class="kw">auto</span>& b : blips) pts.push_back(blipNDC(b));
+    <span class="kw">return</span> makeVAO(pts); <span class="cm">// reuse existing makeVAO helper</span>
+}
+
+<span class="cm">// ── Inside render loop: draw blips ───────────────────────────────────</span>
+<span class="cm">// (add after sweep line draw, before SwapBuffers)</span>
+glPointSize(<span class="nm">7.0f</span>);                        <span class="cm">// pixel size of GL_POINTS</span>
+glUniform1i(glGetUniformLocation(prog, <span class="st">"uIsSweep"</span>), <span class="nm">0</span>); <span class="cm">// not a sweep draw</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; (<span class="kw">int</span>)contacts.size(); i++) {
+    <span class="kw">float</span> age   = contacts[i].age;
+    <span class="kw">float</span> alpha = glm::clamp(<span class="nm">1.0f</span> - age / <span class="nm">3.0f</span>, <span class="nm">0.1f</span>, <span class="nm">1.0f</span>);
+    <span class="cm">// age 0 → alpha 1.0 (just hit by sweep), age 3 → alpha 0.1 (faded)</span>
+
+    setColour(prog, { <span class="nm">0.0f</span>, <span class="nm">1.0f</span>, <span class="nm">0.45f</span> }, alpha);
+    glBindVertexArray(blipVAO);
+    glDrawArrays(GL_POINTS, i, <span class="nm">1</span>);   <span class="cm">// draw one point at offset i</span>
+
+    <span class="cm">// Tick the age forward each frame (simulates elapsed time)</span>
+    contacts[i].age += delta;
+    <span class="kw">if</span> (contacts[i].age > <span class="nm">3.5f</span>) contacts[i].age = <span class="nm">0.05f</span>; <span class="cm">// respawn</span>
+}
+glPointSize(<span class="nm">1.0f</span>);</pre>
+  </div>
+
+  <div class="callout ca-tip">
+    <div class="callout-label">✅ Where to declare blipVAO</div>
+    <p>Declare <code>GLuint blipVAO = makeBlipVAO(contacts);</code> in <code>main()</code> after the sweep line setup, before the render loop. The VAO is built once — the per-frame fade is controlled only by the alpha uniform, not by re-uploading data.</p>
+  </div>
+
+  <h2>Stage 4 Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Contacts on scope! The radar is tracking." data-icon="🔵">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Five green dots visible at correct positions on the scope</div><div class="cp-desc">Check: a blip at bearing 090° range 0.85 should appear near the right edge</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Dynamic fade working — you understand alpha blending." data-icon="🌿">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Blips cycle from bright to dim and respawn</div><div class="cp-desc">Each blip fades over ~3 seconds then reappears bright. This simulates the sweep refreshing a contact.</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+</section>
+
+<!-- ══════ PHASE 1 STAGE 5 — TRAIL EFFECT ══════ -->
+<section class="phase" id="p1s5">
+  <div class="ph-stripe gl"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gl"><div class="ph-tag-dot"></div>Phase 1 · Stage 5 — OpenGL</div>
+    <h1 class="ph-title">Phosphor Trail Effect</h1>
+    <p class="ph-lead gl">The glowing green trail behind the sweep line is what makes a radar display look authentic. It emerges from a clever use of alpha blending — no special effects needed.</p>
+  </div>
+
+  <div class="think">
+    <div class="think-label">🧠 The trick — it's simpler than you think</div>
+    <p>Do not clear the screen to full black every frame. Instead, draw a near-opaque dark rectangle over the entire screen first — covering about 97% of the previous frame. Old bright pixels get 97% darker. New pixels (the sweep line) are drawn at full brightness. After many frames: the sweep tip is bright, the recent trail is medium green, the old trail has faded. This is exactly how a real phosphor CRT works.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">main.cpp — full-screen quad for trail fade (add after blip VAO setup)</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ── Full-screen fade quad: covers entire NDC space ────────────────────
+// Every frame we draw this with alpha ~0.06, darkening everything slightly.
+// Old bright pixels from previous frames fade slowly — creating the trail.</span>
+<span class="kw">float</span> quadVerts[] = {
+    -<span class="nm">1.0f</span>, -<span class="nm">1.0f</span>,   <span class="nm">1.0f</span>, -<span class="nm">1.0f</span>,   <span class="nm">1.0f</span>,  <span class="nm">1.0f</span>,
+    -<span class="nm">1.0f</span>, -<span class="nm">1.0f</span>,   <span class="nm">1.0f</span>,  <span class="nm">1.0f</span>,  -<span class="nm">1.0f</span>,  <span class="nm">1.0f</span>
+};
+<span class="vt">GLuint</span> fadeVAO, fadeVBO;
+glGenVertexArrays(<span class="nm">1</span>, &fadeVAO); glBindVertexArray(fadeVAO);
+glGenBuffers(<span class="nm">1</span>, &fadeVBO); glBindBuffer(GL_ARRAY_BUFFER, fadeVBO);
+glBufferData(GL_ARRAY_BUFFER, <span class="kw">sizeof</span>(quadVerts), quadVerts, GL_STATIC_DRAW);
+glVertexAttribPointer(<span class="nm">0</span>, <span class="nm">2</span>, GL_FLOAT, GL_FALSE, <span class="nm">2</span>*<span class="kw">sizeof</span>(<span class="kw">float</span>), (<span class="kw">void</span>*)<span class="nm">0</span>);
+glEnableVertexAttribArray(<span class="nm">0</span>);
+glBindVertexArray(<span class="nm">0</span>);</pre>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">main.cpp — render loop order (REPLACE your old glClear approach)</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ═══ RENDER ORDER — This order is critical for the trail effect ═══
+// 1. Draw fade quad        — darkens everything from last frame
+// 2. Draw range rings      — always at same brightness (re-drawn fresh)
+// 3. Draw sweep line       — full brightness at current angle
+// 4. Draw blips            — brightness based on age
+// NOTE: NO glClear() — we never fully clear, the fade quad does it</span>
+
+<span class="cm">// ── 1. Fade quad: draw a semi-transparent black over everything ───</span>
+glUniform1i(glGetUniformLocation(prog, <span class="st">"uIsSweep"</span>), <span class="nm">0</span>);
+setColour(prog, { <span class="nm">0.01f</span>, <span class="nm">0.04f</span>, <span class="nm">0.01f</span> }, <span class="nm">0.18f</span>);
+<span class="cm">// Alpha 0.18 means: each frame retains 82% of previous brightness
+// Lower alpha = longer, brighter trail. 0.18 is a good starting point.</span>
+glBindVertexArray(fadeVAO);
+glDrawArrays(GL_TRIANGLES, <span class="nm">0</span>, <span class="nm">6</span>);
+
+<span class="cm">// ── 2. Range rings (drawn fresh each frame over the faded bg) ────</span>
+<span class="cm">/* ... your existing ring draw code here ... */</span>
+
+<span class="cm">// ── 3. Sweep line ─────────────────────────────────────────────────</span>
+<span class="cm">/* ... your existing sweep draw code here ... */</span>
+
+<span class="cm">// ── 4. Blips ──────────────────────────────────────────────────────</span>
+<span class="cm">/* ... your existing blip draw code here ... */</span></pre>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">🏆 Stage 5 Milestone — The Big One</div>
+    <div class="milestone-title">Full Phosphor Radar Display Running</div>
+    <div class="milestone-desc">The sweep line leaves a glowing green trail that fades as the line moves away. Blips persist after the sweep passes and fade slowly. This looks like real radar. You built this with 200 lines of C++ and 20 lines of GLSL — no engine, no framework, pure OpenGL.</div>
+  </div>
+
+  <h2>Stage 5 Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Phosphor trail working — this is exactly how CRT radar worked!" data-icon="🌿">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Green trail fades behind the rotating sweep line</div><div class="cp-desc">The trail should look like a decaying glow, not a hard line. Adjust alpha (0.18f) to taste.</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="You understand framebuffer blending — rare knowledge." data-icon="🧪">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">You can explain: why does removing glClear() create the trail?</div><div class="cp-desc">The framebuffer retains previous frame's pixels. The fade quad darkens them, not erases them. The sweep line writes bright pixels on top.</div></div>
+    <span class="cp-tag think">think</span>
+  </div>
+</section>
+
+<!-- ══════ PHASE 1 STAGE 6 — HUD TEXT ══════ -->
+<section class="phase" id="p1s6">
+  <div class="ph-stripe gl"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag gl"><div class="ph-tag-dot"></div>Phase 1 · Stage 6 — OpenGL</div>
+    <h1 class="ph-title">HUD Overlay — GLFW Window Title</h1>
+    <p class="ph-lead gl">For this project, the HUD is added using GLFW's window title and on-screen geometry rather than a full text rendering system (which requires a font atlas and is a project in itself). We add angular tick marks and a center dot to complete the tactical look.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">main.cpp — add heading ticks + center dot + window title update</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ── Build heading tick marks (every 30°, short lines at edge) ────────</span>
+std::vector&lt;glm::vec2&gt; <span class="fn">makeTickMarks</span>() {
+    std::vector&lt;glm::vec2&gt; pts;
+    <span class="kw">for</span> (<span class="kw">int</span> deg = <span class="nm">0</span>; deg &lt; <span class="nm">360</span>; deg += <span class="nm">30</span>) {
+        <span class="kw">float</span> a  = deg * PI / <span class="nm">180.0f</span>;
+        <span class="kw">float</span> r1 = RADAR_R * <span class="nm">0.93f</span>;  <span class="cm">// inner end of tick</span>
+        <span class="kw">float</span> r2 = RADAR_R;           <span class="cm">// outer end = on the ring</span>
+        pts.push_back({ r1 * sin(a), r1 * cos(a) });
+        pts.push_back({ r2 * sin(a), r2 * cos(a) });
+    }
+    <span class="kw">return</span> pts;
+}
+
+<span class="cm">// ── Center dot: small circle to mark own-ship position ───────────────</span>
+<span class="kw">auto</span> tickPts    = makeTickMarks();
+<span class="vt">GLuint</span> tickVAO  = makeVAO(tickPts);
+<span class="kw">auto</span> centerPts  = makeCircle(<span class="nm">0.015f</span>, <span class="nm">16</span>);   <span class="cm">// tiny circle</span>
+<span class="vt">GLuint</span> centerVAO = makeVAO(centerPts);
+
+<span class="cm">// ── Inside render loop: draw ticks and center ─────────────────────────</span>
+setColour(prog, { <span class="nm">0.0f</span>, <span class="nm">0.6f</span>, <span class="nm">0.2f</span> }, <span class="nm">0.55f</span>);
+glBindVertexArray(tickVAO);
+glDrawArrays(GL_LINES, <span class="nm">0</span>, (<span class="kw">int</span>)tickPts.size());
+
+setColour(prog, { <span class="nm">0.0f</span>, <span class="nm">1.0f</span>, <span class="nm">0.5f</span> }, <span class="nm">1.0f</span>);
+glBindVertexArray(centerVAO);
+glDrawArrays(GL_LINE_LOOP, <span class="nm">0</span>, (<span class="kw">int</span>)centerPts.size());
+
+<span class="cm">// ── Update window title as HUD (cheap but effective) ─────────────────</span>
+<span class="kw">char</span> titleBuf[<span class="nm">128</span>];
+<span class="kw">int</span> contacts_count = (<span class="kw">int</span>)contacts.size();
+<span class="kw">float</span> headingDisplay = fmod(sweepAngle * <span class="nm">180.0f</span> / PI, <span class="nm">360.0f</span>);
+snprintf(titleBuf, <span class="kw">sizeof</span>(titleBuf),
+         <span class="st">"RADAR DISPLAY  |  SWEEP: %03.0f°  |  CONTACTS: %d  |  RR Skillverse"</span>,
+         headingDisplay, contacts_count);
+glfwSetWindowTitle(win, titleBuf);</pre>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">🏆 Phase 1 Complete!</div>
+    <div class="milestone-title">OpenGL Radar Display — Fully Working</div>
+    <div class="milestone-desc">Concentric rings, rotating sweep with phosphor trail, fading blip contacts, heading ticks, center dot, live HUD in title bar. This is a complete, professional-looking application built on everything from Days 1–3. Take a screenshot. This is your OpenGL capstone.</div>
+  </div>
+
+  <h2>Phase 1 Final Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Tick marks on scope! Navigation display complete." data-icon="🧭">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">12 heading tick marks visible at 30° intervals on outer ring</div><div class="cp-desc">Ticks at 000° (North=up), 030°, 060°, 090° (East=right)... and so on</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Phase 1 DONE! OpenGL Capstone complete! 🎊" data-icon="🎊">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">All of Phase 1 running smoothly — take a screenshot</div><div class="cp-desc">Rings + sweep trail + blips + ticks + center dot + live title. If anything is missing, go back to the relevant stage.</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PHASE 2 — VULKAN REBUILD
+══════════════════════════════════════════════════════════ -->
+<section class="phase" id="p2s1">
+  <div class="ph-stripe vk"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag vk"><div class="ph-tag-dot"></div>Phase 2 · Stage 1 — Vulkan</div>
+    <h1 class="ph-title">New Project — Vulkan Structure</h1>
+    <p class="ph-lead vk">You are rebuilding the same radar display in Vulkan. You already know what it should look like — so every Vulkan object you create has a clear visual purpose you can test immediately.</p>
+  </div>
+
+  <div class="think">
+    <div class="think-label">🧠 Why rebuild instead of port?</div>
+    <p>Porting OpenGL to Vulkan line-by-line teaches you nothing. <em>Rebuilding</em> with the same goal forces you to think: "what OpenGL did automatically here, what do I now explicitly control?" Every Vulkan object you create maps to something OpenGL was hiding from you. This is the entire point of Phase 2.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">Create the Vulkan project folder alongside the GL one</span><span class="cb-lang sh">Shell</span></div>
+    <pre>mkdir C:\Labs\Capstone\RadarVK
+cd C:\Labs\Capstone\RadarVK
+mkdir src shaders</pre>
+  </div>
+
+  <div class="ftree">
+    <span class="ft-dir">C:\Labs\Capstone\RadarVK\</span><br>
+    <span class="ft-dir">├── CMakeLists.txt</span><br>
+    <span class="ft-dir">├── src\</span><br>
+    <span class="ft-file">│   └── main.cpp</span><br>
+    <span class="ft-dir">└── shaders\</span><br>
+    <span class="ft-file">    ├── radar.vert</span>          <span class="ft-cm">← GLSL 4.50 vertex shader</span><br>
+    <span class="ft-file">    ├── radar.frag</span>          <span class="ft-cm">← GLSL 4.50 fragment shader</span><br>
+    <span class="ft-new">    ├── radar.vert.spv</span>      <span class="ft-cm">← compiled by glslc (you generate this)</span><br>
+    <span class="ft-new">    └── radar.frag.spv</span>      <span class="ft-cm">← compiled by glslc</span>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">CMakeLists.txt for Vulkan project</span><span class="cb-lang cmake">CMake</span></div>
+    <pre>cmake_minimum_required(VERSION <span class="nm">3.20</span>)
+project(RadarVK)
+set(CMAKE_CXX_STANDARD <span class="nm">17</span>)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(Vulkan REQUIRED)
+
+set(GLFW_DIR $ENV{GLFW_DIR})
+include_directories(${GLFW_DIR}/include)
+
+set(GLM_DIR $ENV{GLM_DIR})
+include_directories(${GLM_DIR})
+
+add_executable(RadarVK src/main.cpp)
+
+target_link_libraries(RadarVK
+    Vulkan::Vulkan
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+)</pre>
+  </div>
+
+  <h2>Compile the Shaders First</h2>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">shaders/radar.vert — Vulkan GLSL (note Y negation)</span><span class="cb-lang glsl">GLSL</span></div>
+    <pre><span class="kw">#version</span> <span class="nm">450</span>
+
+<span class="kw">layout</span>(location = <span class="nm">0</span>) <span class="kw">in</span>  <span class="tp">vec2</span> inPos;
+<span class="kw">layout</span>(location = <span class="nm">0</span>) <span class="kw">out</span> <span class="tp">vec4</span> outColour;   <span class="cm">// pass colour to frag</span>
+
+<span class="cm">// Push constant: small per-draw data (angle, alpha, colour, flags)
+// Max 128 bytes guaranteed — we use 32 bytes</span>
+<span class="kw">layout</span>(push_constant) <span class="kw">uniform</span> Push {
+    <span class="kw">float</span> angle;     <span class="cm">// sweep angle (radians)</span>
+    <span class="kw">float</span> alpha;     <span class="cm">// opacity</span>
+    <span class="kw">float</span> radarR;    <span class="cm">// radar radius in NDC</span>
+    <span class="kw">int</span>   isSweep;   <span class="cm">// 1 = compute sweep tip from angle</span>
+    <span class="tp">vec3</span>  colour;    <span class="cm">// RGB</span>
+    <span class="kw">float</span> _pad;      <span class="cm">// alignment padding to 32 bytes</span>
+} push;
+
+<span class="kw">void</span> <span class="fn">main</span>() {
+    <span class="tp">vec2</span> pos = inPos;
+    <span class="kw">if</span> (push.isSweep == <span class="nm">1</span> && inPos.x > <span class="nm">0.5</span>) {
+        pos = <span class="tp">vec2</span>(push.radarR * sin(push.angle),
+                   push.radarR * cos(push.angle));
+    }
+    <span class="cm">// Vulkan: negate Y so North=up matches our OpenGL prototype</span>
+    gl_Position = <span class="tp">vec4</span>(pos.x, -pos.y, <span class="nm">0.0</span>, <span class="nm">1.0</span>);
+    outColour   = <span class="tp">vec4</span>(push.colour, push.alpha);
+}
+</pre>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">shaders/radar.frag</span><span class="cb-lang glsl">GLSL</span></div>
+    <pre><span class="kw">#version</span> <span class="nm">450</span>
+<span class="kw">layout</span>(location = <span class="nm">0</span>) <span class="kw">in</span>  <span class="tp">vec4</span> inColour;
+<span class="kw">layout</span>(location = <span class="nm">0</span>) <span class="kw">out</span> <span class="tp">vec4</span> outColour;
+<span class="kw">void</span> <span class="fn">main</span>() { outColour = inColour; }
+</pre>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">Compile both shaders to SPIR-V — run every time you edit them</span><span class="cb-lang sh">Shell</span></div>
+    <pre>cd C:\Labs\Capstone\RadarVK
+glslc shaders/radar.vert -o shaders/radar.vert.spv
+glslc shaders/radar.frag -o shaders/radar.frag.spv
+<span class="cm"># Both commands must succeed with no output = success</span></pre>
+  </div>
+
+  <h2>Stage 1 Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Vulkan project structure ready! Let's build." data-icon="🔧">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">RadarVK folder created with src\ and shaders\ subfolders</div></div>
+    <span class="cp-tag build">build</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="SPIR-V compiled! Vulkan will read binary shaders." data-icon="✨">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Both .spv files created — glslc ran with no errors</div><div class="cp-desc">Verify: <code>dir shaders</code> shows radar.vert.spv and radar.frag.spv</div></div>
+    <span class="cp-tag build">build</span>
+  </div>
+</section>
+
+<!-- ══════ PHASE 2 STAGE 2 — VULKAN BOILERPLATE ══════ -->
+<section class="phase" id="p2s2">
+  <div class="ph-stripe vk"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag vk"><div class="ph-tag-dot"></div>Phase 2 · Stage 2 — Vulkan</div>
+    <h1 class="ph-title">Vulkan Boilerplate — The Foundation Layer</h1>
+    <p class="ph-lead vk">Create the Vulkan object chain: Instance → Surface → PhysDevice → Device → Swapchain. Nothing visible yet — but when this runs without validation errors, the entire GPU pipeline is ready.</p>
+  </div>
+
+  <div class="think">
+    <div class="think-label">🧠 Map each object to its OpenGL equivalent</div>
+    <p>VkInstance = glewInit(). VkSurface = GLFW context. VkPhysicalDevice = the GPU you actually render on. VkDevice = the GL context that owns resources. VkSwapchain = glfwSwapBuffers() made explicit. This mapping is why you built the OpenGL version first — every Vulkan object now has a meaning.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">src/main.cpp — complete Vulkan boilerplate (paste entire file)</span><span class="cb-lang cpp">C++</span></div>
+    <pre><span class="cm">// ═══════════════════════════════════════════════════════════════════
+// RadarVK — Capstone Project · RR Skillverse
+// Phase 2: Vulkan Radar Display
+// Build: cmake -B build -G "Visual Studio 17 2022" -A x64
+//        cmake --build build --config Release
+//        (run from project root — shaders/ must be present)
+// ═══════════════════════════════════════════════════════════════════</span>
+<span class="pp">#define</span> GLFW_INCLUDE_VULKAN
+<span class="pp">#include</span> <span class="st">&lt;GLFW/glfw3.h&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;vulkan/vulkan.h&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;glm/glm.hpp&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;iostream&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;vector&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;fstream&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;cmath&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;stdexcept&gt;</span>
+<span class="pp">#include</span> <span class="st">&lt;cstring&gt;</span>
+
+<span class="cm">// ── Constants ─────────────────────────────────────────────────────────</span>
+<span class="kw">const int</span>   WIN_W = <span class="nm">900</span>, WIN_H = <span class="nm">900</span>;
+<span class="kw">const float</span> PI     = <span class="nm">3.14159265358979f</span>;
+<span class="kw">const float</span> RADAR_R = <span class="nm">0.88f</span>;
+<span class="kw">const int</span>   SEGMENTS = <span class="nm">360</span>;
+<span class="kw">const char</span>* VALIDATION = <span class="st">"VK_LAYER_KHRONOS_validation"</span>;
+
+<span class="cm">// ── Push constant layout (must match shaders/radar.vert EXACTLY) ──────</span>
+<span class="kw">struct</span> PushData {
+    <span class="kw">float</span> angle, alpha, radarR;
+    <span class="kw">int</span>   isSweep;
+    <span class="kw">float</span> r, g, b, _pad;  <span class="cm">// 32 bytes total</span>
+};
+
+<span class="cm">// ── Helper: load SPIR-V file ───────────────────────────────────────────</span>
+std::vector&lt;<span class="kw">char</span>&gt; <span class="fn">readSpv</span>(<span class="kw">const</span> std::string& p) {
+    std::ifstream f(p, std::ios::ate | std::ios::binary);
+    <span class="kw">if</span> (!f.is_open()) <span class="kw">throw</span> std::runtime_error(<span class="st">"Cannot open: "</span> + p);
+    size_t sz = f.tellg(); std::vector&lt;<span class="kw">char</span>&gt; buf(sz);
+    f.seekg(<span class="nm">0</span>); f.read(buf.data(), sz); <span class="kw">return</span> buf;
+}
+
+<span class="cm">// ── Helper: create shader module from .spv bytes ──────────────────────</span>
+<span class="vt">VkShaderModule</span> <span class="fn">makeShaderMod</span>(<span class="vt">VkDevice</span> dev, <span class="kw">const</span> std::vector&lt;<span class="kw">char</span>&gt;& code) {
+    <span class="vt">VkShaderModuleCreateInfo</span> ci{};
+    ci.<span class="kw">sType</span>    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    ci.<span class="kw">codeSize</span> = code.size();
+    ci.<span class="kw">pCode</span>    = <span class="kw">reinterpret_cast</span>&lt;<span class="kw">const</span> uint32_t*&gt;(code.data());
+    <span class="vt">VkShaderModule</span> m; vkCreateShaderModule(dev, &ci, <span class="kw">nullptr</span>, &m); <span class="kw">return</span> m;
+}
+
+<span class="cm">// ── Generate circle vertices ───────────────────────────────────────────</span>
+std::vector&lt;glm::vec2&gt; <span class="fn">makeCircle</span>(<span class="kw">float</span> r, <span class="kw">int</span> segs) {
+    std::vector&lt;glm::vec2&gt; pts;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt;= segs; i++) {
+        <span class="kw">float</span> a = (<span class="kw">float</span>)i / segs * <span class="nm">2.0f</span> * PI;
+        pts.push_back({ r * cos(a), r * sin(a) });
+    }
+    <span class="kw">return</span> pts;
+}
+
+<span class="cm">// ═══════════════════════════════════════════════════════════════════════
+// RadarApp class — all Vulkan state in one place
+// ═══════════════════════════════════════════════════════════════════════</span>
+<span class="kw">class</span> RadarApp {
+<span class="kw">public</span>:
+    <span class="vt">GLFWwindow</span>*        window     = <span class="kw">nullptr</span>;
+    <span class="vt">VkInstance</span>         instance   = VK_NULL_HANDLE;
+    <span class="vt">VkSurfaceKHR</span>       surface    = VK_NULL_HANDLE;
+    <span class="vt">VkPhysicalDevice</span>   physDev    = VK_NULL_HANDLE;
+    <span class="vt">VkDevice</span>           device     = VK_NULL_HANDLE;
+    <span class="vt">VkQueue</span>            gfxQueue   = VK_NULL_HANDLE;
+    uint32_t           gfxFamily  = <span class="nm">0</span>;
+    <span class="vt">VkSwapchainKHR</span>     swapchain  = VK_NULL_HANDLE;
+    <span class="vt">VkFormat</span>           swapFmt    = VK_FORMAT_UNDEFINED;
+    <span class="vt">VkExtent2D</span>         swapExt    = {};
+    std::vector&lt;<span class="vt">VkImage</span>&gt;      swapImgs;
+    std::vector&lt;<span class="vt">VkImageView</span>&gt;  swapViews;
+    std::vector&lt;<span class="vt">VkFramebuffer</span>&gt; framebuffers;
+    <span class="vt">VkRenderPass</span>       renderPass = VK_NULL_HANDLE;
+    <span class="vt">VkPipelineLayout</span>   pipeLayout = VK_NULL_HANDLE;
+    <span class="vt">VkPipeline</span>         pipeline   = VK_NULL_HANDLE;
+    <span class="vt">VkCommandPool</span>      cmdPool    = VK_NULL_HANDLE;
+    <span class="vt">VkCommandBuffer</span>    cmdBuf     = VK_NULL_HANDLE;
+    <span class="vt">VkSemaphore</span>        imgAvail   = VK_NULL_HANDLE;
+    <span class="vt">VkSemaphore</span>        renderDone = VK_NULL_HANDLE;
+    <span class="vt">VkFence</span>            inFlight   = VK_NULL_HANDLE;
+
+    <span class="cm">// Geometry buffers (one VkBuffer+VkDeviceMemory per ring + sweep + blips)</span>
+    <span class="kw">struct</span> GeomBuf { <span class="vt">VkBuffer</span> buf; <span class="vt">VkDeviceMemory</span> mem; <span class="kw">int</span> count; };
+    std::vector&lt;GeomBuf&gt; rings;
+    GeomBuf              sweepBuf, blipBuf, fadeBuf;
+
+    <span class="kw">float</span> sweepAngle = <span class="nm">0.0f</span>;
+
+    <span class="cm">// ── Init ──────────────────────────────────────────────────────────</span>
+    <span class="kw">void</span> <span class="fn">init</span>() {
+        initWindow();
+        createInstance();
+        createSurface();
+        pickPhysDevice();
+        createDevice();
+        createSwapchain();
+        createImageViews();
+        createRenderPass();
+        createPipeline();
+        createFramebuffers();
+        createCommandPool();
+        createGeometry();
+        createSyncObjects();
+        allocCommandBuffer();
+    }
+
+    <span class="cm">// ── Run ───────────────────────────────────────────────────────────</span>
+    <span class="kw">void</span> <span class="fn">run</span>() {
+        <span class="kw">float</span> last = (<span class="kw">float</span>)glfwGetTime();
+        <span class="kw">while</span> (!glfwWindowShouldClose(window)) {
+            glfwPollEvents();
+            <span class="kw">if</span> (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+                glfwSetWindowShouldClose(window, <span class="kw">true</span>);
+            <span class="kw">float</span> now = (<span class="kw">float</span>)glfwGetTime();
+            sweepAngle += <span class="nm">1.2f</span> * (now - last); last = now;
+            <span class="kw">if</span> (sweepAngle > <span class="nm">2.0f</span> * PI) sweepAngle -= <span class="nm">2.0f</span> * PI;
+            drawFrame();
+        }
+        vkDeviceWaitIdle(device);
+    }
+
+    <span class="cm">// ── Cleanup ───────────────────────────────────────────────────────</span>
+    <span class="kw">void</span> <span class="fn">cleanup</span>() {
+        vkDestroySemaphore(device, renderDone, <span class="kw">nullptr</span>);
+        vkDestroySemaphore(device, imgAvail,   <span class="kw">nullptr</span>);
+        vkDestroyFence(device, inFlight,       <span class="kw">nullptr</span>);
+        vkDestroyCommandPool(device, cmdPool,  <span class="kw">nullptr</span>);
+        <span class="kw">for</span> (<span class="kw">auto</span>& fb : framebuffers) vkDestroyFramebuffer(device, fb, <span class="kw">nullptr</span>);
+        vkDestroyPipeline(device, pipeline,    <span class="kw">nullptr</span>);
+        vkDestroyPipelineLayout(device, pipeLayout, <span class="kw">nullptr</span>);
+        vkDestroyRenderPass(device, renderPass, <span class="kw">nullptr</span>);
+        <span class="kw">for</span> (<span class="kw">auto</span>& v : swapViews) vkDestroyImageView(device, v, <span class="kw">nullptr</span>);
+        vkDestroySwapchainKHR(device, swapchain, <span class="kw">nullptr</span>);
+        vkDestroyDevice(device,   <span class="kw">nullptr</span>);
+        vkDestroySurfaceKHR(instance, surface, <span class="kw">nullptr</span>);
+        vkDestroyInstance(instance,  <span class="kw">nullptr</span>);
+        glfwDestroyWindow(window); glfwTerminate();
+    }
+
+<span class="kw">private</span>:
+    <span class="kw">void</span> <span class="fn">initWindow</span>() {
+        glfwInit();
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE,  GLFW_FALSE);
+        window = glfwCreateWindow(WIN_W, WIN_H,
+            <span class="st">"Tactical Radar — Vulkan — RR Skillverse"</span>,
+            <span class="kw">nullptr</span>, <span class="kw">nullptr</span>);
+    }
+
+    <span class="kw">void</span> <span class="fn">createInstance</span>() {
+        uint32_t ec = <span class="nm">0</span>; <span class="kw">auto</span> glfwExts = glfwGetRequiredInstanceExtensions(&ec);
+        <span class="vt">VkApplicationInfo</span> ai{}; ai.<span class="kw">sType</span> = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+        ai.<span class="kw">apiVersion</span> = VK_API_VERSION_1_3;
+        <span class="vt">VkInstanceCreateInfo</span> ci{};
+        ci.<span class="kw">sType</span> = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+        ci.<span class="kw">pApplicationInfo</span>        = &ai;
+        ci.<span class="kw">enabledExtensionCount</span>   = ec;
+        ci.<span class="kw">ppEnabledExtensionNames</span> = glfwExts;
+        ci.<span class="kw">enabledLayerCount</span>       = <span class="nm">1</span>;
+        ci.<span class="kw">ppEnabledLayerNames</span>     = &VALIDATION;
+        <span class="kw">if</span> (vkCreateInstance(&ci, <span class="kw">nullptr</span>, &instance) != VK_SUCCESS)
+            <span class="kw">throw</span> std::runtime_error(<span class="st">"vkCreateInstance failed"</span>);
+        std::cout &lt;&lt; <span class="st">"[1] Instance OK\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">createSurface</span>() {
+        glfwCreateWindowSurface(instance, window, <span class="kw">nullptr</span>, &surface);
+        std::cout &lt;&lt; <span class="st">"[2] Surface OK\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">pickPhysDevice</span>() {
+        uint32_t cnt = <span class="nm">0</span>; vkEnumeratePhysicalDevices(instance, &cnt, <span class="kw">nullptr</span>);
+        std::vector&lt;<span class="vt">VkPhysicalDevice</span>&gt; devs(cnt);
+        vkEnumeratePhysicalDevices(instance, &cnt, devs.data());
+        <span class="kw">for</span> (<span class="kw">auto</span>& d : devs) {
+            <span class="vt">VkPhysicalDeviceProperties</span> p; vkGetPhysicalDeviceProperties(d, &p);
+            <span class="kw">if</span> (p.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) { physDev = d; <span class="kw">break</span>; }
+            <span class="kw">if</span> (!physDev) physDev = d;
+        }
+        <span class="vt">VkPhysicalDeviceProperties</span> p; vkGetPhysicalDeviceProperties(physDev, &p);
+        std::cout &lt;&lt; <span class="st">"[3] GPU: "</span> &lt;&lt; p.deviceName &lt;&lt; <span class="st">"\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">createDevice</span>() {
+        <span class="cm">// Find graphics+present queue family</span>
+        uint32_t qc; vkGetPhysicalDeviceQueueFamilyProperties(physDev, &qc, <span class="kw">nullptr</span>);
+        std::vector&lt;<span class="vt">VkQueueFamilyProperties</span>&gt; qfs(qc);
+        vkGetPhysicalDeviceQueueFamilyProperties(physDev, &qc, qfs.data());
+        <span class="kw">for</span> (uint32_t i = <span class="nm">0</span>; i &lt; qc; i++) {
+            <span class="vt">VkBool32</span> pres; vkGetPhysicalDeviceSurfaceSupportKHR(physDev, i, surface, &pres);
+            <span class="kw">if</span> ((qfs[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) && pres) { gfxFamily = i; <span class="kw">break</span>; }
+        }
+        <span class="kw">float</span> pri = <span class="nm">1.0f</span>;
+        <span class="vt">VkDeviceQueueCreateInfo</span> qci{};
+        qci.<span class="kw">sType</span>            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        qci.<span class="kw">queueFamilyIndex</span> = gfxFamily; qci.<span class="kw">queueCount</span> = <span class="nm">1</span>; qci.<span class="kw">pQueuePriorities</span> = &pri;
+        <span class="kw">const char</span>* ext = VK_KHR_SWAPCHAIN_EXTENSION_NAME;
+        <span class="vt">VkPhysicalDeviceFeatures</span> feat{};
+        <span class="vt">VkDeviceCreateInfo</span> dci{};
+        dci.<span class="kw">sType</span>                   = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+        dci.<span class="kw">queueCreateInfoCount</span>    = <span class="nm">1</span>; dci.<span class="kw">pQueueCreateInfos</span> = &qci;
+        dci.<span class="kw">enabledExtensionCount</span>   = <span class="nm">1</span>; dci.<span class="kw">ppEnabledExtensionNames</span> = &ext;
+        dci.<span class="kw">pEnabledFeatures</span>        = &feat;
+        <span class="kw">if</span> (vkCreateDevice(physDev, &dci, <span class="kw">nullptr</span>, &device) != VK_SUCCESS)
+            <span class="kw">throw</span> std::runtime_error(<span class="st">"vkCreateDevice failed"</span>);
+        vkGetDeviceQueue(device, gfxFamily, <span class="nm">0</span>, &gfxQueue);
+        std::cout &lt;&lt; <span class="st">"[4] Device + Queue OK\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">createSwapchain</span>() {
+        <span class="vt">VkSurfaceCapabilitiesKHR</span> caps;
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physDev, surface, &caps);
+        swapExt = caps.currentExtent;
+
+        uint32_t fmtCount; vkGetPhysicalDeviceSurfaceFormatsKHR(physDev, surface, &fmtCount, <span class="kw">nullptr</span>);
+        std::vector&lt;<span class="vt">VkSurfaceFormatKHR</span>&gt; fmts(fmtCount);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physDev, surface, &fmtCount, fmts.data());
+        swapFmt = fmts[<span class="nm">0</span>].format;
+        <span class="kw">for</span> (<span class="kw">auto</span>& f : fmts)
+            <span class="kw">if</span> (f.format == VK_FORMAT_B8G8R8A8_SRGB && f.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+                swapFmt = f.format;
+
+        <span class="vt">VkSwapchainCreateInfoKHR</span> sci{};
+        sci.<span class="kw">sType</span>            = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+        sci.<span class="kw">surface</span>          = surface;
+        sci.<span class="kw">minImageCount</span>    = caps.minImageCount + <span class="nm">1</span>;
+        sci.<span class="kw">imageFormat</span>      = swapFmt;
+        sci.<span class="kw">imageColorSpace</span>  = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
+        sci.<span class="kw">imageExtent</span>      = swapExt;
+        sci.<span class="kw">imageArrayLayers</span> = <span class="nm">1</span>;
+        sci.<span class="kw">imageUsage</span>       = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        sci.<span class="kw">imageSharingMode</span> = VK_SHARING_MODE_EXCLUSIVE;
+        sci.<span class="kw">preTransform</span>     = caps.currentTransform;
+        sci.<span class="kw">compositeAlpha</span>   = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+        sci.<span class="kw">presentMode</span>      = VK_PRESENT_MODE_FIFO_KHR;
+        sci.<span class="kw">clipped</span>          = VK_TRUE;
+        <span class="kw">if</span> (vkCreateSwapchainKHR(device, &sci, <span class="kw">nullptr</span>, &swapchain) != VK_SUCCESS)
+            <span class="kw">throw</span> std::runtime_error(<span class="st">"vkCreateSwapchainKHR failed"</span>);
+        uint32_t ic; vkGetSwapchainImagesKHR(device, swapchain, &ic, <span class="kw">nullptr</span>);
+        swapImgs.resize(ic);
+        vkGetSwapchainImagesKHR(device, swapchain, &ic, swapImgs.data());
+        std::cout &lt;&lt; <span class="st">"[5] Swapchain OK (" &lt;&lt; ic &lt;&lt; " images)\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">createImageViews</span>() {
+        swapViews.resize(swapImgs.size());
+        <span class="kw">for</span> (size_t i = <span class="nm">0</span>; i &lt; swapImgs.size(); i++) {
+            <span class="vt">VkImageViewCreateInfo</span> vi{};
+            vi.<span class="kw">sType</span>    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            vi.<span class="kw">image</span>    = swapImgs[i];
+            vi.<span class="kw">viewType</span> = VK_IMAGE_VIEW_TYPE_2D;
+            vi.<span class="kw">format</span>   = swapFmt;
+            vi.<span class="kw">components</span> = { VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                               VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY };
+            vi.<span class="kw">subresourceRange</span> = { VK_IMAGE_ASPECT_COLOR_BIT, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span> };
+            vkCreateImageView(device, &vi, <span class="kw">nullptr</span>, &swapViews[i]);
+        }
+    }
+
+    <span class="kw">void</span> <span class="fn">createRenderPass</span>() {
+        <span class="vt">VkAttachmentDescription</span> att{};
+        att.<span class="kw">format</span>         = swapFmt;
+        att.<span class="kw">samples</span>        = VK_SAMPLE_COUNT_1_BIT;
+        att.<span class="kw">loadOp</span>         = VK_ATTACHMENT_LOAD_OP_LOAD;
+        <span class="cm">// LOAD (not CLEAR): we keep the previous frame for the phosphor trail effect.
+        // The fade pass draws a semi-transparent quad to darken the old frame.
+        // This is the exact Vulkan equivalent of what we did in OpenGL.</span>
+        att.<span class="kw">storeOp</span>        = VK_ATTACHMENT_STORE_OP_STORE;
+        att.<span class="kw">stencilLoadOp</span>  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        att.<span class="kw">stencilStoreOp</span> = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        att.<span class="kw">initialLayout</span>  = VK_IMAGE_LAYOUT_UNDEFINED;
+        att.<span class="kw">finalLayout</span>    = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+        <span class="vt">VkAttachmentReference</span> ref{ <span class="nm">0</span>, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
+        <span class="vt">VkSubpassDescription</span> sub{};
+        sub.<span class="kw">pipelineBindPoint</span>    = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        sub.<span class="kw">colorAttachmentCount</span> = <span class="nm">1</span>; sub.<span class="kw">pColorAttachments</span> = &ref;
+
+        <span class="vt">VkSubpassDependency</span> dep{};
+        dep.<span class="kw">srcSubpass</span>    = VK_SUBPASS_EXTERNAL; dep.<span class="kw">dstSubpass</span>    = <span class="nm">0</span>;
+        dep.<span class="kw">srcStageMask</span>  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dep.<span class="kw">dstStageMask</span>  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dep.<span class="kw">dstAccessMask</span> = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+        <span class="vt">VkRenderPassCreateInfo</span> rpi{};
+        rpi.<span class="kw">sType</span>           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+        rpi.<span class="kw">attachmentCount</span> = <span class="nm">1</span>; rpi.<span class="kw">pAttachments</span>  = &att;
+        rpi.<span class="kw">subpassCount</span>    = <span class="nm">1</span>; rpi.<span class="kw">pSubpasses</span>    = &sub;
+        rpi.<span class="kw">dependencyCount</span> = <span class="nm">1</span>; rpi.<span class="kw">pDependencies</span> = &dep;
+        vkCreateRenderPass(device, &rpi, <span class="kw">nullptr</span>, &renderPass);
+        std::cout &lt;&lt; <span class="st">"[6] RenderPass OK\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">createPipeline</span>() {
+        <span class="kw">auto</span> vs = makeShaderMod(device, readSpv(<span class="st">"shaders/radar.vert.spv"</span>));
+        <span class="kw">auto</span> fs = makeShaderMod(device, readSpv(<span class="st">"shaders/radar.frag.spv"</span>));
+
+        <span class="vt">VkPipelineShaderStageCreateInfo</span> stages[<span class="nm">2</span>]{};
+        stages[<span class="nm">0</span>].sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        stages[<span class="nm">0</span>].stage  = VK_SHADER_STAGE_VERTEX_BIT;   stages[<span class="nm">0</span>].module = vs; stages[<span class="nm">0</span>].pName = <span class="st">"main"</span>;
+        stages[<span class="nm">1</span>].sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        stages[<span class="nm">1</span>].stage  = VK_SHADER_STAGE_FRAGMENT_BIT; stages[<span class="nm">1</span>].module = fs; stages[<span class="nm">1</span>].pName = <span class="st">"main"</span>;
+
+        <span class="vt">VkVertexInputBindingDescription</span> bind{<span class="nm">0</span>, <span class="kw">sizeof</span>(glm::vec2), VK_VERTEX_INPUT_RATE_VERTEX};
+        <span class="vt">VkVertexInputAttributeDescription</span> attr{<span class="nm">0</span>, <span class="nm">0</span>, VK_FORMAT_R32G32_SFLOAT, <span class="nm">0</span>};
+        <span class="vt">VkPipelineVertexInputStateCreateInfo</span> vi{};
+        vi.<span class="kw">sType</span>                           = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+        vi.<span class="kw">vertexBindingDescriptionCount</span>   = <span class="nm">1</span>; vi.<span class="kw">pVertexBindingDescriptions</span>   = &bind;
+        vi.<span class="kw">vertexAttributeDescriptionCount</span> = <span class="nm">1</span>; vi.<span class="kw">pVertexAttributeDescriptions</span> = &attr;
+
+        <span class="vt">VkPipelineInputAssemblyStateCreateInfo</span> ia{};
+        ia.<span class="kw">sType</span>    = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+        ia.<span class="kw">topology</span> = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+        <span class="cm">// LINE_STRIP: works for rings (line loop) and lines.
+        // We'll switch topology per draw using dynamic state.</span>
+
+        <span class="vt">VkDynamicState</span> dynStates[] = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
+                                          VK_DYNAMIC_STATE_LINE_WIDTH, VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY };
+        <span class="vt">VkPipelineDynamicStateCreateInfo</span> dynCI{};
+        dynCI.<span class="kw">sType</span>             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+        dynCI.<span class="kw">dynamicStateCount</span> = <span class="nm">4</span>; dynCI.<span class="kw">pDynamicStates</span> = dynStates;
+
+        <span class="vt">VkPipelineViewportStateCreateInfo</span> vpS{};
+        vpS.<span class="kw">sType</span>         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+        vpS.<span class="kw">viewportCount</span> = <span class="nm">1</span>; vpS.<span class="kw">scissorCount</span> = <span class="nm">1</span>;
+
+        <span class="vt">VkPipelineRasterizationStateCreateInfo</span> rast{};
+        rast.<span class="kw">sType</span>       = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+        rast.<span class="kw">polygonMode</span> = VK_POLYGON_MODE_FILL;
+        rast.<span class="kw">cullMode</span>    = VK_CULL_MODE_NONE;
+        rast.<span class="kw">frontFace</span>   = VK_FRONT_FACE_CLOCKWISE;
+        rast.<span class="kw">lineWidth</span>   = <span class="nm">1.0f</span>;
+
+        <span class="vt">VkPipelineMultisampleStateCreateInfo</span> ms{};
+        ms.<span class="kw">sType</span>                 = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+        ms.<span class="kw">rasterizationSamples</span> = VK_SAMPLE_COUNT_1_BIT;
+
+        <span class="vt">VkPipelineColorBlendAttachmentState</span> blAtt{};
+        blAtt.<span class="kw">colorWriteMask</span> = VK_COLOR_COMPONENT_R_BIT|VK_COLOR_COMPONENT_G_BIT|
+                                VK_COLOR_COMPONENT_B_BIT|VK_COLOR_COMPONENT_A_BIT;
+        blAtt.<span class="kw">blendEnable</span>    = VK_TRUE;
+        blAtt.<span class="kw">srcColorBlendFactor</span> = VK_BLEND_FACTOR_SRC_ALPHA;
+        blAtt.<span class="kw">dstColorBlendFactor</span> = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        blAtt.<span class="kw">colorBlendOp</span>        = VK_BLEND_OP_ADD;
+        blAtt.<span class="kw">srcAlphaBlendFactor</span> = VK_BLEND_FACTOR_ONE;
+        blAtt.<span class="kw">dstAlphaBlendFactor</span> = VK_BLEND_FACTOR_ZERO;
+        blAtt.<span class="kw">alphaBlendOp</span>        = VK_BLEND_OP_ADD;
+
+        <span class="vt">VkPipelineColorBlendStateCreateInfo</span> bl{};
+        bl.<span class="kw">sType</span>           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+        bl.<span class="kw">attachmentCount</span> = <span class="nm">1</span>; bl.<span class="kw">pAttachments</span> = &blAtt;
+
+        <span class="vt">VkPushConstantRange</span> pcRange{};
+        pcRange.<span class="kw">stageFlags</span> = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+        pcRange.<span class="kw">offset</span>     = <span class="nm">0</span>;
+        pcRange.<span class="kw">size</span>       = <span class="kw">sizeof</span>(PushData); <span class="cm">// 32 bytes</span>
+
+        <span class="vt">VkPipelineLayoutCreateInfo</span> plCI{};
+        plCI.<span class="kw">sType</span>                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+        plCI.<span class="kw">pushConstantRangeCount</span> = <span class="nm">1</span>;
+        plCI.<span class="kw">pPushConstantRanges</span>    = &pcRange;
+        vkCreatePipelineLayout(device, &plCI, <span class="kw">nullptr</span>, &pipeLayout);
+
+        <span class="vt">VkGraphicsPipelineCreateInfo</span> gpCI{};
+        gpCI.<span class="kw">sType</span>               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        gpCI.<span class="kw">stageCount</span>          = <span class="nm">2</span>; gpCI.<span class="kw">pStages</span> = stages;
+        gpCI.<span class="kw">pVertexInputState</span>   = &vi;
+        gpCI.<span class="kw">pInputAssemblyState</span> = &ia;
+        gpCI.<span class="kw">pViewportState</span>      = &vpS;
+        gpCI.<span class="kw">pRasterizationState</span> = &rast;
+        gpCI.<span class="kw">pMultisampleState</span>   = &ms;
+        gpCI.<span class="kw">pColorBlendState</span>    = &bl;
+        gpCI.<span class="kw">pDynamicState</span>       = &dynCI;
+        gpCI.<span class="kw">layout</span>              = pipeLayout;
+        gpCI.<span class="kw">renderPass</span>          = renderPass;
+        gpCI.<span class="kw">subpass</span>             = <span class="nm">0</span>;
+        vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, <span class="nm">1</span>, &gpCI, <span class="kw">nullptr</span>, &pipeline);
+        vkDestroyShaderModule(device, vs, <span class="kw">nullptr</span>);
+        vkDestroyShaderModule(device, fs, <span class="kw">nullptr</span>);
+        std::cout &lt;&lt; <span class="st">"[7] Pipeline OK\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">createFramebuffers</span>() {
+        framebuffers.resize(swapViews.size());
+        <span class="kw">for</span> (size_t i = <span class="nm">0</span>; i &lt; swapViews.size(); i++) {
+            <span class="vt">VkFramebufferCreateInfo</span> fi{};
+            fi.<span class="kw">sType</span>           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+            fi.<span class="kw">renderPass</span>      = renderPass;
+            fi.<span class="kw">attachmentCount</span> = <span class="nm">1</span>; fi.<span class="kw">pAttachments</span> = &swapViews[i];
+            fi.<span class="kw">width</span>  = swapExt.width; fi.<span class="kw">height</span> = swapExt.height; fi.<span class="kw">layers</span> = <span class="nm">1</span>;
+            vkCreateFramebuffer(device, &fi, <span class="kw">nullptr</span>, &framebuffers[i]);
+        }
+    }
+
+    <span class="kw">void</span> <span class="fn">createCommandPool</span>() {
+        <span class="vt">VkCommandPoolCreateInfo</span> ci{};
+        ci.<span class="kw">sType</span>            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        ci.<span class="kw">queueFamilyIndex</span> = gfxFamily;
+        ci.<span class="kw">flags</span>            = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+        vkCreateCommandPool(device, &ci, <span class="kw">nullptr</span>, &cmdPool);
+    }
+
+    <span class="cm">// ── Allocate a VkBuffer + bind VkDeviceMemory ─────────────────────</span>
+    GeomBuf <span class="fn">uploadGeom</span>(<span class="kw">const</span> std::vector&lt;glm::vec2&gt;& pts, <span class="vt">VkBufferUsageFlags</span> usage) {
+        <span class="vt">VkDeviceSize</span> sz = pts.size() * <span class="kw">sizeof</span>(glm::vec2);
+        <span class="vt">VkBufferCreateInfo</span> bci{};
+        bci.<span class="kw">sType</span>       = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        bci.<span class="kw">size</span>        = sz; bci.<span class="kw">usage</span> = usage;
+        bci.<span class="kw">sharingMode</span> = VK_SHARING_MODE_EXCLUSIVE;
+        GeomBuf gb; gb.count = (<span class="kw">int</span>)pts.size();
+        vkCreateBuffer(device, &bci, <span class="kw">nullptr</span>, &gb.buf);
+
+        <span class="vt">VkMemoryRequirements</span> req; vkGetBufferMemoryRequirements(device, gb.buf, &req);
+        <span class="vt">VkPhysicalDeviceMemoryProperties</span> mp; vkGetPhysicalDeviceMemoryProperties(physDev, &mp);
+        uint32_t mIdx = UINT32_MAX;
+        <span class="kw">auto</span> need = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+        <span class="kw">for</span> (uint32_t i = <span class="nm">0</span>; i &lt; mp.memoryTypeCount; i++)
+            <span class="kw">if</span> ((req.memoryTypeBits &(1u&lt;&lt;i)) && ((mp.memoryTypes[i].propertyFlags&need)==need)) { mIdx=i; <span class="kw">break</span>; }
+
+        <span class="vt">VkMemoryAllocateInfo</span> mai{};
+        mai.<span class="kw">sType</span> = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        mai.<span class="kw">allocationSize</span> = req.size; mai.<span class="kw">memoryTypeIndex</span> = mIdx;
+        vkAllocateMemory(device, &mai, <span class="kw">nullptr</span>, &gb.mem);
+        vkBindBufferMemory(device, gb.buf, gb.mem, <span class="nm">0</span>);
+
+        <span class="kw">void</span>* data; vkMapMemory(device, gb.mem, <span class="nm">0</span>, sz, <span class="nm">0</span>, &data);
+        memcpy(data, pts.data(), sz);
+        vkUnmapMemory(device, gb.mem);
+        <span class="kw">return</span> gb;
+    }
+
+    <span class="kw">void</span> <span class="fn">createGeometry</span>() {
+        <span class="kw">float</span> radii[] = { <span class="nm">0.22f</span>, <span class="nm">0.44f</span>, <span class="nm">0.66f</span>, RADAR_R };
+        <span class="kw">for</span> (<span class="kw">float</span> r : radii)
+            rings.push_back(uploadGeom(makeCircle(r, SEGMENTS), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT));
+
+        <span class="kw">float</span> swPts[] = { <span class="nm">0.0f</span>, <span class="nm">0.0f</span>, <span class="nm">1.0f</span>, <span class="nm">0.0f</span> };
+        std::vector&lt;glm::vec2&gt; swVec = {{<span class="nm">0.0f</span>,<span class="nm">0.0f</span>},{<span class="nm">1.0f</span>,<span class="nm">0.0f</span>}};
+        sweepBuf = uploadGeom(swVec, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+
+        std::vector&lt;glm::vec2&gt; blips = {
+            { RADAR_R * <span class="nm">0.6f</span> * sin(<span class="nm">45.0f</span>*PI/<span class="nm">180</span>),  RADAR_R * <span class="nm">0.6f</span> * cos(<span class="nm">45.0f</span>*PI/<span class="nm">180</span>) },
+            { RADAR_R * <span class="nm">0.35f</span>* sin(<span class="nm">135.0f</span>*PI/<span class="nm">180</span>), RADAR_R * <span class="nm">0.35f</span>* cos(<span class="nm">135.0f</span>*PI/<span class="nm">180</span>) },
+            { RADAR_R * <span class="nm">0.75f</span>* sin(<span class="nm">260.0f</span>*PI/<span class="nm">180</span>), RADAR_R * <span class="nm">0.75f</span>* cos(<span class="nm">260.0f</span>*PI/<span class="nm">180</span>) },
+        };
+        blipBuf = uploadGeom(blips, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+
+        std::vector&lt;glm::vec2&gt; quad = {
+            {-<span class="nm">1</span>,-<span class="nm">1</span>},{<span class="nm">1</span>,-<span class="nm">1</span>},{<span class="nm">1</span>,<span class="nm">1</span>},{-<span class="nm">1</span>,-<span class="nm">1</span>},{<span class="nm">1</span>,<span class="nm">1</span>},{-<span class="nm">1</span>,<span class="nm">1</span>}
+        };
+        fadeBuf = uploadGeom(quad, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+
+        std::cout &lt;&lt; <span class="st">"[8] Geometry uploaded\n"</span>;
+    }
+
+    <span class="kw">void</span> <span class="fn">allocCommandBuffer</span>() {
+        <span class="vt">VkCommandBufferAllocateInfo</span> ai{};
+        ai.<span class="kw">sType</span>              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        ai.<span class="kw">commandPool</span>        = cmdPool;
+        ai.<span class="kw">level</span>              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        ai.<span class="kw">commandBufferCount</span> = <span class="nm">1</span>;
+        vkAllocateCommandBuffers(device, &ai, &cmdBuf);
+    }
+
+    <span class="kw">void</span> <span class="fn">createSyncObjects</span>() {
+        <span class="vt">VkSemaphoreCreateInfo</span> si{ VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO };
+        <span class="vt">VkFenceCreateInfo</span>     fi{ VK_STRUCTURE_TYPE_FENCE_CREATE_INFO };
+        fi.<span class="kw">flags</span> = VK_FENCE_CREATE_SIGNALED_BIT; <span class="cm">// start signaled so first frame doesn't hang</span>
+        vkCreateSemaphore(device, &si, <span class="kw">nullptr</span>, &imgAvail);
+        vkCreateSemaphore(device, &si, <span class="kw">nullptr</span>, &renderDone);
+        vkCreateFence(device,     &fi, <span class="kw">nullptr</span>, &inFlight);
+        std::cout &lt;&lt; <span class="st">"[9] Sync objects OK\n"</span>;
+    }
+
+    <span class="cm">// ── Push helper ───────────────────────────────────────────────────</span>
+    <span class="kw">void</span> <span class="fn">push</span>(<span class="kw">float</span> angle, <span class="kw">float</span> alpha, <span class="kw">float</span> r, <span class="kw">float</span> g, <span class="kw">float</span> b,
+              <span class="kw">int</span> isSweep = <span class="nm">0</span>) {
+        PushData pd{ angle, alpha, RADAR_R, isSweep, r, g, b, <span class="nm">0.0f</span> };
+        vkCmdPushConstants(cmdBuf, pipeLayout,
+            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+            <span class="nm">0</span>, <span class="kw">sizeof</span>(PushData), &pd);
+    }
+
+    <span class="kw">void</span> <span class="fn">drawFrame</span>() {
+        <span class="cm">// 1. Wait for previous frame to finish</span>
+        vkWaitForFences(device, <span class="nm">1</span>, &inFlight, VK_TRUE, UINT64_MAX);
+        vkResetFences(device, <span class="nm">1</span>, &inFlight);
+
+        <span class="cm">// 2. Acquire next swapchain image</span>
+        uint32_t imgIdx;
+        vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imgAvail, VK_NULL_HANDLE, &imgIdx);
+
+        <span class="cm">// 3. Record commands</span>
+        vkResetCommandBuffer(cmdBuf, <span class="nm">0</span>);
+        <span class="vt">VkCommandBufferBeginInfo</span> bi{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO };
+        vkBeginCommandBuffer(cmdBuf, &bi);
+
+        <span class="vt">VkClearValue</span> clear{}; clear.color = {{ <span class="nm">0.0f</span>, <span class="nm">0.0f</span>, <span class="nm">0.0f</span>, <span class="nm">1.0f</span> }};
+        <span class="vt">VkRenderPassBeginInfo</span> rpBI{};
+        rpBI.<span class="kw">sType</span>           = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        rpBI.<span class="kw">renderPass</span>      = renderPass;
+        rpBI.<span class="kw">framebuffer</span>     = framebuffers[imgIdx];
+        rpBI.<span class="kw">renderArea</span>      = {{<span class="nm">0</span>,<span class="nm">0</span>}, swapExt};
+        rpBI.<span class="kw">clearValueCount</span> = <span class="nm">1</span>; rpBI.<span class="kw">pClearValues</span> = &clear;
+        vkCmdBeginRenderPass(cmdBuf, &rpBI, VK_SUBPASS_CONTENTS_INLINE);
+
+        vkCmdBindPipeline(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+
+        <span class="vt">VkViewport</span> vp{ <span class="nm">0</span>, <span class="nm">0</span>, (<span class="kw">float</span>)swapExt.width, (<span class="kw">float</span>)swapExt.height, <span class="nm">0</span>, <span class="nm">1</span> };
+        <span class="vt">VkRect2D</span>   sc{ {<span class="nm">0</span>,<span class="nm">0</span>}, swapExt };
+        vkCmdSetViewport(cmdBuf, <span class="nm">0</span>, <span class="nm">1</span>, &vp);
+        vkCmdSetScissor(cmdBuf,  <span class="nm">0</span>, <span class="nm">1</span>, &sc);
+        vkCmdSetLineWidth(cmdBuf, <span class="nm">1.0f</span>);
+
+        <span class="cm">// ═══ Draw order (mirrors the OpenGL version exactly) ═══════════</span>
+
+        <span class="cm">// DRAW 1 — Fade quad: darkens previous frame for phosphor trail</span>
+        vkCmdSetPrimitiveTopology(cmdBuf, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+        <span class="vt">VkDeviceSize</span> off = <span class="nm">0</span>;
+        vkCmdBindVertexBuffers(cmdBuf, <span class="nm">0</span>, <span class="nm">1</span>, &fadeBuf.buf, &off);
+        push(<span class="nm">0</span>, <span class="nm">0.18f</span>, <span class="nm">0.01f</span>, <span class="nm">0.04f</span>, <span class="nm">0.01f</span>); <span class="cm">// near-black, low alpha</span>
+        vkCmdDraw(cmdBuf, <span class="nm">6</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">0</span>);
+
+        <span class="cm">// DRAW 2 — Range rings</span>
+        vkCmdSetPrimitiveTopology(cmdBuf, VK_PRIMITIVE_TOPOLOGY_LINE_STRIP);
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; (<span class="kw">int</span>)rings.size(); i++) {
+            <span class="kw">float</span> a = (i == (<span class="kw">int</span>)rings.size()-<span class="nm">1</span>) ? <span class="nm">0.75f</span> : <span class="nm">0.25f</span>;
+            push(<span class="nm">0</span>, a, <span class="nm">0.0f</span>, i==(<span class="kw">int</span>)rings.size()-<span class="nm">1</span> ? <span class="nm">0.9f</span> : <span class="nm">0.45f</span>, <span class="nm">0.15f</span>);
+            vkCmdBindVertexBuffers(cmdBuf, <span class="nm">0</span>, <span class="nm">1</span>, &rings[i].buf, &off);
+            vkCmdDraw(cmdBuf, rings[i].count, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">0</span>);
+        }
+
+        <span class="cm">// DRAW 3 — Sweep line</span>
+        vkCmdSetLineWidth(cmdBuf, <span class="nm">2.0f</span>);
+        push(sweepAngle, <span class="nm">0.95f</span>, <span class="nm">0.0f</span>, <span class="nm">1.0f</span>, <span class="nm">0.4f</span>, <span class="nm">1</span>); <span class="cm">// isSweep=1</span>
+        vkCmdBindVertexBuffers(cmdBuf, <span class="nm">0</span>, <span class="nm">1</span>, &sweepBuf.buf, &off);
+        vkCmdDraw(cmdBuf, <span class="nm">2</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">0</span>);
+        vkCmdSetLineWidth(cmdBuf, <span class="nm">1.0f</span>);
+
+        <span class="cm">// DRAW 4 — Blip contacts as points</span>
+        vkCmdSetPrimitiveTopology(cmdBuf, VK_PRIMITIVE_TOPOLOGY_POINT_LIST);
+        push(<span class="nm">0</span>, <span class="nm">0.9f</span>, <span class="nm">0.0f</span>, <span class="nm">1.0f</span>, <span class="nm">0.5f</span>);
+        vkCmdBindVertexBuffers(cmdBuf, <span class="nm">0</span>, <span class="nm">1</span>, &blipBuf.buf, &off);
+        vkCmdDraw(cmdBuf, blipBuf.count, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">0</span>);
+
+        vkCmdEndRenderPass(cmdBuf);
+        vkEndCommandBuffer(cmdBuf);
+
+        <span class="cm">// 4. Submit to queue</span>
+        <span class="vt">VkPipelineStageFlags</span> ws = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        <span class="vt">VkSubmitInfo</span> si{};
+        si.<span class="kw">sType</span>                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        si.<span class="kw">waitSemaphoreCount</span>   = <span class="nm">1</span>; si.<span class="kw">pWaitSemaphores</span>   = &imgAvail;
+        si.<span class="kw">pWaitDstStageMask</span>    = &ws;
+        si.<span class="kw">commandBufferCount</span>   = <span class="nm">1</span>; si.<span class="kw">pCommandBuffers</span>   = &cmdBuf;
+        si.<span class="kw">signalSemaphoreCount</span> = <span class="nm">1</span>; si.<span class="kw">pSignalSemaphores</span> = &renderDone;
+        vkQueueSubmit(gfxQueue, <span class="nm">1</span>, &si, inFlight);
+
+        <span class="cm">// 5. Present</span>
+        <span class="vt">VkPresentInfoKHR</span> pi{};
+        pi.<span class="kw">sType</span>              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        pi.<span class="kw">waitSemaphoreCount</span> = <span class="nm">1</span>; pi.<span class="kw">pWaitSemaphores</span> = &renderDone;
+        pi.<span class="kw">swapchainCount</span>     = <span class="nm">1</span>; pi.<span class="kw">pSwapchains</span>     = &swapchain;
+        pi.<span class="kw">pImageIndices</span>      = &imgIdx;
+        vkQueuePresentKHR(gfxQueue, &pi);
+    }
+};
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    std::cout &lt;&lt; <span class="st">"\n=== Radar VK — Capstone Project · RR Skillverse ===\n\n"</span>;
+    RadarApp app;
+    <span class="kw">try</span> {
+        app.init();
+        std::cout &lt;&lt; <span class="st">"\n[✓] All Vulkan objects created. Rendering...\n"</span>;
+        std::cout &lt;&lt; <span class="st">"    Press ESC to exit.\n\n"</span>;
+        app.run();
+        app.cleanup();
+    } <span class="kw">catch</span> (<span class="kw">const</span> std::exception& e) {
+        std::cerr &lt;&lt; <span class="st">"ERROR: "</span> &lt;&lt; e.what() &lt;&lt; <span class="st">"\n"</span>;
+        <span class="kw">return</span> <span class="nm">1</span>;
+    }
+    std::cout &lt;&lt; <span class="st">"Done.\n"</span>;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+  </div>
+
+  <h2>Phase 2 Build + Run</h2>
+  <div class="cb">
+    <div class="cb-head"><span class="cb-label">Build and run the Vulkan radar</span><span class="cb-lang sh">Shell</span></div>
+    <pre>cd C:\Labs\Capstone\RadarVK
+
+<span class="cm"># Compile shaders (always first)</span>
+glslc shaders/radar.vert -o shaders/radar.vert.spv
+glslc shaders/radar.frag -o shaders/radar.frag.spv
+
+<span class="cm"># Build</span>
+cmake -B build -G <span class="st">"Visual Studio 17 2022"</span> -A x64
+cmake --build build --config Release
+
+<span class="cm"># Run from project root</span>
+build\Release\RadarVK.exe</pre>
+  </div>
+
+  <div class="callout ca-tip">
+    <div class="callout-label">✅ Expected Terminal Output Before Window Opens</div>
+    <p><code>[1] Instance OK</code> → <code>[2] Surface OK</code> → <code>[3] GPU: NVIDIA GeForce RTX...</code> → <code>[4] Device + Queue OK</code> → <code>[5] Swapchain OK (3 images)</code> → <code>[6] RenderPass OK</code> → <code>[7] Pipeline OK</code> → <code>[8] Geometry uploaded</code> → <code>[9] Sync objects OK</code> → <code>[✓] All Vulkan objects created. Rendering...</code>. If any line is missing, check the validation layer output — it will name the exact failed call.</p>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">🏆 Phase 2 Complete — The Grand Finale</div>
+    <div class="milestone-title">Vulkan Radar Display Running</div>
+    <div class="milestone-desc">The same radar display as Phase 1 — same rings, same sweep, same trail, same blips — but now running on explicit Vulkan. You created the instance, chose the GPU, declared every memory allocation, recorded the command buffer, managed semaphores and fences, and submitted the frame. Nothing was hidden. Nothing was guessed. Every pixel on screen was explicitly authorised by your code.</div>
+  </div>
+
+  <h2>Phase 2 Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="All 9 Vulkan objects created! Pipeline is live." data-icon="⚡">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Terminal shows [1] through [9] and [✓] — all objects created without errors</div><div class="cp-desc">If you see an error, check validation layer output. The VUID tells you exactly which call failed.</div></div>
+    <span class="cp-tag build">build</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Vulkan radar alive! You built this from scratch!" data-icon="🎉">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Radar display visible — rings, sweep, trail, blips</div><div class="cp-desc">Same visual as the OpenGL version, but running through the complete Vulkan pipeline you wrote</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="You understand the whole pipeline. Outstanding." data-icon="🧠">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">You can name the Vulkan equivalent of every OpenGL call you replaced</div><div class="cp-desc">glGenBuffers → vkCreateBuffer+vkAllocateMemory. glUseProgram → vkCmdBindPipeline. glDrawArrays → vkCmdDraw after vkQueueSubmit. glfwSwapBuffers → vkAcquireNextImageKHR+vkQueuePresentKHR.</div></div>
+    <span class="cp-tag think">think</span>
+  </div>
+</section>
+
+<!-- ══════ FINAL REVIEW ══════ -->
+<section class="phase" id="final">
+  <div class="ph-stripe done"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag done"><div class="ph-tag-dot"></div>Final Stage · Polish</div>
+    <h1 class="ph-title">Final Polish &amp; Known Extensions</h1>
+    <p class="ph-lead done">Your radar display is working. Here are optional improvements to explore after completing the core project — each one is a natural next step using concepts from the handbook.</p>
+  </div>
+
+  <h2>Optional Extensions (pick any one)</h2>
+  <div class="step-row"><div class="step-n gold">A</div><div class="step-body"><div class="st-title">Dynamic blip data (OpenGL)</div><div class="st-desc">Pass a <code>glUniform2fv</code> array of blip positions updated each frame. Contacts that appear as the sweep passes over them — refresh the positions randomly when swept.</div></div></div>
+  <div class="step-row"><div class="step-n gold">B</div><div class="step-body"><div class="st-title">Coloured threat levels (both)</div><div class="st-desc">Add a <code>uThreatLevel</code> uniform (0=green, 1=amber, 2=red). Draw hostile contacts in red using a second colour in the fragment shader.</div></div></div>
+  <div class="step-row"><div class="step-n gold">C</div><div class="step-body"><div class="st-title">Zoom control (both)</div><div class="st-desc">Add keyboard input: press + to multiply RADAR_R by 0.9f (zoom in — contacts expand outward). This simulates changing the range scale.</div></div></div>
+  <div class="step-row"><div class="step-n gold">D</div><div class="step-body"><div class="st-title">VMA memory allocator (Vulkan)</div><div class="st-desc">Replace the manual <code>vkAllocateMemory</code> calls with the Vulkan Memory Allocator library (VMA). This is how production engines manage GPU memory. One include, three functions.</div></div></div>
+
+  <div class="callout ca-key">
+    <div class="callout-label">📌 Stopping Point Rule</div>
+    <p>If you do not have time for extensions, that is correct. The core project is complete. Extensions exist so students who finish early have meaningful work to do — not as requirements. A working, clean core project is worth more than a buggy feature-heavy one.</p>
+  </div>
+
+  <h2>Final Checkpoints</h2>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Both programmes clean-exit! Professional quality." data-icon="✅">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Both RadarGL and RadarVK exit cleanly when ESC is pressed</div><div class="cp-desc">No validation errors on shutdown. All resources destroyed. No "objects not destroyed" warnings.</div></div>
+    <span class="cp-tag test">test</span>
+  </div>
+  <div class="checkpoint" onclick="toggleCheck(this)" data-celebrate="Screenshots taken — this is your portfolio!" data-icon="📸">
+    <div class="cp-box"><span class="cp-check">✓</span></div>
+    <div class="cp-body"><div class="cp-title">Screenshot saved of both versions side by side</div><div class="cp-desc">Keep these for your portfolio. You built hardware-accelerated real-time graphics from scratch.</div></div>
+    <span class="cp-tag think">think</span>
+  </div>
+</section>
+
+<!-- ══════ REFLECTION ══════ -->
+<section class="phase" id="reflect">
+  <div class="ph-stripe done"><div style="height:.5rem"></div></div>
+  <div class="ph-header">
+    <div class="ph-tag done"><div class="ph-tag-dot"></div>Reflection</div>
+    <h1 class="ph-title">What You Just Built — and What It Means</h1>
+    <p class="ph-lead done">A moment to understand what this week actually achieved.</p>
+  </div>
+
+  <h2>One Week Ago vs Right Now</h2>
+  <div class="phase-summary">
+    <div class="ps-title">One week ago you knew</div>
+    <div class="ps-items">
+      <span class="ps-both">C++ basics</span><span class="ps-both">What a GPU is</span>
+    </div>
+  </div>
+  <div class="phase-summary" style="margin-top:.5rem">
+    <div class="ps-title">Right now you can</div>
+    <div class="ps-items">
+      <span class="ps-gl">Write GLSL shaders</span><span class="ps-gl">Use VAO/VBO/uniforms</span>
+      <span class="ps-gl">Build an OpenGL render loop</span><span class="ps-gl">Control alpha blending</span>
+      <span class="ps-vk">Create every Vulkan object from scratch</span>
+      <span class="ps-vk">Choose GPU memory types explicitly</span>
+      <span class="ps-vk">Record + submit command buffers</span>
+      <span class="ps-vk">Manage GPU-CPU synchronisation</span>
+      <span class="ps-vk">Use push constants</span>
+      <span class="ps-both">Decompose a visual into geometry</span>
+      <span class="ps-both">Debug with validation layers</span>
+      <span class="ps-tool">Build with CMake + glslc</span>
+    </div>
+  </div>
+
+  <div class="think">
+    <div class="think-label">🧠 The deeper lesson from this capstone</div>
+    <p>You did not just learn two APIs. You learned how to think about rendering problems: decompose visual into geometry, understand the pipeline, control exactly what the GPU does. OpenGL showed you the results. Vulkan showed you the mechanism. The radar display was the shared goal that made both lessons concrete. That is the pedagogy of "build the same thing twice" — you can compare them, and the comparison is the learning.</p>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">🏆 Capstone Complete</div>
+    <div class="milestone-title">You Built a Tactical Radar Display from Scratch</div>
+    <div class="milestone-desc">In both OpenGL and Vulkan. With shaders you wrote, geometry you generated, memory you allocated, and a synchronisation model you explicitly managed. No engine. No framework. Just you, the GPU, and the hardware pipeline. That is what this week was about.</div>
+  </div>
+
+  <div class="divider"></div>
+  <p style="text-align:center;color:var(--text3);font-size:.82rem;padding:2rem 0;line-height:1.9">
+    <strong style="color:var(--text2)">RR Skillverse — Capstone Project: Tactical Radar Display</strong><br>
+    By Raushan Ranjan · MCT | Senior Corporate Trainer · Koenig Solutions, Noida<br>
+    <em style="color:var(--gold2);font-style:normal">"Sweat in the right direction brings Peace, Money, and Respect."</em>
+  </p>
+</section>
+
+</main>
+
+<script>
+/* ═══ PROGRESS TRACKING ═══ */
+const MILESTONES = [
+  { at:2,  icon:'🔧', title:'Build System Ready!',          msg:'The foundation is set. Time to write some shaders!' },
+  { at:5,  icon:'⭕', title:'First Pixels!',                msg:'Four green rings on screen. The pipeline is working!' },
+  { at:8,  icon:'↻', title:'Animation!',                   msg:'Real-time sweep line rotating. You have a live radar!' },
+  { at:11, icon:'🎯', title:'Contacts Tracking!',           msg:'Blips on scope. The radar is seeing targets!' },
+  { at:13, icon:'🌿', title:'Phosphor Trail!',              msg:'The CRT glow effect. This looks like real radar!' },
+  { at:15, icon:'🏆', title:'Phase 1 Complete!',            msg:'OpenGL radar fully working. Screenshot time! 📸' },
+  { at:18, icon:'⚡', title:'Vulkan Alive!',                msg:'All 9 Vulkan objects created without errors!' },
+  { at:21, icon:'🎉', title:'CAPSTONE COMPLETE!',           msg:'Both OpenGL and Vulkan radar displays working. You built this from first principles. Outstanding work.' },
+];
+
+function countAll()    { return document.querySelectorAll('.checkpoint').length; }
+function countDone()   { return document.querySelectorAll('.checkpoint.done').length; }
+
+function updateProgress() {
+  const total = countAll(), done = countDone();
+  const pct   = total ? (done / total) * 100 : 0;
+
+  document.getElementById('progress').style.width       = pct + '%';
+  document.getElementById('sidebar-progress').style.width = pct + '%';
+  document.getElementById('sidebar-pct').textContent    = done + ' / ' + total + ' tasks';
+
+  // Check milestones
+  MILESTONES.forEach(m => {
+    if (done === m.at) showToast(m.icon, m.title, m.msg);
+  });
+
+  // Update nav check marks
+  updateNavChecks();
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  updateProgress();
+}
+
+/* ═══ TOAST ═══ */
+let toastTimer;
+function showToast(icon, title, msg) {
+  clearTimeout(toastTimer);
+  document.getElementById('toast-icon').textContent  = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent   = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  toastTimer = setTimeout(() => t.classList.remove('show'), 4500);
+}
+
+/* ═══ NAV ACTIVE ═══ */
+const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+const sections = document.querySelectorAll('section.phase[id], div.hero[id]');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = '#' + e.target.id;
+      navItems.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+    }
+  });
+}, { threshold: 0.12, rootMargin: '-50px 0px -50% 0px' });
+sections.forEach(s => obs.observe(s));
+
+/* ═══ SCROLL PROGRESS ═══ */
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const pct = Math.min(100, (d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100);
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+/* ═══ NAV COMPLETION MARKS ═══ */
+function updateNavChecks() {
+  const phaseMap = {
+    '#p1s1': ['Build + CMake ready', 'cmake configures'],
+    '#p1s2': ['Rings visible'],
+    '#p1s3': ['Sweep line'],
+    '#p1s4': ['Blips on screen'],
+    '#p1s5': ['Phosphor trail'],
+    '#p1s6': ['Phase 1 complete'],
+    '#p2s1': ['SPIR-V compiled'],
+    '#p2s2': ['All 9 objects', 'Vulkan radar'],
+  };
+}
+
+/* ═══ INIT ═══ */
+updateProgress();
+
+/* ═══ KEYBOARD: SPACE to dismiss toast ═══ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('toast').classList.contains('show')) {
+    document.getElementById('toast').classList.remove('show');
+  }
+});
+</script>
+</body></html>

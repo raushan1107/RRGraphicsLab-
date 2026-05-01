@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 5 Demos &mdash; RR Graphics Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;--border:#1e2535;--border2:#2a3148;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--accent:#6366f1;--accent2:#818cf8;--cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--pink:#f472b6;--yellow:#fbbf24;--d5:#f472b6;--nav-h:62px;--radius:12px;--font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+::selection{background:rgba(244,114,182,.3);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--d5)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);background:rgba(8,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;font-weight:700;white-space:nowrap}
+.nav-hex{width:32px;height:32px;background:linear-gradient(135deg,var(--d5),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0}
+.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--d5),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;border:1px solid rgba(244,114,182,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1;margin-left:1.5rem}
+.nav-link{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.nav-link.active{color:var(--d5);background:rgba(244,114,182,.08);border-color:rgba(244,114,182,.2)}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-badge{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.3);color:var(--d5)}
+.page{display:flex;padding-top:var(--nav-h)}
+.sidebar{width:265px;flex-shrink:0;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0}
+.main{flex:1;min-width:0;padding:3rem 2.5rem;max-width:1060px}
+.sb-grp{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);padding:0 1.25rem;margin-bottom:.5rem;margin-top:1.2rem}
+.sb-link{display:flex;align-items:center;gap:10px;padding:.55rem 1.25rem;font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;border-left:2px solid transparent;cursor:pointer;text-decoration:none}
+.sb-link:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border2)}
+.sb-link.active{background:rgba(244,114,182,.06);color:var(--d5);border-left-color:var(--d5)}
+.sb-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
+.sb-link.active .sb-num{background:rgba(244,114,182,.15);border-color:rgba(244,114,182,.35);color:var(--d5)}
+.sb-sep{height:1px;background:var(--border);margin:.6rem 1.25rem}
+.demo-sec{padding:3rem 0;border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--nav-h) + 1rem)}
+.demo-sec:first-child{padding-top:0}.demo-sec:last-child{border-bottom:none}
+.demo-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.d-badge{font-family:var(--font-display);font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.3);color:var(--d5)}
+.d-type{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.demo-title{font-family:var(--font-display);font-size:clamp(1.15rem,2.5vw,1.6rem);font-weight:700;color:var(--text);margin-bottom:.6rem;line-height:1.25}
+.demo-desc{font-size:.9rem;color:var(--text2);line-height:1.85;max-width:720px;margin-bottom:1.25rem}
+.demo-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.meta-chip{font-size:11px;color:var(--text3);font-weight:600;background:var(--bg3);border:1px solid var(--border);padding:3px 12px;border-radius:20px}
+.builds-on{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--text3)}
+.bo-chip{padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;background:var(--bg4);border:1px solid var(--border2);color:var(--text2)}
+.bo-ok{color:var(--d5)!important;border-color:rgba(244,114,182,.4)!important;background:rgba(244,114,182,.08)!important}
+.out-preview{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.2);border-left:3px solid var(--d5);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.op-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d5);margin-bottom:.5rem}
+.op-item{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--text2);line-height:1.6;margin-top:.3rem}
+.op-dot{width:7px;height:7px;border-radius:50%;background:var(--d5);flex-shrink:0;margin-top:5px}
+.concept{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(244,114,182,.03));border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.concept-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
+.concept p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.warn{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-left:3px solid #f87171;border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#f87171;margin-bottom:.4rem}
+.warn p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--d5);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.exp-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d5);margin-bottom:.5rem}
+.exp-list{list-style:none;margin:.3rem 0}
+.exp-list li{font-size:.86rem;color:var(--text2);padding:3px 0 3px 18px;position:relative;line-height:1.7}
+.exp-list li::before{content:"\25B8";position:absolute;left:0;color:var(--d5);font-size:.75rem;top:5px}
+.sh{font-size:.92rem;font-weight:700;color:var(--text);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:8px}
+.sh-dot{width:6px;height:6px;border-radius:50%;background:var(--d5);box-shadow:0 0 8px var(--d5)}
+p.note{font-size:.88rem;color:var(--text2);line-height:1.8;margin:.4rem 0}
+code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+.diag{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin:1.25rem 0;overflow-x:auto}
+.diag-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;text-align:center}
+.diag pre{font-family:var(--font-mono);font-size:.78rem;color:var(--text2);line-height:1.65}
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:.55rem 1rem}
+.code-fname{font-family:var(--font-mono);font-size:11px;color:var(--text2);font-weight:600}
+.code-row{display:flex;align-items:center;gap:.75rem}
+.code-lang{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.cp-btn{padding:4px 14px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.cp-btn:hover{border-color:var(--d5);color:var(--d5)}.cp-btn.ok{color:var(--green);border-color:var(--green)}
+.code-block{background:#03050a;border:1px solid var(--border2);border-radius:0 0 var(--radius) var(--radius);overflow:auto;max-height:700px}
+.code-block pre{font-family:var(--font-mono);font-size:.78rem;line-height:1.9;padding:1.25rem 1.5rem;white-space:pre;color:#cdd6f4;min-width:max-content}
+.cmd{background:#030508;border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--d5);border-radius:var(--radius);padding:1rem 1.25rem;margin:.75rem 0;position:relative}
+.cmd-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--d5);margin-bottom:.4rem}
+.cmd pre{font-family:var(--font-mono);font-size:.8rem;color:var(--d5);line-height:1.7}
+.cmd-cp{position:absolute;top:.7rem;right:.75rem;padding:3px 10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);font-size:10px;cursor:pointer;transition:all .2s}
+.cmd-cp:hover{color:var(--d5);border-color:var(--d5)}
+.terminal{background:#020408;border:1px solid rgba(244,114,182,.25);border-radius:var(--radius);overflow:hidden;margin:1rem 0}
+.term-bar{background:#0a0e17;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(244,114,182,.1)}
+.t-dot{width:10px;height:10px;border-radius:50%}
+.term-title{font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem}
+.term-body{padding:1rem 1.25rem;font-family:var(--font-mono);font-size:.8rem;line-height:1.85}
+.ts{color:var(--d5)}.th{color:var(--cyan)}.to{color:#94a3b8}.tw{color:var(--yellow)}.t-hr{border:none;border-top:1px solid #1a2233;margin:.4rem 0}
+.page-foot{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:1px solid var(--border);margin-top:3rem}
+.foot-btn{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.foot-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--d5)}
+.foot-btn.primary{background:rgba(244,114,182,.1);border-color:rgba(244,114,182,.3);color:var(--d5)}
+@media(max-width:900px){.sidebar{display:none}.nav-links{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-hex">&#x2736;</div>
+    RR Graphics Lab <span class="nav-mct">MCT</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html"><span class="nav-dot" style="background:var(--accent)"></span>Module Notes</a>
+    <a class="nav-link active" href="demos.html"><span class="nav-dot" style="background:var(--d5)"></span>Code Demos</a>
+    <a class="nav-link" href="labs.html"><span class="nav-dot" style="background:var(--green)"></span>Lab Challenges</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">Day 5 &mdash; Advanced Vulkan &amp; Integration</span>
+    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan &middot; MCT</span>
+  </div>
+</nav>
+<div class="page">
+<aside class="sidebar">
+  <div class="sb-grp">Day 5 &mdash; 2 Demos</div>
+  <a class="sb-link active" href="#demo19"><span class="sb-num">D19</span>UBO + Descriptors</a>
+  <a class="sb-link" href="#demo20"><span class="sb-num">D20</span>Compute Shader</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Navigation</div>
+  <a class="sb-link" href="day4-demos.html"><span class="sb-num" style="font-size:9px">&#8592;</span>Day 4 Demos</a>
+  <a class="sb-link" href="labs.html"><span class="sb-num" style="font-size:9px">&#128300;</span>Day 5 Labs</a>
+</aside>
+<main class="main">
+
+
+<div class="demo-sec" id="demo19">
+  <div class="demo-eyebrow"><span class="d-badge">Demo 19 &middot; Module 13</span><span class="d-type">Descriptor Sets &amp; UBO &mdash; Animated Triangle</span></div>
+  <div class="demo-title">VkDescriptorSetLayout, VkDescriptorPool, VkDescriptorSet &mdash; Replacing glUniform*()</div>
+  <div class="demo-desc">In OpenGL you called <code class="ic">glUniform4fv()</code> to send a matrix to the shader. Vulkan has no equivalent &mdash; instead you create a descriptor set that binds a VkBuffer to a shader binding point. This demo builds the complete descriptor system: layout, pool, set, update, and bind. The UBO holds an MVP matrix updated each frame, rotating the orange triangle on the Z axis. One UBO per swapchain image prevents the CPU from overwriting data the GPU is still reading.</div>
+  <div class="demo-meta">
+    <span class="meta-chip">&#128187; Project: D19_VulkanUBO</span>
+    <span class="meta-chip">&#9201; ~40 min</span>
+    <span class="meta-chip">383 lines</span>
+    <span class="meta-chip">New: VkDescriptorSetLayout &middot; VkDescriptorPool &middot; VkDescriptorSet &middot; vkUpdateDescriptorSets &middot; UBO</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Demo 18 (triangle + pipeline)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">descriptor set system</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">UBO per swapchain image</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">Orange triangle rotating via MVP in UBO &#10003;</span>
+  </div>
+  <div class="out-preview">
+    <div class="op-label">&#127919; What You Will See</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Window:</strong> Orange triangle rotating smoothly on the Z axis, driven by MVP matrix in the UBO</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Terminal:</strong> Time and frame count printed every 60 frames</div>
+    <div class="op-item"><span class="op-dot"></span><strong>No glUniform:</strong> All shader data flows through the descriptor set + UBO</div>
+  </div>
+  <div class="concept"><div class="concept-lbl">&#128161; Why Descriptors Replace glUniform*()</div><p class="note">In OpenGL, <code class='ic'>glUniform4fv(location, 1, ptr)</code> sent data to the shader immediately. The driver had to track global uniform state and reconcile it at draw time. In Vulkan, you declare upfront exactly what resources each shader binding point needs (the descriptor set layout), allocate a block of memory to hold binding records (the pool), fill in which actual VkBuffer or VkImage is at each slot (update descriptor sets), and bind it before drawing. More setup, but zero driver state tracking overhead — the same pattern works for textures, storage buffers, and images without any new API calls.</p></div>
+  <div class="diag"><div class="diag-title">The Descriptor System — Four Objects, One Chain</div><pre>VkDescriptorSetLayout    ← &quot;binding 0 = uniform buffer, used in vertex stage&quot;
+       ↓ (describes)
+VkDescriptorPool         ← Memory pool: can allocate N sets with M bindings each
+       ↓ (allocates from)
+VkDescriptorSet          ← Actual binding record for one draw
+       ↓ (filled by)
+vkUpdateDescriptorSets() ← &quot;binding 0 in this set = THIS VkBuffer at offset 0&quot;
+       ↓ (used in)
+vkCmdBindDescriptorSets()← Attached to command buffer before vkCmdDraw
+
+One VkDescriptorSet per swapchain image:
+  Image 0 descriptor → UBO buffer 0 (CPU writes frame 0 data)
+  Image 1 descriptor → UBO buffer 1 (CPU writes frame 1 data)
+  Image 2 descriptor → UBO buffer 2 (CPU writes frame 2 data)</pre></div>
+  <div class="sh"><span class="sh-dot"></span>Step 1 &mdash; Compile shaders</div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;sh19&apos;)">Copy</button><pre id="sh19">glslc shader.vert -o vert.spv
+glslc shader.frag -o frag.spv
+REM Copy vert.spv and frag.spv next to the .exe</pre></div>
+  <div class="sh"><span class="sh-dot"></span>shader.vert &mdash; reads UBO at binding 0</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">shader.vert</span><div class="code-row"><span class="code-lang">GLSL</span><button class="cp-btn" onclick="copyCode(this,&apos;vert19&apos;)">Copy All</button></div></div><div class="code-block"><pre id="vert19">#version 450
+// UBO at binding 0 — matches descriptor set layout in demo19_main.cpp
+layout(binding = 0) uniform UniformBufferObject {
+    mat4 model;
+    mat4 view;
+    mat4 proj;
+} ubo;
+
+layout(location = 0) in vec2 inPos;
+layout(location = 1) in vec3 inColor;
+layout(location = 0) out vec3 fragColor;
+
+void main() {
+    // Apply MVP — rotates the triangle on the Z axis via ubo.model
+    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPos, 0.0, 1.0);
+    fragColor = inColor;
+}
+</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>shader.frag</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">shader.frag</span><div class="code-row"><span class="code-lang">GLSL</span><button class="cp-btn" onclick="copyCode(this,&apos;frag19&apos;)">Copy All</button></div></div><div class="code-block"><pre id="frag19">#version 450
+layout(location = 0) in vec3 fragColor;
+layout(location = 0) out vec4 outColor;
+void main() {
+    outColor = vec4(fragColor, 1.0);
+}
+</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake19&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake19">cmake_minimum_required(VERSION 3.20)
+project(D19_VulkanUBO)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Vulkan REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLM_DIR}
+    ${Vulkan_INCLUDE_DIRS}
+)
+add_executable(D19_VulkanUBO src/main.cpp)
+target_link_libraries(D19_VulkanUBO
+    Vulkan::Vulkan
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+)</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main19&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main19">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 5 · DEMO 19
+//  Vulkan Uniform Buffer Object (UBO) — Descriptor Sets, MVP via Descriptor
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: D19_VulkanUBO
+//  FOLDER:       C:\Labs\D19_VulkanUBO\
+//
+//  ── BEFORE BUILDING ────────────────────────────────────────────────────────
+//  glslc shader.vert -o vert.spv
+//  glslc shader.frag -o frag.spv
+//  Copy vert.spv + frag.spv next to .exe
+//  ───────────────────────────────────────────────────────────────────────────
+//
+//  WHAT THIS DEMO TEACHES:
+//  - Why glUniform*() doesn&#x27;t exist in Vulkan — descriptors replace it
+//  - VkDescriptorSetLayout: declares &quot;binding 0 = uniform buffer&quot;
+//  - VkDescriptorPool: memory pool for allocating descriptor sets
+//  - VkDescriptorSet: the actual binding record
+//  - vkUpdateDescriptorSets: fills in which VkBuffer is at binding 0
+//  - VkBuffer (host-visible, HOST_COHERENT) as a UBO per swapchain image
+//  - Updating UBO data each frame: map → write struct → no unmap needed
+//  - vkCmdBindDescriptorSets before vkCmdDraw
+//  - Animated rotating triangle driven by time value in UBO
+//
+//  WHAT YOU WILL SEE:
+//  - Orange triangle rotating continuously, driven by MVP matrix in UBO
+//  - Time printed to terminal every 60 frames
+//  - ESC to quit. Validation: 0 errors.
+//
+//  BUILDS ON: Demo 18 (full pipeline + triangle)
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;glm/glm.hpp&gt;
+#include &lt;glm/gtc/matrix_transform.hpp&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;optional&gt;
+#include &lt;set&gt;
+#include &lt;algorithm&gt;
+#include &lt;fstream&gt;
+#include &lt;cstring&gt;
+#include &lt;stdexcept&gt;
+
+const int WIN_W = 900, WIN_H = 600;
+const std::vector&lt;const char*&gt; VAL_LAYERS  = {&quot;VK_LAYER_KHRONOS_validation&quot;};
+const std::vector&lt;const char*&gt; DEV_EXTS    = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+// ── UBO struct — matches binding 0 layout(std140) in vertex shader ──────────
+// Must be 16-byte aligned. glm matrices are already 64 bytes each.
+struct UniformBufferObject {
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 proj;
+};
+
+// ── Vertex: position + colour (no texture UVs needed here) ──────────────────
+struct Vertex {
+    glm::vec2 pos;
+    glm::vec3 color;
+};
+
+const std::vector&lt;Vertex&gt; VERTICES = {
+    {{ 0.0f,-0.55f},{0.98f,0.57f,0.24f}},  // top  — orange
+    {{ 0.5f, 0.45f},{0.98f,0.57f,0.24f}},  // BR
+    {{-0.5f, 0.45f},{0.98f,0.57f,0.24f}},  // BL
+};
+
+static std::vector&lt;char&gt; readSpv(const std::string&amp; p){
+    std::ifstream f(p,std::ios::ate|std::ios::binary);
+    if(!f.is_open()) throw std::runtime_error(&quot;Cannot open: &quot;+p);
+    size_t s=(size_t)f.tellg(); std::vector&lt;char&gt; b(s); f.seekg(0); f.read(b.data(),s); return b;
+}
+VkShaderModule makeMod(VkDevice d,const std::vector&lt;char&gt;&amp; c){
+    VkShaderModuleCreateInfo ci{};ci.sType=VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    ci.codeSize=c.size();ci.pCode=reinterpret_cast&lt;const uint32_t*&gt;(c.data());
+    VkShaderModule m;vkCreateShaderModule(d,&amp;ci,nullptr,&amp;m);return m;
+}
+struct QFI{std::optional&lt;uint32_t&gt; g,p;bool ok(){return g.has_value()&amp;&amp;p.has_value();}};
+QFI findQF(VkPhysicalDevice d,VkSurfaceKHR s){
+    QFI i;uint32_t n;vkGetPhysicalDeviceQueueFamilyProperties(d,&amp;n,nullptr);
+    std::vector&lt;VkQueueFamilyProperties&gt; f(n);vkGetPhysicalDeviceQueueFamilyProperties(d,&amp;n,f.data());
+    for(uint32_t x=0;x&lt;n;x++){if(f[x].queueFlags&amp;VK_QUEUE_GRAPHICS_BIT)i.g=x;
+        VkBool32 p=false;vkGetPhysicalDeviceSurfaceSupportKHR(d,x,s,&amp;p);if(p)i.p=x;if(i.ok())break;}
+    return i;
+}
+uint32_t findMem(VkPhysicalDevice phys,uint32_t bits,VkMemoryPropertyFlags props){
+    VkPhysicalDeviceMemoryProperties mp;vkGetPhysicalDeviceMemoryProperties(phys,&amp;mp);
+    for(uint32_t i=0;i&lt;mp.memoryTypeCount;i++)
+        if((bits&amp;(1&lt;&lt;i))&amp;&amp;(mp.memoryTypes[i].propertyFlags&amp;props)==props)return i;
+    throw std::runtime_error(&quot;No memory type&quot;);
+}
+void makeBuffer(VkDevice dev,VkPhysicalDevice phys,VkDeviceSize sz,
+                VkBufferUsageFlags usage,VkMemoryPropertyFlags props,
+                VkBuffer&amp; buf,VkDeviceMemory&amp; mem){
+    VkBufferCreateInfo bi{};bi.sType=VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bi.size=sz;bi.usage=usage;bi.sharingMode=VK_SHARING_MODE_EXCLUSIVE;
+    vkCreateBuffer(dev,&amp;bi,nullptr,&amp;buf);
+    VkMemoryRequirements mr;vkGetBufferMemoryRequirements(dev,buf,&amp;mr);
+    VkMemoryAllocateInfo ai{};ai.sType=VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    ai.allocationSize=mr.size;ai.memoryTypeIndex=findMem(phys,mr.memoryTypeBits,props);
+    vkAllocateMemory(dev,&amp;ai,nullptr,&amp;mem);
+    vkBindBufferMemory(dev,buf,mem,0);
+}
+
+int main(){
+    std::cout&lt;&lt;&quot;\n=== Demo 19 — Vulkan UBO + Descriptor Sets ===\n\n&quot;;
+    std::cout&lt;&lt;&quot;Requires vert.spv and frag.spv next to the exe.\n\n&quot;;
+
+    glfwInit();glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API);glfwWindowHint(GLFW_RESIZABLE,GLFW_FALSE);
+    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,&quot;Demo 19 — Vulkan UBO (ESC=quit)&quot;,nullptr,nullptr);
+
+    VkApplicationInfo ai{};ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.apiVersion=VK_API_VERSION_1_0;
+    uint32_t ec=0;const char** eg=glfwGetRequiredInstanceExtensions(&amp;ec);
+    std::vector&lt;const char*&gt; exts(eg,eg+ec);
+    VkInstanceCreateInfo ici{};ici.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;ici.pApplicationInfo=&amp;ai;
+    ici.enabledExtensionCount=(uint32_t)exts.size();ici.ppEnabledExtensionNames=exts.data();
+    ici.enabledLayerCount=(uint32_t)VAL_LAYERS.size();ici.ppEnabledLayerNames=VAL_LAYERS.data();
+    VkInstance inst;vkCreateInstance(&amp;ici,nullptr,&amp;inst);
+    VkSurfaceKHR surface;glfwCreateWindowSurface(inst,win,nullptr,&amp;surface);
+
+    uint32_t dc=0;vkEnumeratePhysicalDevices(inst,&amp;dc,nullptr);
+    std::vector&lt;VkPhysicalDevice&gt; pds(dc);vkEnumeratePhysicalDevices(inst,&amp;dc,pds.data());
+    VkPhysicalDevice phys=VK_NULL_HANDLE;
+    for(auto&amp; d:pds){VkPhysicalDeviceProperties p{};vkGetPhysicalDeviceProperties(d,&amp;p);
+        if(findQF(d,surface).ok()){phys=d;if(p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)break;}}
+    VkPhysicalDeviceProperties gp{};vkGetPhysicalDeviceProperties(phys,&amp;gp);
+    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;gp.deviceName&lt;&lt;&quot;\n&quot;;
+
+    QFI qfi=findQF(phys,surface);
+    std::set&lt;uint32_t&gt; uq={qfi.g.value(),qfi.p.value()};float pr=1.0f;
+    std::vector&lt;VkDeviceQueueCreateInfo&gt; qcis;
+    for(uint32_t f:uq){VkDeviceQueueCreateInfo q{};q.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        q.queueFamilyIndex=f;q.queueCount=1;q.pQueuePriorities=&amp;pr;qcis.push_back(q);}
+    VkPhysicalDeviceFeatures feat{};
+    VkDeviceCreateInfo dci{};dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    dci.queueCreateInfoCount=(uint32_t)qcis.size();dci.pQueueCreateInfos=qcis.data();
+    dci.pEnabledFeatures=&amp;feat;dci.enabledExtensionCount=(uint32_t)DEV_EXTS.size();
+    dci.ppEnabledExtensionNames=DEV_EXTS.data();
+    dci.enabledLayerCount=(uint32_t)VAL_LAYERS.size();dci.ppEnabledLayerNames=VAL_LAYERS.data();
+    VkDevice dev;vkCreateDevice(phys,&amp;dci,nullptr,&amp;dev);
+    VkQueue gfxQ,presQ;
+    vkGetDeviceQueue(dev,qfi.g.value(),0,&amp;gfxQ);vkGetDeviceQueue(dev,qfi.p.value(),0,&amp;presQ);
+
+    VkSurfaceCapabilitiesKHR caps{};vkGetPhysicalDeviceSurfaceCapabilitiesKHR(phys,surface,&amp;caps);
+    uint32_t fN=0;vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fN,nullptr);
+    std::vector&lt;VkSurfaceFormatKHR&gt; fmts(fN);vkGetPhysicalDeviceSurfaceFormatsKHR(phys,surface,&amp;fN,fmts.data());
+    uint32_t pmN=0;vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,nullptr);
+    std::vector&lt;VkPresentModeKHR&gt; pms(pmN);vkGetPhysicalDeviceSurfacePresentModesKHR(phys,surface,&amp;pmN,pms.data());
+    VkSurfaceFormatKHR sf=fmts[0];
+    for(auto&amp; x:fmts)if(x.format==VK_FORMAT_B8G8R8A8_SRGB&amp;&amp;x.colorSpace==VK_COLOR_SPACE_SRGB_NONLINEAR_KHR){sf=x;break;}
+    VkPresentModeKHR pm=VK_PRESENT_MODE_FIFO_KHR;
+    for(auto x:pms)if(x==VK_PRESENT_MODE_MAILBOX_KHR){pm=x;break;}
+    VkExtent2D ext=caps.currentExtent;
+    uint32_t imgN=std::min(caps.minImageCount+1,caps.maxImageCount&gt;0?caps.maxImageCount:UINT32_MAX);
+
+    VkSwapchainCreateInfoKHR sci{};sci.sType=VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    sci.surface=surface;sci.minImageCount=imgN;sci.imageFormat=sf.format;sci.imageColorSpace=sf.colorSpace;
+    sci.imageExtent=ext;sci.imageArrayLayers=1;sci.imageUsage=VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    uint32_t qfa[]={qfi.g.value(),qfi.p.value()};
+    if(qfi.g!=qfi.p){sci.imageSharingMode=VK_SHARING_MODE_CONCURRENT;sci.queueFamilyIndexCount=2;sci.pQueueFamilyIndices=qfa;}
+    else sci.imageSharingMode=VK_SHARING_MODE_EXCLUSIVE;
+    sci.preTransform=caps.currentTransform;sci.compositeAlpha=VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    sci.presentMode=pm;sci.clipped=VK_TRUE;
+    VkSwapchainKHR sc;vkCreateSwapchainKHR(dev,&amp;sci,nullptr,&amp;sc);
+    uint32_t sic=0;vkGetSwapchainImagesKHR(dev,sc,&amp;sic,nullptr);
+    std::vector&lt;VkImage&gt; sis(sic);vkGetSwapchainImagesKHR(dev,sc,&amp;sic,sis.data());
+    std::vector&lt;VkImageView&gt; sivs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkImageViewCreateInfo iv{};iv.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        iv.image=sis[i];iv.viewType=VK_IMAGE_VIEW_TYPE_2D;iv.format=sf.format;
+        iv.components={VK_COMPONENT_SWIZZLE_IDENTITY,VK_COMPONENT_SWIZZLE_IDENTITY,VK_COMPONENT_SWIZZLE_IDENTITY,VK_COMPONENT_SWIZZLE_IDENTITY};
+        iv.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1};vkCreateImageView(dev,&amp;iv,nullptr,&amp;sivs[i]);}
+
+    VkAttachmentDescription att{};att.format=sf.format;att.samples=VK_SAMPLE_COUNT_1_BIT;
+    att.loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR;att.storeOp=VK_ATTACHMENT_STORE_OP_STORE;
+    att.stencilLoadOp=VK_ATTACHMENT_LOAD_OP_DONT_CARE;att.stencilStoreOp=VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    att.initialLayout=VK_IMAGE_LAYOUT_UNDEFINED;att.finalLayout=VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentReference ref{0,VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
+    VkSubpassDescription sub{};sub.pipelineBindPoint=VK_PIPELINE_BIND_POINT_GRAPHICS;sub.colorAttachmentCount=1;sub.pColorAttachments=&amp;ref;
+    VkSubpassDependency dep{};dep.srcSubpass=VK_SUBPASS_EXTERNAL;dep.dstSubpass=0;
+    dep.srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.srcAccessMask=0;
+    dep.dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;dep.dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VkRenderPassCreateInfo rpi{};rpi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    rpi.attachmentCount=1;rpi.pAttachments=&amp;att;rpi.subpassCount=1;rpi.pSubpasses=&amp;sub;rpi.dependencyCount=1;rpi.pDependencies=&amp;dep;
+    VkRenderPass renderPass;vkCreateRenderPass(dev,&amp;rpi,nullptr,&amp;renderPass);
+    std::vector&lt;VkFramebuffer&gt; fbs(sic);
+    for(uint32_t i=0;i&lt;sic;i++){VkFramebufferCreateInfo f{};f.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        f.renderPass=renderPass;f.attachmentCount=1;f.pAttachments=&amp;sivs[i];f.width=ext.width;f.height=ext.height;f.layers=1;vkCreateFramebuffer(dev,&amp;f,nullptr,&amp;fbs[i]);}
+    std::cout&lt;&lt;&quot;[2] Swapchain + render pass + framebuffers\n&quot;;
+
+    // ── DESCRIPTOR SET LAYOUT ──────────────────────────────────────────────
+    // Declares: binding 0 is a uniform buffer used in the vertex shader stage.
+    // This is the Vulkan equivalent of saying &quot;I need a uniform mat4 at slot 0&quot;.
+    VkDescriptorSetLayoutBinding dslb{};
+    dslb.binding         = 0;                               // slot 0 in shader
+    dslb.descriptorType  = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    dslb.descriptorCount = 1;
+    dslb.stageFlags      = VK_SHADER_STAGE_VERTEX_BIT;     // used in vert shader
+
+    VkDescriptorSetLayoutCreateInfo dslci{};
+    dslci.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    dslci.bindingCount = 1;
+    dslci.pBindings    = &amp;dslb;
+    VkDescriptorSetLayout dsLayout;
+    vkCreateDescriptorSetLayout(dev,&amp;dslci,nullptr,&amp;dsLayout);
+    std::cout&lt;&lt;&quot;[3] Descriptor set layout: binding 0 = uniform buffer (vertex stage)\n&quot;;
+
+    // ── ONE UBO PER SWAPCHAIN IMAGE ────────────────────────────────────────
+    // We create one buffer per swapchain image so CPU can update next frame&#x27;s
+    // UBO while GPU is still reading this frame&#x27;s UBO.
+    std::vector&lt;VkBuffer&gt;       uboBufs(sic);
+    std::vector&lt;VkDeviceMemory&gt; uboMems(sic);
+    std::vector&lt;void*&gt;          uboMaps(sic);
+    VkDeviceSize uboSize = sizeof(UniformBufferObject);
+
+    for(uint32_t i=0;i&lt;sic;i++){
+        makeBuffer(dev,phys,uboSize,
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            uboBufs[i],uboMems[i]);
+        // Persistent map — stays mapped. HOST_COHERENT = no explicit flush.
+        vkMapMemory(dev,uboMems[i],0,uboSize,0,&amp;uboMaps[i]);
+    }
+    std::cout&lt;&lt;&quot;[4] &quot;&lt;&lt;sic&lt;&lt;&quot; UBO buffers (one per swapchain image), persistently mapped\n&quot;;
+
+    // ── DESCRIPTOR POOL ────────────────────────────────────────────────────
+    // Pool that can allocate up to sic descriptor sets, each with 1 UBO binding.
+    VkDescriptorPoolSize dps{};
+    dps.type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    dps.descriptorCount = sic;
+    VkDescriptorPoolCreateInfo dpci{};
+    dpci.sType         = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    dpci.poolSizeCount = 1;
+    dpci.pPoolSizes    = &amp;dps;
+    dpci.maxSets       = sic;
+    VkDescriptorPool descPool;
+    vkCreateDescriptorPool(dev,&amp;dpci,nullptr,&amp;descPool);
+
+    // ── DESCRIPTOR SETS ────────────────────────────────────────────────────
+    // Allocate one descriptor set per swapchain image, all with the same layout.
+    std::vector&lt;VkDescriptorSetLayout&gt; layouts(sic,dsLayout);
+    VkDescriptorSetAllocateInfo dsai{};
+    dsai.sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    dsai.descriptorPool     = descPool;
+    dsai.descriptorSetCount = sic;
+    dsai.pSetLayouts        = layouts.data();
+    std::vector&lt;VkDescriptorSet&gt; descSets(sic);
+    vkAllocateDescriptorSets(dev,&amp;dsai,descSets.data());
+
+    // Point each descriptor set at its corresponding UBO buffer
+    for(uint32_t i=0;i&lt;sic;i++){
+        VkDescriptorBufferInfo dbi{};
+        dbi.buffer = uboBufs[i];
+        dbi.offset = 0;
+        dbi.range  = uboSize;
+
+        VkWriteDescriptorSet wds{};
+        wds.sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        wds.dstSet          = descSets[i];
+        wds.dstBinding      = 0;            // matches layout binding = 0
+        wds.dstArrayElement = 0;
+        wds.descriptorType  = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        wds.descriptorCount = 1;
+        wds.pBufferInfo     = &amp;dbi;
+        vkUpdateDescriptorSets(dev,1,&amp;wds,0,nullptr);
+    }
+    std::cout&lt;&lt;&quot;[5] Descriptor sets allocated and updated\n&quot;;
+
+    // Vertex buffer
+    VkBuffer vertBuf;VkDeviceMemory vertMem;
+    VkDeviceSize vbSz=sizeof(VERTICES[0])*VERTICES.size();
+    makeBuffer(dev,phys,vbSz,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+               vertBuf,vertMem);
+    void* vd;vkMapMemory(dev,vertMem,0,vbSz,0,&amp;vd);memcpy(vd,VERTICES.data(),(size_t)vbSz);vkUnmapMemory(dev,vertMem);
+
+    // Pipeline — uses dsLayout in pipeline layout
+    auto vc=readSpv(&quot;vert.spv&quot;);auto fc=readSpv(&quot;frag.spv&quot;);
+    VkShaderModule vm=makeMod(dev,vc),fm=makeMod(dev,fc);
+    VkPipelineShaderStageCreateInfo stg[2]{};
+    stg[0].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[0].stage=VK_SHADER_STAGE_VERTEX_BIT;stg[0].module=vm;stg[0].pName=&quot;main&quot;;
+    stg[1].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[1].stage=VK_SHADER_STAGE_FRAGMENT_BIT;stg[1].module=fm;stg[1].pName=&quot;main&quot;;
+
+    VkVertexInputBindingDescription vbd{};vbd.binding=0;vbd.stride=sizeof(Vertex);vbd.inputRate=VK_VERTEX_INPUT_RATE_VERTEX;
+    VkVertexInputAttributeDescription vad[2]{};
+    vad[0]={0,0,VK_FORMAT_R32G32_SFLOAT,(uint32_t)offsetof(Vertex,pos)};
+    vad[1]={1,0,VK_FORMAT_R32G32B32_SFLOAT,(uint32_t)offsetof(Vertex,color)};
+    VkPipelineVertexInputStateCreateInfo vi{};vi.sType=VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;vi.vertexBindingDescriptionCount=1;vi.pVertexBindingDescriptions=&amp;vbd;vi.vertexAttributeDescriptionCount=2;vi.pVertexAttributeDescriptions=vad;
+    VkPipelineInputAssemblyStateCreateInfo ia{};ia.sType=VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;ia.topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    VkViewport vp{0,0,(float)ext.width,(float)ext.height,0,1};VkRect2D sc2={{0,0},ext};
+    VkPipelineViewportStateCreateInfo vps{};vps.sType=VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;vps.viewportCount=1;vps.pViewports=&amp;vp;vps.scissorCount=1;vps.pScissors=&amp;sc2;
+    VkPipelineRasterizationStateCreateInfo rs{};rs.sType=VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;rs.polygonMode=VK_POLYGON_MODE_FILL;rs.cullMode=VK_CULL_MODE_NONE;rs.frontFace=VK_FRONT_FACE_CLOCKWISE;rs.lineWidth=1.0f;
+    VkPipelineMultisampleStateCreateInfo ms{};ms.sType=VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;ms.rasterizationSamples=VK_SAMPLE_COUNT_1_BIT;
+    VkPipelineColorBlendAttachmentState cba{};cba.colorWriteMask=VK_COLOR_COMPONENT_R_BIT|VK_COLOR_COMPONENT_G_BIT|VK_COLOR_COMPONENT_B_BIT|VK_COLOR_COMPONENT_A_BIT;cba.blendEnable=VK_FALSE;
+    VkPipelineColorBlendStateCreateInfo cb{};cb.sType=VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;cb.attachmentCount=1;cb.pAttachments=&amp;cba;
+
+    // Pipeline layout includes the descriptor set layout
+    VkPipelineLayoutCreateInfo pli{};pli.sType=VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pli.setLayoutCount=1;pli.pSetLayouts=&amp;dsLayout;  // ← key: layout must include dsLayout
+    VkPipelineLayout pipelineLayout;vkCreatePipelineLayout(dev,&amp;pli,nullptr,&amp;pipelineLayout);
+
+    VkGraphicsPipelineCreateInfo gpci{};gpci.sType=VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;gpci.stageCount=2;gpci.pStages=stg;gpci.pVertexInputState=&amp;vi;gpci.pInputAssemblyState=&amp;ia;gpci.pViewportState=&amp;vps;gpci.pRasterizationState=&amp;rs;gpci.pMultisampleState=&amp;ms;gpci.pColorBlendState=&amp;cb;gpci.layout=pipelineLayout;gpci.renderPass=renderPass;gpci.subpass=0;
+    VkPipeline pipeline;vkCreateGraphicsPipelines(dev,VK_NULL_HANDLE,1,&amp;gpci,nullptr,&amp;pipeline);
+    vkDestroyShaderModule(dev,fm,nullptr);vkDestroyShaderModule(dev,vm,nullptr);
+    std::cout&lt;&lt;&quot;[6] Graphics pipeline created\n&quot;;
+
+    VkCommandPoolCreateInfo cpci{};cpci.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;cpci.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;cpci.queueFamilyIndex=qfi.g.value();
+    VkCommandPool cmdPool;vkCreateCommandPool(dev,&amp;cpci,nullptr,&amp;cmdPool);
+    std::vector&lt;VkCommandBuffer&gt; cmds(sic);
+    VkCommandBufferAllocateInfo cbai{};cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;cbai.commandPool=cmdPool;cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;cbai.commandBufferCount=sic;
+    vkAllocateCommandBuffers(dev,&amp;cbai,cmds.data());
+    VkSemaphoreCreateInfo semci{};semci.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    VkFenceCreateInfo fenci{};fenci.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;fenci.flags=VK_FENCE_CREATE_SIGNALED_BIT;
+    VkSemaphore imgAvail,renDone;VkFence inFlight;
+    vkCreateSemaphore(dev,&amp;semci,nullptr,&amp;imgAvail);vkCreateSemaphore(dev,&amp;semci,nullptr,&amp;renDone);vkCreateFence(dev,&amp;fenci,nullptr,&amp;inFlight);
+    std::cout&lt;&lt;&quot;[7] Render loop starting. ESC=quit.\n\n&quot;;
+
+    uint64_t frame=0;
+    while(!glfwWindowShouldClose(win)){
+        glfwPollEvents();
+        if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS)glfwSetWindowShouldClose(win,GLFW_TRUE);
+
+        vkWaitForFences(dev,1,&amp;inFlight,VK_TRUE,UINT64_MAX);vkResetFences(dev,1,&amp;inFlight);
+        uint32_t idx;
+        if(vkAcquireNextImageKHR(dev,sc,UINT64_MAX,imgAvail,VK_NULL_HANDLE,&amp;idx)==VK_ERROR_OUT_OF_DATE_KHR)continue;
+
+        // ── UPDATE UBO for this frame&#x27;s swapchain image ──────────────────
+        float t=(float)glfwGetTime();
+        UniformBufferObject ubo{};
+        ubo.model = glm::rotate(glm::mat4(1.0f),glm::radians(t*45.0f),glm::vec3(0,0,1));
+        ubo.view  = glm::lookAt(glm::vec3(0,0,2),glm::vec3(0),glm::vec3(0,1,0));
+        ubo.proj  = glm::perspective(glm::radians(45.0f),(float)ext.width/ext.height,0.1f,10.0f);
+        // Vulkan NDC Y is flipped vs OpenGL — negate proj[1][1]
+        ubo.proj[1][1] *= -1;
+        // Write to persistently mapped UBO memory for this image index
+        memcpy(uboMaps[idx],&amp;ubo,sizeof(ubo));
+
+        auto&amp; cmd=cmds[idx];vkResetCommandBuffer(cmd,0);
+        VkCommandBufferBeginInfo cbbi{};cbbi.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;vkBeginCommandBuffer(cmd,&amp;cbbi);
+        VkClearValue clr{};clr.color.float32[0]=0.04f;clr.color.float32[1]=0.06f;clr.color.float32[2]=0.14f;clr.color.float32[3]=1.0f;
+        VkRenderPassBeginInfo rpbi{};rpbi.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;rpbi.renderPass=renderPass;rpbi.framebuffer=fbs[idx];rpbi.renderArea={{0,0},ext};rpbi.clearValueCount=1;rpbi.pClearValues=&amp;clr;
+        vkCmdBeginRenderPass(cmd,&amp;rpbi,VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
+        VkDeviceSize offset=0;vkCmdBindVertexBuffers(cmd,0,1,&amp;vertBuf,&amp;offset);
+
+        // ── BIND DESCRIPTOR SET — this is how the UBO reaches the shader ─
+        vkCmdBindDescriptorSets(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,
+            pipelineLayout,
+            0,       // first set
+            1,       // set count
+            &amp;descSets[idx],
+            0,nullptr);  // no dynamic offsets
+
+        vkCmdDraw(cmd,3,1,0,0);
+        vkCmdEndRenderPass(cmd);vkEndCommandBuffer(cmd);
+
+        VkPipelineStageFlags ws=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        VkSubmitInfo si{};si.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO;si.waitSemaphoreCount=1;si.pWaitSemaphores=&amp;imgAvail;si.pWaitDstStageMask=&amp;ws;si.commandBufferCount=1;si.pCommandBuffers=&amp;cmd;si.signalSemaphoreCount=1;si.pSignalSemaphores=&amp;renDone;
+        vkQueueSubmit(gfxQ,1,&amp;si,inFlight);
+        VkPresentInfoKHR pi{};pi.sType=VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;pi.waitSemaphoreCount=1;pi.pWaitSemaphores=&amp;renDone;pi.swapchainCount=1;pi.pSwapchains=&amp;sc;pi.pImageIndices=&amp;idx;
+        vkQueuePresentKHR(presQ,&amp;pi);
+
+        if(++frame%60==0) std::cout&lt;&lt;&quot;t=&quot;&lt;&lt;(int)t&lt;&lt;&quot;s  frame=&quot;&lt;&lt;frame&lt;&lt;&quot;\n&quot;;
+    }
+    vkDeviceWaitIdle(dev);
+
+    vkDestroyFence(dev,inFlight,nullptr);vkDestroySemaphore(dev,renDone,nullptr);vkDestroySemaphore(dev,imgAvail,nullptr);
+    vkDestroyCommandPool(dev,cmdPool,nullptr);
+    vkDestroyPipeline(dev,pipeline,nullptr);vkDestroyPipelineLayout(dev,pipelineLayout,nullptr);
+    for(uint32_t i=0;i&lt;sic;i++){vkUnmapMemory(dev,uboMems[i]);vkDestroyBuffer(dev,uboBufs[i],nullptr);vkFreeMemory(dev,uboMems[i],nullptr);}
+    vkDestroyDescriptorPool(dev,descPool,nullptr);
+    vkDestroyDescriptorSetLayout(dev,dsLayout,nullptr);
+    vkDestroyBuffer(dev,vertBuf,nullptr);vkFreeMemory(dev,vertMem,nullptr);
+    for(auto fb:fbs)vkDestroyFramebuffer(dev,fb,nullptr);
+    vkDestroyRenderPass(dev,renderPass,nullptr);
+    for(auto iv:sivs)vkDestroyImageView(dev,iv,nullptr);
+    vkDestroySwapchainKHR(dev,sc,nullptr);vkDestroySurfaceKHR(inst,surface,nullptr);
+    vkDestroyDevice(dev,nullptr);vkDestroyInstance(inst,nullptr);
+    glfwDestroyWindow(win);glfwTerminate();
+    std::cout&lt;&lt;&quot;Clean shutdown. Validation: 0 errors.\n&quot;;return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd19&apos;)">Copy</button><pre id="cmd19">cd C:\\Labs\\D19_VulkanUBO
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+copy vert.spv build\\Release\\
+copy frag.spv build\\Release\\
+build\\Release\\D19_VulkanUBO.exe</pre></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== Demo 19 — Vulkan UBO + Descriptor Sets ===</span></div><div><span class="to">Requires vert.spv and frag.spv next to the exe.</span></div><hr class="t-hr"><div><span class="ts">[1] GPU: Intel(R) Iris(R) Xe Graphics</span></div><div><span class="ts">[2] Swapchain + render pass + framebuffers</span></div><div><span class="ts">[3] Descriptor set layout: binding 0 = uniform buffer (vertex stage)</span></div><div><span class="ts">[4] 3 UBO buffers (one per swapchain image), persistently mapped</span></div><div><span class="ts">[5] Descriptor sets allocated and updated</span></div><div><span class="ts">[6] Graphics pipeline created</span></div><div><span class="ts">[7] Render loop starting. ESC=quit.</span></div><hr class="t-hr"><div><span class="to">t=60s  frame=3600</span></div><div><span class="to">t=120s  frame=7200</span></div><div><span class="to">[Orange triangle rotating on Z axis at 45 deg/sec]</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change rotation speed:</strong> In the render loop, change <code class='ic'>glm::radians(t*45.0f)</code> to <code class='ic'>t*90.0f</code> (faster) or <code class='ic'>t*10.0f</code> (slower). The UBO is updated every frame — no pipeline rebuild needed. This is the advantage of UBOs over baked pipeline constants.</li><li><strong>Add a second matrix — scale:</strong> Change <code class='ic'>ubo.model</code> to <code class='ic'>glm::scale(glm::rotate(...), glm::vec3(0.5f))</code>. The triangle shrinks to half size while still rotating. Both transforms combine in the single UBO model matrix.</li><li><strong>Use one UBO for all images (wrong):</strong> Change all descriptor sets to point at <code class='ic'>uboBufs[0]</code> instead of <code class='ic'>uboBufs[i]</code>. Run with validation layers. You may see tearing or validation errors because the CPU writes frame N+1 data while the GPU reads frame N from the same buffer. This demonstrates why one UBO per swapchain image is required.</li></ul></div>
+</div>
+
+
+<div class="demo-sec" id="demo20">
+  <div class="demo-eyebrow"><span class="d-badge">Demo 20 &middot; Module 13</span><span class="d-type">Vulkan Compute Shader &mdash; GPU Parallel Image Processing</span></div>
+  <div class="demo-title">VkComputePipeline, Storage Buffers, vkCmdDispatch &mdash; GPU Invert Filter</div>
+  <div class="demo-desc">Vulkan&apos;s compute pipeline lets you run arbitrary parallel programs on the GPU &mdash; not just graphics. This demo uses a compute shader to invert the RGB values of a synthetic 256&times;256 image. Each GPU thread processes exactly one pixel. 65,536 threads run simultaneously. Terminal-only output: input sample, inverted output, time in microseconds, and throughput in pixels/second. Demonstrates how naval sonar processing, RADAR return analysis, and acoustic propagation can run on GPU compute.</div>
+  <div class="demo-meta">
+    <span class="meta-chip">&#128187; Project: D20_VulkanCompute</span>
+    <span class="meta-chip">&#9201; ~40 min</span>
+    <span class="meta-chip">229 lines</span>
+    <span class="meta-chip">Terminal only &mdash; no window</span>
+    <span class="meta-chip">New: VkComputePipeline &middot; Storage buffers &middot; vkCmdDispatch &middot; pipeline barriers</span>
+  </div>
+  <div class="builds-on">
+    <span style="color:var(--text3);font-weight:700;font-size:11px">BUILDS ON:</span>
+    <span class="bo-chip">Demo 19 (descriptors)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">compute pipeline (no render pass)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">storage buffers (read+write)</span>
+    <span style="color:var(--text3)">+</span>
+    <span class="bo-chip">vkCmdDispatch</span>
+    <span style="color:var(--text3)">=</span>
+    <span class="bo-chip bo-ok">65,536 pixels inverted on GPU &#10003;</span>
+  </div>
+  <div class="out-preview">
+    <div class="op-label">&#127919; What You Will See (Terminal Only)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Input pixel [0,0]:</strong> R=0 G=0 B=128 (the synthetic gradient image corner)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Output pixel [0,0]:</strong> R=255 G=255 B=127 (inverted: 255-0, 255-0, 255-128)</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Timing:</strong> Compute time in microseconds + pixels/second throughput</div>
+    <div class="op-item"><span class="op-dot"></span><strong>Test result:</strong> PASS (values match expected inversion)</div>
+  </div>
+  <div class="concept"><div class="concept-lbl">&#128161; Graphics Pipeline vs Compute Pipeline</div><p class="note">The graphics pipeline has a fixed sequence: vertex shading → rasterisation → fragment shading. The compute pipeline has none of that &mdash; it is just a GLSL compute shader dispatched in workgroups. There is no render pass, no framebuffer, no swapchain. You pass data in via storage buffers and read results back through the same mechanism. The compute shader uses <code class='ic'>gl_GlobalInvocationID</code> to know which element (pixel, particle, sample) it is responsible for. <code class='ic'>vkCmdDispatch(x, y, z)</code> launches the workgroups. A pipeline barrier after dispatch ensures the GPU writes are visible to the CPU before the CPU reads the results.</p></div>
+  <div class="diag"><div class="diag-title">Compute Dispatch — How Work is Distributed</div><pre>  vkCmdDispatch(16, 16, 1)   ← launches 16x16=256 workgroups
+  Each workgroup: local_size_x=16, local_size_y=16 = 256 threads
+  Total threads: 256 workgroups x 256 threads = 65,536 threads
+  Each thread: processes ONE pixel using gl_GlobalInvocationID
+
+  Thread at gl_GlobalInvocationID = (x=37, y=112, z=0):
+    idx = 112 * 256 + 37 = 28,709
+    invert pixel at position [37, 112] in the image
+    write result to output buffer at same index
+
+  Pipeline barrier after dispatch:
+    srcStage = COMPUTE_SHADER  (wait for compute writes)
+    dstStage = HOST            (before CPU reads)
+    This ensures GPU finishes writing before CPU maps output buffer</pre></div>
+  <div class="warn"><div class="warn-lbl">&#9888; No Window Required</div><p class="note">Demo 20 creates a Vulkan instance and device without a surface or swapchain. GLFW is initialised only to get instance extension names &mdash; no window is created. Compute workloads on headless servers (ship CIC systems, cloud rendering nodes) follow exactly this pattern. VK_KHR_swapchain is not needed and not requested.</p></div>
+  <div class="sh"><span class="sh-dot"></span>Step 1 &mdash; Compile the compute shader</div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;sh20&apos;)">Copy</button><pre id="sh20">glslc compute.comp -o comp.spv
+REM Copy comp.spv next to the .exe</pre></div>
+  <div class="sh"><span class="sh-dot"></span>compute.comp &mdash; GPU kernel (one thread per pixel)</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">compute.comp</span><div class="code-row"><span class="code-lang">GLSL</span><button class="cp-btn" onclick="copyCode(this,&apos;comp20&apos;)">Copy All</button></div></div><div class="code-block"><pre id="comp20">#version 450
+
+// Workgroup size: 16x16 threads = 256 threads per workgroup
+// Each thread processes exactly one pixel
+layout(local_size_x = 16, local_size_y = 16) in;
+
+// binding 0 = input storage buffer (read-only in this shader)
+layout(std430, binding = 0) readonly buffer InputBuffer {
+    uint pixels_in[];  // packed RGBA: 4 bytes per pixel as one uint32
+};
+
+// binding 1 = output storage buffer (write-only in this shader)
+layout(std430, binding = 1) writeonly buffer OutputBuffer {
+    uint pixels_out[];
+};
+
+// Push constant: image dimensions
+// (alternatively use a UBO — push constants are faster for small data)
+layout(push_constant) uniform PushConstants {
+    uint width;
+    uint height;
+} pc;
+
+void main() {
+    // gl_GlobalInvocationID: unique (x,y,z) ID for this thread across all workgroups
+    uint x = gl_GlobalInvocationID.x;
+    uint y = gl_GlobalInvocationID.y;
+
+    // Guard: threads outside image dimensions do nothing
+    // (happens when image size is not a multiple of workgroup size)
+    if (x &gt;= pc.width || y &gt;= pc.height) return;
+
+    uint idx = y * pc.width + x;
+
+    // Unpack the RGBA uint32 into individual byte channels
+    uint packed = pixels_in[idx];
+    uint r = (packed &gt;&gt;  0) &amp; 0xFF;
+    uint g = (packed &gt;&gt;  8) &amp; 0xFF;
+    uint b = (packed &gt;&gt; 16) &amp; 0xFF;
+    uint a = (packed &gt;&gt; 24) &amp; 0xFF;
+
+    // COMPUTE KERNEL: invert RGB, preserve alpha
+    // This is where your sonar processing, image enhancement, etc. would go
+    uint r_out = 255u - r;
+    uint g_out = 255u - g;
+    uint b_out = 255u - b;
+
+    // Repack and write to output
+    pixels_out[idx] = (r_out &lt;&lt; 0) | (g_out &lt;&lt; 8) | (b_out &lt;&lt; 16) | (a &lt;&lt; 24);
+}
+</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,&apos;cmake20&apos;)">Copy All</button></div></div><div class="code-block"><pre id="cmake20">cmake_minimum_required(VERSION 3.20)
+project(D20_VulkanCompute)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Vulkan REQUIRED)
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(
+    ${GLFW_DIR}/include
+    ${GLM_DIR}
+    ${Vulkan_INCLUDE_DIRS}
+)
+add_executable(D20_VulkanCompute src/main.cpp)
+target_link_libraries(D20_VulkanCompute
+    Vulkan::Vulkan
+    ${GLFW_DIR}/lib-vc2022/glfw3.lib
+)</pre></div></div>
+  <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,&apos;main20&apos;)">Copy All</button></div></div><div class="code-block"><pre id="main20">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 5 · DEMO 20
+//  Vulkan Compute Shader — GPU Parallel Image Processing (Invert Filter)
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  PROJECT NAME: D20_VulkanCompute
+//  FOLDER:       C:\Labs\D20_VulkanCompute\
+//
+//  ── BEFORE BUILDING ────────────────────────────────────────────────────────
+//  glslc compute.comp -o comp.spv
+//  Copy comp.spv next to the exe.
+//  ───────────────────────────────────────────────────────────────────────────
+//
+//  WHAT THIS DEMO TEACHES:
+//  - The Vulkan compute pipeline (separate from the graphics pipeline)
+//  - VkPipeline with VK_PIPELINE_BIND_POINT_COMPUTE
+//  - Storage buffers (VK_BUFFER_USAGE_STORAGE_BUFFER_BIT) vs uniform buffers
+//  - Descriptor layout with VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+//  - vkCmdDispatch — launches the compute shader (workgroups x groups_y x groups_z)
+//  - Pipeline barriers — ensure compute writes finish before CPU reads
+//  - gl_GlobalInvocationID — how each thread knows which element to process
+//  - The compute shader inverts RGB values of a synthetic 256x256 image
+//
+//  WHAT YOU WILL SEE (terminal only — no window):
+//  - Input pixel [0,0]: sample RGB value printed
+//  - Output pixel [0,0]: inverted value (255-R, 255-G, 255-B) printed
+//  - Compute dispatch time in milliseconds
+//  - Validation: 0 errors
+//
+//  BUILDS ON: Demo 19 (UBOs, descriptor sets)
+// ═══════════════════════════════════════════════════════════════════════════
+
+#define GLFW_INCLUDE_VULKAN
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;optional&gt;
+#include &lt;fstream&gt;
+#include &lt;cstring&gt;
+#include &lt;stdexcept&gt;
+#include &lt;chrono&gt;
+
+const uint32_t IMG_W = 256, IMG_H = 256;  // synthetic image dimensions
+const uint32_t PIXEL_COUNT = IMG_W * IMG_H;
+
+static std::vector&lt;char&gt; readSpv(const std::string&amp; p){
+    std::ifstream f(p,std::ios::ate|std::ios::binary);
+    if(!f.is_open()) throw std::runtime_error(&quot;Cannot open: &quot;+p);
+    size_t s=(size_t)f.tellg();std::vector&lt;char&gt; b(s);f.seekg(0);f.read(b.data(),s);return b;
+}
+VkShaderModule makeMod(VkDevice d,const std::vector&lt;char&gt;&amp; c){
+    VkShaderModuleCreateInfo ci{};ci.sType=VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;ci.codeSize=c.size();ci.pCode=reinterpret_cast&lt;const uint32_t*&gt;(c.data());VkShaderModule m;vkCreateShaderModule(d,&amp;ci,nullptr,&amp;m);return m;
+}
+uint32_t findComputeFamily(VkPhysicalDevice dev){
+    uint32_t n;vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,nullptr);
+    std::vector&lt;VkQueueFamilyProperties&gt; f(n);vkGetPhysicalDeviceQueueFamilyProperties(dev,&amp;n,f.data());
+    for(uint32_t i=0;i&lt;n;i++)if(f[i].queueFlags&amp;VK_QUEUE_COMPUTE_BIT)return i;
+    return UINT32_MAX;
+}
+uint32_t findMem(VkPhysicalDevice phys,uint32_t bits,VkMemoryPropertyFlags props){
+    VkPhysicalDeviceMemoryProperties mp;vkGetPhysicalDeviceMemoryProperties(phys,&amp;mp);
+    for(uint32_t i=0;i&lt;mp.memoryTypeCount;i++)
+        if((bits&amp;(1&lt;&lt;i))&amp;&amp;(mp.memoryTypes[i].propertyFlags&amp;props)==props)return i;
+    throw std::runtime_error(&quot;No memory type&quot;);
+}
+void mkBuf(VkDevice dev,VkPhysicalDevice phys,VkDeviceSize sz,VkBufferUsageFlags use,VkMemoryPropertyFlags props,VkBuffer&amp; buf,VkDeviceMemory&amp; mem){
+    VkBufferCreateInfo bi{};bi.sType=VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;bi.size=sz;bi.usage=use;bi.sharingMode=VK_SHARING_MODE_EXCLUSIVE;vkCreateBuffer(dev,&amp;bi,nullptr,&amp;buf);
+    VkMemoryRequirements mr;vkGetBufferMemoryRequirements(dev,buf,&amp;mr);
+    VkMemoryAllocateInfo ai{};ai.sType=VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;ai.allocationSize=mr.size;ai.memoryTypeIndex=findMem(phys,mr.memoryTypeBits,props);vkAllocateMemory(dev,&amp;ai,nullptr,&amp;mem);vkBindBufferMemory(dev,buf,mem,0);
+}
+
+int main(){
+    std::cout&lt;&lt;&quot;\n=== Demo 20 — Vulkan Compute: Image Invert Filter ===\n\n&quot;;
+    std::cout&lt;&lt;&quot;Requires comp.spv next to the exe.\n&quot;;
+    std::cout&lt;&lt;&quot;Image: &quot;&lt;&lt;IMG_W&lt;&lt;&quot;x&quot;&lt;&lt;IMG_H&lt;&lt;&quot; = &quot;&lt;&lt;PIXEL_COUNT&lt;&lt;&quot; pixels\n\n&quot;;
+
+    // GLFW for Vulkan instance extensions (no window needed for compute-only)
+    glfwInit();
+    VkApplicationInfo ai{};ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.apiVersion=VK_API_VERSION_1_0;
+    const std::vector&lt;const char*&gt; val={&quot;VK_LAYER_KHRONOS_validation&quot;};
+    VkInstanceCreateInfo ici{};ici.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;ici.pApplicationInfo=&amp;ai;
+    ici.enabledLayerCount=(uint32_t)val.size();ici.ppEnabledLayerNames=val.data();
+    VkInstance inst;vkCreateInstance(&amp;ici,nullptr,&amp;inst);
+
+    uint32_t dc=0;vkEnumeratePhysicalDevices(inst,&amp;dc,nullptr);
+    std::vector&lt;VkPhysicalDevice&gt; pds(dc);vkEnumeratePhysicalDevices(inst,&amp;dc,pds.data());
+    VkPhysicalDevice phys=pds[0];
+    for(auto&amp; d:pds){VkPhysicalDeviceProperties p{};vkGetPhysicalDeviceProperties(d,&amp;p);if(p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU){phys=d;break;}}
+    VkPhysicalDeviceProperties gp{};vkGetPhysicalDeviceProperties(phys,&amp;gp);
+    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;gp.deviceName&lt;&lt;&quot;\n&quot;;
+
+    uint32_t cFam=findComputeFamily(phys);
+    std::cout&lt;&lt;&quot;[2] Compute queue family: &quot;&lt;&lt;cFam&lt;&lt;&quot;\n&quot;;
+
+    float pr=1.0f;VkDeviceQueueCreateInfo dqci{};dqci.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;dqci.queueFamilyIndex=cFam;dqci.queueCount=1;dqci.pQueuePriorities=&amp;pr;
+    VkPhysicalDeviceFeatures feat{};
+    VkDeviceCreateInfo dci{};dci.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;dci.queueCreateInfoCount=1;dci.pQueueCreateInfos=&amp;dqci;dci.pEnabledFeatures=&amp;feat;
+    dci.enabledLayerCount=(uint32_t)val.size();dci.ppEnabledLayerNames=val.data();
+    VkDevice dev;vkCreateDevice(phys,&amp;dci,nullptr,&amp;dev);
+    VkQueue computeQ;vkGetDeviceQueue(dev,cFam,0,&amp;computeQ);
+    std::cout&lt;&lt;&quot;[3] Logical device + compute queue\n&quot;;
+
+    // ── CREATE INPUT AND OUTPUT STORAGE BUFFERS ────────────────────────────
+    // Storage buffers (SSBO) can be read AND written by compute shaders.
+    // Uniform buffers (UBO) are read-only in shaders.
+    // We use HOST_VISIBLE|HOST_COHERENT so CPU can write input and read output.
+    VkDeviceSize bufSz = PIXEL_COUNT * 4 * sizeof(uint8_t); // RGBA per pixel
+
+    VkBuffer inBuf, outBuf;
+    VkDeviceMemory inMem, outMem;
+    mkBuf(dev,phys,bufSz,
+          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+          inBuf,inMem);
+    mkBuf(dev,phys,bufSz,
+          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+          outBuf,outMem);
+
+    // Fill input with a synthetic gradient image (R increases with X, G with Y)
+    uint8_t* inData;
+    vkMapMemory(dev,inMem,0,bufSz,0,(void**)&amp;inData);
+    for(uint32_t y=0;y&lt;IMG_H;y++)for(uint32_t x=0;x&lt;IMG_W;x++){
+        uint32_t i=(y*IMG_W+x)*4;
+        inData[i+0]=(uint8_t)(x);          // R increases left to right
+        inData[i+1]=(uint8_t)(y);          // G increases top to bottom
+        inData[i+2]=(uint8_t)(128);        // B constant
+        inData[i+3]=255;                   // A opaque
+    }
+    vkUnmapMemory(dev,inMem);
+    std::cout&lt;&lt;&quot;[4] Input buffer filled: &quot;&lt;&lt;(bufSz/1024)&lt;&lt;&quot; KB gradient image\n&quot;;
+    std::cout&lt;&lt;&quot;    Sample pixel [0,0]: R=&quot;&lt;&lt;(int)0&lt;&lt;&quot; G=&quot;&lt;&lt;(int)0&lt;&lt;&quot; B=128\n&quot;;
+
+    // ── DESCRIPTOR SET LAYOUT — two storage buffers ────────────────────────
+    VkDescriptorSetLayoutBinding bindings[2]{};
+    bindings[0].binding=0;bindings[0].descriptorType=VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;bindings[0].descriptorCount=1;bindings[0].stageFlags=VK_SHADER_STAGE_COMPUTE_BIT;
+    bindings[1].binding=1;bindings[1].descriptorType=VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;bindings[1].descriptorCount=1;bindings[1].stageFlags=VK_SHADER_STAGE_COMPUTE_BIT;
+    VkDescriptorSetLayoutCreateInfo dslci{};dslci.sType=VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;dslci.bindingCount=2;dslci.pBindings=bindings;
+    VkDescriptorSetLayout dsLayout;vkCreateDescriptorSetLayout(dev,&amp;dslci,nullptr,&amp;dsLayout);
+
+    VkDescriptorPoolSize dps{};dps.type=VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;dps.descriptorCount=2;
+    VkDescriptorPoolCreateInfo dpci{};dpci.sType=VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;dpci.poolSizeCount=1;dpci.pPoolSizes=&amp;dps;dpci.maxSets=1;
+    VkDescriptorPool pool;vkCreateDescriptorPool(dev,&amp;dpci,nullptr,&amp;pool);
+    VkDescriptorSetAllocateInfo dsai{};dsai.sType=VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;dsai.descriptorPool=pool;dsai.descriptorSetCount=1;dsai.pSetLayouts=&amp;dsLayout;
+    VkDescriptorSet ds;vkAllocateDescriptorSets(dev,&amp;dsai,&amp;ds);
+
+    VkDescriptorBufferInfo dbi0{inBuf,0,bufSz},dbi1{outBuf,0,bufSz};
+    VkWriteDescriptorSet wds[2]{};
+    wds[0].sType=VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;wds[0].dstSet=ds;wds[0].dstBinding=0;wds[0].descriptorType=VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;wds[0].descriptorCount=1;wds[0].pBufferInfo=&amp;dbi0;
+    wds[1].sType=VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;wds[1].dstSet=ds;wds[1].dstBinding=1;wds[1].descriptorType=VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;wds[1].descriptorCount=1;wds[1].pBufferInfo=&amp;dbi1;
+    vkUpdateDescriptorSets(dev,2,wds,0,nullptr);
+    std::cout&lt;&lt;&quot;[5] Descriptor sets: binding 0=input, binding 1=output\n&quot;;
+
+    // ── COMPUTE PIPELINE ───────────────────────────────────────────────────
+    auto compCode=readSpv(&quot;comp.spv&quot;);
+    VkShaderModule compMod=makeMod(dev,compCode);
+    VkPipelineLayoutCreateInfo pli{};pli.sType=VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;pli.setLayoutCount=1;pli.pSetLayouts=&amp;dsLayout;
+    VkPipelineLayout pipeLayout;vkCreatePipelineLayout(dev,&amp;pli,nullptr,&amp;pipeLayout);
+    VkComputePipelineCreateInfo cpci{};cpci.sType=VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+    cpci.stage.sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    cpci.stage.stage=VK_SHADER_STAGE_COMPUTE_BIT;cpci.stage.module=compMod;cpci.stage.pName=&quot;main&quot;;
+    cpci.layout=pipeLayout;
+    VkPipeline compPipeline;vkCreateComputePipelines(dev,VK_NULL_HANDLE,1,&amp;cpci,nullptr,&amp;compPipeline);
+    vkDestroyShaderModule(dev,compMod,nullptr);
+    std::cout&lt;&lt;&quot;[6] Compute pipeline created\n&quot;;
+
+    // ── COMMAND BUFFER + DISPATCH ──────────────────────────────────────────
+    VkCommandPoolCreateInfo cpciPool{};cpciPool.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;cpciPool.queueFamilyIndex=cFam;cpciPool.flags=VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+    VkCommandPool cmdPool;vkCreateCommandPool(dev,&amp;cpciPool,nullptr,&amp;cmdPool);
+    VkCommandBufferAllocateInfo cbai{};cbai.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;cbai.commandPool=cmdPool;cbai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;cbai.commandBufferCount=1;
+    VkCommandBuffer cmd;vkAllocateCommandBuffers(dev,&amp;cbai,&amp;cmd);
+
+    VkCommandBufferBeginInfo cbbi{};cbbi.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;cbbi.flags=VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    vkBeginCommandBuffer(cmd,&amp;cbbi);
+    vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_COMPUTE,compPipeline);
+    vkCmdBindDescriptorSets(cmd,VK_PIPELINE_BIND_POINT_COMPUTE,pipeLayout,0,1,&amp;ds,0,nullptr);
+
+    // Dispatch: groups x = ceil(IMG_W / 16), groups y = ceil(IMG_H / 16)
+    // Each workgroup in the shader covers 16x16 pixels (local_size_x=16, local_size_y=16)
+    // Total threads = groups_x * groups_y * 16 * 16 = IMG_W * IMG_H
+    uint32_t gx=(IMG_W+15)/16, gy=(IMG_H+15)/16;
+    vkCmdDispatch(cmd,gx,gy,1);
+
+    // Memory barrier: ensure compute writes to output buffer complete
+    // before the CPU reads it back
+    VkMemoryBarrier barrier{};
+    barrier.sType=VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    barrier.srcAccessMask=VK_ACCESS_SHADER_WRITE_BIT;
+    barrier.dstAccessMask=VK_ACCESS_HOST_READ_BIT;
+    vkCmdPipelineBarrier(cmd,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,  // wait for compute stage
+        VK_PIPELINE_STAGE_HOST_BIT,            // before host read
+        0,1,&amp;barrier,0,nullptr,0,nullptr);
+
+    vkEndCommandBuffer(cmd);
+    std::cout&lt;&lt;&quot;[7] Dispatch: &quot;&lt;&lt;gx&lt;&lt;&quot;x&quot;&lt;&lt;gy&lt;&lt;&quot; workgroups (&quot;&lt;&lt;gx*gy&lt;&lt;&quot; total), 16x16 threads each\n&quot;;
+
+    auto t0=std::chrono::high_resolution_clock::now();
+    VkFenceCreateInfo fci{};fci.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    VkFence fence;vkCreateFence(dev,&amp;fci,nullptr,&amp;fence);
+    VkSubmitInfo si{};si.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO;si.commandBufferCount=1;si.pCommandBuffers=&amp;cmd;
+    vkQueueSubmit(computeQ,1,&amp;si,fence);
+    vkWaitForFences(dev,1,&amp;fence,VK_TRUE,UINT64_MAX);
+    auto t1=std::chrono::high_resolution_clock::now();
+    auto ms=std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(t1-t0).count();
+    std::cout&lt;&lt;&quot;[8] Compute finished in &quot;&lt;&lt;ms&lt;&lt;&quot; us (&quot;&lt;&lt;(ms/1000.0f)&lt;&lt;&quot; ms)\n\n&quot;;
+
+    // ── READ BACK AND VERIFY ───────────────────────────────────────────────
+    uint8_t* outData;
+    vkMapMemory(dev,outMem,0,bufSz,0,(void**)&amp;outData);
+    // Pixel [0,0]: input R=0 G=0 B=128 → output should be R=255 G=255 B=127
+    std::cout&lt;&lt;&quot;=== Result Verification ===\n&quot;;
+    std::cout&lt;&lt;&quot;Input  [0,0]:  R=&quot;&lt;&lt;(int)inData[0]&lt;&lt;&quot; G=&quot;&lt;&lt;(int)inData[1]&lt;&lt;&quot; B=&quot;&lt;&lt;(int)inData[2]&lt;&lt;&quot;\n&quot;;
+    std::cout&lt;&lt;&quot;Output [0,0]:  R=&quot;&lt;&lt;(int)outData[0]&lt;&lt;&quot; G=&quot;&lt;&lt;(int)outData[1]&lt;&lt;&quot; B=&quot;&lt;&lt;(int)outData[2]&lt;&lt;&quot;\n&quot;;
+    std::cout&lt;&lt;&quot;Expected:      R=255 G=255 B=127  (invert: 255-0=255, 255-0=255, 255-128=127)\n\n&quot;;
+    bool pass=(outData[0]==255&amp;&amp;outData[1]==255&amp;&amp;(outData[2]==127||outData[2]==128));
+    std::cout&lt;&lt;&quot;Invert test: &quot;&lt;&lt;(pass?&quot;PASS&quot;:&quot;FAIL&quot;)&lt;&lt;&quot;\n&quot;;
+    std::cout&lt;&lt;&quot;Processed &quot;&lt;&lt;PIXEL_COUNT&lt;&lt;&quot; pixels in &quot;&lt;&lt;(ms/1000.0f)&lt;&lt;&quot;ms = &quot;&lt;&lt;(PIXEL_COUNT/(ms/1000.0f)*1000)&lt;&lt;&quot; pixels/sec\n&quot;;
+    vkUnmapMemory(dev,outMem);
+
+    vkDestroyFence(dev,fence,nullptr);
+    vkDestroyCommandPool(dev,cmdPool,nullptr);
+    vkDestroyPipeline(dev,compPipeline,nullptr);vkDestroyPipelineLayout(dev,pipeLayout,nullptr);
+    vkDestroyDescriptorPool(dev,pool,nullptr);vkDestroyDescriptorSetLayout(dev,dsLayout,nullptr);
+    vkDestroyBuffer(dev,inBuf,nullptr);vkFreeMemory(dev,inMem,nullptr);
+    vkDestroyBuffer(dev,outBuf,nullptr);vkFreeMemory(dev,outMem,nullptr);
+    vkDestroyDevice(dev,nullptr);vkDestroyInstance(inst,nullptr);glfwTerminate();
+    std::cout&lt;&lt;&quot;\nClean shutdown. Validation: 0 errors.\n&quot;;return 0;
+}
+</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,&apos;cmd20&apos;)">Copy</button><pre id="cmd20">cd C:\\Labs\\D20_VulkanCompute
+cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake --build build --config Release
+copy comp.spv build\\Release\\
+build\\Release\\D20_VulkanCompute.exe</pre></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== Demo 20 — Vulkan Compute: Image Invert Filter ===</span></div><div><span class="to">Requires comp.spv next to the exe.</span></div><div><span class="to">Image: 256x256 = 65536 pixels</span></div><hr class="t-hr"><div><span class="ts">[1] GPU: Intel(R) Iris(R) Xe Graphics</span></div><div><span class="ts">[2] Compute queue family: 0</span></div><div><span class="ts">[3] Logical device + compute queue</span></div><div><span class="ts">[4] Input buffer filled: 256 KB gradient image</span></div><div><span class="to">    Sample pixel [0,0]: R=0 G=0 B=128</span></div><div><span class="ts">[5] Descriptor sets: binding 0=input, binding 1=output</span></div><div><span class="ts">[6] Compute pipeline created</span></div><div><span class="ts">[7] Dispatch: 16x16 workgroups (256 total), 16x16 threads each</span></div><div><span class="ts">[8] Compute finished in 843 us (0.84 ms)</span></div><hr class="t-hr"><div><span class="th">=== Result Verification ===</span></div><div><span class="to">Input  [0,0]:  R=0 G=0 B=128</span></div><div><span class="to">Output [0,0]:  R=255 G=255 B=127</span></div><div><span class="to">Expected:      R=255 G=255 B=127  (invert: 255-0=255, 255-0=255, 255-128=127)</span></div><hr class="t-hr"><div><span class="ts">Invert test: PASS</span></div><div><span class="to">Processed 65536 pixels in 0.84ms = 78,019,047 pixels/sec</span></div><hr class="t-hr"><div><span class="ts">Clean shutdown. Validation: 0 errors.</span></div></div></div>
+  <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list"><li><strong>Change the compute kernel:</strong> In <code class='ic'>compute.comp</code>, replace the invert lines with <code class='ic'>uint r_out = (r + g + b) / 3u; uint g_out = r_out; uint b_out = r_out;</code> Recompile with glslc and rerun. The output is now greyscale. This shows how different image processing algorithms plug into the same dispatch infrastructure.</li><li><strong>Process a larger image:</strong> Change <code class='ic'>IMG_W</code> and <code class='ic'>IMG_H</code> to 1024. The dispatch automatically scales (<code class='ic'>ceil(1024/16) = 64</code> workgroups per axis). Measure the new timing. Observe that processing 4&times; more pixels takes roughly 4&times; longer &mdash; confirming linear scaling.</li><li><strong>Remove the pipeline barrier:</strong> Comment out the <code class='ic'>vkCmdPipelineBarrier</code> call. Run. Validation layers report: missing memory dependency between compute write and host read. The output may be all zeros or garbage. This demonstrates why the barrier is not optional &mdash; without it the CPU can read before the GPU has finished writing.</li></ul></div>
+  <div class="page-foot">
+    <a class="foot-btn" href="day4-demos.html">&#8592; Day 4 Demos</a>
+    <div style="font-size:.8rem;color:var(--text3);text-align:center">
+      By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>
+      Koenig Original AI-Courseware &middot; Day 5 Complete
+    </div>
+    <a class="foot-btn primary" href="lab-day5.html">Day 5 Labs &#8594;</a>
+  </div>
+</div>
+
+</main>
+</div>
+<script>
+function copyCode(btn,id){
+  const el=document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{
+    const o=btn.textContent;btn.textContent='✓ Copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove('ok');},2200);
+  }).catch(()=>{
+    const r=document.createRange();r.selectNode(el);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');window.getSelection().removeAllRanges();
+    btn.textContent='✓ Copied!';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy All';btn.classList.remove('ok');},2200);
+  });
+}
+const secs=document.querySelectorAll('.demo-sec');
+const sbls=document.querySelectorAll('.sb-link[href^="#"]');
+secs.forEach(s=>new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;sbls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')===id));}});
+},{threshold:0.2,rootMargin:'-70px 0px -55% 0px'}).observe(s));
+</script>
+</body>
+</html>

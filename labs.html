@@ -401,21 +401,36 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <div class="day-card-accent" style="background:var(--d5)"></div>
       <div class="day-info">
         <div class="day-label">Day 5 · Modules 13, 14, 15</div>
-        <div class="day-card-title">Capstone: Full Maritime Tactical System</div>
-        <div class="day-card-desc">OpenGL scene + Vulkan renderer + GPU compute sonar processing + C# integration. Final demo presentation.</div>
+        <div class="day-card-title">Maritime Tactical System &mdash; Full Capstone</div>
+        <div class="day-card-desc">Descriptor sets, Vulkan compute sonar processor, C# P/Invoke bridge, and 10-minute live capstone demo covering all 15 modules.</div>
       </div>
-      <span class="day-status status-soon">🔒 Coming Soon</span>
-      <span style="color:var(--text3);font-size:1.1rem;margin-left:1rem" id="arrow-day5">▶</span>
+      <span class="day-status status-live" style="background:rgba(244,114,182,.12);color:var(--pink);border:1px solid rgba(244,114,182,.3)">&#9679; Live</span>
+      <span style="color:var(--text3);font-size:1.1rem;margin-left:1rem" id="arrow-day5">&#9660;</span>
     </div>
-    <div class="day-card-body hidden" id="body-day5">
+    <div class="day-card-body" id="body-day5">
+      <div class="scenario-banner" style="background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(99,102,241,.04));border:1px solid rgba(244,114,182,.2)">
+        <div class="scenario-icon">&#127973;</div>
+        <div class="scenario-text">
+          <h3>Scenario: Maritime Tactical System</h3>
+          <p>You are delivering the final integrated system for the USS Monterey&apos;s combat information centre. Lab 1 animates the Vulkan renderer via UBO and descriptor sets. Lab 2 processes sonar returns with GPU compute. Lab 3 binds multiple resource types in one descriptor set. Lab 4 bridges C# command console to the Vulkan renderer via P/Invoke. Lab 5 is a 10-minute live capstone demo covering all 15 modules.</p>
+          <span class="scenario-tag" style="background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Descriptor sets</span>
+          <span class="scenario-tag" style="background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Vulkan compute</span>
+          <span class="scenario-tag" style="background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);color:var(--pink)">C# P/Invoke</span>
+          <span class="scenario-tag" style="background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Pipeline barriers</span>
+          <span class="scenario-tag" style="background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Capstone demo</span>
+        </div>
+      </div>
       <div class="labs-pills">
-        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L1</span>Vulkan Compute Sonar Processor</div>
-        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L2</span>3D Model Loading (Assimp)</div>
-        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L3</span>Descriptor Sets & UBOs</div>
-        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L4</span>C# Integration via P/Invoke</div>
+        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L1</span>UBO — Animated Vulkan Scene</div>
+        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L2</span>Compute Sonar Signal Processor</div>
+        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L3</span>Multi-Resource Descriptor Sets</div>
+        <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L4</span>C# P/Invoke Command Bridge</div>
         <div class="lab-pill"><span style="background:rgba(244,114,182,.15);color:var(--pink)">L5</span>Capstone Presentation</div>
       </div>
-      <div class="open-btn open-btn-ghost" style="opacity:.5;cursor:default">🔒 Available after Day 5</div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <a class="open-btn open-btn-primary" href="lab-day5.html" style="background:linear-gradient(135deg,rgba(244,114,182,.2),rgba(99,102,241,.1));border:1px solid rgba(244,114,182,.35);color:var(--pink)">&#128300; Open Day 5 Labs</a>
+        <a class="open-btn open-btn-ghost" href="day5-demos.html">&#9889; Day 5 Demos First</a>
+      </div>
     </div>
   </div>
 

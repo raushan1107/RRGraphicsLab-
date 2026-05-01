@@ -107,6 +107,7 @@ code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);borde
     <a class="nav-link" href="index.html"><span class="nav-dot" style="background:var(--accent)"></span>Module Notes</a>
     <a class="nav-link active" href="demos.html"><span class="nav-dot" style="background:var(--d5)"></span>Code Demos</a>
     <a class="nav-link" href="labs.html"><span class="nav-dot" style="background:var(--green)"></span>Lab Challenges</a>
+    <a class="nav-link" href="capstone.html" style="color:#f0b429;border-color:rgba(240,180,41,.25);background:rgba(240,180,41,.06)"><span class="nav-dot" style="background:#f0b429;box-shadow:0 0 6px #f0b429"></span>Capstone &#127942;</a>
   </div>
   <div class="nav-right">
     <span class="nav-badge">Day 5 &mdash; Advanced Vulkan &amp; Integration</span>
@@ -123,6 +124,9 @@ code.ic{font-family:var(--font-mono);font-size:.8rem;background:var(--bg4);borde
   <div class="sb-grp">Navigation</div>
   <a class="sb-link" href="day4-demos.html"><span class="sb-num" style="font-size:9px">&#8592;</span>Day 4 Demos</a>
   <a class="sb-link" href="labs.html"><span class="sb-num" style="font-size:9px">&#128300;</span>Day 5 Labs</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Capstone</div>
+  <a class="sb-link" href="capstone.html" style="color:#f0b429;border-left-color:#f0b429;background:rgba(240,180,41,.06)"><span class="sb-num" style="font-size:9px;color:#f0b429">&#127942;</span>Capstone Project</a>
 </aside>
 <main class="main">
 <div class="demo-sec" id="demo19">
@@ -183,7 +187,7 @@ void main() {
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">shader.frag</span><div class="code-row"><span class="code-lang">GLSL</span><button class="cp-btn" onclick="copyCode(this,'frag19')">Copy All</button></div></div><div class="code-block"><pre id="frag19">#version 450
 layout(location = 0) in vec3 fragColor;
 layout(location = 0) out vec4 outColor;
-void main() {{ outColor = vec4(fragColor, 1.0); }}</pre></div></div>
+void main() { outColor = vec4(fragColor, 1.0); }</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>CMakeLists.txt</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">CMakeLists.txt</span><div class="code-row"><span class="code-lang">CMake</span><button class="cp-btn" onclick="copyCode(this,'cmake19')">Copy All</button></div></div><div class="code-block"><pre id="cmake19">cmake_minimum_required(VERSION 3.20)
 project(D19_VulkanUBO)
@@ -195,7 +199,7 @@ include_directories(${GLFW_DIR}/include ${GLM_DIR} ${Vulkan_INCLUDE_DIRS})
 add_executable(D19_VulkanUBO src/main.cpp)
 target_link_libraries(D19_VulkanUBO Vulkan::Vulkan ${GLFW_DIR}/lib-vc2022/glfw3.lib)</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main19')">Copy All</button></div></div><div class="code-block"><pre id="main19">// ═══════════════════════════════════════════════════════════════════════════
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main19')">Copy All</button></div></div><div class="code-block"><pre id="main19">// =======================================================================
 //  RR GRAPHICS LAB — DAY 5 · DEMO 19
 //  Vulkan Uniform Buffer Object (UBO) — Descriptor Sets, MVP via Descriptor
 //  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
@@ -203,15 +207,15 @@ target_link_libraries(D19_VulkanUBO Vulkan::Vulkan ${GLFW_DIR}/lib-vc2022/glfw3.
 //  PROJECT NAME: D19_VulkanUBO
 //  FOLDER:       C:\Labs\D19_VulkanUBO\
 //
-//  ── BEFORE BUILDING ────────────────────────────────────────────────────────
+//  ── BEFORE BUILDING ──────────────────────────────────────────────────────
 //  glslc shader.vert -o vert.spv
 //  glslc shader.frag -o frag.spv
 //  Copy vert.spv + frag.spv next to .exe
-//  ───────────────────────────────────────────────────────────────────────────
+//  ─────────────────────────────────────────────────────────────────────────
 //
 //  WHAT THIS DEMO TEACHES:
 //  - Why glUniform*() doesn't exist in Vulkan — descriptors replace it
-//  - VkDescriptorSetLayout: declares &quot;binding 0 = uniform buffer&quot;
+//  - VkDescriptorSetLayout: declares "binding 0 = uniform buffer"
 //  - VkDescriptorPool: memory pool for allocating descriptor sets
 //  - VkDescriptorSet: the actual binding record
 //  - vkUpdateDescriptorSets: fills in which VkBuffer is at binding 0
@@ -226,7 +230,7 @@ target_link_libraries(D19_VulkanUBO Vulkan::Vulkan ${GLFW_DIR}/lib-vc2022/glfw3.
 //  - ESC to quit. Validation: 0 errors.
 //
 //  BUILDS ON: Demo 18 (full pipeline + triangle)
-// ═══════════════════════════════════════════════════════════════════════════
+// =======================================================================
 
 #define GLFW_INCLUDE_VULKAN
 #include &lt;GLFW/glfw3.h&gt;
@@ -242,10 +246,10 @@ target_link_libraries(D19_VulkanUBO Vulkan::Vulkan ${GLFW_DIR}/lib-vc2022/glfw3.
 #include &lt;stdexcept&gt;
 
 const int WIN_W = 900, WIN_H = 600;
-const std::vector&lt;const char*&gt; VAL_LAYERS  = {&quot;VK_LAYER_KHRONOS_validation&quot;};
+const std::vector&lt;const char*&gt; VAL_LAYERS  = {"VK_LAYER_KHRONOS_validation"};
 const std::vector&lt;const char*&gt; DEV_EXTS    = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
-// ── UBO struct — matches binding 0 layout(std140) in vertex shader ──────────
+// ── UBO struct — matches binding 0 layout(std140) in vertex shader ─────────
 // Must be 16-byte aligned. glm matrices are already 64 bytes each.
 struct UniformBufferObject {
     glm::mat4 model;
@@ -253,7 +257,7 @@ struct UniformBufferObject {
     glm::mat4 proj;
 };
 
-// ── Vertex: position + colour ────────────────────────────────────────────────
+// ── Vertex: position + colour ───────────────────────────────────────────────
 struct Vertex {
     glm::vec2 pos;
     glm::vec3 color;
@@ -267,7 +271,7 @@ const std::vector&lt;Vertex&gt; VERTICES = {
 
 static std::vector&lt;char&gt; readSpv(const std::string&amp; p){
     std::ifstream f(p,std::ios::ate|std::ios::binary);
-    if(!f.is_open()) throw std::runtime_error(&quot;Cannot open: &quot;+p);
+    if(!f.is_open()) throw std::runtime_error("Cannot open: "+p);
     size_t s=(size_t)f.tellg(); std::vector&lt;char&gt; b(s); f.seekg(0); f.read(b.data(),s); return b;
 }
 VkShaderModule makeMod(VkDevice d,const std::vector&lt;char&gt;&amp; c){
@@ -287,7 +291,7 @@ uint32_t findMem(VkPhysicalDevice phys,uint32_t bits,VkMemoryPropertyFlags props
     VkPhysicalDeviceMemoryProperties mp;vkGetPhysicalDeviceMemoryProperties(phys,&amp;mp);
     for(uint32_t i=0;i&lt;mp.memoryTypeCount;i++)
         if((bits&amp;(1&lt;&lt;i))&amp;&amp;(mp.memoryTypes[i].propertyFlags&amp;props)==props)return i;
-    throw std::runtime_error(&quot;No memory type&quot;);
+    throw std::runtime_error("No memory type");
 }
 void makeBuffer(VkDevice dev,VkPhysicalDevice phys,VkDeviceSize sz,
                 VkBufferUsageFlags usage,VkMemoryPropertyFlags props,
@@ -303,10 +307,10 @@ void makeBuffer(VkDevice dev,VkPhysicalDevice phys,VkDeviceSize sz,
 }
 
 int main(){
-    std::cout&lt;&lt;&quot;\n=== Demo 19 — Vulkan UBO + Descriptor Sets ===\n\n&quot;;
+    std::cout&lt;&lt;"\n=== Demo 19 — Vulkan UBO + Descriptor Sets ===\n\n";
 
     glfwInit();glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API);glfwWindowHint(GLFW_RESIZABLE,GLFW_FALSE);
-    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,&quot;Demo 19 — Vulkan UBO (ESC=quit)&quot;,nullptr,nullptr);
+    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,"Demo 19 — Vulkan UBO (ESC=quit)",nullptr,nullptr);
 
     VkApplicationInfo ai{};ai.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO;ai.apiVersion=VK_API_VERSION_1_0;
     uint32_t ec=0;const char** eg=glfwGetRequiredInstanceExtensions(&amp;ec);
@@ -323,7 +327,7 @@ int main(){
     for(auto&amp; d:pds){VkPhysicalDeviceProperties p{};vkGetPhysicalDeviceProperties(d,&amp;p);
         if(findQF(d,surface).ok()){phys=d;if(p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)break;}}
     VkPhysicalDeviceProperties gp{};vkGetPhysicalDeviceProperties(phys,&amp;gp);
-    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;gp.deviceName&lt;&lt;&quot;\n&quot;;
+    std::cout&lt;&lt;"[1] GPU: "&lt;&lt;gp.deviceName&lt;&lt;"\n";
 
     QFI qfi=findQF(phys,surface);
     std::set&lt;uint32_t&gt; uq={qfi.g.value(),qfi.p.value()};float pr=1.0f;
@@ -384,11 +388,11 @@ int main(){
     std::vector&lt;VkFramebuffer&gt; fbs(sic);
     for(uint32_t i=0;i&lt;sic;i++){VkFramebufferCreateInfo f{};f.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         f.renderPass=renderPass;f.attachmentCount=1;f.pAttachments=&amp;sivs[i];f.width=ext.width;f.height=ext.height;f.layers=1;vkCreateFramebuffer(dev,&amp;f,nullptr,&amp;fbs[i]);}
-    std::cout&lt;&lt;&quot;[2] Swapchain + render pass + framebuffers\n&quot;;
+    std::cout&lt;&lt;"[2] Swapchain + render pass + framebuffers\n";
 
-    // ── DESCRIPTOR SET LAYOUT ──────────────────────────────────────────────
+    // ── DESCRIPTOR SET LAYOUT ─────────────────────────────────────────────
     // Declares: binding 0 is a uniform buffer used in the vertex shader stage.
-    // This is the Vulkan equivalent of saying &quot;I need a uniform mat4 at slot 0&quot;.
+    // This is the Vulkan equivalent of saying "I need a uniform mat4 at slot 0".
     VkDescriptorSetLayoutBinding dslb{};
     dslb.binding         = 0;
     dslb.descriptorType  = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -401,9 +405,9 @@ int main(){
     dslci.pBindings    = &amp;dslb;
     VkDescriptorSetLayout dsLayout;
     vkCreateDescriptorSetLayout(dev,&amp;dslci,nullptr,&amp;dsLayout);
-    std::cout&lt;&lt;&quot;[3] Descriptor set layout: binding 0 = uniform buffer (vertex stage)\n&quot;;
+    std::cout&lt;&lt;"[3] Descriptor set layout: binding 0 = uniform buffer (vertex stage)\n";
 
-    // ── ONE UBO PER SWAPCHAIN IMAGE ────────────────────────────────────────
+    // ── ONE UBO PER SWAPCHAIN IMAGE ───────────────────────────────────────
     // One buffer per image so CPU can update next frame's UBO while GPU
     // is still reading this frame's UBO. Prevents CPU/GPU race condition.
     std::vector&lt;VkBuffer&gt;       uboBufs(sic);
@@ -420,9 +424,9 @@ int main(){
         // HOST_COHERENT means no explicit flush needed.
         vkMapMemory(dev,uboMems[i],0,uboSize,0,&amp;uboMaps[i]);
     }
-    std::cout&lt;&lt;&quot;[4] &quot;&lt;&lt;sic&lt;&lt;&quot; UBO buffers (one per swapchain image), persistently mapped\n&quot;;
+    std::cout&lt;&lt;"[4] "&lt;&lt;sic&lt;&lt;" UBO buffers (one per swapchain image), persistently mapped\n";
 
-    // ── DESCRIPTOR POOL ────────────────────────────────────────────────────
+    // ── DESCRIPTOR POOL ───────────────────────────────────────────────────
     VkDescriptorPoolSize dps{};
     dps.type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     dps.descriptorCount = sic;
@@ -434,7 +438,7 @@ int main(){
     VkDescriptorPool descPool;
     vkCreateDescriptorPool(dev,&amp;dpci,nullptr,&amp;descPool);
 
-    // ── DESCRIPTOR SETS ────────────────────────────────────────────────────
+    // ── DESCRIPTOR SETS ───────────────────────────────────────────────────
     // Allocate one descriptor set per swapchain image.
     std::vector&lt;VkDescriptorSetLayout&gt; layouts(sic,dsLayout);
     VkDescriptorSetAllocateInfo dsai{};
@@ -462,9 +466,9 @@ int main(){
         wds.pBufferInfo     = &amp;dbi;
         vkUpdateDescriptorSets(dev,1,&amp;wds,0,nullptr);
     }
-    std::cout&lt;&lt;&quot;[5] Descriptor sets allocated and updated\n&quot;;
+    std::cout&lt;&lt;"[5] Descriptor sets allocated and updated\n";
 
-    // ── VERTEX BUFFER ─────────────────────────────────────────────────────
+    // ── VERTEX BUFFER ────────────────────────────────────────────────────
     VkBuffer vertBuf;VkDeviceMemory vertMem;
     VkDeviceSize vbSz=sizeof(VERTICES[0])*VERTICES.size();
     makeBuffer(dev,phys,vbSz,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
@@ -473,12 +477,12 @@ int main(){
     void* vd;vkMapMemory(dev,vertMem,0,vbSz,0,&amp;vd);
     memcpy(vd,VERTICES.data(),(size_t)vbSz);vkUnmapMemory(dev,vertMem);
 
-    // ── GRAPHICS PIPELINE — includes descriptor set layout ─────────────────
-    auto vc=readSpv(&quot;vert.spv&quot;);auto fc=readSpv(&quot;frag.spv&quot;);
+    // ── GRAPHICS PIPELINE — includes descriptor set layout ────────────────
+    auto vc=readSpv("vert.spv");auto fc=readSpv("frag.spv");
     VkShaderModule vm=makeMod(dev,vc),fm=makeMod(dev,fc);
     VkPipelineShaderStageCreateInfo stg[2]{};
-    stg[0].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[0].stage=VK_SHADER_STAGE_VERTEX_BIT;stg[0].module=vm;stg[0].pName=&quot;main&quot;;
-    stg[1].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[1].stage=VK_SHADER_STAGE_FRAGMENT_BIT;stg[1].module=fm;stg[1].pName=&quot;main&quot;;
+    stg[0].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[0].stage=VK_SHADER_STAGE_VERTEX_BIT;stg[0].module=vm;stg[0].pName="main";
+    stg[1].sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;stg[1].stage=VK_SHADER_STAGE_FRAGMENT_BIT;stg[1].module=fm;stg[1].pName="main";
 
     VkVertexInputBindingDescription vbd{};vbd.binding=0;vbd.stride=sizeof(Vertex);vbd.inputRate=VK_VERTEX_INPUT_RATE_VERTEX;
     VkVertexInputAttributeDescription vad[2]{};
@@ -506,7 +510,7 @@ int main(){
     gpci.pColorBlendState=&amp;cb;gpci.layout=pipelineLayout;gpci.renderPass=renderPass;gpci.subpass=0;
     VkPipeline pipeline;vkCreateGraphicsPipelines(dev,VK_NULL_HANDLE,1,&amp;gpci,nullptr,&amp;pipeline);
     vkDestroyShaderModule(dev,fm,nullptr);vkDestroyShaderModule(dev,vm,nullptr);
-    std::cout&lt;&lt;&quot;[6] Graphics pipeline created\n&quot;;
+    std::cout&lt;&lt;"[6] Graphics pipeline created\n";
 
     VkCommandPoolCreateInfo cpci{};cpci.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     cpci.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;cpci.queueFamilyIndex=qfi.g.value();
@@ -520,7 +524,7 @@ int main(){
     VkSemaphore imgAvail,renDone;VkFence inFlight;
     vkCreateSemaphore(dev,&amp;semci,nullptr,&amp;imgAvail);vkCreateSemaphore(dev,&amp;semci,nullptr,&amp;renDone);
     vkCreateFence(dev,&amp;fenci,nullptr,&amp;inFlight);
-    std::cout&lt;&lt;&quot;[7] Render loop starting. ESC=quit.\n\n&quot;;
+    std::cout&lt;&lt;"[7] Render loop starting. ESC=quit.\n\n";
 
     uint64_t frame=0;
     while(!glfwWindowShouldClose(win)){
@@ -531,7 +535,7 @@ int main(){
         uint32_t idx;
         if(vkAcquireNextImageKHR(dev,sc,UINT64_MAX,imgAvail,VK_NULL_HANDLE,&amp;idx)==VK_ERROR_OUT_OF_DATE_KHR)continue;
 
-        // ── UPDATE UBO for this frame's swapchain image ────────────────────
+        // ── UPDATE UBO for this frame's swapchain image ───────────────────
         float t=(float)glfwGetTime();
         UniformBufferObject ubo{};
         ubo.model = glm::rotate(glm::mat4(1.0f),glm::radians(t*45.0f),glm::vec3(0,0,1));
@@ -551,7 +555,7 @@ int main(){
         vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
         VkDeviceSize offset=0;vkCmdBindVertexBuffers(cmd,0,1,&amp;vertBuf,&amp;offset);
 
-        // ── BIND DESCRIPTOR SET — this is how the UBO reaches the shader ──
+        // ── BIND DESCRIPTOR SET — this is how the UBO reaches the shader ─
         vkCmdBindDescriptorSets(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,
             pipelineLayout,
             0,               // first set index
@@ -573,7 +577,7 @@ int main(){
         pi.swapchainCount=1;pi.pSwapchains=&amp;sc;pi.pImageIndices=&amp;idx;
         vkQueuePresentKHR(presQ,&amp;pi);
 
-        if(++frame%60==0) std::cout&lt;&lt;&quot;t=&quot;&lt;&lt;(int)t&lt;&lt;&quot;s  frame=&quot;&lt;&lt;frame&lt;&lt;&quot;\n&quot;;
+        if(++frame%60==0) std::cout&lt;&lt;"t="&lt;&lt;(int)t&lt;&lt;"s  frame="&lt;&lt;frame&lt;&lt;"\n";
     }
     vkDeviceWaitIdle(dev);
 
@@ -595,9 +599,14 @@ int main(){
     vkDestroySwapchainKHR(dev,sc,nullptr);vkDestroySurfaceKHR(inst,surface,nullptr);
     vkDestroyDevice(dev,nullptr);vkDestroyInstance(inst,nullptr);
     glfwDestroyWindow(win);glfwTerminate();
-    std::cout&lt;&lt;&quot;Clean shutdown. Validation: 0 errors.\n&quot;;return 0;
+    std::cout&lt;&lt;"Clean shutdown. Validation: 0 errors.\n";return 0;
 }</pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'cmd19')">Copy</button><pre id="cmd19">cd C:\\Labs\\D19_VulkanUBO\ncmake -B build -G "Visual Studio 17 2022" -A x64\ncmake --build build --config Release\ncopy vert.spv build\\Release\\\ncopy frag.spv build\\Release\\\nbuild\\Release\\D19_VulkanUBO.exe</pre></div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'cmd19')">Copy</button><pre id="cmd19">cd C:\Labs\D19_VulkanUBO
+cmake -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+copy vert.spv build\Release\
+copy frag.spv build\Release\
+build\Release\D19_VulkanUBO.exe</pre></div>
   <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== Demo 19 — Vulkan UBO + Descriptor Sets ===</span></div><hr class="t-hr"><div><span class="ts">[1] GPU: Intel(R) Iris(R) Xe Graphics</span></div><div><span class="ts">[2] Swapchain + render pass + framebuffers</span></div><div><span class="ts">[3] Descriptor set layout: binding 0 = uniform buffer (vertex stage)</span></div><div><span class="ts">[4] 3 UBO buffers (one per swapchain image), persistently mapped</span></div><div><span class="ts">[5] Descriptor sets allocated and updated</span></div><div><span class="ts">[6] Graphics pipeline created</span></div><div><span class="ts">[7] Render loop starting. ESC=quit.</span></div><hr class="t-hr"><div><span class="to">t=1s  frame=60</span></div><div><span class="to">[Orange triangle rotating on Z axis at 45 deg/sec]</span></div></div></div>
   <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list">
     <li><strong>Change rotation speed:</strong> In the render loop change <code class="ic">t*45.0f</code> to <code class="ic">t*180.0f</code>. Triangle spins 4&times; faster. No pipeline rebuild needed &mdash; that is the UBO advantage over baked constants.</li>
@@ -605,7 +614,6 @@ int main(){
     <li><strong>Wrong: one UBO for all images:</strong> Point all descriptor sets at <code class="ic">uboBufs[0]</code> instead of <code class="ic">uboBufs[i]</code>. Run. Observe tearing or validation errors &mdash; CPU overwrites frame N+1 while GPU reads frame N from the same buffer.</li>
   </ul></div>
 </div>
-
 <div class="demo-sec" id="demo20">
   <div class="demo-eyebrow"><span class="d-badge">Demo 20 &middot; Module 13</span><span class="d-type">Vulkan Compute Shader &mdash; GPU Parallel Image Processing</span></div>
   <div class="demo-title">VkComputePipeline, Storage Buffers, vkCmdDispatch &mdash; GPU Invert Filter</div>
@@ -654,7 +662,7 @@ int main(){
     Ensures GPU finishes writing before CPU maps output buffer</pre></div>
   <div class="sh"><span class="sh-dot"></span>Step 1 &mdash; Compile compute shader</div>
   <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'sh20')">Copy</button><pre id="sh20">glslc compute.comp -o comp.spv
-REM copy comp.spv build\\Release\\</pre></div>
+REM copy comp.spv build\Release\</pre></div>
   <div class="sh"><span class="sh-dot"></span>compute.comp &mdash; GPU kernel (one thread per pixel)</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">compute.comp</span><div class="code-row"><span class="code-lang">GLSL</span><button class="cp-btn" onclick="copyCode(this,'comp20')">Copy All</button></div></div><div class="code-block"><pre id="comp20">#version 450
 // Workgroup: 16x16 threads = 256 threads per group, each handles one pixel
@@ -699,11 +707,11 @@ include_directories(${GLFW_DIR}/include ${GLM_DIR} ${Vulkan_INCLUDE_DIRS})
 add_executable(D20_VulkanCompute src/main.cpp)
 target_link_libraries(D20_VulkanCompute Vulkan::Vulkan ${GLFW_DIR}/lib-vc2022/glfw3.lib)</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp &mdash; Fixed (push constants declared + pushed before dispatch)</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main20')">Copy All</button></div></div><div class="code-block"><pre id="main20">// ═══════════════════════════════════════════════════════════════════════════
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main20')">Copy All</button></div></div><div class="code-block"><pre id="main20">// =======================================================================
 //  RR GRAPHICS LAB — DAY 5 · DEMO 20  (FIXED + CPU COMPARISON)
 //  Vulkan Compute Shader — GPU Parallel Image Processing (Invert Filter)
 //  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
-// ═══════════════════════════════════════════════════════════════════════════
+// =======================================================================
 
 #define GLFW_INCLUDE_VULKAN
 #include &lt;GLFW/glfw3.h&gt;
@@ -722,9 +730,9 @@ struct PushConstants { uint32_t width, height; };
 static std::vector&lt;char&gt; readSpv(const std::string&amp; p) {
     std::ifstream f(p, std::ios::ate | std::ios::binary);
     if (!f.is_open()) throw std::runtime_error(
-        &quot;Cannot open: &quot; + p +
-        &quot;\n  Run:  glslc compute.comp -o comp.spv&quot;
-        &quot;\n  Then: copy comp.spv build\\Release\\&quot;);
+        "Cannot open: " + p +
+        "\n  Run:  glslc compute.comp -o comp.spv"
+        "\n  Then: copy comp.spv build\\Release\\");
     size_t s = (size_t)f.tellg();
     std::vector&lt;char&gt; b(s); f.seekg(0); f.read(b.data(), s); return b;
 }
@@ -747,7 +755,7 @@ uint32_t findMem(VkPhysicalDevice phys, uint32_t bits, VkMemoryPropertyFlags pro
     vkGetPhysicalDeviceMemoryProperties(phys, &amp;mp);
     for (uint32_t i = 0; i &lt; mp.memoryTypeCount; i++)
         if ((bits &amp; (1 &lt;&lt; i)) &amp;&amp; (mp.memoryTypes[i].propertyFlags &amp; props) == props) return i;
-    throw std::runtime_error(&quot;No memory type&quot;);
+    throw std::runtime_error("No memory type");
 }
 void mkBuf(VkDevice dev, VkPhysicalDevice phys, VkDeviceSize sz,
            VkBufferUsageFlags use, VkMemoryPropertyFlags props,
@@ -765,14 +773,11 @@ void mkBuf(VkDevice dev, VkPhysicalDevice phys, VkDeviceSize sz,
 }
 
 int main() {
-    std::cout &lt;&lt; &quot;\n=== Demo 20 — Vulkan Compute: Image Invert Filter ===\n\n&quot;;
-    std::cout &lt;&lt; &quot;Image: &quot; &lt;&lt; IMG_W &lt;&lt; &quot;x&quot; &lt;&lt; IMG_H &lt;&lt; &quot; = &quot; &lt;&lt; PIXEL_COUNT &lt;&lt; &quot; pixels\n\n&quot;;
+    std::cout &lt;&lt; "\n=== Demo 20 — Vulkan Compute: Image Invert Filter ===\n\n";
+    std::cout &lt;&lt; "Image: " &lt;&lt; IMG_W &lt;&lt; "x" &lt;&lt; IMG_H &lt;&lt; " = " &lt;&lt; PIXEL_COUNT &lt;&lt; " pixels\n\n";
 
     // ── CPU BASELINE — run the same invert on CPU first ───────────────────
-    // This is what your CPU does single-threaded.
-    // Same algorithm: read RGBA uint32, invert RGB, write back.
-    // We run it on a plain std::vector so there is no GPU overhead.
-    std::cout &lt;&lt; &quot;--- CPU Baseline (single-threaded) ---\n&quot;;
+    std::cout &lt;&lt; "--- CPU Baseline (single-threaded) ---\n";
     std::vector&lt;uint32_t&gt; cpuIn(PIXEL_COUNT), cpuOut(PIXEL_COUNT);
     for (uint32_t y = 0; y &lt; IMG_H; y++)
         for (uint32_t x = 0; x &lt; IMG_W; x++) {
@@ -792,19 +797,18 @@ int main() {
     auto cpuUs = std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(
         std::chrono::high_resolution_clock::now() - cpuT0).count();
 
-    // CPU result check: pixel 0 should be R=255 G=255 B=127
     uint32_t cp = cpuOut[0];
-    std::cout &lt;&lt; &quot;CPU pixel [0,0]: R=&quot; &lt;&lt; (cp &amp; 0xFF)
-              &lt;&lt; &quot; G=&quot; &lt;&lt; ((cp &gt;&gt; 8) &amp; 0xFF)
-              &lt;&lt; &quot; B=&quot; &lt;&lt; ((cp &gt;&gt; 16) &amp; 0xFF) &lt;&lt; &quot;\n&quot;;
-    std::cout &lt;&lt; &quot;CPU time:  &quot; &lt;&lt; cpuUs &lt;&lt; &quot; us  (&quot;
-              &lt;&lt; (cpuUs / 1000.f) &lt;&lt; &quot; ms)  — single thread, no SIMD\n\n&quot;;
+    std::cout &lt;&lt; "CPU pixel [0,0]: R=" &lt;&lt; (cp &amp; 0xFF)
+              &lt;&lt; " G=" &lt;&lt; ((cp &gt;&gt; 8) &amp; 0xFF)
+              &lt;&lt; " B=" &lt;&lt; ((cp &gt;&gt; 16) &amp; 0xFF) &lt;&lt; "\n";
+    std::cout &lt;&lt; "CPU time:  " &lt;&lt; cpuUs &lt;&lt; " us  ("
+              &lt;&lt; (cpuUs / 1000.f) &lt;&lt; " ms)  — single thread, no SIMD\n\n";
 
     // ── VULKAN SETUP ──────────────────────────────────────────────────────
     glfwInit();
     VkApplicationInfo ai{};
     ai.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO; ai.apiVersion = VK_API_VERSION_1_0;
-    const std::vector&lt;const char*&gt; val = {&quot;VK_LAYER_KHRONOS_validation&quot;};
+    const std::vector&lt;const char*&gt; val = {"VK_LAYER_KHRONOS_validation"};
     VkInstanceCreateInfo ici{};
     ici.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO; ici.pApplicationInfo = &amp;ai;
     ici.enabledLayerCount = (uint32_t)val.size(); ici.ppEnabledLayerNames = val.data();
@@ -818,7 +822,7 @@ int main() {
         if (p.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) { phys = d; break; }
     }
     VkPhysicalDeviceProperties gp{}; vkGetPhysicalDeviceProperties(phys, &amp;gp);
-    std::cout &lt;&lt; &quot;--- GPU: &quot; &lt;&lt; gp.deviceName &lt;&lt; &quot; ---\n&quot;;
+    std::cout &lt;&lt; "--- GPU: " &lt;&lt; gp.deviceName &lt;&lt; " ---\n";
 
     uint32_t cFam = findComputeFamily(phys);
     float pr = 1.f;
@@ -851,7 +855,7 @@ int main() {
             inData[i+2]=128; inData[i+3]=255;
         }
     vkUnmapMemory(dev, inMem);
-    std::cout &lt;&lt; &quot;[4] Input buffer filled\n&quot;;
+    std::cout &lt;&lt; "[4] Input buffer filled\n";
 
     VkDescriptorSetLayoutBinding bindings[2]{};
     bindings[0]={0,VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,1,VK_SHADER_STAGE_COMPUTE_BIT,nullptr};
@@ -884,16 +888,16 @@ int main() {
     pli.pushConstantRangeCount=1; pli.pPushConstantRanges=&amp;pcRange;
     VkPipelineLayout pipeLayout; vkCreatePipelineLayout(dev,&amp;pli,nullptr,&amp;pipeLayout);
 
-    auto compCode=readSpv(&quot;comp.spv&quot;);
+    auto compCode=readSpv("comp.spv");
     VkShaderModule compMod=makeMod(dev,compCode);
     VkComputePipelineCreateInfo cpci{};
     cpci.sType=VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
     cpci.stage.sType=VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    cpci.stage.stage=VK_SHADER_STAGE_COMPUTE_BIT; cpci.stage.module=compMod; cpci.stage.pName=&quot;main&quot;;
+    cpci.stage.stage=VK_SHADER_STAGE_COMPUTE_BIT; cpci.stage.module=compMod; cpci.stage.pName="main";
     cpci.layout=pipeLayout;
     VkPipeline compPipeline; vkCreateComputePipelines(dev,VK_NULL_HANDLE,1,&amp;cpci,nullptr,&amp;compPipeline);
     vkDestroyShaderModule(dev,compMod,nullptr);
-    std::cout &lt;&lt; &quot;[6] Compute pipeline ready\n&quot;;
+    std::cout &lt;&lt; "[6] Compute pipeline ready\n";
 
     VkCommandPoolCreateInfo cpciPool{};
     cpciPool.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -920,7 +924,7 @@ int main() {
     vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,VK_PIPELINE_STAGE_HOST_BIT,
                          0,1,&amp;barrier,0,nullptr,0,nullptr);
     vkEndCommandBuffer(cmd);
-    std::cout &lt;&lt; &quot;[7] Dispatch: &quot; &lt;&lt; gx &lt;&lt; &quot;x&quot; &lt;&lt; gy &lt;&lt; &quot; workgroups = &quot; &lt;&lt; PIXEL_COUNT &lt;&lt; &quot; threads\n&quot;;
+    std::cout &lt;&lt; "[7] Dispatch: " &lt;&lt; gx &lt;&lt; "x" &lt;&lt; gy &lt;&lt; " workgroups = " &lt;&lt; PIXEL_COUNT &lt;&lt; " threads\n";
 
     VkFenceCreateInfo fci{}; fci.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     VkFence fence; vkCreateFence(dev,&amp;fci,nullptr,&amp;fence);
@@ -938,28 +942,28 @@ int main() {
     uint8_t* outData;
     vkMapMemory(dev,outMem,0,bufSz,0,(void**)&amp;outData);
 
-    std::cout &lt;&lt; &quot;\n=== Result Verification ===\n&quot;;
-    std::cout &lt;&lt; &quot;Input  [0,0]:  R=0   G=0   B=128\n&quot;;
-    std::cout &lt;&lt; &quot;Output [0,0]:  R=&quot; &lt;&lt; (int)outData[0]
-              &lt;&lt; &quot; G=&quot; &lt;&lt; (int)outData[1]
-              &lt;&lt; &quot; B=&quot; &lt;&lt; (int)outData[2] &lt;&lt; &quot;\n&quot;;
-    std::cout &lt;&lt; &quot;Expected:      R=255 G=255 B=127\n\n&quot;;
+    std::cout &lt;&lt; "\n=== Result Verification ===\n";
+    std::cout &lt;&lt; "Input  [0,0]:  R=0   G=0   B=128\n";
+    std::cout &lt;&lt; "Output [0,0]:  R=" &lt;&lt; (int)outData[0]
+              &lt;&lt; " G=" &lt;&lt; (int)outData[1]
+              &lt;&lt; " B=" &lt;&lt; (int)outData[2] &lt;&lt; "\n";
+    std::cout &lt;&lt; "Expected:      R=255 G=255 B=127\n\n";
     bool pass=(outData[0]==255&amp;&amp;outData[1]==255&amp;&amp;(outData[2]==127||outData[2]==128));
-    std::cout &lt;&lt; &quot;Test: &quot; &lt;&lt; (pass?&quot;PASS \xE2\x9C\x93&quot;:&quot;FAIL \xE2\x9C\x97&quot;) &lt;&lt; &quot;\n\n&quot;;
+    std::cout &lt;&lt; "Test: " &lt;&lt; (pass?"PASS \xE2\x9C\x93":"FAIL \xE2\x9C\x97") &lt;&lt; "\n\n";
 
     // ── SPEEDUP COMPARISON ────────────────────────────────────────────────
-    std::cout &lt;&lt; &quot;=== CPU vs GPU Comparison ===\n&quot;;
-    std::cout &lt;&lt; &quot;Pixels processed:  &quot; &lt;&lt; PIXEL_COUNT &lt;&lt; &quot;\n&quot;;
-    std::cout &lt;&lt; &quot;CPU time (1 core): &quot; &lt;&lt; cpuUs &lt;&lt; &quot; us  (&quot;
-              &lt;&lt; (cpuUs/1000.f) &lt;&lt; &quot; ms)\n&quot;;
-    std::cout &lt;&lt; &quot;GPU time (Vk):     &quot; &lt;&lt; gpuUs &lt;&lt; &quot; us  (&quot;
-              &lt;&lt; (gpuUs/1000.f) &lt;&lt; &quot; ms)\n&quot;;
+    std::cout &lt;&lt; "=== CPU vs GPU Comparison ===\n";
+    std::cout &lt;&lt; "Pixels processed:  " &lt;&lt; PIXEL_COUNT &lt;&lt; "\n";
+    std::cout &lt;&lt; "CPU time (1 core): " &lt;&lt; cpuUs &lt;&lt; " us  ("
+              &lt;&lt; (cpuUs/1000.f) &lt;&lt; " ms)\n";
+    std::cout &lt;&lt; "GPU time (Vk):     " &lt;&lt; gpuUs &lt;&lt; " us  ("
+              &lt;&lt; (gpuUs/1000.f) &lt;&lt; " ms)\n";
     if (gpuUs &gt; 0) {
         float speedup = (float)cpuUs / (float)gpuUs;
-        std::cout &lt;&lt; &quot;Speedup:           &quot; &lt;&lt; speedup &lt;&lt; &quot;x faster on GPU\n&quot;;
-        std::cout &lt;&lt; &quot;\nNote: GPU time includes command buffer submission + fence wait.\n&quot;;
-        std::cout &lt;&lt; &quot;      For larger images (4096x4096 = 16M pixels) the gap grows\n&quot;;
-        std::cout &lt;&lt; &quot;      dramatically because GPU parallelism scales, CPU does not.\n&quot;;
+        std::cout &lt;&lt; "Speedup:           " &lt;&lt; speedup &lt;&lt; "x faster on GPU\n";
+        std::cout &lt;&lt; "\nNote: GPU time includes command buffer submission + fence wait.\n";
+        std::cout &lt;&lt; "      For larger images (4096x4096 = 16M pixels) the gap grows\n";
+        std::cout &lt;&lt; "      dramatically because GPU parallelism scales, CPU does not.\n";
     }
 
     vkUnmapMemory(dev,outMem);
@@ -970,25 +974,22 @@ int main() {
     vkDestroyBuffer(dev,inBuf,nullptr); vkFreeMemory(dev,inMem,nullptr);
     vkDestroyBuffer(dev,outBuf,nullptr); vkFreeMemory(dev,outMem,nullptr);
     vkDestroyDevice(dev,nullptr); vkDestroyInstance(inst,nullptr); glfwTerminate();
-    std::cout &lt;&lt; &quot;\nClean shutdown. Validation: 0 errors.\n&quot;;
+    std::cout &lt;&lt; "\nClean shutdown. Validation: 0 errors.\n";
     return 0;
-}
-</pre></div></div>
-  </pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'cmd20')">Copy</button><pre id="cmd20">cd C:\\Labs\\D20_VulkanCompute
+}</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'cmd20')">Copy</button><pre id="cmd20">cd C:\Labs\D20_VulkanCompute
 glslc compute.comp -o comp.spv
-cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake -B build -G "Visual Studio 17 2022" -A x64
 cmake --build build --config Release
-copy comp.spv build\\Release\\
-build\\Release\\D20_VulkanCompute.exe</pre></div>
-  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== Demo 20 — Vulkan Compute: Image Invert Filter ===</span></div><hr class="t-hr"><div><span class="tw">--- CPU Baseline (single-threaded) ---</span></div><div><span class="to">CPU pixel [0,0]: R=255 G=255 B=127</span></div><div><span class="to">CPU time:  3,240 us  (3.24 ms)  — single thread, no SIMD</span></div><hr class="t-hr"><div><span class="tw">--- GPU: Intel(R) Iris(R) Xe Graphics ---</span></div><div><span class="ts">[4] Input buffer filled</span></div><div><span class="ts">[6] Compute pipeline ready</span></div><div><span class="ts">[7] Dispatch: 16x16 workgroups = 65536 threads</span></div><hr class="t-hr"><div><span class="th">=== Result Verification ===</span></div><div><span class="to">Output [0,0]:  R=255 G=255 B=127</span></div><div><span class="ts">Test: PASS ✓</span></div><hr class="t-hr"><div><span class="th">=== CPU vs GPU Comparison ===</span></div><div><span class="to">CPU time (1 core): 3,240 us  (3.24 ms)</span></div><div><span class="to">GPU time (Vk):       851 us  (0.85 ms)</span></div><div><span class="ts">Speedup:           3.8x faster on GPU</span></div><hr class="t-hr"><div><span class="ts">Clean shutdown. Validation: 0 errors.</span></div></div></div></div>
+copy comp.spv build\Release\
+build\Release\D20_VulkanCompute.exe</pre></div>
+  <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== Demo 20 — Vulkan Compute: Image Invert Filter ===</span></div><hr class="t-hr"><div><span class="tw">--- CPU Baseline (single-threaded) ---</span></div><div><span class="to">CPU pixel [0,0]: R=255 G=255 B=127</span></div><div><span class="to">CPU time:  3,240 us  (3.24 ms)  — single thread, no SIMD</span></div><hr class="t-hr"><div><span class="tw">--- GPU: Intel(R) Iris(R) Xe Graphics ---</span></div><div><span class="ts">[4] Input buffer filled</span></div><div><span class="ts">[6] Compute pipeline ready</span></div><div><span class="ts">[7] Dispatch: 16x16 workgroups = 65536 threads</span></div><hr class="t-hr"><div><span class="th">=== Result Verification ===</span></div><div><span class="to">Output [0,0]:  R=255 G=255 B=127</span></div><div><span class="ts">Test: PASS ✓</span></div><hr class="t-hr"><div><span class="th">=== CPU vs GPU Comparison ===</span></div><div><span class="to">CPU time (1 core): 3,240 us  (3.24 ms)</span></div><div><span class="to">GPU time (Vk):       851 us  (0.85 ms)</span></div><div><span class="ts">Speedup:           3.8x faster on GPU</span></div><hr class="t-hr"><div><span class="ts">Clean shutdown. Validation: 0 errors.</span></div></div></div>
   <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list">
     <li><strong>Change kernel to greyscale:</strong> In compute.comp replace invert lines with <code class="ic">uint lum = (r+g+b)/3u; r_out=lum; g_out=lum; b_out=lum;</code> Recompile with glslc. Output becomes greyscale. Same dispatch infrastructure, different kernel.</li>
     <li><strong>Process a larger image:</strong> Change IMG_W and IMG_H to 1024. Dispatch scales automatically (64 groups per axis). Measure new timing &mdash; confirm ~4&times; more pixels takes ~4&times; longer.</li>
     <li><strong>Remove the pipeline barrier:</strong> Comment out vkCmdPipelineBarrier. Validation reports missing memory dependency. Output may be zeros or garbage &mdash; CPU reads before GPU finishes writing.</li>
   </ul></div>
 </div>
-
 <div class="demo-sec" id="demo21">
   <div class="demo-eyebrow"><span class="d-badge">Demo 21 &middot; Module 14</span><span class="d-type">Compute &rarr; Display &mdash; GPU-Processed Image in a Window</span></div>
   <div class="demo-title">Bridging Compute and Graphics &mdash; Storage Buffer as Display Source</div>
@@ -1047,34 +1048,29 @@ build\\Release\\D20_VulkanCompute.exe</pre></div>
   <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'sh21')">Copy</button><pre id="sh21">glslc compute.comp -o comp.spv
 glslc shader.vert  -o vert.spv
 glslc shader.frag  -o frag.spv
-copy *.spv build\\Release\\</pre></div>
+copy *.spv build\Release\</pre></div>
   <div class="sh"><span class="sh-dot"></span>compute.comp &mdash; same invert kernel as Demo 20</div>
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">compute.comp</span><div class="code-row"><span class="code-lang">GLSL</span><button class="cp-btn" onclick="copyCode(this,'comp21')">Copy All</button></div></div><div class="code-block"><pre id="comp21">#version 450
-// Workgroup: 16x16 threads = 256 threads per group, each handles one pixel
 layout(local_size_x = 16, local_size_y = 16) in;
 
 layout(std430, binding = 0) readonly  buffer In  { uint pixels_in[];  };
 layout(std430, binding = 1) writeonly buffer Out { uint pixels_out[]; };
 
-// Push constants: image dimensions (declared in pipeline layout, pushed before dispatch)
 layout(push_constant) uniform PC { uint width; uint height; } pc;
 
 void main() {
     uint x = gl_GlobalInvocationID.x;
     uint y = gl_GlobalInvocationID.y;
-    // Guard: threads outside image do nothing
     if (x &gt;= pc.width || y &gt;= pc.height) return;
 
     uint idx    = y * pc.width + x;
     uint packed = pixels_in[idx];
 
-    // Unpack RGBA from uint32
     uint r = (packed &gt;&gt;  0) &amp; 0xFFu;
     uint g = (packed &gt;&gt;  8) &amp; 0xFFu;
     uint b = (packed &gt;&gt; 16) &amp; 0xFFu;
     uint a = (packed &gt;&gt; 24) &amp; 0xFFu;
 
-    // Invert RGB, preserve alpha
     pixels_out[idx] = ((255u - r) &lt;&lt;  0)
                     | ((255u - g) &lt;&lt;  8)
                     | ((255u - b) &lt;&lt; 16)
@@ -1093,10 +1089,8 @@ void main() {
   <div class="code-wrap"><div class="code-hdr"><span class="code-fname">shader.frag</span><div class="code-row"><span class="code-lang">GLSL</span><button class="cp-btn" onclick="copyCode(this,'frag21')">Copy All</button></div></div><div class="code-block"><pre id="frag21">#version 450
 layout(location = 0) out vec4 outColor;
 
-// The compute output buffer, read directly as a pixel source.
-// No VkImage, no sampler — just a storage buffer indexed by pixel position.
 layout(std430, binding = 0) readonly buffer PixelBuffer {
-    uint pixels[];  // packed RGBA uint32, one per pixel
+    uint pixels[];
 };
 
 layout(push_constant) uniform PC { uint width; uint height; } pc;
@@ -1129,7 +1123,7 @@ include_directories(${GLFW_DIR}/include ${GLM_DIR} ${Vulkan_INCLUDE_DIRS})
 add_executable(D21_ComputeDisplay src/main.cpp)
 target_link_libraries(D21_ComputeDisplay Vulkan::Vulkan ${GLFW_DIR}/lib-vc2022/glfw3.lib)</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>
-  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main21')">Copy All</button></div></div><div class="code-block"><pre id="main21">// ═══════════════════════════════════════════════════════════════════════════
+  <div class="code-wrap"><div class="code-hdr"><span class="code-fname">src/main.cpp</span><div class="code-row"><span class="code-lang">C++</span><button class="cp-btn" onclick="copyCode(this,'main21')">Copy All</button></div></div><div class="code-block"><pre id="main21">// =======================================================================
 //  RR GRAPHICS LAB — DAY 5 · DEMO 21  (FIXED)
 //  Compute → Display: Show GPU-processed image in a window
 //  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
@@ -1150,8 +1144,8 @@ target_link_libraries(D21_ComputeDisplay Vulkan::Vulkan ${GLFW_DIR}/lib-vc2022/g
 //    After presentation, the semaphore may still be in use by the swapchain,
 //    but the next frame tried to signal it again immediately.
 //    Fix: one imgAvail semaphore PER swapchain image (indexed by imgIdx).
-//    This is the standard Vulkan &quot;separate semaphore per image&quot; pattern.
-// ═══════════════════════════════════════════════════════════════════════════
+//    This is the standard Vulkan "separate semaphore per image" pattern.
+// =======================================================================
 
 #define GLFW_INCLUDE_VULKAN
 #include &lt;GLFW/glfw3.h&gt;
@@ -1171,7 +1165,7 @@ struct PushConstants { uint32_t width, height; };
 
 static std::vector&lt;char&gt; readSpv(const std::string&amp; p) {
     std::ifstream f(p, std::ios::ate | std::ios::binary);
-    if (!f.is_open()) throw std::runtime_error(&quot;Cannot open: &quot; + p);
+    if (!f.is_open()) throw std::runtime_error("Cannot open: " + p);
     size_t s = (size_t)f.tellg();
     std::vector&lt;char&gt; b(s); f.seekg(0); f.read(b.data(), s); return b;
 }
@@ -1192,7 +1186,7 @@ uint32_t findMem(VkPhysicalDevice phys,uint32_t bits,VkMemoryPropertyFlags props
     VkPhysicalDeviceMemoryProperties mp;vkGetPhysicalDeviceMemoryProperties(phys,&amp;mp);
     for(uint32_t i=0;i&lt;mp.memoryTypeCount;i++)
         if((bits&amp;(1&lt;&lt;i))&amp;&amp;(mp.memoryTypes[i].propertyFlags&amp;props)==props)return i;
-    throw std::runtime_error(&quot;No memory type&quot;);
+    throw std::runtime_error("No memory type");
 }
 void mkBuf(VkDevice dev,VkPhysicalDevice phys,VkDeviceSize sz,
            VkBufferUsageFlags use,VkMemoryPropertyFlags props,
@@ -1207,16 +1201,16 @@ void mkBuf(VkDevice dev,VkPhysicalDevice phys,VkDeviceSize sz,
 }
 
 int main(){
-    std::cout&lt;&lt;&quot;\n=== Demo 21 — Compute to Display ===\n\n&quot;;
+    std::cout&lt;&lt;"\n=== Demo 21 — Compute to Display ===\n\n";
 
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API,GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE,GLFW_FALSE);
-    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,&quot;Demo 21 — Compute to Display (ESC=quit)&quot;,nullptr,nullptr);
+    GLFWwindow* win=glfwCreateWindow(WIN_W,WIN_H,"Demo 21 — Compute to Display (ESC=quit)",nullptr,nullptr);
 
     uint32_t ec=0;const char**eg=glfwGetRequiredInstanceExtensions(&amp;ec);
     std::vector&lt;const char*&gt;exts(eg,eg+ec);
-    const std::vector&lt;const char*&gt;val={&quot;VK_LAYER_KHRONOS_validation&quot;};
+    const std::vector&lt;const char*&gt;val={"VK_LAYER_KHRONOS_validation"};
     VkApplicationInfo appAI{VK_STRUCTURE_TYPE_APPLICATION_INFO};appAI.apiVersion=VK_API_VERSION_1_0;
     VkInstanceCreateInfo ici{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
     ici.pApplicationInfo=&amp;appAI;
@@ -1231,7 +1225,7 @@ int main(){
     for(auto&amp;d:pds){VkPhysicalDeviceProperties p{};vkGetPhysicalDeviceProperties(d,&amp;p);
         if(findQF(d,surf).ok()&amp;&amp;p.deviceType==VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU){phys=d;break;}}
     VkPhysicalDeviceProperties gp{};vkGetPhysicalDeviceProperties(phys,&amp;gp);
-    std::cout&lt;&lt;&quot;[1] GPU: &quot;&lt;&lt;gp.deviceName&lt;&lt;&quot;\n&quot;;
+    std::cout&lt;&lt;"[1] GPU: "&lt;&lt;gp.deviceName&lt;&lt;"\n";
 
     QFI qfi=findQF(phys,surf);
     std::set&lt;uint32_t&gt;uq={qfi.g.value(),qfi.p.value()};float pr=1.f;
@@ -1305,7 +1299,7 @@ int main(){
         f.width=ext.width;f.height=ext.height;f.layers=1;
         vkCreateFramebuffer(dev,&amp;f,nullptr,&amp;fbs[i]);
     }
-    std::cout&lt;&lt;&quot;[2] Swapchain + render pass + &quot;&lt;&lt;sic&lt;&lt;&quot; framebuffers\n&quot;;
+    std::cout&lt;&lt;"[2] Swapchain + render pass + "&lt;&lt;sic&lt;&lt;" framebuffers\n";
 
     VkDeviceSize bufSz=IMG_W*IMG_H*4;
     VkBuffer inBuf,outBuf;VkDeviceMemory inMem,outMem;
@@ -1320,13 +1314,11 @@ int main(){
         inData[i+0]=(uint8_t)x;inData[i+1]=(uint8_t)y;inData[i+2]=128;inData[i+3]=255;
     }
     vkUnmapMemory(dev,inMem);
-    std::cout&lt;&lt;&quot;[3] Gradient image in input buffer (&quot;&lt;&lt;(bufSz/1024)&lt;&lt;&quot; KB)\n&quot;;
+    std::cout&lt;&lt;"[3] Gradient image in input buffer ("&lt;&lt;(bufSz/1024)&lt;&lt;" KB)\n";
 
-    // ── FIX 1: Separate push constant ranges per pipeline layout ──────────
+    // ── FIX 1: Separate push constant ranges per pipeline layout ─────────
     // compPL only needs COMPUTE_BIT — fragment stage is irrelevant here.
     // gfxPL only needs FRAGMENT_BIT — vertex shader uses no push constants.
-    // Mixing them caused VUID-01796 because vkCmdPushConstants must pass
-    // ALL stages declared in the overlapping range.
     VkPushConstantRange compPC{VK_SHADER_STAGE_COMPUTE_BIT,  0, sizeof(PushConstants)};
     VkPushConstantRange gfxPC {VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants)};
 
@@ -1360,33 +1352,33 @@ int main(){
     wds[1]={VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,nullptr,compDS,1,0,1,VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,nullptr,&amp;dbi1};
     wds[2]={VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,nullptr,gfxDS, 0,0,1,VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,nullptr,&amp;dbi1};
     vkUpdateDescriptorSets(dev,3,wds,0,nullptr);
-    std::cout&lt;&lt;&quot;[4] Descriptors: compDS(in+out) + gfxDS(out\xe2\x86\x92display)\n&quot;;
+    std::cout&lt;&lt;"[4] Descriptors: compDS(in+out) + gfxDS(out\xe2\x86\x92display)\n";
 
     // Pipeline layouts — each with its own independent push constant range
     VkPipelineLayoutCreateInfo cpli{VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
     cpli.setLayoutCount=1;cpli.pSetLayouts=&amp;compDSL;
-    cpli.pushConstantRangeCount=1;cpli.pPushConstantRanges=&amp;compPC;  // COMPUTE only
+    cpli.pushConstantRangeCount=1;cpli.pPushConstantRanges=&amp;compPC;
     VkPipelineLayout compPL;vkCreatePipelineLayout(dev,&amp;cpli,nullptr,&amp;compPL);
 
     VkPipelineLayoutCreateInfo gpli{VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
     gpli.setLayoutCount=1;gpli.pSetLayouts=&amp;gfxDSL;
-    gpli.pushConstantRangeCount=1;gpli.pPushConstantRanges=&amp;gfxPC;   // FRAGMENT only
+    gpli.pushConstantRangeCount=1;gpli.pPushConstantRanges=&amp;gfxPC;
     VkPipelineLayout gfxPL;vkCreatePipelineLayout(dev,&amp;gpli,nullptr,&amp;gfxPL);
 
     // Compute pipeline
-    auto compCode=readSpv(&quot;comp.spv&quot;);VkShaderModule compMod=makeMod(dev,compCode);
+    auto compCode=readSpv("comp.spv");VkShaderModule compMod=makeMod(dev,compCode);
     VkComputePipelineCreateInfo cpc{VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO};
-    cpc.stage={VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,nullptr,0,VK_SHADER_STAGE_COMPUTE_BIT,compMod,&quot;main&quot;,nullptr};
+    cpc.stage={VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,nullptr,0,VK_SHADER_STAGE_COMPUTE_BIT,compMod,"main",nullptr};
     cpc.layout=compPL;
     VkPipeline compPipeline;vkCreateComputePipelines(dev,VK_NULL_HANDLE,1,&amp;cpc,nullptr,&amp;compPipeline);
     vkDestroyShaderModule(dev,compMod,nullptr);
 
     // Graphics pipeline
-    auto vc=readSpv(&quot;vert.spv&quot;),fc=readSpv(&quot;frag.spv&quot;);
+    auto vc=readSpv("vert.spv"),fc=readSpv("frag.spv");
     VkShaderModule vm=makeMod(dev,vc),fm=makeMod(dev,fc);
     VkPipelineShaderStageCreateInfo stg[2]{};
-    stg[0]={VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,nullptr,0,VK_SHADER_STAGE_VERTEX_BIT,  vm,&quot;main&quot;,nullptr};
-    stg[1]={VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,nullptr,0,VK_SHADER_STAGE_FRAGMENT_BIT,fm,&quot;main&quot;,nullptr};
+    stg[0]={VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,nullptr,0,VK_SHADER_STAGE_VERTEX_BIT,  vm,"main",nullptr};
+    stg[1]={VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,nullptr,0,VK_SHADER_STAGE_FRAGMENT_BIT,fm,"main",nullptr};
     VkPipelineVertexInputStateCreateInfo   vi{VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO};
     VkPipelineInputAssemblyStateCreateInfo ia{VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO};
     ia.topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -1407,9 +1399,9 @@ int main(){
     gpci.layout=gfxPL;gpci.renderPass=renderPass;gpci.subpass=0;
     VkPipeline gfxPipeline;vkCreateGraphicsPipelines(dev,VK_NULL_HANDLE,1,&amp;gpci,nullptr,&amp;gfxPipeline);
     vkDestroyShaderModule(dev,vm,nullptr);vkDestroyShaderModule(dev,fm,nullptr);
-    std::cout&lt;&lt;&quot;[5] Compute + graphics pipelines created\n&quot;;
+    std::cout&lt;&lt;"[5] Compute + graphics pipelines created\n";
 
-    // ── Command pool + sync ────────────────────────────────────────────────
+    // ── Command pool + sync ───────────────────────────────────────────────
     VkCommandPoolCreateInfo cpci2{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
     cpci2.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     cpci2.queueFamilyIndex=qfi.g.value();
@@ -1421,9 +1413,6 @@ int main(){
     vkAllocateCommandBuffers(dev,&amp;cbai,cmds.data());
 
     // FIX 2: One imgAvail semaphore PER swapchain image
-    // A single shared semaphore gets reused before the presentation engine
-    // releases it, causing VUID-00067. One per image guarantees each acquired
-    // image has its own unsignaled semaphore ready to use.
     std::vector&lt;VkSemaphore&gt; imgAvail(sic);
     VkSemaphore renderDone;VkFence inFlight;
     VkSemaphoreCreateInfo semci{VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
@@ -1434,7 +1423,7 @@ int main(){
     vkCreateSemaphore(dev,&amp;semci,nullptr,&amp;renderDone);
     vkCreateFence(dev,&amp;fenci,nullptr,&amp;inFlight);
 
-    // ── Run compute once before render loop ────────────────────────────────
+    // ── Run compute once before render loop ───────────────────────────────
     {
         VkCommandBufferAllocateInfo oai{VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
         oai.commandPool=cmdPool;oai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;oai.commandBufferCount=1;
@@ -1445,7 +1434,6 @@ int main(){
         vkCmdBindPipeline(oc,VK_PIPELINE_BIND_POINT_COMPUTE,compPipeline);
         vkCmdBindDescriptorSets(oc,VK_PIPELINE_BIND_POINT_COMPUTE,compPL,0,1,&amp;compDS,0,nullptr);
         PushConstants pc{IMG_W,IMG_H};
-        // Now stageFlags matches the range declared in compPL: COMPUTE_BIT only
         vkCmdPushConstants(oc,compPL,VK_SHADER_STAGE_COMPUTE_BIT,0,sizeof(pc),&amp;pc);
         vkCmdDispatch(oc,(IMG_W+15)/16,(IMG_H+15)/16,1);
         VkMemoryBarrier bar{VK_STRUCTURE_TYPE_MEMORY_BARRIER};
@@ -1461,11 +1449,11 @@ int main(){
         vkWaitForFences(dev,1,&amp;oFence,VK_TRUE,UINT64_MAX);
         vkDestroyFence(dev,oFence,nullptr);
     }
-    std::cout&lt;&lt;&quot;[6] Compute dispatch complete — output buffer filled\n&quot;;
-    std::cout&lt;&lt;&quot;[7] Render loop starting. ESC=quit.\n\n&quot;;
+    std::cout&lt;&lt;"[6] Compute dispatch complete — output buffer filled\n";
+    std::cout&lt;&lt;"[7] Render loop starting. ESC=quit.\n\n";
 
-    // ── Render loop ────────────────────────────────────────────────────────
-    uint32_t frameIndex = 0;  // cycles 0..sic-1, selects which imgAvail to use
+    // ── Render loop ───────────────────────────────────────────────────────
+    uint32_t frameIndex = 0;
     while(!glfwWindowShouldClose(win)){
         glfwPollEvents();
         if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS)glfwSetWindowShouldClose(win,GLFW_TRUE);
@@ -1474,7 +1462,6 @@ int main(){
         vkResetFences(dev,1,&amp;inFlight);
 
         uint32_t idx;
-        // Use imgAvail[frameIndex] — unique semaphore for this frame slot
         vkAcquireNextImageKHR(dev,sc,UINT64_MAX,imgAvail[frameIndex],VK_NULL_HANDLE,&amp;idx);
 
         auto&amp;cmd=cmds[idx];vkResetCommandBuffer(cmd,0);
@@ -1488,7 +1475,6 @@ int main(){
         vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,gfxPipeline);
         vkCmdBindDescriptorSets(cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,gfxPL,0,1,&amp;gfxDS,0,nullptr);
         PushConstants pc{IMG_W,IMG_H};
-        // stageFlags matches gfxPL range: FRAGMENT_BIT only
         vkCmdPushConstants(cmd,gfxPL,VK_SHADER_STAGE_FRAGMENT_BIT,0,sizeof(pc),&amp;pc);
         vkCmdDraw(cmd,3,1,0,0);
         vkCmdEndRenderPass(cmd);vkEndCommandBuffer(cmd);
@@ -1525,25 +1511,23 @@ int main(){
     vkDestroySwapchainKHR(dev,sc,nullptr);vkDestroySurfaceKHR(inst,surf,nullptr);
     vkDestroyDevice(dev,nullptr);vkDestroyInstance(inst,nullptr);
     glfwDestroyWindow(win);glfwTerminate();
-    std::cout&lt;&lt;&quot;Clean shutdown. Validation: 0 errors.\n&quot;;
+    std::cout&lt;&lt;"Clean shutdown. Validation: 0 errors.\n";
     return 0;
-}
-</pre></div></div>
-  </pre></div></div>
-  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'cmd21')">Copy</button><pre id="cmd21">cd C:\\Labs\\D21_ComputeDisplay
+}</pre></div></div>
+  <div class="cmd"><div class="cmd-lbl">Command</div><button class="cmd-cp" onclick="copyCode(this,'cmd21')">Copy</button><pre id="cmd21">cd C:\Labs\D21_ComputeDisplay
 glslc compute.comp -o comp.spv
 glslc shader.vert -o vert.spv
 glslc shader.frag -o frag.spv
-cmake -B build -G &quot;Visual Studio 17 2022&quot; -A x64
+cmake -B build -G "Visual Studio 17 2022" -A x64
 cmake --build build --config Release
-copy *.spv build\\Release\\
-build\\Release\\D21_ComputeDisplay.exe</pre></div>
+copy *.spv build\Release\
+build\Release\D21_ComputeDisplay.exe</pre></div>
   <div class="terminal"><div class="term-bar"><div class="t-dot" style="background:#ff5f57"></div><div class="t-dot" style="background:#febc2e"></div><div class="t-dot" style="background:#28c840"></div><span class="term-title">Expected Terminal Output</span></div><div class="term-body"><div><span class="th">=== Demo 21 — Compute to Display ===</span></div><hr class="t-hr"><div><span class="ts">[1] GPU: Intel(R) Iris(R) Xe Graphics</span></div><div><span class="ts">[2] Swapchain + render pass + 3 framebuffers</span></div><div><span class="ts">[3] Gradient image in input buffer (256 KB)</span></div><div><span class="ts">[4] Descriptors: compDS(in+out) + gfxDS(out→display)</span></div><div><span class="ts">[5] Compute + graphics pipelines created</span></div><div><span class="ts">[6] Compute dispatch complete — output buffer filled</span></div><div><span class="ts">[7] Render loop starting. ESC=quit.</span></div><hr class="t-hr"><div><span class="to">[Window: inverted gradient visible — pink/magenta tones]</span></div><div><span class="to">[ESC to quit]</span></div></div></div>
   <div class="exp"><div class="exp-lbl">&#128300; Break-to-Learn Experiments</div><ul class="exp-list">
     <li><strong>Display input instead of output:</strong> In the graphics descriptor write, point <code class="ic">gfxDS binding0</code> at <code class="ic">dbi0</code> (inBuf) instead of <code class="ic">dbi1</code> (outBuf). Window shows the original gradient (cyan/blue). Same display pipeline, different buffer.</li>
     <li><strong>Change kernel to greyscale:</strong> Edit compute.comp: replace invert lines with <code class="ic">uint lum=(r+g+b)/3u; pixels_out[idx]=lum|(lum&lt;&lt;8)|(lum&lt;&lt;16)|(a&lt;&lt;24);</code> Recompile with glslc. Window shows greyscale. Display pipeline unchanged.</li>
-    <li><strong>Centre the image in the window:</strong> In <code class="ic">shader.frag</code>, replace the index calculation with: <code class="ic">int ox = (int(pc.width) - int(gl_FragCoord.x) * 256 / int(ext.width));</code> or more simply, offset the coordinates: <code class="ic">uint x = uint(gl_FragCoord.x) - (900u - 256u)/2u;</code> and same for y. Recompile with glslc. The image shifts to centre. This shows how the fragment shader controls which buffer region maps to which screen region.</li>
-    <li><strong>Re-dispatch each frame:</strong> Move the compute block inside the render loop before <code class="ic">vkCmdBeginRenderPass</code>. The image updates live each frame. Animate the kernel by passing a time value via push constants &mdash; foundation of real-time GPU image processing.</li>
+    <li><strong>Centre the image in the window:</strong> In <code class="ic">shader.frag</code>, offset the coordinates: <code class="ic">uint x = uint(gl_FragCoord.x) - (900u - 256u)/2u;</code> and same for y. Recompile with glslc. The image shifts to centre.</li>
+    <li><strong>Re-dispatch each frame:</strong> Move the compute block inside the render loop before <code class="ic">vkCmdBeginRenderPass</code>. The image updates live each frame. Animate the kernel by passing a time value via push constants — foundation of real-time GPU image processing.</li>
   </ul></div>
   <div class="page-foot">
     <a class="foot-btn" href="day4-demos.html">&#8592; Day 4 Demos</a>
@@ -1551,6 +1535,7 @@ build\\Release\\D21_ComputeDisplay.exe</pre></div>
       By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>
       Koenig Original AI-Courseware &middot; Day 5 Complete
     </div>
+    <a class="foot-btn" href="capstone.html" style="background:rgba(240,180,41,.1);border-color:rgba(240,180,41,.3);color:#f0b429">&#127942; Capstone</a>
     <a class="foot-btn primary" href="lab-day5.html">Day 5 Labs &#8594;</a>
   </div>
 </div>

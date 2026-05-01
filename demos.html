@@ -23,8 +23,6 @@ a{text-decoration:none;color:inherit}
 ::selection{background:rgba(99,102,241,.35);color:#fff}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
   background:rgba(8,10,15,.92);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
@@ -43,8 +41,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
 .nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .nav-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
 .nav-author{font-size:11px;color:var(--text3);font-weight:600}
-
-/* HERO */
 .hero{padding:calc(var(--nav-h) + 4rem) 2rem 3rem;text-align:center;position:relative;overflow:hidden;max-width:900px;margin:0 auto}
 .hero-grid{position:fixed;inset:0;z-index:-1;
   background-image:linear-gradient(rgba(34,211,238,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.03) 1px,transparent 1px);
@@ -57,45 +53,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
 h1{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.2;margin-bottom:1rem}
 .h1-accent{background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero-sub{font-size:.95rem;color:var(--text2);max-width:580px;margin:0 auto 2rem;line-height:1.8}
-.how-it-works{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
-  margin:2rem 0;max-width:700px;margin:2rem auto;
-}
+.how-it-works{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2rem auto;max-width:700px}
 .how-step{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:left}
 .how-num{font-family:var(--font-display);font-size:1.5rem;font-weight:700;
   background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
 .how-title{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
 .how-desc{font-size:.78rem;color:var(--text3);line-height:1.6}
-
-/* WRAPPER */
 .wrapper{max-width:1200px;margin:0 auto;padding:0 2rem}
-.sec-eyebrow{font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:.5rem}
-.sec-title{font-family:var(--font-display);font-size:clamp(1.4rem,2.5vw,1.9rem);font-weight:700;margin-bottom:.4rem}
-.sec-sub{font-size:.9rem;color:var(--text2);margin-bottom:2.5rem}
-
-/* DAY SECTION */
 .day-section{padding:4rem 0;border-top:1px solid var(--border)}
 .day-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:2.5rem;flex-wrap:wrap}
-.day-badge{
-  padding:.5rem 1.25rem;border-radius:30px;
-  font-family:var(--font-display);font-size:12px;font-weight:700;
-  white-space:nowrap;flex-shrink:0;
-}
+.day-badge{padding:.5rem 1.25rem;border-radius:30px;font-family:var(--font-display);font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0}
 .day-header-info{flex:1}
 .day-title{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--text)}
 .day-desc{font-size:.85rem;color:var(--text2);margin-top:.3rem}
-.day-cta{
-  padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;
-  border:1px solid;cursor:pointer;transition:all .2s;white-space:nowrap;
-  display:inline-flex;align-items:center;gap:6px;
-}
-
-/* DEMO CARDS GRID */
+.day-cta{padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid;cursor:pointer;transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .demos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem}
-.demo-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
-  overflow:hidden;transition:all .25s;
-}
+.demo-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s}
 .demo-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
 .demo-card-accent{height:3px}
 .demo-card-body{padding:1.25rem}
@@ -104,44 +77,29 @@ h1{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:
 .demo-desc{font-size:.83rem;color:var(--text2);line-height:1.65;margin-bottom:1rem}
 .demo-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
 .demo-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
-.demo-what{font-size:.78rem;color:var(--text3);line-height:1.6;margin-bottom:1rem;
-  padding:.75rem;background:var(--bg3);border-radius:8px;border-left:2px solid}
-.demo-card-foot{
-  padding:.85rem 1.25rem;border-top:1px solid var(--border);
-  display:flex;gap:8px;align-items:center;
-}
-.btn-demo{
-  flex:1;padding:8px;border-radius:8px;
-  font-size:12px;font-weight:700;text-align:center;
-  cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
+.demo-what{font-size:.78rem;color:var(--text3);line-height:1.6;margin-bottom:1rem;padding:.75rem;background:var(--bg3);border-radius:8px;border-left:2px solid}
+.demo-card-foot{padding:.85rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center}
+.btn-demo{flex:1;padding:8px;border-radius:8px;font-size:12px;font-weight:700;text-align:center;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
 .btn-demo-primary{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);color:var(--cyan)}
 .btn-demo-primary:hover{background:rgba(34,211,238,.2)}
 .btn-demo-sec{background:var(--bg3);border:1px solid var(--border2);color:var(--text2)}
 .btn-demo-sec:hover{background:var(--bg4);color:var(--text)}
 .demo-duration{font-size:10px;color:var(--text3);white-space:nowrap}
-
-/* SVG OVERVIEW DIAGRAM */
 .overview-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:3rem}
 .overview-title{font-family:var(--font-display);font-size:.9rem;font-weight:700;color:var(--text2);margin-bottom:1.5rem;text-align:center}
-
-/* FOOTER */
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;margin-top:4rem}
 .footer-brand{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
 .footer-sub{font-size:.82rem;color:var(--text3);margin-bottom:1.5rem}
 .footer-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
 .footer-link{font-size:.82rem;color:var(--text3);transition:color .2s}.footer-link:hover{color:var(--cyan)}
 .footer-copy{font-size:.78rem;color:var(--text3);border-top:1px solid var(--border);padding-top:1.5rem;margin-top:1rem}
-
 @media(max-width:768px){.nav-links{display:none}.demos-grid{grid-template-columns:1fr}.how-it-works{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-brand" href="index.html">
-    <div class="nav-brand-hex">⬡</div>
+    <div class="nav-brand-hex">&#x2B21;</div>
     RR Graphics Lab <span class="nav-mct">MCT</span>
   </a>
   <div class="nav-links">
@@ -151,566 +109,217 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     <a class="nav-link" href="catalogue.html"><span class="nav-dot" style="background:var(--orange)"></span>Demo Catalogue</a>
   </div>
   <div class="nav-actions">
-    <span class="nav-author">Raushan Ranjan · MCT | Educator</span>
+    <span class="nav-author">Raushan Ranjan &middot; MCT | Educator</span>
   </div>
 </nav>
-
 <div class="hero-grid"></div>
-
-<!-- HERO -->
 <div class="hero">
   <div class="eyebrow"><span class="eyebrow-dot"></span>Concept-by-Concept Code Demonstrations</div>
   <h1>Code <span class="h1-accent">Demos</span></h1>
-  <p class="hero-sub">Each demo isolates one concept with complete annotated code, expected output, and experiments. Trainer runs live in class — students follow, understand, then write it themselves.</p>
-
+  <p class="hero-sub">Each demo isolates one concept with complete annotated code, expected output, and experiments. Trainer runs live in class &mdash; students follow, understand, then write it themselves.</p>
   <div class="how-it-works">
-    <div class="how-step">
-      <div class="how-num">01</div>
-      <div class="how-title">Read the Notes</div>
-      <div class="how-desc">Review the concept in Module Notes so the theory is fresh before the demo.</div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">02</div>
-      <div class="how-title">Watch & Follow</div>
-      <div class="how-desc">Trainer runs the demo live. Students type each line themselves and observe the output.</div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">03</div>
-      <div class="how-title">Experiment</div>
-      <div class="how-desc">Change values, break things deliberately, observe what happens. This is when understanding sticks.</div>
-    </div>
+    <div class="how-step"><div class="how-num">01</div><div class="how-title">Read the Notes</div><div class="how-desc">Review the concept in Module Notes so the theory is fresh before the demo.</div></div>
+    <div class="how-step"><div class="how-num">02</div><div class="how-title">Watch &amp; Follow</div><div class="how-desc">Trainer runs the demo live. Students type each line themselves and observe the output.</div></div>
+    <div class="how-step"><div class="how-num">03</div><div class="how-title">Experiment</div><div class="how-desc">Change values, break things deliberately, observe what happens. This is when understanding sticks.</div></div>
   </div>
 </div>
-
-<!-- COURSE OVERVIEW SVG -->
 <div class="wrapper">
   <div class="overview-box">
-    <div class="overview-title">5-Day Demo Roadmap — All Concepts at a Glance</div>
+    <div class="overview-title">5-Day Demo Roadmap &mdash; All Concepts at a Glance</div>
     <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;display:block;margin:0 auto">
       <defs>
-        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#6366f1"/>
-          <stop offset="100%" stop-color="#818cf8"/>
-        </linearGradient>
-        <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#0891b2"/>
-          <stop offset="100%" stop-color="#22d3ee"/>
-        </linearGradient>
-        <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#16a34a"/>
-          <stop offset="100%" stop-color="#4ade80"/>
-        </linearGradient>
-        <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#ea580c"/>
-          <stop offset="100%" stop-color="#fb923c"/>
-        </linearGradient>
-        <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#db2777"/>
-          <stop offset="100%" stop-color="#f472b6"/>
-        </linearGradient>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#818cf8"/></linearGradient>
+        <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0891b2"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient>
+        <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#16a34a"/><stop offset="100%" stop-color="#4ade80"/></linearGradient>
+        <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ea580c"/><stop offset="100%" stop-color="#fb923c"/></linearGradient>
+        <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#db2777"/><stop offset="100%" stop-color="#f472b6"/></linearGradient>
       </defs>
-      <!-- Day boxes -->
       <rect x="10" y="10" width="160" height="200" rx="10" fill="rgba(99,102,241,.08)" stroke="rgba(99,102,241,.3)" stroke-width="1"/>
       <rect x="185" y="10" width="160" height="200" rx="10" fill="rgba(34,211,238,.06)" stroke="rgba(34,211,238,.25)" stroke-width="1"/>
       <rect x="360" y="10" width="160" height="200" rx="10" fill="rgba(74,222,128,.06)" stroke="rgba(74,222,128,.25)" stroke-width="1"/>
       <rect x="535" y="10" width="160" height="200" rx="10" fill="rgba(251,146,60,.06)" stroke="rgba(251,146,60,.25)" stroke-width="1"/>
       <rect x="710" y="10" width="180" height="200" rx="10" fill="rgba(244,114,182,.06)" stroke="rgba(244,114,182,.25)" stroke-width="1"/>
-      <!-- Day labels -->
       <text x="90" y="35" text-anchor="middle" fill="url(#g1)" font-family="Space Mono" font-size="11" font-weight="700">DAY 1</text>
       <text x="265" y="35" text-anchor="middle" fill="url(#g2)" font-family="Space Mono" font-size="11" font-weight="700">DAY 2</text>
       <text x="440" y="35" text-anchor="middle" fill="url(#g3)" font-family="Space Mono" font-size="11" font-weight="700">DAY 3</text>
       <text x="615" y="35" text-anchor="middle" fill="url(#g4)" font-family="Space Mono" font-size="11" font-weight="700">DAY 4</text>
       <text x="800" y="35" text-anchor="middle" fill="url(#g5)" font-family="Space Mono" font-size="11" font-weight="700">DAY 5</text>
-      <!-- Day 1 demos -->
-      <text x="90" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D1 · Pipeline Walkthrough</text>
-      <text x="90" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D2 · First Window</text>
-      <text x="90" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D3 · VBO + VAO</text>
-      <text x="90" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D4 · Shaders</text>
-      <text x="90" y="132" text-anchor="middle" fill="#94a3b8" font-size="9.5">D5 · Triangle</text>
-      <text x="90" y="150" text-anchor="middle" fill="#94a3b8" font-size="9.5">D6 · EBO Rectangle</text>
-      <text x="90" y="168" text-anchor="middle" fill="#94a3b8" font-size="9.5">D7 · Uniforms</text>
-      <!-- Day 2 demos -->
-      <text x="265" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D8 · MVP Matrix</text>
-      <text x="265" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D9 · 3D Cube</text>
-      <text x="265" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D10 · Camera</text>
-      <text x="265" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D11 · Phong Lighting</text>
-      <text x="265" y="132" text-anchor="middle" fill="#94a3b8" font-size="9.5">D12 · Textures</text>
-      <text x="265" y="150" text-anchor="middle" fill="#94a3b8" font-size="9.5">D13 · Skybox</text>
-      <!-- Day 3 demos -->
-      <text x="440" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D14 · GLSL Deep Dive</text>
-      <text x="440" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D15 · Instancing</text>
-      <text x="440" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D16 · FBO Effects</text>
-      <text x="440" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D17 · Transparency</text>
-      <text x="440" y="132" text-anchor="middle" fill="#94a3b8" font-size="9.5">D18 · MSAA</text>
-      <text x="440" y="150" text-anchor="middle" fill="#94a3b8" font-size="9.5">D19 · RenderDoc</text>
-      <!-- Day 4 demos -->
-      <text x="615" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D20 · Vulkan Setup</text>
-      <text x="615" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D21 · VkInstance</text>
-      <text x="615" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D22 · Devices</text>
-      <text x="615" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D23 · Swapchain</text>
-      <text x="615" y="132" text-anchor="middle" fill="#94a3b8" font-size="9.5">D24 · Pipeline</text>
-      <text x="615" y="150" text-anchor="middle" fill="#94a3b8" font-size="9.5">D25 · First Triangle</text>
-      <!-- Day 5 demos -->
-      <text x="800" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D26 · Compute Shader</text>
-      <text x="800" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D27 · Model Loading</text>
-      <text x="800" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D28 · Descriptors</text>
-      <text x="800" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D29 · C# Integration</text>
-      <text x="800" y="132" text-anchor="middle" fill="#94a3b8" font-size="9.5">D30 · Capstone Demo</text>
+      <text x="90" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D1 &middot; Pipeline Walkthrough</text>
+      <text x="90" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D2 &middot; First Window</text>
+      <text x="90" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D3 &middot; VBO + VAO</text>
+      <text x="90" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D4 &middot; Shaders</text>
+      <text x="90" y="132" text-anchor="middle" fill="#94a3b8" font-size="9.5">D5 &middot; Triangle</text>
+      <text x="90" y="150" text-anchor="middle" fill="#94a3b8" font-size="9.5">D6 &middot; EBO Rectangle</text>
+      <text x="90" y="168" text-anchor="middle" fill="#94a3b8" font-size="9.5">D7 &middot; Uniforms</text>
+      <text x="265" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D8 &middot; MVP Matrix</text>
+      <text x="265" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D9 &middot; 3D Cube</text>
+      <text x="265" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D10 &middot; Camera</text>
+      <text x="265" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D11 &middot; Phong Lighting</text>
+      <text x="265" y="132" text-anchor="middle" fill="#94a3b8" font-size="9.5">D12 &middot; Textures</text>
+      <text x="440" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D13 &middot; Procedural Shader</text>
+      <text x="440" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D14 &middot; Instancing</text>
+      <text x="440" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D15 &middot; FBO Effects</text>
+      <text x="440" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D16 &middot; Stencil + Blend</text>
+      <text x="615" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D17 &middot; Swapchain</text>
+      <text x="615" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D18 &middot; First Vk Triangle</text>
+      <text x="615" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D19 &middot; Vk Env</text>
+      <text x="615" y="114" text-anchor="middle" fill="#94a3b8" font-size="9.5">D20 &middot; Vk Devices</text>
+      <text x="800" y="60" text-anchor="middle" fill="#94a3b8" font-size="9.5">D21 &middot; UBO + Descriptors</text>
+      <text x="800" y="78" text-anchor="middle" fill="#94a3b8" font-size="9.5">D22 &middot; Compute Shader</text>
+      <text x="800" y="96" text-anchor="middle" fill="#94a3b8" font-size="9.5">D23 &middot; Compute Display</text>
     </svg>
   </div>
 
-  <!-- ═══════════════════ DAY 1 ═══════════════════ -->
+  <!-- DAY 1 -->
   <div class="day-section" id="day1">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);color:#818cf8">Day 1 — OpenGL Foundations</div>
+      <div class="day-badge" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);color:#818cf8">Day 1 &mdash; OpenGL Foundations</div>
       <div class="day-header-info">
         <div class="day-title">Introduction, Environment Setup, Data Flow</div>
-        <div class="day-desc">7 demos · Modules 1, 2, 3 · From "what is a GPU" to drawing coloured geometry with VBO/VAO/EBO</div>
+        <div class="day-desc">7 demos &middot; Modules 1, 2, 3 &middot; From "what is a GPU" to drawing coloured geometry with VBO/VAO/EBO</div>
       </div>
-      <a class="day-cta" href="day1-demos.html" style="border-color:rgba(99,102,241,.4);color:#818cf8;background:rgba(99,102,241,.08)">
-        ⚡ Open Day 1 Demos →
-      </a>
+      <a class="day-cta" href="day1-demos.html" style="border-color:rgba(99,102,241,.4);color:#818cf8;background:rgba(99,102,241,.08)">&#9889; Open Day 1 Demos &rarr;</a>
     </div>
-
     <div class="demos-grid">
-      <!-- D1 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d1)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 1 · Module 1</div>
-          <div class="demo-title">The Rendering Pipeline Walkthrough</div>
-          <div class="demo-desc">Understand what the GPU does at each stage before writing one line of code. Visual explanation of vertex → rasterize → fragment → screen.</div>
-          <div class="demo-tags"><span class="demo-tag">Pipeline</span><span class="demo-tag">GPU Architecture</span><span class="demo-tag">Theory</span></div>
-          <div class="demo-what" style="border-color:var(--d1)">🎯 What you'll see: Step-by-step pipeline diagram with which stages you write vs. GPU auto-handles. No code — pure concept.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-pipeline">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html" onclick="setTimeout(()=>openModule&&openModule(1),300)">📖 Notes</a>
-          <span class="demo-duration">~15 min</span>
-        </div>
-      </div>
-
-      <!-- D2 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d1)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 2 · Module 2</div>
-          <div class="demo-title">First OpenGL Window</div>
-          <div class="demo-desc">Complete GLFW + GLEW setup from scratch. Every line of the window program explained — CMakeLists.txt, context creation, render loop.</div>
-          <div class="demo-tags"><span class="demo-tag">GLFW</span><span class="demo-tag">GLEW</span><span class="demo-tag">CMake</span><span class="demo-tag">Context</span></div>
-          <div class="demo-what" style="border-color:var(--d1)">🎯 What you'll see: A dark navy window with your GPU name printed in terminal. Change background colour in 1 line.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-window">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~20 min</span>
-        </div>
-      </div>
-
-      <!-- D3 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d1)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 3 · Module 3</div>
-          <div class="demo-title">VBO — Uploading Vertex Data to GPU</div>
-          <div class="demo-desc">Learn exactly what glGenBuffers, glBindBuffer, and glBufferData do. Watch data move from your C++ array into GPU VRAM.</div>
-          <div class="demo-tags"><span class="demo-tag">VBO</span><span class="demo-tag">GPU Memory</span><span class="demo-tag">glBufferData</span></div>
-          <div class="demo-what" style="border-color:var(--d1)">🎯 What you'll see: The VBO creation pattern — the three-step recipe every OpenGL program uses.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-vbo">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~20 min</span>
-        </div>
-      </div>
-
-      <!-- D4 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d1)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 4 · Module 3</div>
-          <div class="demo-title">VAO + glVertexAttribPointer Decoded</div>
-          <div class="demo-desc">The most confusing call in OpenGL — decoded parameter by parameter. Stride, offset, type, normalized — every argument explained with diagrams.</div>
-          <div class="demo-tags"><span class="demo-tag">VAO</span><span class="demo-tag">glVertexAttribPointer</span><span class="demo-tag">Stride</span></div>
-          <div class="demo-what" style="border-color:var(--d1)">🎯 What you'll see: Memory layout diagram + VAO recording. Change the layout intentionally to see corruption.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-vao">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~25 min</span>
-        </div>
-      </div>
-
-      <!-- D5 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d1)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 5 · Module 3</div>
-          <div class="demo-title">First Triangle + Shaders</div>
-          <div class="demo-desc">The most significant milestone in graphics programming. Complete vertex + fragment shader written from scratch. Every GLSL keyword explained.</div>
-          <div class="demo-tags"><span class="demo-tag">Triangle</span><span class="demo-tag">GLSL</span><span class="demo-tag">Vertex Shader</span><span class="demo-tag">Fragment Shader</span></div>
-          <div class="demo-what" style="border-color:var(--d1)">🎯 What you'll see: An orange triangle on screen — your first rendered geometry. Colour it differently per vertex.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-triangle">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~30 min</span>
-        </div>
-      </div>
-
-      <!-- D6 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d1)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 6 · Module 3</div>
-          <div class="demo-title">EBO — Rectangle from 4 Vertices</div>
-          <div class="demo-desc">Draw a rectangle using only 4 vertices + index data instead of 6 duplicated vertices. Shows the memory saving and glDrawElements call.</div>
-          <div class="demo-tags"><span class="demo-tag">EBO</span><span class="demo-tag">Index Buffer</span><span class="demo-tag">glDrawElements</span></div>
-          <div class="demo-what" style="border-color:var(--d1)">🎯 What you'll see: Coloured rectangle + wireframe toggle to see both triangles making it up.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-ebo">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~20 min</span>
-        </div>
-      </div>
-
-      <!-- D7 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d1)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 7 · Module 3</div>
-          <div class="demo-title">Uniforms + Animation with Time</div>
-          <div class="demo-desc">Pass a time value from CPU to GPU every frame using glUniform1f. Watch the colour or position animate — your first dynamic, real-time rendering.</div>
-          <div class="demo-tags"><span class="demo-tag">Uniforms</span><span class="demo-tag">Animation</span><span class="demo-tag">glfwGetTime</span></div>
-          <div class="demo-what" style="border-color:var(--d1)">🎯 What you'll see: A pulsing colour triangle that cycles through colours in real time using sin(time).</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-uniforms">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~20 min</span>
-        </div>
-      </div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d1)"></div><div class="demo-card-body"><div class="demo-concept">Demo 1 &middot; Module 1</div><div class="demo-title">The Rendering Pipeline Walkthrough</div><div class="demo-desc">Visual explanation of vertex &rarr; rasterize &rarr; fragment &rarr; screen. Which stages you write vs GPU auto-handles.</div><div class="demo-tags"><span class="demo-tag">Pipeline</span><span class="demo-tag">GPU Architecture</span><span class="demo-tag">Theory</span></div><div class="demo-what" style="border-color:var(--d1)">&#127919; Step-by-step pipeline diagram. No code &mdash; pure concept.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-pipeline">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~15 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d1)"></div><div class="demo-card-body"><div class="demo-concept">Demo 2 &middot; Module 2</div><div class="demo-title">First OpenGL Window</div><div class="demo-desc">Complete GLFW + GLEW setup. Every line of the window program explained &mdash; CMakeLists.txt, context creation, render loop.</div><div class="demo-tags"><span class="demo-tag">GLFW</span><span class="demo-tag">GLEW</span><span class="demo-tag">CMake</span><span class="demo-tag">Context</span></div><div class="demo-what" style="border-color:var(--d1)">&#127919; Dark navy window. GPU name in terminal. Change background in 1 line.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-window">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~20 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d1)"></div><div class="demo-card-body"><div class="demo-concept">Demo 3 &middot; Module 3</div><div class="demo-title">VBO &mdash; Uploading Vertex Data to GPU</div><div class="demo-desc">glGenBuffers, glBindBuffer, glBufferData decoded. Watch data move from C++ array into GPU VRAM.</div><div class="demo-tags"><span class="demo-tag">VBO</span><span class="demo-tag">GPU Memory</span><span class="demo-tag">glBufferData</span></div><div class="demo-what" style="border-color:var(--d1)">&#127919; The VBO three-step recipe every OpenGL program uses.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-vbo">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~20 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d1)"></div><div class="demo-card-body"><div class="demo-concept">Demo 4 &middot; Module 3</div><div class="demo-title">VAO + glVertexAttribPointer Decoded</div><div class="demo-desc">The most confusing call in OpenGL &mdash; decoded parameter by parameter. Stride, offset, type, normalized explained.</div><div class="demo-tags"><span class="demo-tag">VAO</span><span class="demo-tag">glVertexAttribPointer</span><span class="demo-tag">Stride</span></div><div class="demo-what" style="border-color:var(--d1)">&#127919; Memory layout diagram + VAO recording. Change layout to see corruption.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-vao">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~25 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d1)"></div><div class="demo-card-body"><div class="demo-concept">Demo 5 &middot; Module 3</div><div class="demo-title">First Triangle + Shaders</div><div class="demo-desc">The most significant milestone in graphics programming. Complete vertex + fragment shader from scratch. Every GLSL keyword explained.</div><div class="demo-tags"><span class="demo-tag">Triangle</span><span class="demo-tag">GLSL</span><span class="demo-tag">Vertex Shader</span><span class="demo-tag">Fragment Shader</span></div><div class="demo-what" style="border-color:var(--d1)">&#127919; Orange triangle on screen. Colour it differently per vertex.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-triangle">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~30 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d1)"></div><div class="demo-card-body"><div class="demo-concept">Demo 6 &middot; Module 3</div><div class="demo-title">EBO &mdash; Rectangle from 4 Vertices</div><div class="demo-desc">Draw a rectangle using 4 vertices + index data instead of 6 duplicated vertices. glDrawElements call explained.</div><div class="demo-tags"><span class="demo-tag">EBO</span><span class="demo-tag">Index Buffer</span><span class="demo-tag">glDrawElements</span></div><div class="demo-what" style="border-color:var(--d1)">&#127919; Coloured rectangle + wireframe toggle to see both triangles.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-ebo">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~20 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d1)"></div><div class="demo-card-body"><div class="demo-concept">Demo 7 &middot; Module 3</div><div class="demo-title">Uniforms + Animation with Time</div><div class="demo-desc">Pass a time value from CPU to GPU every frame using glUniform1f. Watch colour or position animate in real time.</div><div class="demo-tags"><span class="demo-tag">Uniforms</span><span class="demo-tag">Animation</span><span class="demo-tag">glfwGetTime</span></div><div class="demo-what" style="border-color:var(--d1)">&#127919; Pulsing colour triangle cycling through colours using sin(time).</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day1-demos.html#demo-uniforms">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~20 min</span></div></div>
     </div>
   </div>
 
-  <!-- ═══════════════════ DAY 2 ═══════════════════ -->
+  <!-- DAY 2 -->
   <div class="day-section" id="day2">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);color:var(--cyan)">Day 2 — 3D World, Lighting &amp; Textures</div>
+      <div class="day-badge" style="background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);color:var(--cyan)">Day 2 &mdash; 3D World, Lighting &amp; Textures</div>
       <div class="day-header-info">
         <div class="day-title">Model Matrix, MVP Pipeline, Phong Lighting, Textures</div>
-        <div class="day-desc">4 demos · Modules 4, 5, 6 · From a spinning 2D triangle to a fully lit, textured 3D cube with fly camera</div>
+        <div class="day-desc">4 demos &middot; Modules 4, 5, 6 &middot; From a spinning 2D triangle to a fully lit, textured 3D cube with fly camera</div>
       </div>
-      <a class="day-cta" href="day2-demos.html" style="border-color:rgba(34,211,238,.3);color:var(--cyan);background:rgba(34,211,238,.08)">Open Day 2 Demos →</a>
+      <a class="day-cta" href="day2-demos.html" style="border-color:rgba(34,211,238,.3);color:var(--cyan);background:rgba(34,211,238,.08)">Open Day 2 Demos &rarr;</a>
     </div>
     <div class="demos-grid">
-
-      <!-- D7 — Model Matrix -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d2)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 7 · Module 4</div>
-          <div class="demo-title">The Model Matrix — First Moving Geometry</div>
-          <div class="demo-desc">Send a glm::mat4 to the vertex shader every frame. Translate, rotate, and scale the triangle in real time. T and S keys toggle each transform independently.</div>
-          <div class="demo-tags"><span class="demo-tag">GLM</span><span class="demo-tag">glm::rotate</span><span class="demo-tag">glUniformMatrix4fv</span></div>
-          <div class="demo-what" style="border-color:var(--d2)">🎯 Orange triangle spinning continuously. T=translate, S=scale toggles. Angle printed every 60 frames.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo7">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~25 min</span>
-        </div>
-      </div>
-
-      <!-- D8 — Full MVP + Camera -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d2)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 8 · Module 4</div>
-          <div class="demo-title">Full MVP + Fly Camera — WASD + Mouse Look</div>
-          <div class="demo-desc">Complete Model × View × Projection pipeline. Depth testing enabled. Fly camera with WASD movement, mouse look (yaw/pitch), scroll to zoom. Delta time for frame-rate-independent speed.</div>
-          <div class="demo-tags"><span class="demo-tag">glm::lookAt</span><span class="demo-tag">glm::perspective</span><span class="demo-tag">GL_DEPTH_TEST</span><span class="demo-tag">Camera</span></div>
-          <div class="demo-what" style="border-color:var(--d2)">🎯 3D rotating coloured cube. Full fly camera. Scroll to change FOV. Break test: comment out depth test to see faces flicker.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo8">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~40 min</span>
-        </div>
-      </div>
-
-      <!-- D9 — Phong Lighting -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d2)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 9 · Module 5</div>
-          <div class="demo-title">Phong Lighting — Ambient + Diffuse + Specular</div>
-          <div class="demo-desc">Normals as a third vertex attribute. Normal matrix in vertex shader. Per-fragment lighting calculation in fragment shader. Orbiting light source shown as a small white cube. 1/2/3 keys isolate each lighting component.</div>
-          <div class="demo-tags"><span class="demo-tag">Normals</span><span class="demo-tag">dot()</span><span class="demo-tag">reflect()</span><span class="demo-tag">Normal Matrix</span></div>
-          <div class="demo-what" style="border-color:var(--d2)">🎯 Grey lit cube + orbiting white light. 1=ambient only, 2=+diffuse, 3=full Phong. Arrow keys tune brightness and shininess.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo9">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~40 min</span>
-        </div>
-      </div>
-
-      <!-- D10 — Textures -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d2)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 10 · Module 6</div>
-          <div class="demo-title">Textures — UV Coords, stb_image, Textured Lit Cube</div>
-          <div class="demo-desc">UV coordinates as a fourth vertex attribute (8 floats/vertex). stb_image loads PNG from disk. glTexImage2D uploads to GPU. sampler2D in fragment shader. Phong lighting multiplied by texture colour. T and L keys toggle texture and lighting independently.</div>
-          <div class="demo-tags"><span class="demo-tag">stb_image</span><span class="demo-tag">UV Mapping</span><span class="demo-tag">sampler2D</span><span class="demo-tag">Mipmaps</span></div>
-          <div class="demo-what" style="border-color:var(--d2)">🎯 Textured lit cube (crate or checkerboard fallback). T=texture on/off, L=lighting on/off. Four combinations show each layer's contribution.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day2-demos.html#demo10">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~40 min</span>
-        </div>
-      </div>
-
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d2)"></div><div class="demo-card-body"><div class="demo-concept">Demo 7 &middot; Module 4</div><div class="demo-title">The Model Matrix &mdash; First Moving Geometry</div><div class="demo-desc">Send a glm::mat4 to the vertex shader every frame. Translate, rotate, and scale the triangle in real time.</div><div class="demo-tags"><span class="demo-tag">GLM</span><span class="demo-tag">glm::rotate</span><span class="demo-tag">glUniformMatrix4fv</span></div><div class="demo-what" style="border-color:var(--d2)">&#127919; Orange triangle spinning. T=translate, S=scale toggles.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day2-demos.html#demo7">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~25 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d2)"></div><div class="demo-card-body"><div class="demo-concept">Demo 8 &middot; Module 4</div><div class="demo-title">Full MVP + Fly Camera &mdash; WASD + Mouse Look</div><div class="demo-desc">Complete Model &times; View &times; Projection pipeline. Depth testing. Fly camera with WASD, mouse look, scroll to zoom.</div><div class="demo-tags"><span class="demo-tag">glm::lookAt</span><span class="demo-tag">glm::perspective</span><span class="demo-tag">GL_DEPTH_TEST</span><span class="demo-tag">Camera</span></div><div class="demo-what" style="border-color:var(--d2)">&#127919; 3D rotating coloured cube. Full fly camera. Scroll to change FOV.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day2-demos.html#demo8">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~40 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d2)"></div><div class="demo-card-body"><div class="demo-concept">Demo 9 &middot; Module 5</div><div class="demo-title">Phong Lighting &mdash; Ambient + Diffuse + Specular</div><div class="demo-desc">Normals as a vertex attribute. Normal matrix. Per-fragment lighting. Orbiting light source. 1/2/3 keys isolate each component.</div><div class="demo-tags"><span class="demo-tag">Normals</span><span class="demo-tag">dot()</span><span class="demo-tag">reflect()</span><span class="demo-tag">Normal Matrix</span></div><div class="demo-what" style="border-color:var(--d2)">&#127919; Grey lit cube + orbiting white light. 1=ambient, 2=+diffuse, 3=full Phong.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day2-demos.html#demo9">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~40 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d2)"></div><div class="demo-card-body"><div class="demo-concept">Demo 10 &middot; Module 6</div><div class="demo-title">Textures &mdash; UV Coords, stb_image, Textured Lit Cube</div><div class="demo-desc">UV coordinates. stb_image loads PNG. glTexImage2D uploads to GPU. sampler2D in fragment shader. Phong &times; texture.</div><div class="demo-tags"><span class="demo-tag">stb_image</span><span class="demo-tag">UV Mapping</span><span class="demo-tag">sampler2D</span><span class="demo-tag">Mipmaps</span></div><div class="demo-what" style="border-color:var(--d2)">&#127919; Textured lit cube. T=texture on/off, L=lighting on/off. Four combinations.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day2-demos.html#demo10">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~40 min</span></div></div>
     </div>
   </div>
 
-  <!-- ═══════════════════ DAYS 3-5 PREVIEW ═══════════════════ -->
-  <!-- ═══════════════════ DAY 3 ═══════════════════ -->
+  <!-- DAY 3 -->
   <div class="day-section" id="day3">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:var(--green)">Day 3 — Advanced OpenGL</div>
+      <div class="day-badge" style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:var(--green)">Day 3 &mdash; Advanced OpenGL</div>
       <div class="day-header-info">
         <div class="day-title">GLSL Deep Dive, Instancing, FBO Post-Processing, Stencil + Blending</div>
-        <div class="day-desc">4 demos · Modules 7, 8, 9 · From procedural shaders to rendering scenes into textures</div>
+        <div class="day-desc">4 demos &middot; Modules 7, 8, 9 &middot; From procedural shaders to rendering scenes into textures</div>
       </div>
-      <a class="day-cta" href="day3-demos.html" style="border-color:rgba(74,222,128,.3);color:var(--green);background:rgba(74,222,128,.08)">Open Day 3 Demos →</a>
+      <a class="day-cta" href="day3-demos.html" style="border-color:rgba(74,222,128,.3);color:var(--green);background:rgba(74,222,128,.08)">Open Day 3 Demos &rarr;</a>
     </div>
     <div class="demos-grid">
-
-      <!-- D11 — Procedural Shader -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d3)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 11 · Module 7</div>
-          <div class="demo-title">Procedural Radar Shader — GLSL Deep Dive</div>
-          <div class="demo-desc">Entire radar display computed in the fragment shader: rings via fract(), sweep via atan()+mod(), soft edges via smoothstep(), blips via length(). Zero texture files. One uniform: uTime.</div>
-          <div class="demo-tags"><span class="demo-tag">fract()</span><span class="demo-tag">smoothstep()</span><span class="demo-tag">atan()</span><span class="demo-tag">Fullscreen Quad</span></div>
-          <div class="demo-what" style="border-color:var(--d3)">🎯 Green radar display. +/- = ring count. S = sweep. H = hard vs soft edges (aliasing demo).</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo11">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~30 min</span>
-        </div>
-      </div>
-
-      <!-- D12 — Instancing -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d3)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 12 · Module 7</div>
-          <div class="demo-title">Instancing — 1,000 Contacts, One Draw Call</div>
-          <div class="demo-desc">Per-instance VBO holds 1,000 unique positions. glVertexAttribDivisor(1,1) makes attribute 1 advance once per instance. glDrawArraysInstanced draws all 1,000 in a single GPU command. Terminal shows frame time comparison: instanced vs non-instanced.</div>
-          <div class="demo-tags"><span class="demo-tag">glDrawArraysInstanced</span><span class="demo-tag">glVertexAttribDivisor</span><span class="demo-tag">gl_InstanceID</span></div>
-          <div class="demo-what" style="border-color:var(--d3)">🎯 1,000 coloured contacts. I=toggle instanced/non-instanced. +/-=count. Watch frame time change.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo12">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~30 min</span>
-        </div>
-      </div>
-
-      <!-- D13 — FBO -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d3)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 13 · Module 8</div>
-          <div class="demo-title">FBO Post-Processing — Render Scene to Texture</div>
-          <div class="demo-desc">Two-pass rendering: Pass 1 renders the 3D vessel into a custom framebuffer (to texture). Pass 2 draws a fullscreen quad sampling that texture and applying an effect. Five switchable effects via F1–F5.</div>
-          <div class="demo-tags"><span class="demo-tag">FBO</span><span class="demo-tag">Render-to-Texture</span><span class="demo-tag">Post-Processing</span><span class="demo-tag">Fullscreen Quad</span></div>
-          <div class="demo-what" style="border-color:var(--d3)">🎯 F1=normal F2=greyscale F3=night vision F4=edge detect F5=vignette. Camera still works in all modes.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo13">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~40 min</span>
-        </div>
-      </div>
-
-      <!-- D14 — Stencil + Blend -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d3)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 14 · Module 8</div>
-          <div class="demo-title">Stencil Outline + Transparent Radar Sweep</div>
-          <div class="demo-desc">All three fragment tests active simultaneously: depth (surface ordering), stencil (selection outline), blending (transparent sweep). Two-pass stencil outline: write mask on vessel, draw scaled hull only where mask absent. Sweep composites at alpha=0.35.</div>
-          <div class="demo-tags"><span class="demo-tag">Stencil Buffer</span><span class="demo-tag">GL_NOTEQUAL</span><span class="demo-tag">glBlendFunc</span><span class="demo-tag">glDepthMask</span></div>
-          <div class="demo-what" style="border-color:var(--d3)">🎯 Gold outline + green transparent sweep. F1=sweep toggle. F2=outline toggle. Break tests in comments.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day3-demos.html#demo14">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~40 min</span>
-        </div>
-      </div>
-
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d3)"></div><div class="demo-card-body"><div class="demo-concept">Demo 11 &middot; Module 7</div><div class="demo-title">Procedural Radar Shader &mdash; GLSL Deep Dive</div><div class="demo-desc">Entire radar display computed in the fragment shader: rings via fract(), sweep via atan()+mod(), soft edges via smoothstep().</div><div class="demo-tags"><span class="demo-tag">fract()</span><span class="demo-tag">smoothstep()</span><span class="demo-tag">atan()</span><span class="demo-tag">Fullscreen Quad</span></div><div class="demo-what" style="border-color:var(--d3)">&#127919; Green radar display. +/- = ring count. S = sweep. H = hard vs soft edges.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day3-demos.html#demo11">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~30 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d3)"></div><div class="demo-card-body"><div class="demo-concept">Demo 12 &middot; Module 7</div><div class="demo-title">Instancing &mdash; 1,000 Contacts, One Draw Call</div><div class="demo-desc">Per-instance VBO + glVertexAttribDivisor(1,1). glDrawArraysInstanced draws all 1,000 in one GPU command.</div><div class="demo-tags"><span class="demo-tag">glDrawArraysInstanced</span><span class="demo-tag">glVertexAttribDivisor</span><span class="demo-tag">gl_InstanceID</span></div><div class="demo-what" style="border-color:var(--d3)">&#127919; 1,000 coloured contacts. I=toggle instanced/non-instanced. Watch frame time change.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day3-demos.html#demo12">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~30 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d3)"></div><div class="demo-card-body"><div class="demo-concept">Demo 13 &middot; Module 8</div><div class="demo-title">FBO Post-Processing &mdash; Render Scene to Texture</div><div class="demo-desc">Two-pass rendering: Pass 1 renders 3D scene into FBO. Pass 2 draws fullscreen quad with post-process effect. Five effects via F1&ndash;F5.</div><div class="demo-tags"><span class="demo-tag">FBO</span><span class="demo-tag">Render-to-Texture</span><span class="demo-tag">Post-Processing</span><span class="demo-tag">Fullscreen Quad</span></div><div class="demo-what" style="border-color:var(--d3)">&#127919; F1=normal F2=greyscale F3=night vision F4=edge detect F5=vignette.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day3-demos.html#demo13">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~40 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d3)"></div><div class="demo-card-body"><div class="demo-concept">Demo 14 &middot; Module 8</div><div class="demo-title">Stencil Outline + Transparent Radar Sweep</div><div class="demo-desc">All three fragment tests active: depth, stencil (selection outline), blending (transparent sweep). Two-pass stencil outline technique.</div><div class="demo-tags"><span class="demo-tag">Stencil Buffer</span><span class="demo-tag">GL_NOTEQUAL</span><span class="demo-tag">glBlendFunc</span><span class="demo-tag">glDepthMask</span></div><div class="demo-what" style="border-color:var(--d3)">&#127919; Gold outline + green transparent sweep. F1=sweep. F2=outline.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day3-demos.html#demo14">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~40 min</span></div></div>
     </div>
   </div>
 
+  <!-- DAY 4 -->
   <div class="day-section" id="day4">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Day 4 — Introduction to Vulkan</div>
+      <div class="day-badge" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);color:var(--orange)">Day 4 &mdash; Introduction to Vulkan</div>
       <div class="day-header-info">
         <div class="day-title">Vulkan Instance, Devices, Swapchain, Pipeline, First Triangle</div>
-        <div class="day-desc">4 demos · Modules 10, 11, 12 · From environment probe to drawing a triangle with full frame synchronisation</div>
+        <div class="day-desc">4 demos &middot; Modules 10, 11, 12 &middot; From environment probe to drawing a triangle with full frame synchronisation</div>
       </div>
-      <a class="day-cta" href="day4-demos.html" style="border-color:rgba(251,146,60,.4);color:var(--orange);background:rgba(251,146,60,.08)">
-        ⚡ Open Day 4 Demos →
-      </a>
+      <a class="day-cta" href="day4-demos.html" style="border-color:rgba(251,146,60,.4);color:var(--orange);background:rgba(251,146,60,.08)">&#9889; Open Day 4 Demos &rarr;</a>
     </div>
-
     <div class="demos-grid">
-
-      <!-- D15 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d4)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 15 · Module 10</div>
-          <div class="demo-title">Vulkan Environment — Instance, Layers, Physical Devices</div>
-          <div class="demo-desc">Creates a VkInstance with validation layers, lists all installed layers, enumerates every GPU with type, driver version, queue families, and VRAM heap sizes. Creates a VkSurfaceKHR to prove surface extension support. Opens a window.</div>
-          <div class="demo-tags"><span class="demo-tag">VkInstance</span><span class="demo-tag">VkPhysicalDevice</span><span class="demo-tag">Validation layers</span><span class="demo-tag">VkSurfaceKHR</span></div>
-          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: All GPUs listed in terminal with full property dump. Window opens to confirm surface extension works. No logical device yet.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo15">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~35 min</span>
-        </div>
-      </div>
-
-      <!-- D16 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d4)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 16 · Module 11</div>
-          <div class="demo-title">Logical Device, Queues, Command Pool, Command Buffer</div>
-          <div class="demo-desc">Selects the best GPU (scoring discrete over integrated), finds graphics and present queue family indices, creates VkDevice with VK_KHR_swapchain extension, retrieves both queues. Allocates a VkCommandPool and one VkCommandBuffer — records an empty begin/end to prove the API works.</div>
-          <div class="demo-tags"><span class="demo-tag">VkDevice</span><span class="demo-tag">VkQueue</span><span class="demo-tag">VkCommandPool</span><span class="demo-tag">VkCommandBuffer</span></div>
-          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: GPU selected, both queue indices printed, device created, command buffer recorded without crash. Window stays open — no swapchain yet.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo16">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~35 min</span>
-        </div>
-      </div>
-
-      <!-- D17 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d4)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 17 · Module 11</div>
-          <div class="demo-title">Swapchain, Render Pass, Framebuffers — First Pixels</div>
-          <div class="demo-desc">Queries surface capabilities, selects B8G8R8A8_SRGB format and MAILBOX present mode, creates VkSwapchainKHR and VkImageViews. Defines a VkRenderPass with clear/store ops, one VkFramebuffer per image. Full acquire → clear → present frame loop with semaphores and fence.</div>
-          <div class="demo-tags"><span class="demo-tag">VkSwapchainKHR</span><span class="demo-tag">VkRenderPass</span><span class="demo-tag">VkFramebuffer</span><span class="demo-tag">Present modes</span></div>
-          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: Navy window clearing at vsync. Terminal shows chosen format and present mode. No pipeline or geometry yet.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo17">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~35 min</span>
-        </div>
-      </div>
-
-      <!-- D18 -->
-      <div class="demo-card">
-        <div class="demo-card-accent" style="background:var(--d4)"></div>
-        <div class="demo-card-body">
-          <div class="demo-concept">Demo 18 · Module 12</div>
-          <div class="demo-title">Full Pipeline + vkCmdDraw — First Triangle</div>
-          <div class="demo-desc">Loads SPIR-V from vert.spv and frag.spv (compiled with glslc). Builds the full VkGraphicsPipelineCreateInfo: vertex input (empty — positions hardcoded via gl_VertexIndex), input assembly, viewport, rasterizer, multisample, blend. Calls vkCmdDraw(3,1,0,0). White triangle on navy background.</div>
-          <div class="demo-tags"><span class="demo-tag">VkPipeline</span><span class="demo-tag">VkShaderModule</span><span class="demo-tag">vkCmdDraw</span><span class="demo-tag">glslc</span></div>
-          <div class="demo-what" style="border-color:var(--d4)">🎯 What you'll see: White triangle on navy background. Requires glslc to compile shader.vert and shader.frag to .spv first.</div>
-        </div>
-        <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day4-demos.html#demo18">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
-          <span class="demo-duration">~45 min</span>
-        </div>
-      </div>
-
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d4)"></div><div class="demo-card-body"><div class="demo-concept">Demo 15 &middot; Module 10</div><div class="demo-title">Vulkan Environment &mdash; Instance, Layers, Physical Devices</div><div class="demo-desc">Creates VkInstance with validation layers. Lists all GPUs with type, driver version, queue families, VRAM heaps. Proves surface extension support.</div><div class="demo-tags"><span class="demo-tag">VkInstance</span><span class="demo-tag">VkPhysicalDevice</span><span class="demo-tag">Validation layers</span><span class="demo-tag">VkSurfaceKHR</span></div><div class="demo-what" style="border-color:var(--d4)">&#127919; All GPUs listed in terminal. Window opens. No logical device yet.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day4-demos.html#demo15">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~35 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d4)"></div><div class="demo-card-body"><div class="demo-concept">Demo 16 &middot; Module 11</div><div class="demo-title">Logical Device, Queues, Command Pool, Command Buffer</div><div class="demo-desc">Selects best GPU, finds queue families, creates VkDevice with VK_KHR_swapchain. Allocates VkCommandPool and records an empty command buffer.</div><div class="demo-tags"><span class="demo-tag">VkDevice</span><span class="demo-tag">VkQueue</span><span class="demo-tag">VkCommandPool</span><span class="demo-tag">VkCommandBuffer</span></div><div class="demo-what" style="border-color:var(--d4)">&#127919; GPU selected, queues printed, device created. Window open. No swapchain yet.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day4-demos.html#demo16">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~35 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d4)"></div><div class="demo-card-body"><div class="demo-concept">Demo 17 &middot; Module 11</div><div class="demo-title">Swapchain, Render Pass, Framebuffers &mdash; First Pixels</div><div class="demo-desc">Creates VkSwapchainKHR, VkImageViews, VkRenderPass, VkFramebuffers. Full acquire &rarr; clear &rarr; present loop with semaphores and fence.</div><div class="demo-tags"><span class="demo-tag">VkSwapchainKHR</span><span class="demo-tag">VkRenderPass</span><span class="demo-tag">VkFramebuffer</span><span class="demo-tag">Present modes</span></div><div class="demo-what" style="border-color:var(--d4)">&#127919; Navy window clearing at vsync. Chosen format and present mode shown. No pipeline yet.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day4-demos.html#demo17">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~35 min</span></div></div>
+      <div class="demo-card"><div class="demo-card-accent" style="background:var(--d4)"></div><div class="demo-card-body"><div class="demo-concept">Demo 18 &middot; Module 12</div><div class="demo-title">Full Pipeline + vkCmdDraw &mdash; First Triangle</div><div class="demo-desc">Loads SPIR-V from glslc-compiled shaders. Builds full VkGraphicsPipelineCreateInfo. Calls vkCmdDraw(3,1,0,0). Positions hardcoded via gl_VertexIndex.</div><div class="demo-tags"><span class="demo-tag">VkPipeline</span><span class="demo-tag">VkShaderModule</span><span class="demo-tag">vkCmdDraw</span><span class="demo-tag">glslc</span></div><div class="demo-what" style="border-color:var(--d4)">&#127919; White triangle on navy background. Requires glslc to compile shaders first.</div></div><div class="demo-card-foot"><a class="btn-demo btn-demo-primary" href="day4-demos.html#demo18">&#9889; Open Demo</a><a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a><span class="demo-duration">~45 min</span></div></div>
     </div>
   </div>
 
+  <!-- DAY 5 -->
   <div class="day-section" id="day5">
     <div class="day-header">
-      <div class="day-badge" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Day 5 — Advanced Vulkan &amp; Integration</div>
+      <div class="day-badge" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.25);color:var(--pink)">Day 5 &mdash; Advanced Vulkan &amp; Integration</div>
       <div class="day-header-info">
-        <div class="day-title">Descriptor Sets, UBO, Compute Shaders, C# Integration, Capstone</div>
-        <div class="day-desc">2 demos · Modules 13, 14, 15 · From glUniform replacement to GPU compute pipelines</div>
+        <div class="day-title">Descriptor Sets, UBO, Compute Shaders, Compute&rarr;Display</div>
+        <div class="day-desc">3 demos &middot; Modules 13, 14 &middot; From glUniform replacement to GPU compute pipelines and displaying GPU results in a window</div>
       </div>
-      <a class="day-cta" href="day5-demos.html" style="border-color:rgba(244,114,182,.4);color:var(--pink);background:rgba(244,114,182,.08)">
-        ⚡ Open Day 5 Demos →
-      </a>
+      <a class="day-cta" href="day5-demos.html" style="border-color:rgba(244,114,182,.4);color:var(--pink);background:rgba(244,114,182,.08)">&#9889; Open Day 5 Demos &rarr;</a>
     </div>
-
     <div class="demos-grid">
-
       <!-- D19 -->
       <div class="demo-card">
         <div class="demo-card-accent" style="background:var(--d5)"></div>
         <div class="demo-card-body">
-          <div class="demo-concept">Demo 19 · Module 13</div>
+          <div class="demo-concept">Demo 19 &middot; Module 13</div>
           <div class="demo-title">UBO + Descriptor Sets &mdash; Replacing glUniform*()</div>
           <div class="demo-desc">Builds the complete Vulkan descriptor system: VkDescriptorSetLayout (binding 0 = uniform buffer), VkDescriptorPool, one VkDescriptorSet per swapchain image. Each frame: updates the UBO (MVP matrices) via persistent mapped memory, binds the descriptor set, draws an animated rotating orange triangle.</div>
           <div class="demo-tags"><span class="demo-tag">VkDescriptorSetLayout</span><span class="demo-tag">VkDescriptorPool</span><span class="demo-tag">UBO</span><span class="demo-tag">vkUpdateDescriptorSets</span></div>
-          <div class="demo-what" style="border-color:var(--d5)">🎯 What you'll see: Orange triangle rotating at 45°/sec driven by MVP matrix in UBO. Terminal prints frame count. Validation: 0 errors.</div>
+          <div class="demo-what" style="border-color:var(--d5)">&#127919; Orange triangle rotating at 45&deg;/sec driven by MVP matrix in UBO. Terminal prints frame count. Validation: 0 errors.</div>
         </div>
         <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day5-demos.html#demo19">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <a class="btn-demo btn-demo-primary" href="day5-demos.html#demo19">&#9889; Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a>
           <span class="demo-duration">~40 min</span>
         </div>
       </div>
-
       <!-- D20 -->
       <div class="demo-card">
         <div class="demo-card-accent" style="background:var(--d5)"></div>
         <div class="demo-card-body">
-          <div class="demo-concept">Demo 20 · Module 13</div>
+          <div class="demo-concept">Demo 20 &middot; Module 13</div>
           <div class="demo-title">Vulkan Compute Shader &mdash; GPU Parallel Image Processing</div>
-          <div class="demo-desc">Creates a Vulkan compute pipeline (no graphics pipeline, no window, no swapchain). Dispatches a compute shader across a 256×256 image: each of 65,536 GPU threads inverts one pixel. Storage buffers (SSBO) hold input and output. Pipeline barrier ensures GPU writes complete before CPU reads. Terminal reports timing and throughput.</div>
-          <div class="demo-tags"><span class="demo-tag">VkComputePipeline</span><span class="demo-tag">SSBO</span><span class="demo-tag">vkCmdDispatch</span><span class="demo-tag">Pipeline barriers</span></div>
-          <div class="demo-what" style="border-color:var(--d5)">🎯 What you'll see: Terminal only. Input/output pixel values verified, dispatch time in µs, throughput in pixels/second. No window required.</div>
+          <div class="demo-desc">Creates a Vulkan compute pipeline (no graphics pipeline, no window). Dispatches a compute shader across 256&times;256 pixels &mdash; 65,536 threads each invert one pixel. Storage buffers (SSBO) for input/output. Push constants pass image dimensions. Pipeline barrier before CPU readback. Terminal reports timing and throughput.</div>
+          <div class="demo-tags"><span class="demo-tag">VkComputePipeline</span><span class="demo-tag">SSBO</span><span class="demo-tag">vkCmdDispatch</span><span class="demo-tag">Push constants</span><span class="demo-tag">Pipeline barriers</span></div>
+          <div class="demo-what" style="border-color:var(--d5)">&#127919; Terminal only. Input/output pixel verified (PASS). Dispatch time in &mu;s + pixels/sec throughput. ~78M pixels/sec on Iris Xe.</div>
         </div>
         <div class="demo-card-foot">
-          <a class="btn-demo btn-demo-primary" href="day5-demos.html#demo20">⚡ Open Demo</a>
-          <a class="btn-demo btn-demo-sec" href="index.html">📖 Notes</a>
+          <a class="btn-demo btn-demo-primary" href="day5-demos.html#demo20">&#9889; Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a>
           <span class="demo-duration">~40 min</span>
         </div>
       </div>
-
+      <!-- D21 — NEW -->
+      <div class="demo-card">
+        <div class="demo-card-accent" style="background:var(--d5)"></div>
+        <div class="demo-card-body">
+          <div class="demo-concept">Demo 21 &middot; Module 14</div>
+          <div class="demo-title">Compute &rarr; Display &mdash; GPU-Processed Image in a Window</div>
+          <div class="demo-desc">Bridges compute and graphics pipelines in one application. A compute pass inverts the gradient image into a storage buffer; a graphics pass reads that same buffer in the fragment shader and renders it fullscreen. Pipeline barrier between the two stages. Fullscreen triangle trick (3 vertices, no VkBuffer). Two descriptor sets sharing the compute output buffer.</div>
+          <div class="demo-tags"><span class="demo-tag">Compute&rarr;Graphics barrier</span><span class="demo-tag">Shared SSBO</span><span class="demo-tag">Fullscreen triangle</span><span class="demo-tag">Dual descriptor sets</span></div>
+          <div class="demo-what" style="border-color:var(--d5)">&#127919; Window: inverted gradient image displayed fullscreen &mdash; pink/magenta tones. Top-left pixel R=255 G=255 B=127. ESC to quit. Validation: 0 errors.</div>
+        </div>
+        <div class="demo-card-foot">
+          <a class="btn-demo btn-demo-primary" href="day5-demos.html#demo21">&#9889; Open Demo</a>
+          <a class="btn-demo btn-demo-sec" href="index.html">&#128214; Notes</a>
+          <span class="demo-duration">~45 min</span>
+        </div>
+      </div>
     </div>
   </div>
 
 </div><!-- end wrapper -->
-
 <footer>
-  <div class="footer-brand">RR Graphics Lab — Code Demos</div>
-  <div class="footer-sub">OpenGL & Vulkan Training · Raushan Ranjan · 20+ Concept Demos</div>
+  <div class="footer-brand">RR Graphics Lab &mdash; Code Demos</div>
+  <div class="footer-sub">OpenGL &amp; Vulkan Training &middot; Raushan Ranjan &middot; 21+ Concept Demos</div>
   <div class="footer-links">
     <a class="footer-link" href="index.html">Module Notes</a>
     <a class="footer-link" href="demos.html">Code Demos</a>
     <a class="footer-link" href="labs.html">Lab Challenges</a>
-    <a class="footer-link" href="day1-demos.html">Day 1 Demos</a>
+    <a class="footer-link" href="day5-demos.html">Day 5 Demos</a>
   </div>
   <div class="footer-copy">
-    By <strong>Raushan Ranjan</strong> (MCT | Educator) · Koenig Solutions · Koenig Original AI-Courseware<br>
-    <span style="color:var(--text3);font-size:.75rem">Computer Graphics with OpenGL and Vulkan — v1.0 · 2026</span>
+    By <strong>Raushan Ranjan</strong> (MCT | Educator) &middot; Koenig Solutions &middot; Koenig Original AI-Courseware<br>
+    <span style="color:var(--text3);font-size:.75rem">Computer Graphics with OpenGL and Vulkan &mdash; v1.0 &middot; 2026</span>
   </div>
 </footer>
 </body>

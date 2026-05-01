@@ -319,7 +319,7 @@ code{font-family:var(--font-mono);font-size:.82rem;background:var(--raised);bord
     <div class="ha-av">RR</div>
     <div>
       <div class="ha-name">Building with Raushan Ranjan</div>
-      <div class="ha-title">MCT · Senior Corporate Trainer · Koenig Solutions</div>
+      <div class="ha-title">MCT · RR Skillverse</div>
     </div>
   </div>
   <div class="hero-stats">
@@ -541,19 +541,17 @@ add_custom_command(TARGET RadarGL POST_BUILD
     <p>The CMakeLists.txt reads <code>GLEW_DIR</code>, <code>GLFW_DIR</code>, and <code>GLM_DIR</code> from your system environment. From Day 1–3 you already have <code>GLFW_DIR</code> set. If <code>GLEW_DIR</code> or <code>GLM_DIR</code> are missing: System Properties → Environment Variables → New. Then restart your command prompt. <code>GLEW_DIR</code> points to your GLEW root, <code>GLM_DIR</code> points to the glm/ header folder.</p>
   </div>
 
-  <h2>Build Commands — Run These Now</h2>
+  <h2>Configure CMake — Run This Now</h2>
   <div class="cb">
-    <div class="cb-head"><span class="cb-label">Configure + build (you'll re-run the second line after every code change)</span><span class="cb-lang sh">Shell</span></div>
+    <div class="cb-head"><span class="cb-label">Configure only (run once — do NOT build until Stage 2)</span><span class="cb-lang sh">Shell</span></div>
     <pre>cd C:\Labs\Capstone\RadarGL
 
-<span class="cm"># Generate Visual Studio project files (run once)</span>
+<span class="cm"># Generate Visual Studio project files — run ONCE, here in Stage 1</span>
 cmake -B build -G <span class="st">"Visual Studio 17 2022"</span> -A x64
 
-<span class="cm"># Build (run after every code change)</span>
-cmake --build build --config Release
-
-<span class="cm"># Run — ALWAYS from project root (shaders folder must be visible)</span>
-build\Release\RadarGL.exe</pre>
+<span class="cm"># You should see: "Build files have been written to: ...build"
+# Do NOT build yet — src\main.cpp is still empty.
+# Build + Run happens in Stage 2 after you write the C++ code.</span></pre>
   </div>
 
   <h2>Stage 1 Checkpoints</h2>
@@ -2002,7 +2000,7 @@ build\Release\RadarVK.exe</pre>
   <div class="divider"></div>
   <p style="text-align:center;color:var(--text3);font-size:.82rem;padding:2rem 0;line-height:1.9">
     <strong style="color:var(--text2)">RR Skillverse — Capstone Project: Tactical Radar Display</strong><br>
-    By Raushan Ranjan · MCT | Senior Corporate Trainer · Koenig Solutions, Noida<br>
+    By Raushan Ranjan · MCT | RR Skillverse, Noida<br>
     <em style="color:var(--gold2);font-style:normal">"Sweat in the right direction brings Peace, Money, and Respect."</em>
   </p>
 </section>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 5 Labs — Maritime Tactical System | RR Graphics Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a0f;--bg2:#0d1017;--bg3:#12161f;--bg4:#181d28;--border:#1e2535;--border2:#2a3148;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--accent:#6366f1;--accent2:#818cf8;--cyan:#22d3ee;--green:#4ade80;--orange:#fb923c;--pink:#f472b6;--yellow:#fbbf24;--d5:#f472b6;--nav-h:62px;--radius:12px;--font-body:'Sora',sans-serif;--font-mono:'JetBrains Mono',monospace;--font-display:'Space Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+::selection{background:rgba(244,114,182,.25);color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--d5)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);background:rgba(8,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:14px;font-weight:700;white-space:nowrap}
+.nav-hex{width:30px;height:30px;background:linear-gradient(135deg,var(--d5),var(--pink));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0}
+.nav-mct{font-size:9px;font-weight:700;background:linear-gradient(135deg,var(--d5),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;border:1px solid rgba(244,114,182,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1;margin-left:1.5rem}
+.nav-link{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{background:var(--bg3);color:var(--text);border-color:var(--border)}
+.nav-link.active{color:var(--green);background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-badge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.3);color:var(--d5)}
+.page{display:flex;padding-top:var(--nav-h)}
+.sidebar{width:270px;flex-shrink:0;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0}
+.main{flex:1;min-width:0;padding:3rem 2.5rem;max-width:1050px}
+.sb-grp{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);padding:0 1.25rem;margin-bottom:.5rem;margin-top:1rem}
+.sb-link{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;cursor:pointer;border-left:2px solid transparent;text-decoration:none}
+.sb-link:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border2)}
+.sb-link.active{background:rgba(244,114,182,.06);color:var(--d5);border-left-color:var(--d5)}
+.sb-num{width:22px;height:22px;border-radius:6px;flex-shrink:0;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--border2);color:var(--text3)}
+.sb-link.active .sb-num{background:rgba(244,114,182,.15);border-color:rgba(244,114,182,.35);color:var(--d5)}
+.sb-sep{height:1px;background:var(--border);margin:.75rem 1.25rem}
+.sb-prog{padding:1rem 1.25rem}
+.sb-prog-title{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:.4rem;display:flex;justify-content:space-between}
+.prog-bar{height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--d5),var(--pink));border-radius:2px;transition:width .4s}
+.lab-sec{padding:3rem 0;border-bottom:1px solid var(--border);scroll-margin-top:calc(var(--nav-h) + 1rem)}
+.lab-sec:last-of-type{border-bottom:none}
+.eyebrow-row{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.lab-badge{font-family:var(--font-display);font-size:10px;font-weight:700;padding:3px 14px;border-radius:20px;background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.3);color:var(--d5)}
+.lab-diff{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3)}
+.lab-title{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:700;color:var(--text);margin-bottom:.5rem;line-height:1.25}
+.lab-desc{font-size:.9rem;color:var(--text2);line-height:1.85;max-width:700px;margin-bottom:1rem}
+.lab-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.meta-chip{font-size:11px;color:var(--text3);font-weight:600;background:var(--bg3);border:1px solid var(--border);padding:4px 12px;border-radius:20px}
+.adds-over{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.adds-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d5);margin-bottom:.6rem}
+.adds-list{list-style:none}
+.adds-list li{font-size:.86rem;color:var(--text2);padding:3px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.65}
+.adds-dot{color:var(--green);flex-shrink:0;font-size:.8rem;margin-top:3px}
+.out-box{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.2);border-left:3px solid var(--d5);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.out-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d5);margin-bottom:.5rem}
+.out-item{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--text2);line-height:1.6;margin-top:.3rem}
+.out-dot{width:7px;height:7px;border-radius:50%;background:var(--d5);flex-shrink:0;margin-top:5px}
+.concept{background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(244,114,182,.03));border:1px solid rgba(99,102,241,.18);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.concept-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:.4rem}
+.concept p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.warn{background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.2);border-left:3px solid var(--orange);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.warn-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:.4rem}
+.warn p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.tip{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.2);border-left:3px solid var(--d5);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.tip-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d5);margin-bottom:.4rem}
+.tip p{font-size:.86rem;color:var(--text2);line-height:1.8}
+.obj-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem}
+.obj-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
+.obj-list{list-style:none}
+.obj-list li{font-size:.86rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.65}
+.obj-chk{width:16px;height:16px;border-radius:4px;border:1px solid var(--border2);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s}
+.obj-chk:hover{border-color:var(--d5);background:rgba(244,114,182,.1)}
+.obj-chk.done{background:var(--d5);border-color:var(--d5);color:var(--bg)}
+.sh{font-size:.92rem;font-weight:700;color:var(--text);margin:1.75rem 0 .75rem;display:flex;align-items:center;gap:8px}
+.sh-dot{width:6px;height:6px;border-radius:50%;background:var(--d5);box-shadow:0 0 8px var(--d5)}
+p.note{font-size:.87rem;color:var(--text2);line-height:1.8;margin:.35rem 0}
+.diag{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin:1.25rem 0;overflow-x:auto}
+.diag-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;text-align:center}
+.diag pre{font-family:var(--font-mono);font-size:.77rem;color:var(--text2);line-height:1.65}
+.ftree{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.ftree-title{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
+.ftree pre{font-family:var(--font-mono);font-size:.8rem;color:var(--text2);line-height:1.8}
+.code-wrap{position:relative;margin:1.25rem 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:.6rem 1rem}
+.code-fname{font-family:var(--font-mono);font-size:11px;color:var(--text2);font-weight:600}
+.code-meta{display:flex;align-items:center;gap:.75rem}
+.code-lang{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.copy-btn{padding:4px 14px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.copy-btn:hover{border-color:var(--d5);color:var(--d5)}.copy-btn.ok{color:var(--green);border-color:var(--green)}
+.code-block{background:#03050a;border:1px solid var(--border2);border-radius:0 0 var(--radius) var(--radius);overflow:auto;max-height:700px}
+.code-block pre{font-family:var(--font-mono);font-size:.78rem;line-height:1.9;padding:1.25rem 1.5rem;white-space:pre;color:#cdd6f4;min-width:max-content}
+.cmd-wrap{background:#030508;border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--d5);border-radius:var(--radius);padding:1rem 1.25rem;margin:.75rem 0;position:relative}
+.cmd-label{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--d5);margin-bottom:.4rem}
+.cmd-wrap pre{font-family:var(--font-mono);font-size:.8rem;color:var(--d5);line-height:1.7}
+.cmd-copy-btn{position:absolute;top:.75rem;right:.75rem;padding:3px 10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);font-size:10px;cursor:pointer;transition:all .2s}
+.cmd-copy-btn:hover{color:var(--d5);border-color:var(--d5)}
+.del-box{background:linear-gradient(135deg,rgba(244,114,182,.07),rgba(99,102,241,.04));border:1px solid rgba(244,114,182,.25);border-radius:var(--radius);padding:1.5rem;margin-top:2rem}
+.del-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d5);margin-bottom:.5rem}
+.del-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.del-desc{font-size:.85rem;color:var(--text2);line-height:1.75;margin-bottom:.75rem}
+.del-list{list-style:none}
+.del-list li{font-size:.85rem;color:var(--text2);padding:4px 0;display:flex;align-items:flex-start;gap:8px}
+.del-dot{width:6px;height:6px;border-radius:50%;background:var(--d5);flex-shrink:0;margin-top:7px}
+.exp{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.18);border-left:3px solid var(--d5);border-radius:var(--radius);padding:1.1rem;margin:1rem 0}
+.exp-lbl{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--d5);margin-bottom:.5rem}
+.exp-list{list-style:none;margin:.3rem 0}
+.exp-list li{font-size:.86rem;color:var(--text2);padding:3px 0 3px 18px;position:relative;line-height:1.7}
+.exp-list li::before{content:"\25B8";position:absolute;left:0;color:var(--d5);font-size:.75rem;top:5px}
+code.ic{font-family:var(--font-mono);font-size:.79rem;background:var(--bg4);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+.page-foot{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:1px solid var(--border);margin-top:3rem}
+.foot-btn{padding:9px 20px;border-radius:9px;font-size:12.5px;font-weight:700;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.foot-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--d5)}
+.foot-btn.primary{background:rgba(244,114,182,.1);border-color:rgba(244,114,182,.3);color:var(--d5)}
+@media(max-width:900px){.sidebar{display:none}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-hex">&#x2736;</div>
+    RR Graphics Lab <span class="nav-mct">MCT</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html"><span class="nav-dot" style="background:var(--accent)"></span>Module Notes</a>
+    <a class="nav-link" href="demos.html"><span class="nav-dot" style="background:var(--cyan)"></span>Code Demos</a>
+    <a class="nav-link active" href="labs.html"><span class="nav-dot" style="background:var(--green)"></span>Lab Challenges</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">Day 5 Labs &mdash; Maritime Tactical System</span>
+    <span style="font-size:11px;color:var(--text3);font-weight:600">Raushan Ranjan &middot; MCT</span>
+  </div>
+</nav>
+
+<div class="page">
+<aside class="sidebar">
+  <div class="sb-grp">Scenario</div>
+  <div class="sb-link active" onclick="scrollTo('overview')"><span class="sb-num" style="font-size:8px">&#9432;</span>Maritime Tactical System</div>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">5 Labs</div>
+  <a class="sb-link" href="#lab1"><span class="sb-num">L1</span>UBO — Animated Scene</a>
+  <a class="sb-link" href="#lab2"><span class="sb-num">L2</span>Compute Sonar Processor</a>
+  <a class="sb-link" href="#lab3"><span class="sb-num">L3</span>Descriptor Sets (Multi)</a>
+  <a class="sb-link" href="#lab4"><span class="sb-num">L4</span>C# P/Invoke Bridge</a>
+  <a class="sb-link" href="#lab5"><span class="sb-num">L5</span>Capstone Presentation</a>
+  <div class="sb-sep"></div>
+  <div class="sb-grp">Navigation</div>
+  <a class="sb-link" href="lab-day4.html"><span class="sb-num" style="font-size:9px">&#8592;</span>Day 4 Labs</a>
+  <a class="sb-link" href="day5-demos.html"><span class="sb-num" style="font-size:9px">&#9654;</span>Day 5 Demos</a>
+  <div class="sb-sep"></div>
+  <div class="sb-prog">
+    <div class="sb-prog-title"><span>Day 5 Progress</span><span id="pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- OVERVIEW -->
+<div id="overview" style="padding-bottom:3rem;border-bottom:1px solid var(--border);margin-bottom:1rem">
+  <div style="display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--d5);border:1px solid rgba(244,114,182,.25);background:rgba(244,114,182,.06);padding:5px 14px;border-radius:30px;margin-bottom:1rem">
+    <span style="width:5px;height:5px;border-radius:50%;background:var(--d5);animation:pulse 2s infinite"></span>
+    Day 5 Capstone &middot; 5 Labs &middot; Full Tactical System
+  </div>
+  <div style="font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--text);margin-bottom:.75rem;line-height:1.2">Maritime Tactical System</div>
+  <div style="font-size:.93rem;color:var(--text2);line-height:1.85;max-width:700px;margin-bottom:1.5rem">You are delivering the final integrated system for the USS Monterey&apos;s combat information centre. Five labs build it layer by layer: animated Vulkan scene via UBO, GPU compute sonar processing, multi-resource descriptor sets, a C# bridge for command console integration, and a 10-minute live capstone demo. This is the culmination of all 15 modules.</div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Descriptor Sets</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Vulkan Compute</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">UBO / SSBO</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">C# P/Invoke</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">vkCmdDispatch</span>
+    <span style="font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)">Pipeline barriers</span>
+  </div>
+</div>
+
+<div class="concept" style="margin-bottom:2.5rem">
+  <div class="concept-lbl">&#128193; Project Setup</div>
+  <p class="note">Labs 1&ndash;3 use the NavalBridgeRenderer project from Day 4 as a base. Each lab extends or modifies a specific part. Labs 4&ndash;5 introduce a new C# console project and the capstone presentation.</p>
+</div>
+
+<!-- ═══════════ LAB 1 ═══════════ -->
+<div class="lab-sec" id="lab1">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 1 of 5</span>
+    <span class="lab-diff">&#11035; Advanced &middot; ~45 min</span>
+  </div>
+  <div class="lab-title">Animate the Naval Bridge Renderer via UBO</div>
+  <div class="lab-desc">Extend the Day 4 capstone (Lab 5) with a full descriptor set and UBO. Replace the hardcoded vertex positions with a vertex buffer, and drive the triangle rotation via an MVP matrix sent through a UBO at binding 0. One UBO per swapchain image. The triangle rotates continuously at 45&deg;/sec.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: VkDescriptorSetLayout &middot; VkDescriptorPool &middot; VkDescriptorSet &middot; UBO per image</span>
+    <span class="meta-chip">&#9889; Do Demo 19 first</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Add Over Day 4 Lab 5</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>UBO struct: glm::mat4 model + view + proj</li>
+      <li><span class="adds-dot">&#9658;</span>VkDescriptorSetLayout: binding 0 = uniform buffer, vertex stage</li>
+      <li><span class="adds-dot">&#9658;</span>VkDescriptorPool + one VkDescriptorSet per swapchain image</li>
+      <li><span class="adds-dot">&#9658;</span>One VkBuffer (HOST_VISIBLE | HOST_COHERENT) per swapchain image, persistently mapped</li>
+      <li><span class="adds-dot">&#9658;</span>Update UBO each frame: model = rotate(t * 45deg, Z), view = lookAt, proj = perspective</li>
+      <li><span class="adds-dot">&#9658;</span>vkCmdBindDescriptorSets before vkCmdDraw</li>
+      <li><span class="adds-dot">&#9658;</span>Vertex shader reads UBO at layout(binding=0)</li>
+    </ul>
+  </div>
+
+  <div class="out-box">
+    <div class="out-label">&#127919; What You Will See</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Window:</strong> Orange triangle rotating at 45&deg;/sec driven by MVP matrix in UBO</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Terminal:</strong> Frame count printed every 60 frames confirming loop is running</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Validation:</strong> 0 errors — descriptor sets and UBO lifecycle correct</div>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>UBO struct declared matching shader layout(std140) exactly</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>VkDescriptorSetLayout with binding 0 = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>VkDescriptorPool with descriptorCount = swapchain image count</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>One UBO buffer per swapchain image, persistently mapped</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>vkUpdateDescriptorSets called once to bind each buffer to its set</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>UBO updated per frame via memcpy to the mapped pointer for the acquired image index</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>vkCmdBindDescriptorSets called before vkCmdDraw in the render loop</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>ubo.proj[1][1] *= -1 applied to correct Vulkan Y-axis flip</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <div class="warn-lbl">&#9997; Common Mistakes</div>
+    <p class="note"><strong>Forgetting proj[1][1] *= -1:</strong> Vulkan NDC has Y pointing down (OpenGL: Y up). Without this flip, the triangle is upside down. <strong>Wrong descriptor count in pool:</strong> Pool must have descriptorCount equal to the number of swapchain images &mdash; if you allocated 3 images but poolSize.descriptorCount = 1, vkAllocateDescriptorSets fails. <strong>Binding mismatch:</strong> The layout binding number must match the GLSL <code class="ic">layout(binding = N)</code> annotation exactly.</p>
+  </div>
+
+  <div class="tip">
+    <div class="tip-lbl">&#128161; Pipeline Layout Must Include the Descriptor Set Layout</div>
+    <p class="note">When creating <code class="ic">VkPipelineLayoutCreateInfo</code>, set <code class="ic">setLayoutCount = 1</code> and <code class="ic">pSetLayouts = &amp;dsLayout</code>. If the pipeline layout does not include the descriptor set layout, <code class="ic">vkCmdBindDescriptorSets</code> will silently fail or produce validation errors &mdash; the shader will read undefined data.</p>
+  </div>
+
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 1 Deliverable</div>
+    <div class="del-title">Animated Vulkan Scene via UBO</div>
+    <div class="del-desc">Orange triangle rotating at 45&deg;/sec. All transformation data flows through the descriptor set and UBO. No per-frame vkQueueWaitIdle &mdash; proper semaphore/fence sync from Day 4 Lab 5 retained.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Triangle rotates smoothly without jitter or stutter</li>
+      <li><span class="del-dot"></span>Validation layers: 0 errors reported</li>
+      <li><span class="del-dot"></span>Can explain: why one UBO per swapchain image, not one shared UBO</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════ LAB 2 ═══════════ -->
+<div class="lab-sec" id="lab2">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 2 of 5</span>
+    <span class="lab-diff">&#11035; Advanced &middot; ~50 min</span>
+  </div>
+  <div class="lab-title">GPU Compute Sonar Signal Processor</div>
+  <div class="lab-desc">Implement a standalone Vulkan compute pass that processes a synthetic sonar return array on the GPU. 512 sonar samples (floats) are written to a host-visible storage buffer, a compute shader applies a simple signal processing kernel (noise floor subtraction + normalisation), and results are read back. Demonstrates how naval sonar returns can be GPU-processed at &gt;100 million samples/second with zero CPU involvement during the compute phase.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: VkComputePipeline &middot; SSBO &middot; vkCmdDispatch &middot; pipeline barriers</span>
+    <span class="meta-chip">&#9889; Do Demo 20 first</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Build</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Input SSBO: 512 floats simulating sonar amplitude returns (synthetic noise + signal)</li>
+      <li><span class="adds-dot">&#9658;</span>Output SSBO: 512 floats, processed (noise floor = 0.1 subtracted, normalised 0&ndash;1)</li>
+      <li><span class="adds-dot">&#9658;</span>Compute shader: one thread per sample, local_size_x = 64</li>
+      <li><span class="adds-dot">&#9658;</span>Dispatch: ceil(512/64) = 8 workgroups</li>
+      <li><span class="adds-dot">&#9658;</span>Pipeline barrier after dispatch (COMPUTE_SHADER &rarr; HOST)</li>
+      <li><span class="adds-dot">&#9658;</span>CPU reads back results and prints first 8 processed values</li>
+      <li><span class="adds-dot">&#9658;</span>Timing: measure total dispatch + wait time</li>
+    </ul>
+  </div>
+
+  <div class="out-box">
+    <div class="out-label">&#127919; What You Will See (Terminal)</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Input samples [0&ndash;7]:</strong> Raw synthetic values (e.g. 0.05, 0.82, 0.13...)</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Output samples [0&ndash;7]:</strong> Noise-subtracted and normalised (0.00, 0.72, 0.03...)</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Timing:</strong> Processing time in microseconds + throughput in samples/sec</div>
+    <div class="out-item"><span class="out-dot"></span><strong>No window</strong> &mdash; headless compute, no swapchain</div>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>Compute shader (sonar_process.comp)</div>
+<div class="code-wrap"><div class="code-header"><span class="code-fname">sonar_process.comp</span><div class="code-meta"><span class="code-lang">GLSL</span><button class="copy-btn" onclick="cp(this,'sonar_comp')">Copy All</button></div></div><div class="code-block"><pre id="sonar_comp">#version 450
+layout(local_size_x = 64) in;
+
+// binding 0: raw sonar return amplitudes (read-only)
+layout(std430, binding = 0) readonly buffer InputSamples {
+    float samples_in[];
+};
+
+// binding 1: processed output (write-only)
+layout(std430, binding = 1) writeonly buffer OutputSamples {
+    float samples_out[];
+};
+
+layout(push_constant) uniform PC {
+    uint count;       // total sample count
+    float noiseFloor; // noise threshold to subtract (0.1)
+    float maxVal;     // max expected amplitude for normalisation (1.0)
+} pc;
+
+void main() {
+    uint idx = gl_GlobalInvocationID.x;
+    if (idx >= pc.count) return;
+
+    float raw = samples_in[idx];
+
+    // Noise floor subtraction: anything below noiseFloor is treated as noise
+    float clean = max(raw - pc.noiseFloor, 0.0);
+
+    // Normalise to 0..1 range relative to max expected amplitude
+    float normalised = clean / (pc.maxVal - pc.noiseFloor);
+    normalised = clamp(normalised, 0.0, 1.0);
+
+    samples_out[idx] = normalised;
+}</pre></div></div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>512-float input SSBO filled with synthetic sonar data (signal at index 100&ndash;110)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>VkComputePipeline created from sonar_process.comp SPIR-V</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Two SSBOs bound at binding 0 (input) and binding 1 (output)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Push constants: sample count, noise floor (0.1), max amplitude (1.0)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>vkCmdDispatch(8, 1, 1) launched and timed</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Pipeline barrier before CPU read-back</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>First 8 input and output values printed — output shows noise suppression</li>
+    </ul>
+  </div>
+
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 2 Deliverable</div>
+    <div class="del-title">GPU Sonar Signal Processor</div>
+    <div class="del-desc">512 sonar samples processed on GPU with noise subtraction and normalisation. Terminal output shows before/after values and throughput.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Noise floor correctly suppressed in output (samples below 0.1 &rarr; 0.0)</li>
+      <li><span class="del-dot"></span>Signal peak at index 100&ndash;110 preserved and normalised to ~1.0</li>
+      <li><span class="del-dot"></span>Pipeline barrier prevents CPU reading before GPU finishes</li>
+      <li><span class="del-dot"></span>Throughput printed: &gt;50 million samples/sec expected on discrete GPU</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════ LAB 3 ═══════════ -->
+<div class="lab-sec" id="lab3">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 3 of 5</span>
+    <span class="lab-diff">&#11035; Advanced &middot; ~45 min &middot; Builds on Lab 1</span>
+  </div>
+  <div class="lab-title">Multi-Resource Descriptor Sets &mdash; UBO + Texture Sampler</div>
+  <div class="lab-desc">Extend Lab 1 to bind two resources in a single descriptor set: the UBO (binding 0, uniform buffer) and a texture sampler (binding 1, combined image sampler). Load a 64&times;64 solid-colour PNG (or generate a procedural texture in code), sample it in the fragment shader, and multiply the result by the vertex colour. This pattern is how all real Vulkan renderers pass both transformation data and textures to shaders.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: VkImage &middot; VkImageView &middot; VkSampler &middot; layout transition barriers &middot; combined image sampler</span>
+    <span class="meta-chip">&#9889; Builds on Lab 1</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Add Over Lab 1</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>Procedural 64&times;64 RGBA texture generated in CPU memory (gradient)</li>
+      <li><span class="adds-dot">&#9658;</span>VkImage + VkDeviceMemory (DEVICE_LOCAL) + staging buffer upload</li>
+      <li><span class="adds-dot">&#9658;</span>Image layout transition: UNDEFINED &rarr; TRANSFER_DST &rarr; SHADER_READ_ONLY</li>
+      <li><span class="adds-dot">&#9658;</span>VkImageView wrapping the VkImage</li>
+      <li><span class="adds-dot">&#9658;</span>VkSampler (LINEAR filter, REPEAT wrap)</li>
+      <li><span class="adds-dot">&#9658;</span>Descriptor layout: binding 0 = UBO, binding 1 = COMBINED_IMAGE_SAMPLER</li>
+      <li><span class="adds-dot">&#9658;</span>Fragment shader samples the texture and multiplies by vertex colour</li>
+    </ul>
+  </div>
+
+  <div class="out-box">
+    <div class="out-label">&#127919; What You Will See</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Window:</strong> Rotating triangle tinted by the procedural gradient texture &mdash; colour shifts as it rotates</div>
+    <div class="out-item"><span class="out-dot"></span><strong>Terminal:</strong> Texture upload size and image layout transitions confirmed</div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-title">Image Layout Transition Chain (Required for Texture Upload)</div>
+    <pre>
+  CPU creates staging buffer (HOST_VISIBLE)  →  memcpy texture data into it
+
+  VkImage created (DEVICE_LOCAL, TRANSFER_DST_OPTIMAL initially undefined)
+
+  Transition 1: image layout UNDEFINED → TRANSFER_DST_OPTIMAL
+    pipeline barrier: src=TOP_OF_PIPE, dst=TRANSFER
+    allows: vkCmdCopyBufferToImage()
+
+  Transition 2: image layout TRANSFER_DST_OPTIMAL → SHADER_READ_ONLY_OPTIMAL
+    pipeline barrier: src=TRANSFER, dst=FRAGMENT_SHADER
+    allows: texture2D() in fragment shader
+
+  VkSampler wraps the view and defines filtering (LINEAR) and wrapping (REPEAT)</pre>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>64×64 RGBA texture data generated procedurally in CPU memory</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Staging buffer uploaded to DEVICE_LOCAL VkImage via vkCmdCopyBufferToImage</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Two image layout transitions with correct pipeline barriers</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>VkImageView and VkSampler created</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Descriptor layout updated: binding 0 = UBO, binding 1 = COMBINED_IMAGE_SAMPLER</div></li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Pool updated to include sampler descriptor count</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Fragment shader samples texture and multiplies result</li>
+    </ul>
+  </div>
+
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 3 Deliverable</div>
+    <div class="del-title">Rotating Triangle with UBO + Texture Sampler</div>
+    <div class="del-desc">Single descriptor set binding two resource types (UBO + sampler). Triangle rotates and is tinted by the procedural texture. All image layout transitions correct with validation: 0 errors.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Texture colours visible on the triangle (not white/black)</li>
+      <li><span class="del-dot"></span>Rotation still working from Lab 1 UBO</li>
+      <li><span class="del-dot"></span>Can explain the two image layout transitions and why each is needed</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════ LAB 4 ═══════════ -->
+<div class="lab-sec" id="lab4">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 4 of 5</span>
+    <span class="lab-diff">&#11035; Advanced &middot; ~50 min</span>
+  </div>
+  <div class="lab-title">C# P/Invoke Bridge &mdash; Command Console to Vulkan Renderer</div>
+  <div class="lab-desc">Compile the Day 5 Lab 1 renderer as a native Windows DLL. Write a thin C# console application that loads it with P/Invoke, calls an exported <code class="ic">StartRenderer()</code> function in a background thread, and sends rotation speed commands via an exported <code class="ic">SetRotationSpeed(float)</code> function. The Vulkan window responds in real time. This is the integration pattern used in naval CIC systems where a command layer (C#/.NET) drives a GPU renderer (C++).</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#128203; Concepts: __declspec(dllexport) &middot; P/Invoke &middot; DllImport &middot; Thread safety &middot; std::atomic</span>
+    <span class="meta-chip">&#9889; Builds on Lab 1 Vulkan renderer</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#10133; What You Build</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span>C++ DLL: Lab 1 renderer refactored, <code class="ic">StartRenderer()</code> and <code class="ic">SetRotationSpeed(float)</code> exported</li>
+      <li><span class="adds-dot">&#9658;</span>Rotation speed stored as <code class="ic">std::atomic&lt;float&gt;</code> — thread-safe between DLL thread and C# caller</li>
+      <li><span class="adds-dot">&#9658;</span>CMakeLists: <code class="ic">add_library(NavalRenderer SHARED src/main.cpp)</code></li>
+      <li><span class="adds-dot">&#9658;</span>C# console: DllImport("NavalRenderer.dll") with two P/Invoke declarations</li>
+      <li><span class="adds-dot">&#9658;</span>C# starts renderer in Task.Run (background thread), reads keyboard: S=slow, F=fast, Q=quit</li>
+    </ul>
+  </div>
+
+  <div class="sh"><span class="sh-dot"></span>C++ DLL exports (add to Lab 1 main.cpp)</div>
+<div class="code-wrap"><div class="code-header"><span class="code-fname">DLL export additions — add to top of main.cpp</span><div class="code-meta"><span class="code-lang">C++</span><button class="copy-btn" onclick="cp(this,'dll_exports')">Copy All</button></div></div><div class="code-block"><pre id="dll_exports">// Thread-safe rotation speed shared between DLL thread and C# caller
+#include &lt;atomic&gt;
+static std::atomic&lt;float&gt; g_rotSpeed{45.0f};
+
+// Export these two functions for C# P/Invoke
+extern "C" {
+    __declspec(dllexport) void StartRenderer() {
+        // Call the existing render loop (blocks until ESC or window closed)
+        // In the render loop, replace the hardcoded 45.0f with g_rotSpeed.load()
+        runRenderLoop();  // refactor main() render loop into this function
+    }
+
+    __declspec(dllexport) void SetRotationSpeed(float degreesPerSecond) {
+        g_rotSpeed.store(degreesPerSecond);
+    }
+}
+
+// In CMakeLists.txt — change add_executable to:
+// add_library(NavalRenderer SHARED src/main.cpp)
+// add_definitions(-DBUILDING_DLL)</pre></div></div>
+
+  <div class="sh"><span class="sh-dot"></span>C# console — P/Invoke command layer</div>
+<div class="code-wrap"><div class="code-header"><span class="code-fname">Program.cs — C# Command Console</span><div class="code-meta"><span class="code-lang">C#</span><button class="copy-btn" onclick="cp(this,'csharp_bridge')">Copy All</button></div></div><div class="code-block"><pre id="csharp_bridge">// ═══════════════════════════════════════════════════════════════════════════
+//  RR GRAPHICS LAB — DAY 5 · LAB 4
+//  Maritime Tactical System — C# Command Console Bridge
+//  By Raushan Ranjan (MCT) | Koenig Original AI-Courseware
+//
+//  This C# console drives the Vulkan renderer DLL via P/Invoke.
+//  The renderer runs in a background task. This thread sends commands.
+//  Real CIC systems follow this exact pattern: .NET command layer + C++ GPU renderer.
+// ═══════════════════════════════════════════════════════════════════════════
+
+using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+
+class TacticalConsole
+{
+    // P/Invoke declarations — must match __declspec(dllexport) names exactly
+    [DllImport("NavalRenderer.dll", CallingConvention = CallingConvention.Cdecl)]
+    static extern void StartRenderer();
+
+    [DllImport("NavalRenderer.dll", CallingConvention = CallingConvention.Cdecl)]
+    static extern void SetRotationSpeed(float degreesPerSecond);
+
+    static void Main(string[] args)
+    {
+        Console.WriteLine("=== Maritime Tactical Command Console ===");
+        Console.WriteLine("Starting Vulkan renderer in background thread...\n");
+
+        // Start the Vulkan renderer in a background task
+        // StartRenderer() blocks until the window is closed
+        var rendererTask = Task.Run(() => StartRenderer());
+
+        Console.WriteLine("Renderer running. Commands:");
+        Console.WriteLine("  S = Slow (10 deg/sec)");
+        Console.WriteLine("  F = Fast (180 deg/sec)");
+        Console.WriteLine("  N = Normal (45 deg/sec)");
+        Console.WriteLine("  Q = Quit");
+        Console.WriteLine("  Any number = Set exact speed (e.g. '90')");
+        Console.WriteLine();
+
+        while (!rendererTask.IsCompleted)
+        {
+            if (!Console.KeyAvailable) { Task.Delay(50).Wait(); continue; }
+            
+            string input = Console.ReadLine()?.Trim() ?? "";
+
+            if (string.IsNullOrEmpty(input)) continue;
+
+            switch (input.ToUpper())
+            {
+                case "S":
+                    SetRotationSpeed(10.0f);
+                    Console.WriteLine("[CMD] Speed: 10 deg/sec (slow)");
+                    break;
+                case "F":
+                    SetRotationSpeed(180.0f);
+                    Console.WriteLine("[CMD] Speed: 180 deg/sec (fast)");
+                    break;
+                case "N":
+                    SetRotationSpeed(45.0f);
+                    Console.WriteLine("[CMD] Speed: 45 deg/sec (normal)");
+                    break;
+                case "Q":
+                    Console.WriteLine("[CMD] Quit — close the Vulkan window to exit.");
+                    break;
+                default:
+                    if (float.TryParse(input, out float speed))
+                    {
+                        SetRotationSpeed(speed);
+                        Console.WriteLine($"[CMD] Speed set to {speed} deg/sec");
+                    }
+                    else
+                    {
+                        Console.WriteLine("[ERR] Unknown command. Use S/F/N/Q or a number.");
+                    }
+                    break;
+            }
+        }
+        Console.WriteLine("Renderer closed. Console exit.");
+    }
+}</pre></div></div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Objectives</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>Lab 1 main() refactored — render loop extracted to runRenderLoop()</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>std::atomic&lt;float&gt; g_rotSpeed declared and used in UBO update</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>StartRenderer() and SetRotationSpeed() exported with extern "C" __declspec(dllexport)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>CMakeLists changed: add_library(NavalRenderer SHARED ...)</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>C# project created, DllImport declarations match exported names</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>NavalRenderer.dll and vert.spv + frag.spv in same folder as C# exe</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Rotation speed changes in real time when C# console sends commands</li>
+    </ul>
+  </div>
+
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Lab 4 Deliverable</div>
+    <div class="del-title">C# Console Driving Vulkan Renderer</div>
+    <div class="del-desc">Two-window system: Vulkan render window + C# command console. Speed changes applied instantly via P/Invoke without restarting the renderer.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>S command visibly slows the triangle, F visibly speeds it up</li>
+      <li><span class="del-dot"></span>Entering a number (e.g. "90") sets exact rotation speed</li>
+      <li><span class="del-dot"></span>Renderer continues running while console processes commands</li>
+      <li><span class="del-dot"></span>Can explain: why std::atomic is needed, what P/Invoke does, the CallingConvention requirement</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════ LAB 5 — CAPSTONE ═══════════ -->
+<div class="lab-sec" id="lab5">
+  <div class="eyebrow-row">
+    <span class="lab-badge">Lab 5 of 5 &mdash; Capstone</span>
+    <span class="lab-diff">&#11035; Capstone &middot; ~60 min + 10-min live demo</span>
+  </div>
+  <div class="lab-title">Maritime Tactical System &mdash; Full Capstone Demo</div>
+  <div class="lab-desc">Bring everything together into a 10-minute live demo covering the full 5-day journey from OpenGL triangle to Vulkan compute pipeline to C# integration. You choose what to demonstrate from the items below. The goal is to show understanding, not just working code &mdash; the instructor will ask questions on any component.</div>
+  <div class="lab-meta">
+    <span class="meta-chip">&#9201; 10-min live demo + Q&amp;A</span>
+    <span class="meta-chip">All 15 modules covered</span>
+    <span class="meta-chip">No new code required</span>
+  </div>
+
+  <div class="adds-over">
+    <div class="adds-label">&#9989; Capstone Checklist — All 15 Modules</div>
+    <ul class="adds-list">
+      <li><span class="adds-dot">&#9658;</span><strong>M1 (Pipeline):</strong> Explain what each GPU pipeline stage does and which you wrote vs GPU-fixed</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M2 (Window):</strong> Show Day 1 Lab 1 running. Explain GLFW + GLEW setup, context creation</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M3 (VBO/VAO/EBO/Shaders):</strong> Show Day 1 Lab 5. Explain what glVertexAttribPointer stride/offset means</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M4 (MVP):</strong> Show Day 2 Lab 1. Explain model × view × projection order and why it matters</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M5 (Lighting):</strong> Show Day 2 Lab 2. Explain ambient/diffuse/specular. Show shininess change live</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M6 (Texture):</strong> Show Day 2 Lab 3. Explain UV coords and why Phong × texture = final colour</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M7 (GLSL/Instancing):</strong> Show Day 3 Lab 1 or Lab 2. Explain atan()/fract() or gl_InstanceID</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M8 (FBO/Stencil/Blend):</strong> Show Day 3 Lab 3 or Lab 4. Explain the two-pass FBO pattern</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M9 (Performance):</strong> Toggle instancing on/off in Day 3 Lab 2. Show frame time difference</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M10 (Vulkan Instance):</strong> Show Demo 15 terminal output. Explain VkInstance → VkPhysicalDevice difference</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M11 (Device/Swapchain):</strong> Show Demo 17 navy window. Explain acquire → render → present frame loop</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M12 (Pipeline/Triangle):</strong> Show Demo 18 triangle. Explain why pipeline is immutable and what it bakes</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M13 (Descriptors/Compute):</strong> Show Day 5 Lab 1 (UBO rotation) and Lab 2 (sonar processor terminal)</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M14 (Integration):</strong> Show Day 5 Lab 4. Demonstrate C# changing rotation speed live via P/Invoke</li>
+      <li><span class="adds-dot">&#9658;</span><strong>M15 (Capstone Review):</strong> Summarise the 5-day progression and one thing you would do differently with more time</li>
+    </ul>
+  </div>
+
+  <div class="out-box">
+    <div class="out-label">&#127919; Suggested 10-Minute Demo Flow</div>
+    <div class="out-item"><span class="out-dot"></span><strong>0:00&ndash;1:00</strong> — Open Day 1 Lab 5 (animated contact display). Briefly explain what changed from Lab 1 to Lab 5.</div>
+    <div class="out-item"><span class="out-dot"></span><strong>1:00&ndash;2:30</strong> — Open Day 2 Lab 3 (textured lit vessel). Change shininess live. Disable texture to show Phong alone.</div>
+    <div class="out-item"><span class="out-dot"></span><strong>2:30&ndash;4:00</strong> — Open Day 3 Lab 3 (FBO sonar) or Lab 4 (stencil outline). Toggle effect on/off.</div>
+    <div class="out-item"><span class="out-dot"></span><strong>4:00&ndash;5:30</strong> — Run Demo 18 (Vulkan triangle). Explain the 800-line cost vs OpenGL 80 lines. What did each extra line do?</div>
+    <div class="out-item"><span class="out-dot"></span><strong>5:30&ndash;7:30</strong> — Run Day 5 Lab 1 (UBO rotation). Change rotation speed by editing the UBO update line. Run Lab 2 terminal to show sonar processing throughput.</div>
+    <div class="out-item"><span class="out-dot"></span><strong>7:30&ndash;9:00</strong> — Run Day 5 Lab 4 (C# bridge). Send S/F/90 commands from console. Demonstrate real-time response.</div>
+    <div class="out-item"><span class="out-dot"></span><strong>9:00&ndash;10:00</strong> — Q&amp;A. Instructor picks any component and asks how it works.</div>
+  </div>
+
+  <div class="obj-box">
+    <div class="obj-lbl">Instructor Q&amp;A Bank &mdash; Be Ready for These</div>
+    <ul class="obj-list">
+      <li><div class="obj-chk" onclick="chk(this)"></div>What is the difference between VkPhysicalDevice and VkDevice?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Why does Vulkan need a semaphore AND a fence for frame synchronisation?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>What does gl_VertexAttribPointer stride mean? What happens if you get it wrong?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Why multiply Phong lighting by texture colour in the fragment shader?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>What does glVertexAttribDivisor(1,1) do and why?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Why does Vulkan require one UBO per swapchain image instead of one shared UBO?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>What is a pipeline barrier and when is it required?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Why is std::atomic needed in the DLL export? What could go wrong without it?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>What does the normal matrix correct for, and why is it not just the model matrix?</li>
+      <li><div class="obj-chk" onclick="chk(this)"></div>Why does the FBO require two render passes? What is in each one?</li>
+    </ul>
+  </div>
+
+  <div class="del-box">
+    <div class="del-lbl">&#10003; Final Capstone Deliverable &mdash; Day 5 Complete</div>
+    <div class="del-title">Maritime Tactical System &mdash; 5-Day Journey Complete</div>
+    <div class="del-desc">A 10-minute live demonstration covering at least one artefact from each of the 15 modules, with answers to instructor questions on any component demonstrated.</div>
+    <ul class="del-list">
+      <li><span class="del-dot"></span>Can run at least one lab from each of the 5 days without errors</li>
+      <li><span class="del-dot"></span>Can explain what any single line of code in any lab does</li>
+      <li><span class="del-dot"></span>Can demonstrate live: changing a parameter (shininess, rotation speed, effect toggle) and showing the result</li>
+      <li><span class="del-dot"></span>Can answer 5 of the 10 Q&amp;A bank questions without looking at notes</li>
+    </ul>
+  </div>
+
+  <div class="page-foot">
+    <a class="foot-btn" href="lab-day4.html">&#8592; Day 4 Labs</a>
+    <div style="font-size:.8rem;color:var(--text3);text-align:center">
+      By <strong style="color:var(--text2)">Raushan Ranjan</strong> (MCT | Educator)<br>
+      Koenig Original AI-Courseware &middot; Day 5 Complete &middot; Course Complete
+    </div>
+    <a class="foot-btn primary" href="index.html">Module Notes &#8594;</a>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function cp(btn, id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+    const o = btn.textContent; btn.textContent = '✓ Copied!'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = o; btn.classList.remove('ok'); }, 2200);
+  });
+}
+function chk(el) {
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+  const all = document.querySelectorAll('.obj-chk');
+  const done = document.querySelectorAll('.obj-chk.done').length;
+  const pct = Math.round(done / all.length * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('pct').textContent = pct + '%';
+}
+const secs = document.querySelectorAll('.lab-sec');
+const sbls = document.querySelectorAll('.sidebar .sb-link[href^="#"]');
+secs.forEach(s => new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = '#' + e.target.id;
+      sbls.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+    }
+  });
+}, { threshold: 0.25, rootMargin: '-65px 0px -55% 0px' }).observe(s));
+</script>
+</body>
+</html>

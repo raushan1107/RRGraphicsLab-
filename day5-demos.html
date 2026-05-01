@@ -187,9 +187,9 @@ void main() {{ outColor = vec4(fragColor, 1.0); }}</pre></div></div>
 project(D19_VulkanUBO)
 set(CMAKE_CXX_STANDARD 17)
 find_package(Vulkan REQUIRED)
-set(GLFW_DIR $ENV{{GLFW_DIR}})
-set(GLM_DIR  $ENV{{GLM_DIR}})
-include_directories(${{GLFW_DIR}}/include ${{GLM_DIR}} ${{Vulkan_INCLUDE_DIRS}})
+set(GLFW_DIR $ENV{GLFW_DIR})
+set(GLM_DIR  $ENV{GLM_DIR})
+include_directories(${GLFW_DIR}/include ${GLM_DIR} ${Vulkan_INCLUDE_DIRS})
 add_executable(D19_VulkanUBO src/main.cpp)
 target_link_libraries(D19_VulkanUBO Vulkan::Vulkan ${{GLFW_DIR}}/lib-vc2022/glfw3.lib)</pre></div></div>
   <div class="sh"><span class="sh-dot"></span>src/main.cpp</div>

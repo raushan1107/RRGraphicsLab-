@@ -638,10 +638,10 @@ build\\Release\\D19_VulkanUBO.exe</pre></div>
     <div class="op-item"><span class="op-dot"></span><strong>Test:</strong> PASS &mdash; validation 0 errors</div>
     <div class="op-item"><span class="op-dot"></span><strong>Throughput:</strong> ~78 million pixels/second on Intel Iris Xe</div>
   </div>
-  <div class="warn"><div class="warn-lbl">&#9888; Two Fixes Applied vs Original</div>
+  <!-- <div class="warn"><div class="warn-lbl">&#9888; Two Fixes Applied vs Original</div>
     <p class="note"><strong>Fix 1 &mdash; VkPushConstantRange in pipeline layout:</strong> The compute shader uses <code class="ic">layout(push_constant)</code> for width/height. Without declaring the range in <code class="ic">VkPipelineLayoutCreateInfo</code>, validation fires <code class="ic">VUID-07987</code> and all output pixels become 0.</p>
     <p class="note"><strong>Fix 2 &mdash; vkCmdPushConstants before vkCmdDispatch:</strong> Without pushing the constants first, <code class="ic">VUID-08602</code> fires and the shader reads uninitialised memory. Output is all zeros. Push constants must be set before the dispatch that reads them.</p>
-  </div>
+  </div> -->
   <div class="concept"><div class="concept-lbl">&#128161; Graphics Pipeline vs Compute Pipeline</div><p class="note">The graphics pipeline has a fixed sequence: vertex shading &rarr; rasterisation &rarr; fragment shading. The compute pipeline has none of that &mdash; just a GLSL compute shader dispatched in workgroups. No render pass, no framebuffer, no swapchain. Data flows in via storage buffers. <code class="ic">gl_GlobalInvocationID</code> tells each thread which pixel it owns. <code class="ic">vkCmdDispatch(x,y,z)</code> launches the workgroups.</p></div>
   <div class="diag"><div class="diag-title">Compute Dispatch &mdash; How 65,536 Threads Cover 256&times;256 Pixels</div><pre>  vkCmdDispatch(16, 16, 1)       &larr; 256 workgroups total
   Each workgroup: 16&times;16 threads   &larr; local_size_x=16, local_size_y=16
